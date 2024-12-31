@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Buscador de Versículos Bíblicos</title>
+ <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <link rel="stylesheet" href="https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/refs/heads/main/css/estiloparalelo.css">
+
+</head>
+<body>
+  <div id="main">
+    <!-- Tooltip para "paralelo" -->
+    <div class="tooltip paralelo-tooltip">
+      <img id="imgparalelo" src="https://i.imgur.com/xB2Fvor.png" 
+           alt="Contenido paralelo" 
+           onclick="toggleParaleloSidebar()" />
+      <span class="tooltiptext">Paralelo</span>
+    </div>
+
+    <!-- Sidebar paralelo -->
+   <!-- Sidebar paralelo -->
+<div id="paraleloSidebar">
+  <!-- Dropdown de versiones -->
+  <div id="versionDropdown" class="dropdown">
+  <label for="versionSelector" class="dropdown-label">Versión:</label>
+  <select id="versionSelector" class="version-dropdown" onchange="cambiarVersion()">
+    <option value="RVR1960">Reina-Valera 1960</option>
+    <option value="Americas">Las Américas</option>
+    <option value="Jubileos">Biblia Jubileos</option>
+  </select>
+</div>
+
+<div id="bookDropdown" class="dropdown">
+  <label for="bookSelector" class="dropdown-label">Libro:</label>
+  <select id="bookSelector" class="book-dropdown" onchange="cargarCapitulos()">
+    <option value="">Selecciona un libro</option>
+  </select>
+</div>
+
+<div id="chapterDropdown" class="dropdown">
+  <label for="chapterSelector" class="dropdown-label">Capítulo:</label>
+  <select id="chapterSelector" class="chapter-dropdown" onchange="mostrarCapitulo()">
+    <option value="">Selecciona un capítulo</option>
+  </select>
+</div>
+
+ 
+
+  <!-- Contenedor para contenido de capítulos -->
+  <div id="chapterContentSidebar" style="margin-top: 10px; color: white; padding: 10px; overflow-y: auto; max-height: 450px;"></div>
+</div>
+
+
+    <!-- Resultados generales -->
+    <ul id="results"></ul>
+  </div>
+
+  <script src="https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/refs/heads/main/js/scriptparalelo.js"></script>
+
+</body>
+</html>
