@@ -413,7 +413,24 @@ position: absolute;
       <div id="main">
       <!-- iconos debajo del buscador-->
 
- <!-- Tooltip para "paralelo" -->
+<div class="tooltip copiar-tooltip">
+  <img id="imgcopiar" src="https://i.imgur.com/YaVe5C3.png" 
+       alt="Copiar contenido" 
+       onclick="copiarContenido()" />
+  <span class="tooltiptext">Copiar</span>
+</div>
+<div id="main">
+   
+ 
+
+  <!-- Contenedor para contenido de capítulos -->
+  <div id="chapterContentSidebar" style="margin-top: 10px; color: white; padding: 10px; overflow-y: auto; max-height: 450px;"></div>
+</div>
+
+
+<!-- Tooltip para "paralelo" -->
+
+    <!-- Tooltip para "paralelo" -->
     <div class="tooltip paralelo-tooltip">
       <img id="imgparalelo" src="https://i.imgur.com/xB2Fvor.png" 
            alt="Contenido paralelo" 
@@ -445,51 +462,6 @@ position: absolute;
     <option value="">Selecciona un capítulo</option>
   </select>
 </div>
-
- 
-
-  <!-- Contenedor para contenido de capítulos -->
-  <div id="chapterContentSidebar" style="margin-top: 10px; color: white; padding: 10px; overflow-y: auto; max-height: 450px;"></div>
-</div>
-
-
-    <!-- Sidebar paralelo -->
-   <!-- Sidebar paralelo -->
-<div id="paraleloSidebar">
-  <!-- Dropdown de versiones -->
-  <div id="versionDropdown" class="dropdown">
-  <label for="versionSelector" class="dropdown-label">Versión:</label>
-  <select id="versionSelector" class="version-dropdown" onchange="cambiarVersion()">
-    <option value="RVR1960">Reina-Valera 1960</option>
-    <option value="Americas">Las Américas</option>
-    <option value="Jubileos">Biblia Jubileos</option>
-  </select>
-</div>
-
-<div id="bookDropdown" class="dropdown">
-  <label for="bookSelector" class="dropdown-label">Libro:</label>
-  <select id="bookSelector" class="book-dropdown" onchange="cargarCapitulos()">
-    <option value="">Selecciona un libro</option>
-  </select>
-</div>
-
-<div id="chapterDropdown" class="dropdown">
-  <label for="chapterSelector" class="dropdown-label">Capítulo:</label>
-  <select id="chapterSelector" class="chapter-dropdown" onchange="mostrarCapitulo()">
-    <option value="">Selecciona un capítulo</option>
-  </select>
-</div>
-
- 
-
-  <!-- Contenedor para contenido de capítulos -->
-  <div id="chapterContentSidebar" style="margin-top: 10px; color: white; padding: 10px; overflow-y: auto; max-height: 450px;"></div>
-</div>
-
-
-<!-- Tooltip para "paralelo" -->
-
-
 
 
 <!-- el menu desplegable de comentarios-->
@@ -834,6 +806,6 @@ function copiarContenido() {
 
 
     </script>
-   <script src="js/scriptparalelo.js"></script>
+    <script src="https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/refs/heads/main/js/scriptparalelo.js"></script>
   </body>
 </html>
