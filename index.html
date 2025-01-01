@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Buscador de Versículos Bíblicos</title>
   <head>
     <title>Buscador de Versículos Bíblicos</title>
  <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <link rel="stylesheet" href="css/estiloparalelo.css">
+</head>
+<body>
+  <div id="main">
+    <!-- Tooltip para "paralelo" -->
      <link rel="stylesheet" href="css/estiloparalelo.css">
     <style>
       /* Estilo general */
@@ -12,7 +19,6 @@
         margin: 0;
         padding: 0;
       }
-
       body {
         font-family: Arial, sans-serif;
         padding: 20px;
@@ -22,13 +28,11 @@
         color: #333;
         line-height: 1.6;
       }
-
       h1 {
         text-align: center;
         color: #4CAF50;
       }    /* no lo estoy usando pero es para titulos, color y centrado */
       
-
       .search-container {
         display: flex;
         align-items: center;
@@ -36,7 +40,6 @@
         margin-bottom: 10px;
         margin-left: -60px; /* Desplaza hacia la izquierda */
       }
-
       input[type="text"] {
         flex: 1;
         padding: 10px;
@@ -44,7 +47,6 @@
         border-radius: 4px;
         font-size: 16px;
       }
-
       button {
         padding: 8px 12px;
         border: 1px solid #ccc;
@@ -54,17 +56,14 @@
         font-size: 14px;
         cursor: pointer;
       }
-
       button:hover {
         background-color: #5d5f5d;
       }
-
       ul {
         list-style-type: none;
         padding: 0;
         margin-top: -23px;
       }
-
       li {
         padding: 15px;
         border: 1px solid #ccc;
@@ -75,7 +74,6 @@
   margin-left: -90px; /* Desplaza hacia la izquierda */
  margin-top: 20px;
       }
-
       /* Sidebar */
    #mySidebar {
     width: 0; /* Ancho inicial */
@@ -90,15 +88,12 @@
     padding-top: 20px; /* Espaciado interno desde el contenido superior */
     color: white;
   }
-
   #mySidebar.open {
     width: 32%;
     height: 600px;
     margin-top: 25px;
   top: 115px;
   }
-
-
       #mySidebar a {
         padding: 10px 15px;
         text-decoration: none;
@@ -107,25 +102,18 @@
         display: block;
         transition: 0.3s;
       }
-
       #mySidebar a:hover {
         background-color: #575757;
       }
-
       #main {
         transition: margin-right 0.3s;
         padding: 20px;
-
       }
       #main.shifted {
     margin-right: 10%; /* Igual al ancho del sidebar izquierdo */
   transition: margin-right 0.4s ease; /* Animación suave */
 }
-
-
-
    
-
       /* Estilos específicos para el menú desplegable */
       .dropdown-label {
         display: inline-block;
@@ -136,7 +124,6 @@
         position: relative;
         margin-left: -60px; /* Desplaza hacia la izquierda */
       }
-
       .dropdown-content {
         display: none; /* Inicialmente oculto */
         position: absolute;
@@ -145,7 +132,6 @@
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
         z-index: 1;
       }
-
       .dropdown-content a {
         color: #800000;
         background-color: #ffffff;
@@ -153,12 +139,10 @@
         text-decoration: none;
         display: block;
       }
-
       .dropdown-content a:hover {
         color: #ffffff;
         background-color: #333333;
       }
-
       #welcomeMessage {
   text-align: center;
   margin: 1px -10px;
@@ -174,7 +158,6 @@
   gap: 10px;
   margin-bottom: 20px;
 }
-
 #menuSidebar button {
   padding: 10px;
   border: none;
@@ -184,12 +167,10 @@
   cursor: pointer;  /* Muestra que es clickeable */
   border-radius: 4px;
 }
-
 #menuSidebar button:hover {
   background-color: #575757;
   transform: scale(1.05); /* Amplía la imagen ligeramente al pasar el mouse */
 }
-
 .seccionSidebar {
   display: none; /* Oculta todas las secciones por defecto */
   color: white;
@@ -197,7 +178,6 @@
   background-color: #222;
   border-radius: 4px;
 }
-
 #imgcopiar {
 position: absolute;
   top: -45px; /* Ajusta la distancia desde el contenedor superior */
@@ -207,7 +187,6 @@ position: absolute;
   margin-top: 10px;
   transition: transform 0.3s ease; /* Animación al pasar el mouse */
 }
-
 #imgcopiar:hover {
   transform: scale(1.2); /* Amplía la imagen ligeramente al pasar el mouse */
 }
@@ -234,7 +213,6 @@ position: absolute;
   margin-top: 10px;
   transition: transform 0.3s ease; /* Animación al pasar el mouse */
 }
-
 #imgmaterial:hover {
   transform: scale(1.2); /* Amplía la imagen ligeramente al pasar el mouse */
 }
@@ -244,7 +222,6 @@ position: absolute;
   cursor: pointer;
   margin-top: -20px;
 }
-
 .tooltip .tooltiptext {
   visibility: hidden;
   width: 70px;
@@ -259,8 +236,6 @@ position: absolute;
   left: -70px;
   transform: translateX(-50%);
 }
-
-
 /* General tooltip */
 .material-tooltip .tooltiptext {
   visibility: hidden;
@@ -296,9 +271,6 @@ position: absolute;
   left:-100px;
   top: 0px;
 }
-
-
-
 /* Específico para el tooltip de copiar */
 .copiar-tooltip img {
   top: -25px;
@@ -306,19 +278,14 @@ position: absolute;
   width: 30px;
   transition: transform 0.3s ease;
 }
-
 .copiar-tooltip img:hover {
   transform: scale(1.2);
 }
-
-
-
 /* Ajuste del contenido principal cuando el sidebar está abierto */
 #main.shifted-left {
   margin-left: 10%; /* Ajusta al ancho de tu sidebar */
   transition: margin-left 0.4s ease; /* Animación suave */
 }
-
 .modal {
   display: none;
   position: fixed;
@@ -330,14 +297,12 @@ position: absolute;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.8);
 }
-
 .modal-content {
   margin: auto;
   display: block;
   width: 80%;
   max-width: 700px;
 }
-
 .close {
   position: absolute;
   top: 20px;
@@ -347,14 +312,12 @@ position: absolute;
   font-weight: bold;
   cursor: pointer;
 }
-
 .close:hover,
 .close:focus {
   color: #bbb;
   text-decoration: none;
   cursor: pointer;
 }
-
     /* Botones de capítulo */
     #chapterButtons, #bookButtons {
       margin-top: 20px;
@@ -362,7 +325,6 @@ position: absolute;
       flex-wrap: wrap;
       gap: 5px;
     }
-
     .chapter-button, .book-button {
  
     padding: 10px;
@@ -372,19 +334,14 @@ position: absolute;
     font-size: 16px;
     cursor: pointer;
     border-radius: 1px;
-
     }
-
     .chapter-button:hover, .book-button:hover {
       background-color: #0056b3;
     }
-
-
     </style>
     <link rel="stylesheet" href="https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/refs/heads/main/css/estiloparalelo.css">
   </head>
   <body>
-
       <div class="search-container">
         <input
           type="text"
@@ -393,8 +350,6 @@ position: absolute;
         />
         <button id="searchButton">Buscar</button>
       </div>
-
-
   <!-- lista de libros disponibles--> 
 <div class="dropdown-label" id="dropdownButton">
         Bible Book List
@@ -408,18 +363,19 @@ position: absolute;
           <a href="#">Revelación Apocalipsis</a>
         </div>
       </div>
-
-
       <div id="main">
       <!-- iconos debajo del buscador-->
-
-    <!-- Tooltip para "paralelo" -->
+ <!-- Tooltip para "paralelo" -->
     <div class="tooltip paralelo-tooltip">
       <img id="imgparalelo" src="https://i.imgur.com/xB2Fvor.png" 
            alt="Contenido paralelo" 
-           onclick="toggleParaleloSidebar()" />
-      <span class="tooltiptext">Paralelo</span>
-    </div>
+@@ -48,10 +453,387 @@
+</div>
+
+
+    <!-- Resultados generales -->
+    <ul id="results"></ul>
+    <!-- Sidebar paralelo -->
    <!-- Sidebar paralelo -->
 <div id="paraleloSidebar">
   <!-- Dropdown de versiones -->
@@ -431,33 +387,23 @@ position: absolute;
     <option value="Jubileos">Biblia Jubileos</option>
   </select>
 </div>
-
 <div id="bookDropdown" class="dropdown">
   <label for="bookSelector" class="dropdown-label">Libro:</label>
   <select id="bookSelector" class="book-dropdown" onchange="cargarCapitulos()">
     <option value="">Selecciona un libro</option>
   </select>
 </div>
-
 <div id="chapterDropdown" class="dropdown">
   <label for="chapterSelector" class="dropdown-label">Capítulo:</label>
   <select id="chapterSelector" class="chapter-dropdown" onchange="mostrarCapitulo()">
     <option value="">Selecciona un capítulo</option>
   </select>
 </div>
-
-<div class="tooltip copiar-tooltip">
-  <img id="imgcopiar" src="https://i.imgur.com/YaVe5C3.png" 
-       alt="Copiar contenido" 
-       onclick="copiarContenido()" />
-  <span class="tooltiptext">Copiar</span>
-</div>
-   
-
+ 
   <!-- Contenedor para contenido de capítulos -->
   <div id="chapterContentSidebar" style="margin-top: 10px; color: white; padding: 10px; overflow-y: auto; max-height: 450px;"></div>
-
-
+</div>
+<!-- Tooltip para "paralelo" -->
 <!-- el menu desplegable de comentarios-->
     <div class="tooltip material-tooltip">
 <img id="imgmaterial" src="https://i.imgur.com/oJRwGnT.png" alt="Menú" onclick="toggleSidebar()">
@@ -466,7 +412,6 @@ position: absolute;
     <!-- Sidebar -->
     <div id="mySidebar">
    
-
   <div id="menuSidebar">
     <button onclick="mostrarSeccion('comentarios')">Comentarios de Eric de Jesús Rodríguez Mendoza</button>
     <button onclick="mostrarSeccion('critico')">Aparato Crítico NA28</button>
@@ -476,7 +421,6 @@ position: absolute;
     <!-- Contenedor para los comentarios -->
     <div id="comentarios" class="seccionSidebar">
       <p><a href="#" onclick="cargarComentarios()">Comentarios Gálatas 1</a> 
-
   <div id="contenidoComentarios" style="margin-top: 10px; color: white; padding: 10px;"></div></p>
     </div>
     <div id="critico" class="seccionSidebar" style="display: none;">
@@ -492,7 +436,6 @@ position: absolute;
   <p>
     <a href="#" onclick="abrirModal('https://i.imgur.com/5w9LMZx.png')">Tribus de Israel (tiempo de los reyes)</a>
   </p>
-
   <p>
     <a href="#" onclick="abrirModal('https://i.imgur.com/5w9LMZx.png')">Tierra de Israel en el Primer siglo</a>
   </p>
@@ -504,42 +447,28 @@ position: absolute;
   </p>
  
 </div>
-
     <div id="modal" class="modal">
   <span class="close" onclick="cerrarModal()">&times;</span>
   <img id="modalImg" class="modal-content" alt="Mapa de los pueblos">
   <div id="caption"></div>
 </div>
-
   </div>
 </div>
-
-
 <!-- mensaje de bievenida-->
 <div id="welcomeMessage">
   <h2>¡Bienvenido al Buscador de Versículos Bíblicos!</h2>
   <p>Escribe el libro, capítulo y versículo que deseas buscar.</p>
 </div>
-
-</div>
-
 <!-- el id de resultados generales-->
       <ul id="results"></ul>   
-
     </div>
-
   
-
 <script>
-
-
   function cargarComentarios() {
     const url = "https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/refs/heads/main/comentarios_codigos/galatas/galatas1.html"; // Enlace RAW de galatas
     const contenedor = document.getElementById("contenidoComentarios");
-
     // Limpia el contenido antes de cargar nuevo
     contenedor.innerHTML = "Cargando comentarios...";
-
     fetch(url)
       .then(response => {
         if (!response.ok) {
@@ -555,18 +484,13 @@ position: absolute;
       });
   }
 </script>
-
-
     <script>
-
       // Funciones del sidebar
-
 function toggleSidebar() {
   const sidebar = document.getElementById("mySidebar");
   const main = document.getElementById("main");
   const toggleNav = document.getElementById("toggleNav");
   const isOpen = sidebar.classList.contains("open");
-
   if (isOpen) {
     sidebar.classList.remove("open");
     main.classList.remove("shifted");
@@ -577,21 +501,16 @@ function toggleSidebar() {
     toggleNav.src = "https://i.imgur.com/oJRwGnT.png"; // Sustituye por un enlace válido de tu imagen de cierre
   }
 }
-
-
-
       // JSON y búsqueda
       const urls = [
         "https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/main/galatas.json",
         "https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/main/Hebreos.json"
       ];
-
       const searchInput = document.getElementById("searchInput");
       const searchButton = document.getElementById("searchButton");
       const resultsContainer = document.getElementById("results");
       const dropdownButton = document.getElementById("dropdownButton");
       const dropdownMenu = document.getElementById("dropdownMenu");
-
       async function fetchJsonData(url) {
         try {
           const response = await fetch(url);
@@ -602,7 +521,6 @@ function toggleSidebar() {
           return null;
         }
       }
-
       async function fetchAllJsonData() {
         const allData = {};
         for (const url of urls) {
@@ -611,23 +529,19 @@ function toggleSidebar() {
         }
         return allData;
       }
-
 async function searchVerses(query) {
   const datos = await fetchAllJsonData();
   if (!datos) return;
-
   resultsContainer.innerHTML = "";
   const normalizedQuery = query
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "") // Elimina tildes
     .toLowerCase();
-
   // Mapear abreviaturas a nombres completos
   const libroMap = {
     gal: "gálatas", Gal: "Gálatas",
     heb: "hebreos", Heb: "hebreos"
   };
-
   // Extraer partes de la consulta
   const match = normalizedQuery.match(/^([\w\s]+)\s(\d+)(?::(\d+)(?:-(\d+))?)?$/);
   if (match) {
@@ -635,10 +549,8 @@ async function searchVerses(query) {
     const capitulo = match[2];
     const versiculoInicio = match[3] ? parseInt(match[3], 10) : null;
     const versiculoFin = match[4] ? parseInt(match[4], 10) : null;
-
     // Convertir abreviatura a nombre completo si es necesario
     libro = libroMap[libro] || libro;
-
     // Normalizar claves del JSON
     const libroEncontrado = Object.keys(datos).find(key => {
       const libroNormalizado = libroMap[libro] || libro; // Traduce la abreviatura o usa el valor original
@@ -653,7 +565,6 @@ async function searchVerses(query) {
           .toLowerCase()
       );
     });
-
     if (libroEncontrado) {
       const capitulos = datos[libroEncontrado];
       if (capitulos[capitulo]) {
@@ -710,7 +621,6 @@ async function searchVerses(query) {
         });
       });
     });
-
     if (resultados.length > 0) {
       resultsContainer.innerHTML = resultados.join("");
     } else {
@@ -718,41 +628,31 @@ async function searchVerses(query) {
     }
   }
 }
-
-
-
-
       searchButton.addEventListener("click", () => {
         const query = searchInput.value.trim();
         if (query) searchVerses(query);
       });
-
       searchInput.addEventListener("keypress", event => {
         if (event.key === "Enter") {
           const query = searchInput.value.trim();
           if (query) searchVerses(query);
         }
       });
-
       // Funcionalidad del menú desplegable
       dropdownButton.addEventListener("click", () => {
         const isMenuVisible = dropdownMenu.style.display === "block";
         dropdownMenu.style.display = isMenuVisible ? "none" : "block";
       });
-
       document.addEventListener("click", event => {
         if (!dropdownButton.contains(event.target)) {
           dropdownMenu.style.display = "none";
         }
       });
-
       // Ocultar el mensaje de bienvenida al realizar una búsqueda
 const welcomeMessage = document.getElementById("welcomeMessage");
-
 function hideWelcomeMessage() {
   welcomeMessage.style.display = "none";
 }
-
 searchButton.addEventListener("click", () => {
   const query = searchInput.value.trim();
   if (query) {
@@ -760,7 +660,6 @@ searchButton.addEventListener("click", () => {
     searchVerses(query);
   }
 });
-
 searchInput.addEventListener("keypress", event => {
   if (event.key === "Enter") {
     const query = searchInput.value.trim();
@@ -773,17 +672,14 @@ searchInput.addEventListener("keypress", event => {
 function mostrarSeccion(seccion) {
   const secciones = document.querySelectorAll(".seccionSidebar");
   secciones.forEach(sec => (sec.style.display = "none")); // Oculta todas las secciones
-
   const seccionSeleccionada = document.getElementById(seccion);
   if (seccionSeleccionada) {
     seccionSeleccionada.style.display = "block"; // Muestra la sección seleccionada
   }
 }
-
 function copiarContenido() {
   const resultados = document.getElementById("results");
   const texto = resultados.innerText; // Obtiene el texto de los resultados
-
   if (texto) {
     navigator.clipboard.writeText(texto).then(() => {
       alert("El contenido ha sido copiado.");
@@ -794,12 +690,11 @@ function copiarContenido() {
     alert("No hay contenido para copiar.");
   }
 }
-
-
 // Función para alternar el nuevo sidebar
 
-
+<script src="js/scriptparalelo.js"></script>
+</body>
     </script>
-    <script src="https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/refs/heads/main/js/scriptparalelo.js"></script>
+   <script src="js/scriptparalelo.js"></script>
   </body>
 </html>
