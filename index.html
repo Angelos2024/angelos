@@ -338,6 +338,28 @@ position: absolute;
     .chapter-button:hover, .book-button:hover {
       background-color: #0056b3;
     }
+    /* Contenedor flexible para los selectores */
+.selectors-container {
+      display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 70px;
+    margin-bottom: 2px;
+}
+
+/* Ajuste para el contenido del capítulo */
+.content-container {
+  margin-top: 10px;
+  color: white;
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 450px;
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
     </style>
     <link rel="stylesheet" href="https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/refs/heads/main/css/estiloparalelo.css">
   </head>
@@ -384,6 +406,7 @@ position: absolute;
     </div>
 
    <!-- Sidebar paralelo -->
+   <div class="selectors-container">
 <div id="paraleloSidebar">
   <!-- Dropdown de versiones -->
   <div id="versionDropdown" class="dropdown">
@@ -394,11 +417,13 @@ position: absolute;
     <option value="Jubileos">Biblia Jubileos</option>
   </select>
 </div>
+</div>
 <div id="bookDropdown" class="dropdown">
   <label for="bookSelector" class="dropdown-label">Libro:</label>
   <select id="bookSelector" class="book-dropdown" onchange="cargarCapitulos()">
     <option value="">Selecciona un libro</option>
   </select>
+</div>
 </div>
 <div id="chapterDropdown" class="dropdown">
   <label for="chapterSelector" class="dropdown-label">Capítulo:</label>
