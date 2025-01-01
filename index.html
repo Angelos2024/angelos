@@ -339,26 +339,6 @@ position: absolute;
       background-color: #0056b3;
     }
     /* Contenedor flexible para los selectores */
-.selectors-container {
-      display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 70px;
-    margin-bottom: 2px;
-}
-
-/* Ajuste para el contenido del capítulo */
-.content-container {
-  margin-top: 10px;
-  color: white;
-  padding: 10px;
-  overflow-y: auto;
-  max-height: 450px;
-  background-color: #f1f1f1;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
 
     </style>
     <link rel="stylesheet" href="https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/refs/heads/main/css/estiloparalelo.css">
@@ -407,7 +387,7 @@ position: absolute;
 
    <!-- Sidebar paralelo -->
    <div id="paraleloSidebar">
-   <div class="selectors-container">
+ 
   <!-- Dropdown de versiones -->
   <div id="versionDropdown" class="dropdown">
   <label for="versionSelector" class="dropdown-label">Versión:</label>
@@ -424,7 +404,7 @@ position: absolute;
     <option value="">Selecciona un libro</option>
   </select>
 </div>
-</div>
+
 <div id="chapterDropdown" class="dropdown">
   <label for="chapterSelector" class="dropdown-label">Capítulo:</label>
   <select id="chapterSelector" class="chapter-dropdown" onchange="mostrarCapitulo()">
