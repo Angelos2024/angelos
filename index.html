@@ -365,17 +365,24 @@ position: absolute;
       </div>
       <div id="main">
       <!-- iconos debajo del buscador-->
- <!-- Tooltip para "paralelo" -->
-    <div class="tooltip paralelo-tooltip">
-      <img id="imgparalelo" src="https://i.imgur.com/xB2Fvor.png" 
-           alt="Contenido paralelo" 
-@@ -48,10 +453,387 @@
+
+
+      <div class="tooltip copiar-tooltip">
+  <img id="imgcopiar" src="https://i.imgur.com/YaVe5C3.png" 
+       alt="Copiar contenido" 
+       onclick="copiarContenido()" />
+  <span class="tooltiptext">Copiar</span>
 </div>
 
 
-    <!-- Resultados generales -->
-    <ul id="results"></ul>
-    <!-- Sidebar paralelo -->
+ <!-- Tooltip para "paralelo" -->
+    <div class="tooltip paralelo-tooltip">
+      <img id="imgparalelo" src="https://i.imgur.com/xB2Fvor.png" 
+          alt="Contenido paralelo" 
+           onclick="toggleParaleloSidebar()" />
+      <span class="tooltiptext">Paralelo</span>
+    </div>
+
    <!-- Sidebar paralelo -->
 <div id="paraleloSidebar">
   <!-- Dropdown de versiones -->
@@ -403,7 +410,7 @@ position: absolute;
   <!-- Contenedor para contenido de capítulos -->
   <div id="chapterContentSidebar" style="margin-top: 10px; color: white; padding: 10px; overflow-y: auto; max-height: 450px;"></div>
 </div>
-<!-- Tooltip para "paralelo" -->
+
 <!-- el menu desplegable de comentarios-->
     <div class="tooltip material-tooltip">
 <img id="imgmaterial" src="https://i.imgur.com/oJRwGnT.png" alt="Menú" onclick="toggleSidebar()">
@@ -691,9 +698,6 @@ function copiarContenido() {
   }
 }
 // Función para alternar el nuevo sidebar
-
-<script src="js/scriptparalelo.js"></script>
-</body>
     </script>
    <script src="js/scriptparalelo.js"></script>
   </body>
