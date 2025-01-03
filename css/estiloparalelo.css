@@ -163,17 +163,22 @@
 
     /* Dropdowns */
     #versionDropdown, #bookDropdown, #chapterDropdown {
-      margin-bottom: 5px;
+        display: flex;
+  flex-direction: column; /* Coloca el label encima del select */
+  margin-bottom: 5px; /* Espacio entre dropdowns */
     }
 
     select {
-      padding: 5px;
-      border: none;
-      background-color: #333;
-      color: white;
-      border-radius: 5px;
-      font-size: 14px;
-      cursor: pointer;
+    padding: 5px;
+    border: none;
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 5px;
+
+    float: left;
     }
 
     select:hover {
@@ -187,3 +192,19 @@
       color: #ddd228;
       border-radius: 5px;
     }
+/* Contenedor principal */
+.dropdown-container {
+ display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin: 10px;
+    align-items: end;
+    justify-items: start;
+    justify-content: center;
+        margin-top: -12px;
+}
+
+/* Ajustar el capítulo a ocupar toda la fila */
+#chapterDropdown {
+  grid-column: span 2; /* Ocupar dos columnas */
+}
