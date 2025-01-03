@@ -6,12 +6,10 @@
     <title>Buscador de Versículos Bíblicos</title>
  <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-           <link rel="stylesheet" href="css/estiloparalelo.css">   
+       <link rel="stylesheet" href="css/estiloparalelo.css">
 </head>
 <body>
-  <div id="main">
-    <!-- Tooltip para "paralelo" -->
-  
+
     <style>
       /* Estilo general */
       * {
@@ -116,14 +114,11 @@
    
       /* Estilos específicos para el menú desplegable */
       .dropdown-label {
-        display: inline-block;
-        font-size: 16px;
-        font-weight: bold;
-        color: #800000;
-        cursor: pointer;
-        position: relative;
-        margin-left: -60px; /* Desplaza hacia la izquierda */
+       margin-bottom: 5px; /* Espacio entre el label y el select */
+  font-size: 14px; /* Ajusta el tamaño del texto si es necesario */
       }
+
+
       .dropdown-content {
         display: none; /* Inicialmente oculto */
         position: absolute;
@@ -232,8 +227,7 @@ position: absolute;
   padding: 5px 0;
   position: absolute;
   z-index: 1;
-  top: 40px; /* Ajusta según cada tooltip */
-  left: -70px;
+  left: -175px;
   transform: translateX(-50%);
 }
 /* General tooltip */
@@ -341,6 +335,7 @@ position: absolute;
     /* Contenedor flexible para los selectores */
 
     </style>
+
   </head>
   <body>
       <div class="search-container">
@@ -352,7 +347,13 @@ position: absolute;
         <button id="searchButton">Buscar</button>
       </div>
   <!-- lista de libros disponibles--> 
-<div class="dropdown-label" id="dropdownButton">
+<div class="dropdown-label" id="dropdownButton" style="      display: inline-block;
+        font-size: 16px;
+        font-weight: bold;
+        color: #800000;
+        cursor: pointer;
+        position: relative;
+        margin-left: -60px; /* Desplaza hacia la izquierda */">
         Bible Book List
         <div class="dropdown-content" id="dropdownMenu">
           <a href="#">Según Marcos</a>
@@ -389,7 +390,7 @@ position: absolute;
 
    <!-- Sidebar paralelo -->
    <div id="paraleloSidebar">
- 
+ <div class="dropdown-container">
   <!-- Dropdown de versiones -->
   <div id="versionDropdown" class="dropdown">
   <label for="versionSelector" class="dropdown-label">Versión:</label>
@@ -397,6 +398,7 @@ position: absolute;
     <option value="RVR1960">Reina-Valera 1960</option>
     <option value="Americas">Las Américas</option>
     <option value="Jubileos">Biblia Jubileos</option>
+
   </select>
 </div>
 
@@ -413,9 +415,9 @@ position: absolute;
     <option value="">Selecciona un capítulo</option>
   </select>
 </div>
- 
+ </div>
   <!-- Contenedor para contenido de capítulos -->
-  <div id="chapterContentSidebar" style="margin-top: 10px; color: white; padding: 10px; overflow-y: auto; max-height: 450px;"></div>
+  <div id="chapterContentSidebar" style="margin-top: 3px; color: white; padding: 10px; overflow-y: auto; max-height: 450px;"></div>
 </div>
 
 <!-- el menu desplegable de comentarios-->
@@ -426,6 +428,8 @@ position: absolute;
   <div id="menuSidebar">
     <button onclick="mostrarSeccion('comentarios')">Comentarios de Eric de Jesús Rodríguez Mendoza</button>
     <button onclick="mostrarSeccion('critico')">Aparato Crítico NA28</button>
+
+
     <button onclick="mostrarSeccion('mapas')">Mapas</button>
   </div>
   <div id="contenidoSidebar">
@@ -473,7 +477,7 @@ position: absolute;
 <!-- el id de resultados generales-->
       <ul id="results"></ul>   
     </div>
-  <script src="js/scriptparalelo.js"></script>
+ 
 <script>
   function cargarComentarios() {
     const url = "https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/refs/heads/main/comentarios_codigos/galatas/galatas1.html"; // Enlace RAW de galatas
@@ -494,7 +498,9 @@ position: absolute;
         contenedor.innerHTML = `<p>Error al cargar los comentarios: ${error.message}</p>`;
       });
   }
+  
 </script>
+
     <script>
       // Funciones del sidebar
 function toggleSidebar() {
@@ -701,8 +707,12 @@ function copiarContenido() {
     alert("No hay contenido para copiar.");
   }
 }
+
+
+
 // Función para alternar el nuevo sidebar
     </script>
-  
+   <script src="js/scriptparalelo.js"></script>
+
   </body>
 </html>
