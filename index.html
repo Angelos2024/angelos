@@ -333,11 +333,30 @@ position: absolute;
       background-color: #0056b3;
     }
     /* Contenedor flexible para los selectores */
-
+    /* Contenedor flexible para los selectores */
+  #myDIV {
+    position:absolute;
+  margin-top: 100px;
+  padding:10px;
+  right: 0px;
+  display: none; /* Oculto por defecto */
+  }
     </style>
 
   </head>
   <body>
+
+
+    <!-- codigo nuevo buscador-->
+<div style="display: flex; " >
+
+  <div id="myDIV"  style="flex-shrink: 0; width: 250px;">
+    <h3>Resultados</h3>
+
+    <ul id="countResults"></ul>
+
+  </div>
+  </div>
       <div class="search-container">
         <input
           type="text"
@@ -518,51 +537,65 @@ function toggleSidebar() {
     toggleNav.src = "https://i.imgur.com/oJRwGnT.png"; // Sustituye por un enlace válido de tu imagen de cierre
   }
 }
-      // JSON y búsqueda
-      const urls = [
-        "https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/main/galatas.json",
-        "https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/main/Hebreos.json"
-      ];
-      const searchInput = document.getElementById("searchInput");
-      const searchButton = document.getElementById("searchButton");
-      const resultsContainer = document.getElementById("results");
-      const dropdownButton = document.getElementById("dropdownButton");
-      const dropdownMenu = document.getElementById("dropdownMenu");
-      async function fetchJsonData(url) {
-        try {
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`Error al cargar JSON: ${response.status}`);
-          return await response.json();
-        } catch (error) {
-          console.error(`Error:`, error);
-          return null;
-        }
-      }
-      async function fetchAllJsonData() {
-        const allData = {};
-        for (const url of urls) {
-          const data = await fetchJsonData(url);
-          if (data) Object.assign(allData, data);
-        }
-        return allData;
-      }
-async function searchVerses(query) {
-  const datos = await fetchAllJsonData();
-  if (!datos) return;
-  resultsContainer.innerHTML = "";
-  const normalizedQuery = query
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // Elimina tildes
-    .toLowerCase();
-  // Mapear abreviaturas a nombres completos
-  const libroMap = {
-    gal: "gálatas", Gal: "Gálatas",
-    heb: "hebreos", Heb: "hebreos"
-  };
-  // Extraer partes de la consulta
-  const match = normalizedQuery.match(/^([\w\s]+)\s(\d+)(?::(\d+)(?:-(\d+))?)?$/);
-  if (match) {
-    let libro = match[1].trim();
+  
+  // JSON y búsqueda
+  const urls = [
+    "https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/main/galatas.json",
+    "https://raw.githubusercontent.com/Angelos2024/torah-Yehoshua/main/Hebreos.json"
+  ];
+  const searchInput = document.getElementById("searchInput");
+  const searchButton = document.getElementById("searchButton");
+  const resultsContainer = document.getElementById("results");
+  const countResultsContainer = document.getElementById("countResults");
+  const sidebar = document.getElementById("myDIV");
+
+  const dropdownButton = document.getElementById("dropdownButton");
+  const dropdownMenu = document.getElementById("dropdownMenu");
+
+  // Función para cargar datos JSON
+  async function fetchJsonData(url) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Error al cargar JSON: ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.error(`Error:`, error);
+      return null;
+    }
+  }
+
+  async function fetchAllJsonData() {
+    const allData = {};
+    for (const url of urls) {
+      const data = await fetchJsonData(url);
+      if (data) Object.assign(allData, data);
+    }
+    return allData;
+  }
+
+  // Función de búsqueda principal
+  async function searchVerses(query) {
+    const datos = await fetchAllJsonData();
+    if (!datos) return;
+
+    resultsContainer.innerHTML = "";
+    countResultsContainer.innerHTML = "";
+
+    const normalizedQuery = query
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+    // Mapear abreviaturas a nombres completos
+    const libroMap = {
+      gal: "gálatas", Gal: "Gálatas",
+      heb: "hebreos", Heb: "Hebreos"
+    };
+
+    // Verificar si es una búsqueda de versículo específico
+    const match = normalizedQuery.match(/^([\w\s]+)\s(\d+)(?::(\d+)(?:-(\d+))?)?$/);
+    if (match) {
+let libro = match[1].trim();
     const capitulo = match[2];
     const versiculoInicio = match[3] ? parseInt(match[3], 10) : null;
     const versiculoFin = match[4] ? parseInt(match[4], 10) : null;
@@ -582,79 +615,113 @@ async function searchVerses(query) {
           .toLowerCase()
       );
     });
-    if (libroEncontrado) {
-      const capitulos = datos[libroEncontrado];
-      if (capitulos[capitulo]) {
-        if (versiculoInicio && versiculoFin) {
-          // Mostrar un rango de versículos
-          for (let i = versiculoInicio; i <= versiculoFin; i++) {
-            if (capitulos[capitulo][i]) {
-              const li = document.createElement("li");
-              li.innerHTML = `${libroEncontrado} ${capitulo}:${i} - ${capitulos[capitulo][i]}`;
-              resultsContainer.appendChild(li);
-            } else {
-              const li = document.createElement("li");
-              li.innerHTML = `${libroEncontrado} ${capitulo}:${i} - Versículo no encontrado.`;
-              resultsContainer.appendChild(li);
+      if (libroEncontrado) {
+        const capitulos = datos[libroEncontrado];
+        if (capitulos[capitulo]) {
+          if (versiculoInicio && versiculoFin) {
+            for (let i = versiculoInicio; i <= versiculoFin; i++) {
+              const texto = capitulos[capitulo][i];
+              resultsContainer.innerHTML += texto
+                ? `<li>${libroEncontrado} ${capitulo}:${i} - ${texto}</li>`
+                : `<li>${libroEncontrado} ${capitulo}:${i} - Versículo no encontrado.</li>`;
             }
+          } else if (versiculoInicio) {
+            const texto = capitulos[capitulo][versiculoInicio];
+            resultsContainer.innerHTML = texto
+              ? `<li>${libroEncontrado} ${capitulo}:${versiculoInicio} - ${texto}</li>`
+              : "<li>Versículo no encontrado.</li>";
+          } else {
+            Object.entries(capitulos[capitulo]).forEach(([numVerso, textoVerso]) => {
+              resultsContainer.innerHTML += `<li>${libroEncontrado} ${capitulo}:${numVerso} - ${textoVerso}</li>`;
+            });
           }
-        } else if (versiculoInicio) {
-          // Mostrar un solo versículo
-          const texto = capitulos[capitulo][versiculoInicio];
-          resultsContainer.innerHTML = texto
-            ? `<li>${libroEncontrado} ${capitulo}:${versiculoInicio} - ${texto}</li>`
-            : "<li>Versículo no encontrado.</li>";
         } else {
-          // Mostrar todo el capítulo
-          Object.entries(capitulos[capitulo]).forEach(([numVerso, textoVerso]) => {
-            const li = document.createElement("li");
-            li.innerHTML = `${libroEncontrado} ${capitulo}:${numVerso} - ${textoVerso}`;
-            resultsContainer.appendChild(li);
-          });
+          resultsContainer.innerHTML = "<li>Capítulo no encontrado.</li>";
         }
-      } else resultsContainer.innerHTML = "<li>Capítulo no encontrado.</li>";
-    } else resultsContainer.innerHTML = "<li>Libro no encontrado.</li>";
-  } else {
-    // Nueva lógica para búsqueda de palabras
-    const resultados = [];
-    const palabraRegex = new RegExp(`(${query})`, "gi"); // Regex para buscar la palabra sin cambios
-    Object.keys(datos).forEach(libro => {
-      Object.keys(datos[libro]).forEach(capitulo => {
-        Object.entries(datos[libro][capitulo]).forEach(([versiculo, texto]) => {
-          const textoNormalizado = texto
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase();
-          if (textoNormalizado.includes(normalizedQuery)) {
-            // Resaltar la palabra en el texto original
-            const textoResaltado = texto.replace(
-              palabraRegex,
-              "<span style='background-color: yellow; font-weight: bold;'>$1</span>"
-            );
-            resultados.push(
-              `<li>${libro} ${capitulo}:${versiculo} - ${textoResaltado}</li>`
-            );
-          }
+      } else {
+        resultsContainer.innerHTML = "<li>Libro no encontrado.</li>";
+      }
+    } else {
+      // Búsqueda de palabras
+      const resultados = [];
+      const conteoPorLibro = {};
+      const palabraRegex = new RegExp(`(${query})`, "gi");
+
+      Object.keys(datos).forEach(libro => {
+        let libroCount = 0;
+        Object.keys(datos[libro]).forEach(capitulo => {
+          Object.entries(datos[libro][capitulo]).forEach(([versiculo, texto]) => {
+            const textoNormalizado = texto
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase();
+            if (textoNormalizado.includes(normalizedQuery)) {
+              const textoResaltado = texto.replace(
+                palabraRegex,
+                "<span style='background-color: yellow; font-weight: bold;'>$1</span>"
+              );
+              resultados.push(
+                `<li>${libro} ${capitulo}:${versiculo} - ${textoResaltado}
+                <br><a href="#" onclick="displayChapter('${libro}', '${capitulo}')">Leer capítulo completo</a></li>`
+              );
+              libroCount++;
+            }
+          });
         });
+        if (libroCount > 0) {
+          conteoPorLibro[libro] = libroCount;
+        }
+      });
+
+      if (resultados.length > 0) {
+        resultsContainer.innerHTML = resultados.join("");
+        Object.entries(conteoPorLibro).forEach(([libro, count]) => {
+          countResultsContainer.innerHTML += `<li>${libro} (${count})</li>`;
+        });
+      } else {
+        resultsContainer.innerHTML = "<li>No se encontraron coincidencias.</li>";
+      }
+    }
+
+    // Mostrar u ocultar el sidebar según resultados
+    sidebar.style.display = resultsContainer.innerHTML ? "block" : "none";
+  }
+
+  // Eventos para la búsqueda
+  searchButton.addEventListener("click", () => {
+    const query = searchInput.value.trim();
+    if (query) searchVerses(query);
+  });
+
+  searchInput.addEventListener("keypress", event => {
+    if (event.key === "Enter") {
+      const query = searchInput.value.trim();
+      if (query) searchVerses(query);
+    }
+  });
+
+   function displayChapter(libro, capitulo) {
+    fetchAllJsonData().then(datos => {
+      if (!datos[libro] || !datos[libro][capitulo]) return;
+      resultsContainer.innerHTML = "";
+      Object.entries(datos[libro][capitulo]).forEach(([numVerso, textoVerso]) => {
+        resultsContainer.innerHTML += `<li>${libro} ${capitulo}:${numVerso} - ${textoVerso}</li>`;
       });
     });
-    if (resultados.length > 0) {
-      resultsContainer.innerHTML = resultados.join("");
-    } else {
-      resultsContainer.innerHTML = "<li>No se encontraron coincidencias.</li>";
-    }
   }
-}
-      searchButton.addEventListener("click", () => {
-        const query = searchInput.value.trim();
-        if (query) searchVerses(query);
-      });
-      searchInput.addEventListener("keypress", event => {
-        if (event.key === "Enter") {
-          const query = searchInput.value.trim();
-          if (query) searchVerses(query);
-        }
-      });
+
+  searchButton.addEventListener("click", () => {
+    const query = searchInput.value.trim();
+    if (query) searchVerses(query);
+  });
+
+  searchInput.addEventListener("keypress", event => {
+    if (event.key === "Enter") {
+      const query = searchInput.value.trim();
+      if (query) searchVerses(query);
+    }
+  });
+
       // Funcionalidad del menú desplegable
       dropdownButton.addEventListener("click", () => {
         const isMenuVisible = dropdownMenu.style.display === "block";
