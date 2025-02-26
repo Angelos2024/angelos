@@ -1,4 +1,14 @@
 /* styles.css */
+html, body {
+    height: 100vh !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important; /* Evita desplazamientos innecesarios */
+}
+
+
+
 @media (max-width: 768px) { /* Solo en dispositivos móviles */
     .menu-inferior {
         position: fixed !important;
