@@ -4,7 +4,8 @@ html, body {
     width: 100vw !important;
     margin: 0 !important;
     padding: 0 !important;
-    overflow: hidden !important; /* Evita desplazamientos innecesarios */
+   overflow-x: hidden !important ; /* Solo oculta el desplazamiento horizontal */
+    overflow-y: auto !important; /* Permite desplazamiento vertical */
 }
 
 
