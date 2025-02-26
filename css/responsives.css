@@ -1,0 +1,163 @@
+@media (max-width: 992px) {
+    .overlay h1 {
+        font-size: 70px !important; /* Reduce el tamaño del título */
+    }
+
+    .overlay p {
+        font-size: 20px !important; /* Reduce el tamaño del párrafo */
+    }
+
+    #area {
+        font-size: 20px !important; /* Reduce el tamaño del botón */    
+        padding: 8px 16px !important;
+        margin-top: -5px !important; /* Sube un poco el botón */
+    }
+
+    #area .icono {
+        width: 30px !important; /* Reduce el tamaño del icono */
+        height: 30px !important;
+    }
+}
+@media (max-width: 860px) {
+    .overlay h1 {
+        font-size: 70px !important; /* Reduce aún más el tamaño del título */
+    }
+
+    .overlay p {
+        font-size: 18px !important; /* Reduce el tamaño del párrafo */
+    }
+
+    #area {
+        font-size: 25px !important; /* Reduce el tamaño del botón */    
+        padding: 6px 14px !important;
+
+    }
+
+    #area .icono {
+        width: 25px !important; /* Reduce el tamaño del icono */
+        height: 25px !important;
+    }
+}
+
+@media (max-width: 776px) {
+    .overlay h1 {
+        font-size: 70px !important; /* Reduce aún más el tamaño del título */
+    }
+
+    .overlay p {
+        font-size: 18px !important; /* Reduce el tamaño del párrafo */
+    }
+
+    #area {
+        font-size: 25px !important; /* Reduce el tamaño del botón */    
+        padding: 6px 14px !important;
+       margin-top: -40px !important; /* Sube un poco el botón */
+    }
+
+    #area .icono {
+        width: 25px !important; /* Reduce el tamaño del icono */
+        height: 25px !important;
+    }
+}
+
+@media (max-width: 992px) {
+    #intro {
+        width: 800px !important; /* Reduce el tamaño del título */
+    }
+
+}
+@media (max-width: 810px) {
+    #intro {
+        width: 750px !important; /* Reduce el tamaño del título */
+    }
+
+}
+@media (max-width: 740px) {
+    #intro {
+        width: 660px !important; /* Reduce el tamaño del título */
+    }
+
+}
+@media (max-width: 665px) {
+    #intro {
+        width: 560px !important; /* Reduce el tamaño del título */
+    }
+
+}
+
+@media (max-width: 1102px) {
+    #algodon {
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .container {
+        max-width: 1400px !important; /* Ajusta el tamaño en pantallas grandes */
+    }
+}
+        /* Ajuste para pantallas menores a 1100px */
+@media (max-width: 1100px) {
+    #intro2 {
+       margin-top: 20px !important;
+        margin-left: 100px !important;
+        text-align: center !important;
+        padding: 1px !important;
+        max-width: 400px !important;
+    }
+}
+@media (max-width: 855px) {
+    #intro2 {
+       margin-top: 20px !important;
+        margin-left: 60px !important;
+        text-align: center !important;
+        padding: 1px !important;
+        max-width: 300px !important;
+    }
+}
+
+
+
+@media (max-width: 744px) {
+    #intro2 {
+       margin-top: 20px !important;
+        margin-left: 70px !important;
+        text-align: center !important;
+        padding: 1px !important;
+        max-width: 250px !important;
+    }
+}
+
+@media (max-width: 755px) {
+    #entrada {
+        margin-top: 20px;
+    margin-left: -12px;
+    }
+}
+/* Ajustamos las tarjetas para que sean flexibles */
+#antig {
+    width: 300px !important; /* Se ajusta al contenedor */
+    max-width: 450px !important; /* Máximo de 300px *
+}
+
+/* Ajustamos las imágenes para que sean responsivas */
+#antig2 {
+    width: 100% !important; /* Se adapta al tamaño de la tarjeta */
+    height: auto !important; /* Mantiene la proporción */
+}
+
+/* Diseño responsivo: en pantallas pequeñas, se verán en 2 columnas */
+@media (max-width: 768px) {
+    #antig {
+        width: 50% !important; /* Cada tarjeta ocupará el 50% del ancho */
+    }
+}
+
+/* En móviles muy pequeños, las tarjetas serán de una sola columna */
+@media (max-width: 500px) {
+    #antig {
+        width: 100% !important; /* Ocuparán todo el ancho */
+    }
+}
+
+
