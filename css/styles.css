@@ -1,0 +1,509 @@
+/* styles.css */
+@media (max-width: 768px) { /* Solo en dispositivos móviles */
+    .menu-inferior {
+        position: fixed !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 8% !important;
+        background-color: #fff !important;
+        border-top: 1px solid #ddd !important;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-around !important;
+        z-index: 1000 !important; /* Asegura que esté encima */
+    }
+
+    .menu-inferior .nav-link {
+        color: #333 !important;
+        font-size: 14px !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 100% !important;
+    }
+
+    /* Solo deja espacio en la versión móvil */
+    #intro3 {
+        padding-bottom: 10vh !important; 
+    }
+}
+
+
+
+
+#likned {
+    display: inline-block;
+    background-color: black; 
+    color: white; /* Texto negro */
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px; /* Bordes redondeados */
+    text-decoration: none; /* Quita el subrayado */
+    transition: background-color 0.3s, transform 0.2s;
+    border: 2px solid #000; /* Borde negro */
+}
+
+#likned:hover {
+    background-color: #4b2743; 
+    transform: scale(1.05); /* Efecto de crecimiento leve */
+}
+
+/* Estilo general del cuerpo */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #edddce; /* Fondo blanco puro */
+    color: #000000; /* Texto en negro intenso */
+    margin: 0;
+    padding: 0;
+}
+#algodon {
+    width: 200px;
+    float: right;
+    margin-left: auto;
+    margin-top: -350px;
+}
+@media (max-width: 1100px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centra el contenido */
+        text-align: center; /* Asegura que el texto no quede alineado raro */
+    }
+
+    #algodon {
+        float: none; /* Elimina el float para que la imagen se ubique en la siguiente línea */
+        margin: 20px auto 0 auto; /* Centra la imagen y da espacio con el texto */
+        display: block;
+    }
+}
+#boton0 {
+    background-color: #4b2743; /* Color de fondo */
+    color: white; /* Color del texto */
+    border: 2px solid #4b2743; /* Borde opcional */
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor a una mano */
+    transition: all 0.3s ease; /* Suaviza la transición */
+}
+
+#boton0:hover {
+    background-color: white; /* Fondo blanco al pasar el mouse */
+    color: black; /* Texto negro */
+    border: 2px solid black; /* Borde negro opcional */
+}
+
+
+#descarga{
+
+    font-family: 'Sriracha', cursive;
+    font-size: 24px;
+font-weight: 550; /* SemiBold */
+    }
+ #entrada {
+    margin-top: 20px;
+    margin-left: 15px;
+            max-width: 850px;
+            background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
+            padding: 30px;
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        }
+
+
+
+/* Contenedor que alinea el video y el contenido */
+.contenido-video {
+    display: flex; /* Usa flexbox para alinear elementos en fila */
+    align-items: center; /* Alinea verticalmente */
+    gap: 20px; /* Espacio entre el video y el contenido */
+    justify-content: flex-start; /* Mantiene los elementos alineados a la izquierda */
+}
+
+/* Contenedor del video */
+/* Contenedor del video */
+.video-box {
+    width: 35%; /* Ajusta el tamaño del video */
+    max-width: 400px;
+    aspect-ratio: 16 / 9; /* Mantiene la proporción del video */
+    margin-left: 20px; /* Márgenes a la izquierda */
+    margin-top: 40px; /* Márgenes arriba para separarlo de otros contenidos */
+}
+
+/* Si el video es muy grande, asegura que no se desborde */
+.video-box iframe {
+    width: 130%;
+    height: 130%;
+}
+
+
+/* Contenedor del texto */
+#intro2 {
+    flex: 1; /* Hace que el contenido ocupe el espacio restante */
+    max-width: 650px;
+}
+
+/* Diseño responsive: apila el video arriba del texto en pantallas pequeñas */
+@media (max-width: 768px) {
+   
+
+    .video-box {
+        width: 40%; /* Video ocupa el ancho completo */
+        max-width: 40%;
+    }
+
+    #intro2 {
+        text-align: center;
+    }
+}
+
+        #intro2 {
+    margin-top: 20px;
+    margin-right: -340px;
+    text-align: right;
+            background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
+            padding: 30px;
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        }
+
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap');
+
+
+.texto-edicion {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 540; /* SemiBold */
+    font-size: 13px;
+    letter-spacing: -0.5px; /* Reduce el espacio entre letras */
+    font-stretch: 110%; /* Hace que la fuente se vea más alargada */
+}
+
+.edicion-numero {
+    font-size: 13px;
+    letter-spacing: -0.5px; /* Ajuste similar para coherencia */
+    font-weight: 540; /* Asegura que tome SemiBold */
+}
+
+
+
+/* Barra de navegación */
+.navbar {
+    background-color: #2e2d2d !important; /* Fondo blanco puro */
+    border-bottom: 2px solid #000000; /* Línea inferior negra */
+
+    padding: 4px 16px; /* Reduce el padding superior e inferior */
+
+}
+/* En móviles muy pequeños, las tarjetas serán de una sola columna */
+@media (max-width: 570px) {
+    .navbar {
+        width: 620px !important; /* Ocuparán todo el ancho */
+    }
+}
+.navbar-nav {
+    margin: 0 auto; /* Centra los elementos */
+    display: flex;
+    justify-content: center; /* Asegura que los elementos estén centrados */
+    gap: 50px; /* Espaciado entre elementos */
+}
+
+.navbar-brand, .nav-link {
+    color: white !important; /* Texto en negro intenso */
+    font-weight: Proxima Nova;
+}
+
+.nav-link:hover {
+    color: #e79e4d !important; /* color estándar al pasar el cursor */
+}
+
+/* Encabezado principal */
+.jumbotron {
+    background-color: #FFFFFF; /* Fondo blanco puro */
+    color: #000000; /* Texto en negro intenso */
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.jumbotron h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.jumbotron p {
+    font-size: 1.2rem;
+}
+
+/* Sección de actualización */
+.alert-info {
+    background-color: #FFFFE0; /* Fondo amarillo claro */
+    color: #000000; /* Texto en negro intenso */
+    border: 1px solid #FFD700; /* Borde dorado */
+    font-weight: bold;
+}
+
+/* Tarjetas de contenido principal */
+.card {
+    border: 1px solid #000000; /* Borde negro */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.card-title {
+    font-weight: bold;
+    color: #000000; /* Título en negro intenso */
+}
+
+.card-text {
+    color: #000000; /* Texto en negro intenso */
+}
+
+/* Botones de descarga */
+.btn-primary {
+    background-color: #0000EE; /* Fondo azul estándar */
+    border: none;
+    color: #FFFFFF; /* Texto blanco */
+}
+
+.btn-primary:hover {
+    background-color: #0000CC; /* Azul más oscuro al pasar el cursor */
+}
+
+.btn-secondary {
+    background-color: #7F8C8D; /* Gris medio */
+    border: none;
+    color: #FFFFFF; /* Texto blanco */
+}
+
+.btn-secondary:hover {
+    background-color: #5D6D6F; /* Gris más oscuro al pasar el cursor */
+}
+
+/* Pie de página */
+footer {
+    background-color: #FFFFFF; /* Fondo blanco puro */
+    color: #000000; /* Texto en negro intenso */
+    padding: 1rem 0;
+    text-align: center;
+    border-top: 2px solid #000000; /* Línea superior negra */
+}
+.hero-section {
+    position: relative;
+    background: url("https://imgur.com/9XlBVnU.png") no-repeat center center;
+    background-size: cover;
+    background-position: center top; /* Desplaza la imagen hacia abajo */
+    height: 380px; /* Mantiene el tamaño del contenedor */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+    background-position: center 10%;
+
+}
+/* En móviles muy pequeños, las tarjetas serán de una sola columna */
+@media (max-width: 570px) {
+    .hero-section {
+        height: 380px !important; /* Mantiene el tamaño del contenedor */
+        width: 620px !important;
+    }
+}
+
+.hero-section {
+    display: flex;
+    align-items: flex-start; /* Mueve el contenido hacia arriba */
+    padding-top: 50px; /* Ajusta según sea necesario */
+}
+
+ @import url('link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;600&display=swap" rel="stylesheet"');
+.text-box {
+    font-family: 'Signika', sans-serif; /* Aplica la fuente */
+     font-weight: 400 !important; /* Hace el texto más delgado */
+    font-size: 18px; /* Ajusta el tamaño del texto */
+    background-color: white; /* Fondo blanco */
+    color: black; /* Texto negro */
+    padding: 1px 8px; /* Espaciado */
+    display: inline;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+    
+
+#area{
+    background-color: #4b2743;
+    font-family: 'Assistant', sans-serif; /* Aplica la fuente */
+    font-weight: 500; /* Semi-bold */
+    font-size: 19px; /* Tamaño del texto */
+    padding: 10px 20px; /* Espaciado interno */
+    color: white; /* Color del texto */
+    border: none; /* Sin bordes */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor tipo botón */
+    transition: 0.1s ease-in-out; /* Animación suave */
+}
+
+#area:hover {
+    background-color: white; /* Fondo blanco */
+    color: #4b2743; /* Color del texto */
+    border: 1px solid #4b2743; /* Borde con color */
+}
+.icono {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+
+@media (max-width: 992px) { 
+    .navbar-nav {
+        gap: 5px; /* Reduce el espacio entre elementos */
+    }
+    
+    .nav-item {
+        margin: 2px 0; /* Ajusta márgenes para reducir separación */
+    }
+}
+
+#area:hover .icono {
+    content: url('https://imgur.com/KRocoUA.png'); /* Cambia la imagen */
+}
+
+
+.navbar-toggler-icon {
+    filter: invert(1); /* Invierte el color para hacerlo blanco */
+}
+
+@media (max-width: 992px) {
+    .navbar-collapse {
+        position: fixed;
+        top: 0;
+        right: 0; /* Cambia a left: 0 si quieres que se abra desde la izquierda */
+        width: 250px; /* Ancho del menú */
+        height: 100vh;
+        background-color: black; /* Fondo negro */
+        color: white; /* Texto blanco */
+        box-shadow: -3px 0 5px rgba(0, 0, 0, 0.5);
+        padding-top: 60px;
+        transform: translateX(100%); /* Inicialmente oculto */
+        transition: transform 0.2s ease-in-out; /* Hace que se abra/cierre más rápido */
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .navbar-collapse.show {
+        transform: translateX(0); /* Aparece desde la derecha */
+    }
+
+    .navbar-nav {
+        flex-direction: column;
+        align-items: start;
+        padding-left: 20px;
+    }
+
+    .nav-link {
+        color: white !important;
+        padding: 10px;
+        font-size: 18px;
+    }
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .navbar-toggler {
+        border-color: white !important;
+
+        top: 15px;
+        right: 15px;
+  
+    }
+    @media (max-width: 768px) {
+  .navbar-toggler {
+    display: none !important;
+  }
+}
+
+
+
+
+    /* 🔹 Botón "X" para cerrar el menú */
+    .close-menu {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 24px;
+        color: white;
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 100;
+    }
+
+    .close-menu:hover {
+        color: red;
+    }
+}
+
+.grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+        .item {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .item img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        @media (max-width: 680px) {
+    .item {
+        padding: 30px !important; /* Ocuparán todo el ancho */
+        width: 270px !important;
+    }
+    #post{
+font-size: 13px !important;
+
+
+
+}        
+}
+
+        .item a {
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .item a:hover {
+            color: #007BFF;
+        }
+        .buttons {
+            margin-top: 10px;
+        }
+        .buttons button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .buttons button:hover {
+            background-color: #0056b3;
+        }
