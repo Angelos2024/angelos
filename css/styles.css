@@ -1,3 +1,4 @@
+/* styles.css */
 html, body {
     height: 100vh;
     width: 100vw;
@@ -6,7 +7,6 @@ html, body {
     overflow-x: hidden; /* Solo oculta el desplazamiento horizontal */
     overflow-y: auto; /* Permite desplazamiento vertical */
 }
-
 
 
 
@@ -322,11 +322,36 @@ footer {
         width: 620px !important;
     }
 }
-
-.hero-section {
-    display: flex;
-    align-items: flex-start; /* Mueve el contenido hacia arriba */
-    padding-top: 50px; /* Ajusta según sea necesario */
+@media (max-width: 550px) {
+    .hero-section {
+        height: 380px !important; /* Mantiene el tamaño del contenedor */
+        width: 550px !important;
+    }
+}
+/* En móviles muy pequeños, las tarjetas serán de una sola columna */
+@media (max-width: 500px) {
+    .hero-section {
+        height: 380px !important; /* Mantiene el tamaño del contenedor */
+        width: 500px !important;
+    }
+}
+@media (max-width: 480px) {
+    .hero-section {
+        height: 380px !important; /* Mantiene el tamaño del contenedor */
+        width: 480px !important;
+    }
+}
+@media (max-width: 460px) {
+    .hero-section {
+        height: 380px !important; /* Mantiene el tamaño del contenedor */
+        width: 430px !important;
+    }
+}
+@media (max-width: 380px) {
+    .hero-section {
+        height: 380px !important; /* Mantiene el tamaño del contenedor */
+        width: 380px !important;
+    }
 }
 
  @import url('link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;600&display=swap" rel="stylesheet"');
