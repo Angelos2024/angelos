@@ -60,7 +60,26 @@
     }
 }
 
+@media (max-width: 415px) {
+    .overlay h1 {
+        font-size: 40px !important; /* Reduce el tamaño del título */
+    }
 
+    .overlay p {
+        font-size: 20px !important; /* Reduce el tamaño del párrafo */
+    }
+
+    #area {
+        font-size: 20px !important; /* Reduce el tamaño del botón */    
+        padding: 8px 16px !important;
+        margin-top: -5px !important; /* Sube un poco el botón */
+    }
+
+    #area .icono {
+        width: 30px !important; /* Reduce el tamaño del icono */
+        height: 30px !important;
+    }
+}
 @media (max-width: 992px) {
     #intro {
         width: 800px !important; /* Reduce el tamaño del título */
@@ -100,7 +119,7 @@
 }
 @media (max-width: 415px) {
     #intro {
-        width: 400px !important; /* Reduce el tamaño del título */
+        width: 435px !important; /* Reduce el tamaño del título */
     }
 
 }
