@@ -18,47 +18,48 @@
         height: 30px !important;
     }
 }
-@media (max-width: 860px) {
+
+@media (max-width: 575px) {
     .overlay h1 {
-        font-size: 70px !important; /* Reduce aún más el tamaño del título */
+        font-size: 50px !important; /* Reduce el tamaño del título */
     }
 
     .overlay p {
-        font-size: 18px !important; /* Reduce el tamaño del párrafo */
+        font-size: 20px !important; /* Reduce el tamaño del párrafo */
     }
 
     #area {
-        font-size: 25px !important; /* Reduce el tamaño del botón */    
-        padding: 6px 14px !important;
-
+        font-size: 20px !important; /* Reduce el tamaño del botón */    
+        padding: 8px 16px !important;
+        margin-top: -5px !important; /* Sube un poco el botón */
     }
 
     #area .icono {
-        width: 25px !important; /* Reduce el tamaño del icono */
-        height: 25px !important;
+        width: 30px !important; /* Reduce el tamaño del icono */
+        height: 30px !important;
     }
 }
-
-@media (max-width: 776px) {
+@media (max-width: 507px) {
     .overlay h1 {
-        font-size: 70px !important; /* Reduce aún más el tamaño del título */
+        font-size: 48px !important; /* Reduce el tamaño del título */
     }
 
     .overlay p {
-        font-size: 18px !important; /* Reduce el tamaño del párrafo */
+        font-size: 20px !important; /* Reduce el tamaño del párrafo */
     }
 
     #area {
-        font-size: 25px !important; /* Reduce el tamaño del botón */    
-        padding: 6px 14px !important;
-       margin-top: -40px !important; /* Sube un poco el botón */
+        font-size: 20px !important; /* Reduce el tamaño del botón */    
+        padding: 8px 16px !important;
+        margin-top: -5px !important; /* Sube un poco el botón */
     }
 
     #area .icono {
-        width: 25px !important; /* Reduce el tamaño del icono */
-        height: 25px !important;
+        width: 30px !important; /* Reduce el tamaño del icono */
+        height: 30px !important;
     }
 }
+
 
 @media (max-width: 992px) {
     #intro {
@@ -84,6 +85,26 @@
     }
 
 }
+@media (max-width: 500px) {
+    #intro {
+        width: 510px !important; /* Reduce el tamaño del título */
+    }
+
+}
+
+@media (max-width: 480px) {
+    #intro {
+        width: 470px !important; /* Reduce el tamaño del título */
+    }
+
+}
+@media (max-width: 415px) {
+    #intro {
+        width: 400px !important; /* Reduce el tamaño del título */
+    }
+
+}
+
 
 @media (max-width: 1102px) {
     #algodon {
@@ -127,7 +148,25 @@
         max-width: 250px !important;
     }
 }
+@media (max-width: 500px) {
+    #intro2 {
+       margin-top: 20px !important;
+        margin-left: 50px !important;
+        text-align: center !important;
+        padding: 1px !important;
+        max-width: 200px !important;
+    }
+}
 
+@media (max-width: 415px) {
+    #intro2 {
+       margin-top: 20px !important;
+        margin-left: 40px !important;
+        text-align: center !important;
+        padding: 1px !important;
+        max-width: 150px !important;
+    }
+}
 @media (max-width: 755px) {
     #entrada {
         margin-top: 20px;
@@ -136,8 +175,8 @@
 }
 /* Ajustamos las tarjetas para que sean flexibles */
 #antig {
-    width: 300px !important; /* Se ajusta al contenedor */
-    max-width: 450px !important; /* Máximo de 300px *
+    width: 300px ; /* Se ajusta al contenedor */
+    max-width: 450px; /* Máximo de 300px *
 }
 
 /* Ajustamos las imágenes para que sean responsivas */
@@ -149,15 +188,37 @@
 /* Diseño responsivo: en pantallas pequeñas, se verán en 2 columnas */
 @media (max-width: 768px) {
     #antig {
-        width: 50% !important; /* Cada tarjeta ocupará el 50% del ancho */
+        width: 100% !important; /* Cada tarjeta ocupará el 50% del ancho */
     }
 }
 
 /* En móviles muy pequeños, las tarjetas serán de una sola columna */
 @media (max-width: 500px) {
     #antig {
-        width: 100% !important; /* Ocuparán todo el ancho */
+        width: 200px !important; /* Ocuparán todo el ancho */
     }
 }
 
 
+
+
+/* Dispositivos pequeños (hasta 360px de ancho, ej. celulares compactos) */
+@media (max-width: 360px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+/* Tamaño estándar de celular (hasta 480px de ancho) */
+@media (max-width: 480px) {
+    body {
+        font-size: 16px;
+    }
+}
+
+/* Phablets y celulares grandes (hasta 768px de ancho, ej. tablets pequeñas) */
+@media (max-width: 768px) {
+    body {
+        font-size: 18px;
+    }
+}
