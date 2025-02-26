@@ -8,6 +8,12 @@ html, body {
     overflow-y: auto; /* Permite desplazamiento vertical */
 }
 
+@media (max-width: 460px) {
+    #intro3 .col-6 {
+        flex: 0 0 50%; /* Fuerza que cada tarjeta ocupe el 50% del ancho */
+        max-width: 50%;
+    }
+}
 
 
 @media (max-width: 768px) { /* Solo en dispositivos móviles */
@@ -107,12 +113,14 @@ body {
 }
 
 
-#descarga{
+@import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
 
-    font-family: 'Sriracha', cursive;
+#descarga {
+    font-family: 'Sriracha' im, cursive !important;
     font-size: 24px;
-font-weight: 550; /* SemiBold */
-    }
+    font-weight: 400; /* Valor correcto */
+}
+
  #entrada {
     margin-top: 20px;
     margin-left: 15px;
@@ -169,7 +177,20 @@ font-weight: 550; /* SemiBold */
         text-align: center;
     }
 }
+@media (max-width: 415px) {
+   
 
+    .video-box {
+        margin-top: -50px;
+        width: 40%; /* Video ocupa el ancho completo */
+        max-width: 40%;
+        height: 200px;
+    }
+
+    #intro2 {
+        text-align: center;
+    }
+}
         #intro2 {
     margin-top: 20px;
     margin-right: -340px;
