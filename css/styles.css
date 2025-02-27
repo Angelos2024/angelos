@@ -220,9 +220,13 @@ body {
 }
 
 
-
+.nav-link:{
+    color: white !important; /* color estándar al pasar el cursor */
+    
+}
 .nav-link:hover {
     color: #e79e4d !important; /* color estándar al pasar el cursor */
+
 }
 
 /* Encabezado principal */
