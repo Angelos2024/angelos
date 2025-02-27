@@ -55,20 +55,105 @@
         </div>
     </nav>
 
-<nav class="menu-inferior d-md-none"> 
-    <a href="index.html" class="nav-link">
-        <img src="https://imgur.com/iLGhOd5.png" style="width: 26px; height:25px;" alt="Inicio" class="icono-menu">Inicio
+<nav class="menu-inferior d-md-none" id="menu">
+    <div class="menu-container">
+        <div class="menu-items" id="menuItems">
+            <a href="index.html" class="nav-link">
+                <img src="https://imgur.com/iLGhOd5.png" class="icono-menu" style="width: 35px; height:35px; margin-top: 20px;" alt="Inicio"><p  style="margin-top: -2px; color: black;">Inicio</p>
+            </a>
+            <a href="https://angelos2024.github.io/torah-Yehoshua/" class="nav-link" style="margin-left:30px;">
+                <img src="https://imgur.com/GcQLHq3.png" class="icono-menu" style="width: 35px; height:35px; margin-top: 20px;" alt="Escritos"><p  style="margin-top: -2px; color: black; margin-left:-10px;">Escritos</p>
+            </a>
+            <a href="materiales.html" class="nav-link" style="margin-left: 50px;">
+                <img src="https://imgur.com/yvLYM1F.png" class="icono-menu" style="width: 35px; height:35px; margin-top: 20px;" alt="Documentos"> <p  style="margin-top: -2px; color: black; margin-left:-15px;" >Materiales</p>
+            </a>
+        </div>
+    </div>
+    <a href="#" class="nav-link toggle-button" id="toggleMenu">
+        <img src="https://imgur.com/ca55I8V.png" class="icono-menu" style="width: 40px; height:37px; margin-top: 20px;" id="iconoToggle" alt="Ocultar">
+        <p id="textoToggle" style="margin-top: -2px;  margin-left:-10px; color: black;">Ocultar</p>
     </a>
-    <a href="https://angelos2024.github.io/torah-Yehoshua/" class="nav-link">
-        <img src="https://imgur.com/GcQLHq3.png"style="width: 26px; height:25px;" alt="Escritos" class="icono-menu">Escritos
-    </a>
-    <a href="materiales.html" class="nav-link">
-        <img src="https://imgur.com/yvLYM1F.png"style="width: 26px; height:25px;" alt="Documentos" class="icono-menu">Materiales
-    </a>
-    <a href="#" class="nav-link">
-        <img src="https://imgur.com/ca55I8V.png" style="width: 35px; height:35px; margin-top: 15px;" alt="Más" class="icono-menu"><p style="margin-top: -7px;">Ocultar
-    </p></a>
 </nav>
+
+
+<style>
+    @media (max-width: 540px) {
+        .menu-inferior {
+            position: fixed !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 8% !important;
+            background-color: #fff !important;
+            border-top: 1px solid #ddd !important;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 10px !important;
+            z-index: 1000 !important;
+        }
+
+        .menu-container {
+            flex-grow: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-items {
+            display: flex;
+            gap: 10px;
+            transition: transform 0.5s ease-in-out, margin-left 0.5s ease-in-out;
+        }
+
+        .toggle-button {
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.5s ease-in-out;
+        }
+    }
+
+    @media (min-width: 541px) {
+        .menu-inferior {
+            display: none !important;
+        }
+    }
+
+    .menu-hidden .menu-items {
+        transform: translateX(-50px);
+    }
+
+    .menu-hidden .toggle-button {
+        transform: translateX(-50px);
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const menu = document.getElementById("menu");
+        const menuItems = document.getElementById("menuItems");
+        const toggleButton = document.getElementById("toggleMenu");
+        const iconoToggle = document.getElementById("iconoToggle");
+        const textoToggle = document.getElementById("textoToggle");
+        let menuVisible = true;
+
+        toggleButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            menuVisible = !menuVisible;
+            
+            if (menuVisible) {
+                menu.classList.remove("menu-hidden");
+                iconoToggle.src = "https://imgur.com/ca55I8V.png";
+                textoToggle.textContent = "Ocultar";
+            } else {
+                menu.classList.add("menu-hidden");
+                iconoToggle.src = "https://imgur.com/L9y6RDO.png";
+                textoToggle.textContent = "Mostrar";
+            }
+        });
+    });
+</script>
+
    <header class="hero-section">
     <div class="overlay">
         <h1 class="display-4" style="font-family: 'Cormorant Garamond', serif; font-weight: 540; /* SemiBold */ font-size: 74px; color: black;" >
