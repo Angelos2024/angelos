@@ -219,10 +219,7 @@ body {
     gap: 50px; /* Espaciado entre elementos */
 }
 
-.navbar-brand, .nav-link {
-    color: white !important; /* Texto en negro intenso */
-    font-weight: Proxima Nova;
-}
+
 
 .nav-link:hover {
     color: #e79e4d !important; /* color estándar al pasar el cursor */
@@ -392,15 +389,6 @@ footer {
 }
 
 
-@media (max-width: 992px) { 
-    .navbar-nav {
-        gap: 5px; /* Reduce el espacio entre elementos */
-    }
-    
-    .nav-item {
-        margin: 2px 0; /* Ajusta márgenes para reducir separación */
-    }
-}
 
 #area:hover .icono {
     content: url('https://imgur.com/KRocoUA.png'); /* Cambia la imagen */
@@ -439,15 +427,7 @@ footer {
         padding-left: 20px;
     }
 
-    .nav-link {
-        color: white !important;
-        padding: 10px;
-        font-size: 18px;
-    }
-
-    .nav-link:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-    }
+  
 
     .navbar-toggler {
         border-color: white !important;
@@ -456,7 +436,7 @@ footer {
         right: 15px;
   
     }
-    @media (max-width: 540px) {
+    @media (max-width: 600px) {
   .navbar-toggler {
     display: none !important;
   }
