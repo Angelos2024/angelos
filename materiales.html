@@ -27,6 +27,7 @@
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s, color 0.3s;
+
 }
 
 #contenidos:hover {
@@ -94,6 +95,30 @@
         width: 240px !important;
     }
 }
+
+@media (max-width: 510px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .item {
+        width: 200px !important;
+        height: 230px !important;
+    }
+}
+
+@media (max-width: 440px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .item {
+        width: 180px !important;
+        height: 230px !important;
+    }
+    #itemraro{
+        width: 180px !important;
+        height: 270px !important;
+    }
+}
 </style>
 </head>
 <body>
@@ -148,6 +173,47 @@
 
 <style>
 
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  /* Forzar siempre al menos 2 cuadros en pantallas pequeñas */
+  @media (max-width: 500px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(150px, 1fr)); /* Siempre 2 columnas */
+    }
+  }
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 230px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+  }
+
+  button {
+
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
         .toggle-button {
     display: none !important; /* Ocultamos por defecto */
 
@@ -165,7 +231,7 @@ margin-left: 50px !important;
 
 }
        }   
-    @media (max-width: 480px) {
+    @media (max-width: 510px) {
             #fig1 {
 margin-left: -110px !important;
        }
@@ -193,7 +259,7 @@ margin-left: 10px !important;
        } 
 
 #fig3{
-margin-left: 30px !important;
+margin-left: 18px !important;
        }
 
 .toggle-button {
@@ -495,7 +561,7 @@ margin-left: 30px !important;
     justify-content: center; /* Centra horizontalmente */" onclick="window.open('https://drive.google.com/file/d/1hXHxlrtV4BHdYEHPBUSKfWfNhDrrfJl5/view?usp=sharing', '_blank', 'noopener,noreferrer');">Ver</button>
                 </div>
             </div>
-             <div class="item" style="height: 230px; background: white; padding: 10px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
+             <div class="item" id="itemraro" style="height: 230px; background: white; padding: 10px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
     <img src="https://imgur.com/Vu52ZX7.jpg" style="height: 120px; border-radius: 5px;" alt="Versiones de Biblias">
     <p id="post" style="font-family: 'Avenir Black', sans-serif; font-size: 14px; font-weight: 900; text-align: center; margin: 5px 0;">Acerca del Infierno</p>
     <div class="buttons" style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
@@ -540,7 +606,7 @@ margin-left: 30px !important;
     justify-content: center; /* Centra horizontalmente */" onclick="window.open('https://drive.google.com/file/d/1RbPQ-kwNUGrfBU3GsBBGOmxJzafUySz-/view?usp=sharing', '_blank', 'noopener,noreferrer');">Ver</button>
                 </div>
             </div>
-             <div class="item" style="height: 230px; background: white; padding: 10px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
+             <div class="item" id="itemraro" style="height: 230px; background: white; padding: 10px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
     <img src="https://imgur.com/Vu52ZX7.jpg" style="height: 120px; border-radius: 5px;" alt="Versiones de Biblias">
     <p id="post" style="font-family: 'Avenir Black', sans-serif; font-size: 12px; font-weight: 900; text-align: center; margin: 5px 0;">Cómo estudiar las Escrituras</p>
     <div class="buttons" style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
