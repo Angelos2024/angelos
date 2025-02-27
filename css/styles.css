@@ -16,31 +16,8 @@ html, body {
 }
 
 
-@media (max-width: 768px) { /* Solo en dispositivos móviles */
-    .menu-inferior {
-        position: fixed !important;
-        bottom: 0 !important;
-        width: 100% !important;
-        height: 8% !important;
-        background-color: #fff !important;
-        border-top: 1px solid #ddd !important;
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1) !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-around !important;
-        z-index: 1000 !important; /* Asegura que esté encima */
-    }
 
-    .menu-inferior .nav-link {
-        color: #333 !important;
-        font-size: 14px !important;
-        text-align: center !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        height: 100% !important;
-    }
+
 
     /* Solo deja espacio en la versión móvil */
     #intro3 {
@@ -116,7 +93,7 @@ body {
 @import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
 
 #descarga {
-    font-family: 'Sriracha' im, cursive !important;
+    font-family: 'Sriracha', cursive !important;
     font-size: 24px;
     font-weight: 400; /* Valor correcto */
 }
@@ -479,13 +456,17 @@ footer {
         right: 15px;
   
     }
-    @media (max-width: 768px) {
+    @media (max-width: 540px) {
   .navbar-toggler {
     display: none !important;
   }
 }
 
-
+    @media (max-width: 540px) {
+  #navio {
+    height: 10px !important; /* Ocuparán todo el ancho */
+  }
+}
 
 
     /* 🔹 Botón "X" para cerrar el menú */
