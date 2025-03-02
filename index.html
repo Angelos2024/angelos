@@ -73,7 +73,7 @@
 </nav>
  <!-- 🔹 Botón "Ocultar" con los mismos estilos que el enlace 🔹 --> 
 <button class="nav-link toggle-button" id="toggleMenu" style="border: none; background: none; display: flex; align-items: center; cursor: pointer;  ">
-    <img src="https://imgur.com/ca55I8V.png" class="icono-menu" style="width: 34px; height: 34px; margin-top: -50px;" id="iconoToggle" alt="Ocultar">
+    <img src="https://imgur.com/ca55I8V.png" class="icono-menu" style="width: 33px; height: 33px; margin-top: -50px;" id="iconoToggle" alt="Ocultar">
    
 </button>
 
@@ -84,13 +84,27 @@
     display: none !important; /* Ocultamos por defecto */
 
 }
-
-    @media (max-width: 550px) {
+    @media (max-width: 600px) {
             #fig1 {
-margin-left: -100px !important;
+margin-left: -160px !important;
        }
        #fig2{
-margin-left: 50px !important;
+margin-left: 100px !important;
+       } 
+              #fig3{
+margin-left: 100px !important;
+       }
+.toggle-button {
+    display: flex; !important; /* Ocultamos por defecto */
+
+}
+       } 
+    @media (max-width: 550px) {
+            #fig1 {
+margin-left: -130px !important;
+       }
+       #fig2{
+margin-left: 70px !important;
        } 
 .toggle-button {
     display: flex; !important; /* Ocultamos por defecto */
@@ -99,14 +113,15 @@ margin-left: 50px !important;
        }   
     @media (max-width: 480px) {
             #fig1 {
-margin-left: -110px !important;
+margin-left: -120px !important;
        }
        #fig2{
-margin-left: 30px !important;
+margin-left: 60 px !important;
        } 
 
+
 #fig3{
-margin-left: 40px !important;
+margin-left: 50px !important;
        }
        .toggle-button {
     display: flex; !important; /* Ocultamos por defecto */
@@ -118,14 +133,14 @@ margin-left: 40px !important;
 
  @media (max-width: 418px) {
             #fig1 {
-margin-left: -80px !important;
+margin-left: -140px !important;
        }
        #fig2{
-margin-left: 10px !important;
+margin-left: 25px !important;
        } 
 
 #fig3{
-margin-left: 18px !important;
+margin-left: 60px !important;
        }
 
 .toggle-button {
@@ -135,7 +150,24 @@ margin-left: 18px !important;
 }
        } 
 
+ @media (max-width: 387px) {
+            #fig1 {
+margin-left: -120px !important;
+       }
+       #fig2{
+margin-left: 15px !important;
+       } 
 
+#fig3{
+margin-left: 50px !important;
+       }
+
+.toggle-button {
+    display: flex; !important; /* Ocultamos por defecto */
+    margin-top: 300px !important;
+
+}
+       }
     .menu-inferior {
     display: none; /* Ocultamos por defecto */
 
@@ -201,9 +233,7 @@ margin-left: 18px !important;
     }
 
     .icono-menu {
-        width: 30px; /* Tamaño inicial de los iconos */
-        height: 30px;
-        margin-top: 5px;
+
         transition: width 0.3s, height 0.3s; /* Suaviza el cambio de tamaño */
     }
 
