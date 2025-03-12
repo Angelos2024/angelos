@@ -485,6 +485,117 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 </script>
+
+    <!-- 🔹 Sección de Agradecimiento -->
+<section id="agradecimiento" class="container my-5">
+    <h2 class="agradecimiento-titulo">Agradecimientos</h2>
+
+    <p class="agradecimiento-texto">
+        Gracias a todos los que han apoyado este proyecto de estudio y enseñanza de la Torah. 
+        Su esfuerzo y dedicación han hecho posible este espacio de aprendizaje. 
+        Que Hashem los bendiga abundantemente.
+    </p>
+
+    <div class="agradecimiento-contenido">
+        <div class="agradecimiento-grupo">
+            <h3>Colaboradores iniciales:</h3>
+            <ul>
+                <li>Hna. Laura Cortez</li>
+                <li>Hna. Rebeca Morales</li>
+                <li>Hno. Angel Roan</li>
+            </ul>
+        </div>
+
+        <div class="agradecimiento-grupo">
+            <h3>Colaboradores en transcripción de cartas:</h3>
+            <ul>
+                <li>Hna. Raquel Díaz</li>
+                <li>Hno. Isaac Bermúdez</li>
+                <li>Hna. Janet Correa</li>
+                <li>Hno. Hector Guifarro</li>
+            </ul>
+        </div>
+    </div>
+
+<div class="agradecimiento-grupo">
+    <div class="agradecimiento-traduccion">
+        <h3>Colaboradora en traducción del sitio al francés:</h3>
+        <p>Hna. Nancy Esquivel</p>
+    </div>
+    </div>
+</section>
+
+<style>
+#agradecimiento {
+    background-color: #f8f9fa; /* Fondo claro */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.agradecimiento-titulo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #075e54; /* Verde WhatsApp */
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.agradecimiento-texto {
+    font-size: 16px;
+    color: #333;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+/* 🔹 Contenedor de agradecimientos en columnas */
+.agradecimiento-contenido {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+/* 🔹 Estilos para cada grupo de colaboradores */
+.agradecimiento-grupo {
+    flex: 1;
+    min-width: 280px; /* Evita que los grupos se rompan en columnas */
+}
+
+.agradecimiento-grupo h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.agradecimiento-grupo ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.agradecimiento-grupo ul li {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* 🔹 Traducción se mantiene debajo */
+.agradecimiento-traduccion {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #333;
+    text-align: left;
+}
+
+/* 🔹 Responsivo: en pantallas pequeñas los grupos se alinean en una sola columna */
+@media (max-width: 768px) {
+    .agradecimiento-contenido {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+</style>
+
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"></script>
     <!-- Pie de página -->
