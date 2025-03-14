@@ -19,17 +19,23 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    let width = Math.min(screen.width, window.innerWidth); // 📌 Detecta tamaño real de la pantalla
+    const area= document.getElementById("area");
 
-    // 🔥 Si estás en un CELULAR, redirige a la versión móvil de "Área de Estudio"
-    if (width <= 991) {
-        window.location.href = "https://angelos2024.github.io/torah-Yehoshua/versionmovil.html";
-    } else {
-        // 🔥 Si es una computadora, deja la versión normal
-        window.location.href = "https://angelos2024.github.io/torah-Yehoshua/";
-    }
+    area.addEventListener("click", function (event) {
+        event.preventDefault(); // ❌ Evita la navegación automática
+
+        let width = Math.min(screen.width, window.innerWidth); // 📌 Detecta tamaño real de pantalla
+
+        // 🔥 Si es celular, ir a la versión móvil
+        if (width <= 991) {
+            window.location.href = "https://angelos2024.github.io/torah-Yehoshua/versionmovil.html";
+        } else {
+            // 🔥 Si es PC, ir a la versión normal
+            window.location.href = "https://angelos2024.github.io/torah-Yehoshua/";
+        }
+    });
 });
-</script>
+
 </head>
 <body>
 
@@ -300,7 +306,8 @@ margin-left: 50px !important;
 <br> 
 <br> 
 <a href="https://angelos2024.github.io/torah-Yehoshua/">
-<button id="area" type="button"  class="btn btn-lg">
+<a href="#" id="area" class="btn btn-success">
+class="btn btn-lg"</a>
     ÁREA DE ESTUDIO 
     <img src="https://imgur.com/5N0pMlA.png" alt="Icono" class="icono" style="width: 40px; height: 40px; margin-left: 10px;">
 </button>
