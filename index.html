@@ -18,23 +18,33 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const area = document.getElementById("area");
+        document.addEventListener("DOMContentLoaded", function () {
+            const area = document.getElementById("area");
 
-    area.addEventListener("click", function (event) {
-        event.preventDefault(); // ❌ Evita la navegación automática
+            area.addEventListener("click", function (event) {
+                event.preventDefault(); // ❌ Evita la navegación automática
 
-        let width = Math.min(screen.width, window.innerWidth); // 📌 Detecta tamaño real de pantalla
+                let width = Math.min(screen.width, window.innerWidth); // 📌 Detecta tamaño real de pantalla
+                let userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-        // 🔥 Si es celular, ir a la versión móvil
-        if (width <= 991) {
-            window.location.href = "https://angelos2024.github.io/torah-Yehoshua/versionmovil.html";
-        } else {
-            // 🔥 Si es PC, ir a la versión normal
-            window.location.href = "https://angelos2024.github.io/torah-Yehoshua/";
-        }
-    });
-});
+                // 🔥 Detectar si es un iPhone con Chrome
+                let isChromeiOS = /CriOS/.test(userAgent) && /iPhone/.test(userAgent);
+
+                // 🔥 Si es iPhone con Chrome, confiar solo en `window.innerWidth`
+                if (isChromeiOS) {
+                    width = window.innerWidth;
+                }
+
+                // 📌 Si es celular, ir a la versión móvil
+                if (width <= 991) {
+                    window.location.href = "https://angelos2024.github.io/torah-Yehoshua/versionmovil.html";
+                } else {
+                    // 📌 Si es PC, ir a la versión normal
+                    window.location.href = "https://angelos2024.github.io/torah-Yehoshua/";
+                }
+            });
+        });
+   
 
 </script>
 </head>
