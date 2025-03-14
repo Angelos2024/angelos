@@ -17,8 +17,19 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let width = Math.min(screen.width, window.innerWidth); // 📌 Detecta tamaño real de la pantalla
 
-
+    // 🔥 Si estás en un CELULAR, redirige a la versión móvil de "Área de Estudio"
+    if (width <= 991) {
+        window.location.href = "https://angelos2024.github.io/torah-Yehoshua/versionmovil.html";
+    } else {
+        // 🔥 Si es una computadora, deja la versión normal
+        window.location.href = "https://angelos2024.github.io/torah-Yehoshua/";
+    }
+});
+</script>
 </head>
 <body>
 
