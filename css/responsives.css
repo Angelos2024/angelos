@@ -1,3 +1,163 @@
+
+
+@media (min-width: 2400px) {
+
+    .navbar-nav{
+
+gap: 350px !important;
+      }
+        
+    .overlay h1 {
+        font-size: 85px !important; /* Reduce el tamaño del título */
+    }
+
+    .overlay p {
+        font-size: 30px !important; /* Reduce el tamaño del párrafo */
+    }
+
+    #area {
+        font-size: 30px !important; /* Reduce el tamaño del botón */    
+        padding: 10px 20px !important;
+        margin-top: -5px !important; /* Sube un poco el botón */
+
+    }
+
+#algodon{
+
+margin-top: -310px !important;
+margin-right: 200px !important;
+
+    }
+
+    #area .icono {
+        width: 30px !important; /* Reduce el tamaño del icono */
+        height: 30px !important;
+    }
+
+
+    #entrada {
+        height: 250px !important;
+            font-size: 21px !important;
+max-width: 1900px !important;
+}
+
+#intro2 {
+
+margin-right:0px !important;
+margin-right:-35px !important;
+text-align:center !important;
+max-width: 1000px !important;
+    }
+
+ #descarga {
+    font-family: 'Sriracha', cursive !important;
+    font-size: 35px !important;
+    font-weight: 400;
+}
+
+#intro2 a.btn{
+width: 300px !important;
+
+}
+
+#antig {
+    width: 440px !important;
+    max-width: 450px !important;
+}
+
+
+}
+
+
+
+
+
+@media (min-width:1920px) {
+
+    .navbar-nav{
+
+gap: 200px !important;
+      }
+        
+    .overlay h1 {
+        font-size: 85px !important; /* Reduce el tamaño del título */
+    }
+
+    .overlay p {
+        font-size: 30px !important; /* Reduce el tamaño del párrafo */
+    }
+
+    #area {
+        font-size: 30px !important; /* Reduce el tamaño del botón */    
+        padding: 10px 20px !important;
+        margin-top: -5px !important; /* Sube un poco el botón */
+
+    }
+
+#algodon{
+
+margin-top: -310px !important;
+margin-right: 200px !important;
+
+    }
+
+    #area .icono {
+        width: 30px !important; /* Reduce el tamaño del icono */
+        height: 30px !important;
+    }
+
+
+    #entrada {
+        height: 250px !important;
+            font-size: 16px !important;
+max-width: 1150px !important;
+}
+
+#intro2 {
+
+margin-right:0px !important;
+margin-right:-100px !important;
+text-align:center !important;
+max-width: 788px !important;
+    }
+
+ #descarga {
+    font-family: 'Sriracha', cursive !important;
+    font-size: 35px !important;
+    font-weight: 400;
+}
+
+#intro2 a.btn{
+width: 300px !important;
+
+}
+
+#antig {
+    width: 440px !important;
+    max-width: 450px !important;
+}
+
+
+}
+
+
+@media (min-width:2000px) {
+
+    #entrada {
+        height: 250px !important;
+            font-size: 21px !important;
+max-width: 1600px !important;
+}
+
+#algodon{
+
+margin-top: -310px !important;
+margin-right: 200px !important;
+
+    }
+ }
+
+
 @media (max-width: 992px) {
     .overlay h1 {
         font-size: 70px !important; /* Reduce el tamaño del título */
@@ -133,8 +293,28 @@
 
 @media screen and (min-width: 1600px) {
     .container {
-        max-width: 1400px !important; /* Ajusta el tamaño en pantallas grandes */
+        max-width: 1800px !important; /* Ajusta el tamaño en pantallas grandes */
     }
+
+    #entrada {
+        height: 250px !important;
+            font-size: 16px !important;
+max-width: 1400px !important;
+}
+#algodon{
+
+margin-top: -310px !important;
+margin-right: 100px !important;
+
+    }
+#intro2 {
+
+margin-right:0px !important;
+margin-right:-200px !important;
+text-align:center !important;
+max-width: 788px !important;
+    }
+
 }
         /* Ajuste para pantallas menores a 1100px */
 @media (max-width: 1100px) {
@@ -156,7 +336,12 @@
     }
 }
 
-
+@media (max-width: 755px) {
+    #entrada {
+        margin-top: 20px;
+    margin-left: -12px;
+    }
+}
 
 @media (max-width: 744px) {
     #intro2 {
@@ -177,6 +362,23 @@
     }
 }
 
+@media (max-width: 430px) {
+    #intro2 {
+       margin-top: 20px !important;
+        margin-left: 30px !important;
+        text-align: center !important;
+        padding: 1px !important;
+        max-width: 200px !important;
+    }
+
+
+        #entrada {
+        margin-top: 20px !important;
+    margin-left: -25px !important;
+    }
+}
+
+
 @media (max-width: 415px) {
     #intro2 {
        margin-top: 20px !important;
@@ -186,12 +388,24 @@
         max-width: 150px !important;
     }
 }
-@media (max-width: 755px) {
-    #entrada {
-        margin-top: 20px;
-    margin-left: -12px;
+
+@media (max-width: 370px) {
+    #intro2 {
+       margin-top: 20px !important;
+        margin-left: 30px !important;
+        text-align: center !important;
+        padding: 1px !important;
+        max-width: 150px !important;
+    }
+
+
+        #entrada {
+        margin-top: 20px !important;
+     margin-left: -35px !important;
+    font-size: 16px !important;
     }
 }
+
 /* Ajustamos las tarjetas para que sean flexibles */
 #antig {
     width: 300px ; /* Se ajusta al contenedor */
@@ -241,3 +455,4 @@
         font-size: 18px;
     }
 }
+
