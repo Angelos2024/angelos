@@ -358,7 +358,7 @@ footer {
     font-family: 'Signika', sans-serif; /* Aplica la fuente */
      font-weight: 400 !important; /* Hace el texto más delgado */
     font-size: 18px; /* Ajusta el tamaño del texto */
-    background-color: none; /* Fondo blanco */
+    background-color: none !important; /* Fondo blanco */
     color: black; /* Texto negro */
     padding: 1px 8px; /* Espaciado */
     display: inline;
