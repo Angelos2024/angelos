@@ -241,6 +241,30 @@ margin-right: 200px !important;
         height: 30px !important;
     }
 }
+
+@media (max-width: 390px) {
+    .overlay h1 {
+        font-size: 40px !important; /* Reduce el tamaño del título */
+    }
+
+    .overlay p {
+        font-size: 19px !important; /* Reduce el tamaño del párrafo */
+        margin-left: -43px !important;
+    }
+
+     }
+
+     @media (max-width: 360px) {
+    .overlay h1 {
+        font-size: 40px !important; /* Reduce el tamaño del título */
+    }
+
+    .overlay p {
+        font-size: 19px !important; /* Reduce el tamaño del párrafo */
+        margin-left: -25px !important;
+    }
+
+     }
 @media (max-width: 992px) {
     #intro {
         width: 800px !important; /* Reduce el tamaño del título */
