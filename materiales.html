@@ -127,126 +127,115 @@
     display: none !important; /* Ocultamos por defecto */
 
 }
-    @media (max-width: 600px) {
-            #fig1 {
-margin-left: -160px !important;
-       }
-       #fig2{
-margin-left: 100px !important;
-       } 
-              #fig3{
-margin-left: 5px !important;
-       }
-.toggle-button {
-    display: flex; !important; /* Ocultamos por defecto */
-
-}
-       } 
-    @media (max-width: 550px) {
-            #fig1 {
-margin-left: -130px !important;
-       }
-       #fig2{
-margin-left: 70px !important;
-       } 
-.toggle-button {
-    display: flex; !important; /* Ocultamos por defecto */
-
-}
-}
-    @media (max-width: 500px) {
-            #fig1 {
-margin-left: -100px !important;
-       }
-       #fig2{
-margin-left: 70px !important;
-       } 
-.toggle-button {
-    display: flex; !important; /* Ocultamos por defecto */
-
-       } 
-       }   
-    @media (max-width: 480px) {
-            #fig1 {
-margin-left: -75px !important;
-       }
-       #fig2{
-margin-left: 60px !important;
-       } 
-
-
-#fig3{
-margin-left: 50px !important;
-       }
-       .toggle-button {
-    display: flex; !important; /* Ocultamos por defecto */
-
+   @media (max-width: 600px) {
+    #fig1 {
+        margin-left: -160px !important;
+    }
+    #fig2 {
+        margin-left: 100px !important;
+    }
+    #fig3 {
+        margin-left: 5px !important;
+    }
+    .toggle-button {
+        display: flex !important; /* Mostramos en pantallas chicas */
+    }
 }
 
-       }   
-    @media (max-width: 430px) {
-            #fig1 {
-margin-left: -65px !important;
-       }
-       #fig2{
-margin-left: 60px !important;
-       } 
-
-
-#fig3{
-margin-left: 50px !important;
-       }
-       .toggle-button {
-    display: flex; !important; /* Ocultamos por defecto */
-
+@media (max-width: 550px) {
+    #fig1 {
+        margin-left: -130px !important;
+    }
+    #fig2 {
+        margin-left: 70px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+    }
 }
 
-       } 
-
- @media (max-width: 418px) {
-            #fig1 {
-margin-left: -60px !important;
-       }
-       #fig2{
-margin-left: 25px !important;
-       } 
-
-#fig3{
-margin-left: 60px !important;
-       }
-
-.toggle-button {
-    display: flex; !important; /* Ocultamos por defecto */
-    margin-top: 300px !important;
-
+@media (max-width: 500px) {
+    #fig1 {
+        margin-left: -100px !important;
+    }
+    #fig2 {
+        margin-left: 70px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+    }
 }
-       } 
 
- @media (max-width: 387px) {
-            #fig1 {
-margin-left: -55px !important;
-       }
-       #fig2{
-margin-left: 15px !important;
-       } 
+@media (max-width: 480px) {
+    #fig1 {
+        margin-left: -75px !important;
+    }
+    #fig2 {
+        margin-left: 60px !important;
+    }
+    #fig3 {
+        margin-left: 50px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+    }
+}
 
-#fig3{
-margin-left: 50px !important;
-       }
+@media (max-width: 430px) {
+    #fig1 {
+        margin-left: -65px !important;
+    }
+    #fig2 {
+        margin-right: 60px !important;
+    }
+    #fig3 {
+        margin-left: 50px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 418px) {
+    #fig1 {
+        margin-left: -60px !important;
+    }
+    #fig2 {
+        margin-left: 25px !important;
+    }
+    #fig3 {
+        margin-left: 60px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 387px) {
+    #fig1 {
+        margin-left: -55px !important;
+    }
+    #fig2 {
+        margin-left: 15px !important;
+    }
+    #fig3 {
+        margin-left: 10px !important;
+    }
 }
 
 @media (max-width: 378px) {
-            #fig1 {
-margin-left: -50px !important;
-       }
-       #fig2{
-margin-left: 15px !important;
-       } 
-
-#fig3{
-margin-left: 50px !important;
-       }
+    #fig1 {
+        margin-left: -50px !important;
+    }
+    #fig2 {
+        margin-left: 15px !important;
+    }
+    #fig3 {
+        margin-left: 50px !important;
+    }
 }
+
 .toggle-button {
     display: flex; !important; /* Ocultamos por defecto */
     margin-top: 300px !important;
@@ -340,8 +329,18 @@ margin-left: 50px !important;
                 box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
             }
         }
-       
+       @media (max-width: 450px) {
 
+    .menu-items {
+        display: flex
+;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1px;
+        margin-left: -30px;
+    }
+     }
     </style>
 </head>
 <body>
