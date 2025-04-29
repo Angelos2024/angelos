@@ -119,7 +119,515 @@
         height: 270px !important;
     }
 }
+    
 </style>
+    <style>
+
+        .toggle-button {
+    display: none !important; /* Ocultamos por defecto */
+
+}
+    @media (max-width: 600px) {
+            #fig1 {
+margin-left: -160px !important;
+       }
+       #fig2{
+margin-left: 100px !important;
+       } 
+              #fig3{
+margin-left: 100px !important;
+       }
+.toggle-button {
+    display: flex; !important; /* Ocultamos por defecto */
+
+}
+       } 
+    @media (max-width: 550px) {
+            #fig1 {
+margin-left: -130px !important;
+       }
+       #fig2{
+margin-left: 70px !important;
+       } 
+.toggle-button {
+    display: flex; !important; /* Ocultamos por defecto */
+
+}
+       }   
+    @media (max-width: 480px) {
+            #fig1 {
+margin-left: -120px !important;
+       }
+       #fig2{
+margin-left: 60 px !important;
+       } 
+
+
+#fig3{
+margin-left: 50px !important;
+       }
+       .toggle-button {
+    display: flex; !important; /* Ocultamos por defecto */
+
+}
+
+       }   
+
+
+ @media (max-width: 418px) {
+            #fig1 {
+margin-left: -140px !important;
+       }
+       #fig2{
+margin-left: 25px !important;
+       } 
+
+#fig3{
+margin-left: 60px !important;
+       }
+
+.toggle-button {
+    display: flex; !important; /* Ocultamos por defecto */
+    margin-top: 300px !important;
+
+}
+       } 
+
+ @media (max-width: 387px) {
+            #fig1 {
+margin-left: -120px !important;
+       }
+       #fig2{
+margin-left: 15px !important;
+       } 
+
+#fig3{
+margin-left: 50px !important;
+       }
+
+.toggle-button {
+    display: flex; !important; /* Ocultamos por defecto */
+    margin-top: 300px !important;
+
+}
+       }
+    .menu-inferior {
+    display: none; /* Ocultamos por defecto */
+
+}
+
+
+.toggle-button {
+    position: fixed;
+    right: 10px;
+    bottom: -20px !important; /* Asegúrate de que sea igual a la altura del menú */
+    background: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1010;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+        @media (max-width: 600px) {
+            .menu-inferior {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 35px;
+                background-color: #fff;
+                border-top: 1px solid #ddd;
+                box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+                display: flex;
+                align-items: center;
+                z-index: 1000 !important;
+                transition: transform 0.4s ease-in-out;
+                padding: 0 10px;
+            }
+
+.toggle-button {
+    display: flex !important;
+
+}
+
+
+            .menu-container {
+                display: flex;
+                align-items: center;
+                flex-grow: 1;
+                transition: transform 0.4s ease-in-out;
+                 justify-content: space-around;
+            }
+
+            .menu-items {
+                display: flex;
+                align-items: center;
+                 justify-content: center; /* Asegura la distribución uniforme */
+                 flex-wrap: wrap; /* Permite que los botones se acomoden en pantallas pequeñas */gap: 15px;
+            }
+            .nav-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        flex-grow: 1; /* Hace que los iconos puedan reducir su tamaño si es necesario */
+        min-width: 50px; /* Define un tamaño mínimo para evitar que desaparezcan */
+    }
+
+    .icono-menu {
+
+        transition: width 0.3s, height 0.3s; /* Suaviza el cambio de tamaño */
+    }
+
+            /* 🔥 Hacemos que el fondo blanco solo se mueva hasta el botón ocultar 🔥 */
+            .menu-inferior.menu-hidden {
+                transform: translateX(calc(200%));
+            }
+
+            /* 🔹 Botón "Ocultar" SIEMPRE visible y NO se mueve 🔹 */
+            .toggle-button {
+                position: fixed;
+                right: 10px;
+                bottom: 20px;
+                background: #fff;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                z-index: 1010;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            }
+        }
+        @media (max-width: 360px) {
+    #fig1 {
+        margin-left: -100px !important;
+    }
+    #fig2 {
+        margin-left: 5px !important;
+    }
+    #fig3 {
+        margin-left: 30px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 340px) {
+    #fig1 {
+        margin-left: -90px !important;
+    }
+    #fig2 {
+        margin-left: 0px !important;
+    }
+    #fig3 {
+        margin-left: 20px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 320px) {
+    #fig1 {
+        margin-left: -80px !important;
+    }
+    #fig2 {
+        margin-left: -10px !important;
+    }
+    #fig3 {
+        margin-left: 10px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 300px) {
+    #fig1 {
+        margin-left: -70px !important;
+    }
+    #fig2 {
+        margin-left: -20px !important;
+    }
+    #fig3 {
+        margin-left: 0px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 280px) {
+    #fig1 {
+        margin-left: -65px !important;
+    }
+    #fig2 {
+        margin-left: -25px !important;
+    }
+    #fig3 {
+        margin-left: 0px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 270px) {
+    #fig1 {
+        margin-left: -60px !important;
+    }
+    #fig2 {
+        margin-left: -30px !important;
+    }
+    #fig3 {
+        margin-left: 0px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+@media (max-width: 600px) {
+    #fig1 {
+        margin-left: -160px !important;
+    }
+    #fig2 {
+        margin-left: 100px !important;
+    }
+    #fig3 {
+        margin-left: 100px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 550px) {
+    #fig1 {
+        margin-left: -130px !important;
+    }
+    #fig2 {
+        margin-left: 70px !important;
+    }
+    #fig3 {
+        margin-left: 70px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 500px) {
+    #fig1 {
+        margin-left: -125px !important;
+    }
+    #fig2 {
+        margin-left: 65px !important;
+    }
+    #fig3 {
+        margin-left: 65px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #fig1 {
+        margin-left: -120px !important;
+    }
+    #fig2 {
+        margin-left: 60px !important;
+    }
+    #fig3 {
+        margin-left: 60px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 440px) {
+    #fig1 {
+        margin-left: -115px !important;
+    }
+    #fig2 {
+        margin-left: 55px !important;
+    }
+    #fig3 {
+        margin-left: 55px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 418px) {
+    #fig1 {
+        margin-left: -110px !important;
+    }
+    #fig2 {
+        margin-left: 40px !important;
+    }
+    #fig3 {
+        margin-left: 50px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+@media (max-width: 412px) {
+    #fig1 {
+        margin-left: -110px !important;
+    }
+    #fig2 {
+        margin-left: 40px !important;
+    }
+    #fig3 {
+        margin-left: 55px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 400px) {
+    #fig1 {
+        margin-left: -105px !important;
+    }
+    #fig2 {
+        margin-left: 30px !important;
+    }
+    #fig3 {
+        margin-left: 50px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 387px) {
+    #fig1 {
+        margin-left: -100px !important;
+    }
+    #fig2 {
+        margin-left: 20px !important;
+    }
+    #fig3 {
+        margin-left: 45px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    #fig1 {
+        margin-left: -90px !important;
+    }
+    #fig2 {
+        margin-left: 10px !important;
+    }
+    #fig3 {
+        margin-left: 30px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 340px) {
+    #fig1 {
+        margin-left: -80px !important;
+    }
+    #fig2 {
+        margin-left: 0px !important;
+    }
+    #fig3 {
+        margin-left: 20px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 320px) {
+    #fig1 {
+        margin-left: -70px !important;
+    }
+    #fig2 {
+        margin-left: -10px !important;
+    }
+    #fig3 {
+        margin-left: 10px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 300px) {
+    #fig1 {
+        margin-left: -60px !important;
+    }
+    #fig2 {
+        margin-left: -20px !important;
+    }
+    #fig3 {
+        margin-left: 0px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 280px) {
+    #fig1 {
+        margin-left: -55px !important;
+    }
+    #fig2 {
+        margin-left: -25px !important;
+    }
+    #fig3 {
+        margin-left: 0px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+@media (max-width: 270px) {
+    #fig1 {
+        margin-left: -50px !important;
+    }
+    #fig2 {
+        margin-left: -30px !important;
+    }
+    #fig3 {
+        margin-left: 0px !important;
+    }
+    .toggle-button {
+        display: flex !important;
+        margin-top: 300px !important;
+    }
+}
+
+    </style>
 </head>
 <body>
   <!-- Barra de navegación -->
