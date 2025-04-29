@@ -15,7 +15,113 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+
 <style>
+#contenidos {
+    width: 100px;
+    height: 30px;
+    background-color: #4b2743; /* Color de fondo */
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s;
+
+}
+
+#contenidos:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid #4b2743; /* Opcional: borde del color original */
+}
+
+.grid {
+    display: grid;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* ✅ 4 columnas en pantallas grandes */
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ✅ 3 columnas en pantallas medianas */
+@media (max-width: 1023px) and (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+
+
+/* ✅ 2 columnas en pantallas pequeñas */
+@media (max-width: 711px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 850px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+
+
+@media (max-width: 800px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+/* ✅ 2 columnas en móviles muy pequeños */
+@media (max-width: 680px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .item {
+        width: 235px !important;
+    }
+}
+
+@media (max-width: 595px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .item {
+        width: 240px !important;
+    }
+}
+
+@media (max-width: 510px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .item {
+        width: 200px !important;
+        height: 230px !important;
+    }
+}
+
+@media (max-width: 440px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .item {
+        width: 180px !important;
+        height: 230px !important;
+    }
+    #itemraro{
+        width: 180px !important;
+        height: 270px !important;
+    }
+}
+    
+</style>
+    <style>
 
         .toggle-button {
     display: none !important; /* Ocultamos por defecto */
@@ -521,119 +627,6 @@ margin-left: 50px !important;
     }
 }
 
-    </style>
-<style>
-#contenidos {
-    width: 100px;
-    height: 30px;
-    background-color: #4b2743; /* Color de fondo */
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s, color 0.3s;
-
-}
-
-#contenidos:hover {
-    background-color: white;
-    color: black;
-    border: 1px solid #4b2743; /* Opcional: borde del color original */
-}
-
-.grid {
-    display: grid;
-    gap: 15px;
-    justify-content: center;
-}
-
-/* ✅ 4 columnas en pantallas grandes */
-@media (min-width: 1024px) {
-    .grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-/* ✅ 3 columnas en pantallas medianas */
-@media (max-width: 1023px) and (min-width: 768px) {
-    .grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-
-
-/* ✅ 2 columnas en pantallas pequeñas */
-@media (max-width: 711px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@media (max-width: 850px) {
-    .grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-
-
-@media (max-width: 800px) {
-    .grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-/* ✅ 2 columnas en móviles muy pequeños */
-@media (max-width: 680px) {
-    .grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .item {
-        width: 235px !important;
-    }
-}
-
-@media (max-width: 595px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .item {
-        width: 240px !important;
-    }
-}
-
-@media (max-width: 510px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .item {
-        width: 200px !important;
-        height: 230px !important;
-    }
-}
-
-@media (max-width: 440px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .item {
-        width: 180px !important;
-        height: 230px !important;
-    }
-    #itemraro{
-        width: 180px !important;
-        height: 270px !important;
-    }
-}
-    
-</style>
-    <style>
-
-        .toggle-button {
-    display: none !important; /* Ocultamos por defecto */
-
-}
- 
     </style>
 </head>
 <body>
