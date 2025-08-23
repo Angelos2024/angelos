@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>NA28 – Cartas</title>
+
+  <!-- Bootstrap -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Estilos del sitio (mismos que tus otras páginas) -->
+  <link href="css/styles.css" rel="stylesheet" />
+  <link href="css/responsives.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    .na28-wrapper { max-width: 1200px; margin: 20px auto 60px auto; padding: 10px; }
+    .na28-grid { display: grid; grid-template-columns: 220px 1fr; gap: 16px; }
+
+
+
+    .doc-list { background: #fff; border: 1px solid #000; border-radius: 10px; padding: 14px;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.08); position: sticky; top: 12px; height: fit-content;
+      display: flex; flex-direction: column; gap: 10px; }
+    .doc-list h6 { margin: 0 0 6px 0; font-family: 'Signika', sans-serif; font-weight: 700; font-size: 16px; }
+
+    .doc-btn { display: block; width: 100%; height: 38px; line-height: 38px; text-align: center;
+      background-color: #4b2743; color: #fff; border: 1px solid #4b2743;
+      border-radius: 8px; font-family: 'Signika', sans-serif; font-weight: 600; font-size: 14px;
+      cursor: pointer; transition: .15s ease-in-out; text-decoration: none !important; }
+    .doc-btn:hover, .doc-btn.active { background: #ffffff; color: #000; border-color: #000; }
+
+    .doc-divider { height: 20px; }
+    .download-wrap { margin-top: 6px; display: flex; justify-content: center; }
+    .btn-descargar { display:block; width: 100%; height: 40px; line-height: 40px; text-align:center;
+      background: #4b2743; color: #fff; border: 2px solid #4b2743; font-weight: 700; border-radius: 8px; font-size: 15px; }
+    .btn-descargar:hover { background: #fff; color: #000; border-color: #000; text-decoration: none; }
+
+    .viewer-card { background: #ffffff; border: 1px solid #000; border-radius: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.08); padding: 10px; display: flex; flex-direction: column; min-height: 70vh; position: relative; }
+    .viewer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .viewer-title { font-family:'Signika',sans-serif; font-weight:700; font-size:16px; margin: 0; }
+    .viewer-subtitle { font-family:'Signika',sans-serif; font-weight:600; font-size:14px; color:#4b2743; }
+    .viewer-frame-wrap { flex: 1; width: 100%; min-height: 70vh; position: relative; }
+    .viewer-frame { border: none; width: 100%; height: 100%; border-radius: 8px; background: #f5f5f5; }
+
+    @media (max-width: 700px) { .na28-grid { grid-template-columns: 1fr; } .doc-list { position: static; } .viewer-frame-wrap { min-height: 75vh; } .viewer-header { flex-direction: column; align-items: flex-start; gap: 4px; } }
+
+    .na28-comentario { margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ddd;
+      font-family: 'Signika', sans-serif; font-size: 15px; line-height: 1.6; color: #333; }
+    .na28-comentario strong { color: #4b2743; }
+
+    .na28-legal { margin-top: 20px; }
+    .na28-legal summary { font-weight: 700; color: #4b2743; cursor: pointer; }
+    .na28-legal p { margin-top: 10px; font-size: 14px; color: #444; }
+      /* Escudo para bloquear el botón de "desplegar" del visor de Drive */
+    .iframe-shield { position: absolute; top: 8px; right: 8px; width: 88px; height: 88px; z-index: 10; pointer-events: auto; background: transparent; }
+    @media (max-width: 768px) { .iframe-shield { width: 72px; height: 72px; top: 6px; right: 6px; } }
+
+/* ===== doc-list fluido a partir de 960px ===== */
+@media (max-width: 1200px) {
+  .na28-grid {
+    /* en escritorio la doc-list mide ~220px; ahora será fluida */
+    grid-template-columns: clamp(140px, 18vw, 200px) 1fr;
+  }
+  .doc-list {
+    padding: clamp(8px, 1.5vw, 14px);  /* se compacta también su padding */
+  }
+}
+/* ===== Móvil ≤700px: doc-list arriba como menú horizontal ===== */
+@media (max-width: 700px){
+  /* 1) Una sola columna: primero doc-list (ya está primero en el DOM) */
+  .na28-grid{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  /* 2) doc-list como barra horizontal (tipo tabs) */
+  .doc-list{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;           /* scroll si no caben */
+    white-space: nowrap;
+    padding: 8px;
+    position: sticky; top: 0;   /* opcional: que quede arriba al hacer scroll */
+    z-index: 20;
+  }
+  .doc-list h6{ display: none; } /* ocultar título para ganar espacio */
+
+  /* 3) Botones comprimidos y horizontales */
+  .doc-btn{
+    flex: 0 0 auto;             /* no se estiran ni encogen raro */
+    height: 34px;
+    line-height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;       /* pastilla */
+    font-size: 14px;
+    width: auto;                /* dejan de ser 100% */
+  }
+
+  /* 4) Botón “Descargar” dentro de la barra */
+  .download-wrap{ margin-top: 0; }
+  .btn-descargar{
+    height: 34px;
+    line-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    flex: 0 0 auto;
+  }
+
+  /* 5) Visor más alto para mejor lectura */
+  .viewer-card{
+    min-height: calc(100vh - 120px); /* ajusta si tu navbar es más alta */
+  }
+}
+
+@media (max-width: 700px){
+  /* barra horizontal más angosta */
+  .doc-list{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 6px 10px;       /* menos padding → más angosta */
+    position: sticky; top: 0;
+    z-index: 20;
+    background: #fff;        /* opcional: fondo sólido */
+  }
+
+  /* ocultar título para ahorrar espacio */
+  .doc-list h6{ display: none; }
+
+  /* botones más compactos */
+  .doc-btn{
+    flex: 0 0 auto;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 12px;
+    font-size: 13px;
+    border-radius: 20px;
+    width: auto;
+  }
+
+  /* botón Descargar alineado a la derecha */
+  .download-wrap{
+    margin-left: auto;   /* lo empuja al final de la fila */
+  }
+  .btn-descargar{
+    height: 30px;
+    line-height: 30px;
+    padding: 0 14px;
+    font-size: 13px;
+    border-radius: 20px;
+    flex: 0 0 auto;
+  }
+}
+
+/* Texto pequeño personalizado */
+.p-small {
+  font-size: 12px;
+  line-height: 1.2;
+  color: #444;         /* opcional, cambia el tono */
+  margin: 4px 0;       /* opcional, ajusta el espacio */
+  font-family: 'Signika', sans-serif; /* misma fuente que usas en tu diseño */
+}
+
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="d-flex align-items-center text-white">
+      <img src="https://imgur.com/60ChKBP.png" alt="Icono" width="35" height="35" class="mr-3">
+      <div class="texto-edicion">
+          <span>Edición Eric</span><br>
+          <span class="edicion-numero">XXI</span>
+      </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <button class="close-menu">&times;</button>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html" style="color:white;">INICIO</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://angelos2024.github.io/torah-Yehoshua/" style="color:white;">ÁREA DE ESTUDIO</a></li>
+        <li class="nav-item"><a class="nav-link" href="NA28español.html" style="color:white;">Nestle-Aland 28-ES</a></li>
+        <li class="nav-item"><a class="nav-link" href="materiales.html" style="color:white;">MATERIALES</a></li>
+        <li class="nav-item"><a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/c/EricdeJes%C3%BAsRodr%C3%ADguezMendoza/videos" style="color:white;">ESTUDIOS VIDEOS</a></li>
+        <li class="nav-item"><a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://yehoshuamaranata.blogspot.com" style="color:white;">BIBLIOTECA DE ERIC</a></li>
+      </ul>
+    </div>
+  </nav>
+
+ <main class="na28-wrapper container-fluid">
+
+    <div class="na28-grid">
+      <aside class="doc-list">
+        <h6>Cartas disponibles NA28 (Español)</h6>
+        <!-- Dejamos los botones; el JS asigna los IDs correctos de vista/descarga -->
+        <a href="#" class="doc-btn active" data-name="Gálatas">Gálatas</a>
+        <a href="#" class="doc-btn" data-name="Efesios" data-id="EFESIOS">Efesios</a>
+        <a href="#" class="doc-btn" data-name="Hebreos">Hebreos</a>
+        <a href="#" class="doc-btn" data-name="1 Tesalonicenses">1 Tesalonicenses</a>
+        <div class="doc-divider"></div>
+        <div class="download-wrap">
+          <a id="btnDescargar" class="btn-descargar" href="#" target="_blank" rel="noopener noreferrer">Descargar</a> 
+        </div>
+        <p class="p-small">contraseña:<br>Yehoshua es Hashem</p> 
+      </aside>
+
+      <section class="viewer-card">
+        <div class="viewer-header">
+          <div id="tituloDoc" class="viewer-title">Gálatas (NA28)</div>
+          <div class="viewer-subtitle">Edición de Estudio Nestle-Aland 28-ES, 2025 (Á. Roan)</div>
+        </div>
+        <div class="viewer-frame-wrap">
+          <!-- Escudo transparente que evita hacer click en el icono de pop-out del visor de Drive -->
+          <div class="iframe-shield" title="Descarga deshabilitada"></div>
+          <iframe id="pdfFrame" class="viewer-frame" allow="autoplay" src="about:blank"></iframe>
+        </div>
+      </section>
+    </div>
+
+    <div class="na28-comentario mt-4">
+      <p>
+        <strong>Nota:</strong> Esta versión de <strong>NA28 – Edición Español 2025</strong> ha sido elaborada con base en la <em>Nestle-Aland 28</em> (griego-alemán). 
+        El compendio completo aún se encuentra en desarrollo y conforme avance el progreso, los nuevos contenidos se compartirán automáticamente en esta misma sección.
+      </p>
+      <p>
+        Esta herramienta está destinada al apoyo y al estudio de las Escrituras del evangelio en su versión griega. Aunque traducida al español, conserva y señala las variantes en griego para facilitar la identificación y comparación entre los distintos manuscritos.
+      </p>
+
+      <details class="na28-legal">
+        <summary>📜 Aviso legal y editorial</summary>
+        <p>Esta edición crítica en español 2025 se elaboró tomando como referencia la obra académica <em>Nestle-Aland Novum Testamentum Graece, 28ª edición</em> (Deutsche Bibelgesellschaft, Stuttgart). El texto griego base y las variantes allí consignadas pertenecen al dominio académico de uso común en la investigación bíblica.</p>
+        <p>La presente edición en español constituye un trabajo original de traducción, adaptación y comentario con fines exclusivamente académicos y de estudio personal. No se pretende sustituir, reproducir ni competir con la edición oficial de la Deutsche Bibelgesellschaft.</p>
+        <p>Se autoriza su difusión gratuita únicamente con fines de apoyo al estudio del evangelio en su idioma original, sin fines de lucro, respetando la integridad del trabajo.</p>
+      </details>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <script>
+    // IDs proporcionadas por el usuario
+    const IDS = {
+      visible: {
+        'Gálatas': '1gG9kPDsqjKd8TXYRO0xyp1Q2eyeqdjSJ',
+        'Hebreos': '1Nwu4f3KltgNvMDS2oDzgy1rxSkX2487A',
+        '1 Tesalonicenses': '17iBdqSMl_5m7JuPitWJcf02iHDrvSZ_N'
+      },
+      protegido: {
+        'Gálatas': '1YvPcV2A5RrN00wzSp_l31giW8pIRA72k',
+        'Hebreos': '1GV3Bca7qhBDVyJmxCAyO4HFBkR_zrfWy',
+        '1 Tesalonicenses': '11ki16xeaUkFEeKJgM9AYxTgVS6QySShU'
+      }
+    };
+
+    function buildPreviewUrl(id) { return `https://drive.google.com/file/d/${id}/preview`; }
+    function buildViewUrl(id) { return `https://drive.google.com/file/d/${id}/view?usp=sharing`; }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var closeMenuBtn = document.querySelector('.close-menu');
+      var navbarCollapse = document.querySelector('#navbarNav');
+      var menuToggle = document.querySelector('.navbar-toggler');
+      if (closeMenuBtn && navbarCollapse && menuToggle) {
+        closeMenuBtn.style.display = 'none';
+        menuToggle.addEventListener('click', function () {
+          if (window.innerWidth <= 700) {
+            closeMenuBtn.style.display = navbarCollapse.classList.contains('show') ? 'none' : 'block';
+          }
+        });
+        closeMenuBtn.addEventListener('click', function () {
+          navbarCollapse.classList.remove('show');
+          closeMenuBtn.style.display = 'none';
+        });
+        window.addEventListener('resize', function () {
+          if (window.innerWidth > 700) closeMenuBtn.style.display = 'none';
+        });
+      }
+
+      // Estado inicial: Gálatas
+      const frame = document.getElementById('pdfFrame');
+      const titulo = document.getElementById('tituloDoc');
+      const btnDesc = document.getElementById('btnDescargar');
+
+      function loadDoc(name) {
+        if (name === 'Efesios') {
+          alert('En proceso, estamos trabajando en este documento...');
+          return;
+        }
+        const prevId = IDS.visible[name];
+        const dlId = IDS.protegido[name];
+        if (!prevId || !dlId) {
+          alert('Falta configurar los IDs de Drive para: ' + name);
+          return;
+        }
+        frame.src = buildPreviewUrl(prevId); // Vista sin descarga
+        titulo.textContent = name + ' (NA28)';
+        btnDesc.href = buildViewUrl(dlId);   // Descarga SOLO del protegido
+      }
+
+      // Cargar inicial
+      loadDoc('Gálatas');
+
+      // Listeners del menú lateral
+      const list = document.querySelector('.doc-list');
+      list.addEventListener('click', function (e) {
+        const a = e.target.closest('.doc-btn');
+        if (!a) return;
+        e.preventDefault();
+        const name = a.getAttribute('data-name') || a.textContent.trim();
+
+        // Toggle activo
+        list.querySelectorAll('.doc-btn').forEach(btn => btn.classList.remove('active'));
+        a.classList.add('active');
+
+        loadDoc(name);
+      });
+    });
+  </script>
+</body>
+</html>
