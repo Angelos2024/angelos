@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>NA28 – Cartas</title>
 
   <!-- Bootstrap -->
@@ -35,11 +35,11 @@
       background: #4b2743; color: #fff; border: 2px solid #4b2743; font-weight: 700; border-radius: 8px; font-size: 15px; }
     .btn-descargar:hover { background: #fff; color: #000; border-color: #000; text-decoration: none; }
 
-    .viewer-card { background: #ffffff; border: 1px solid #000; border-radius: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.08); padding: 10px; display: flex; flex-direction: column; min-height: 70vh; position: relative; }
+    .viewer-card { background: #ffffff; border: 1px solid #000; border-radius: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.08); padding: 10px; display: flex; flex-direction: column; min-height: calc(100vh - 140px); position: relative; }
     .viewer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .viewer-title { font-family:'Signika',sans-serif; font-weight:700; font-size:16px; margin: 0; }
     .viewer-subtitle { font-family:'Signika',sans-serif; font-weight:600; font-size:14px; color:#4b2743; }
-    .viewer-frame-wrap { flex: 1; width: 100%; min-height: 70vh; position: relative; }
+    .viewer-frame-wrap { flex: 1; width: 100%; min-height: calc(100vh - 160px); position: relative; }
     .viewer-frame { border: none; width: 100%; height: 100%; border-radius: 8px; background: #f5f5f5; }
 
     @media (max-width: 700px) { .na28-grid { grid-template-columns: 1fr; } .doc-list { position: static; } .viewer-frame-wrap { min-height: 75vh; } .viewer-header { flex-direction: column; align-items: flex-start; gap: 4px; } }
@@ -52,8 +52,19 @@
     .na28-legal summary { font-weight: 700; color: #4b2743; cursor: pointer; }
     .na28-legal p { margin-top: 10px; font-size: 14px; color: #444; }
       /* Escudo para bloquear el botón de "desplegar" del visor de Drive */
-    .iframe-shield { position: absolute; top: 8px; right: 8px; width: 88px; height: 88px; z-index: 10; pointer-events: auto; background: transparent; }
-    @media (max-width: 768px) { .iframe-shield { width: 72px; height: 72px; top: 6px; right: 6px; } }
+/* Escudo: barra superior completa del visor de Drive */
+.iframe-shield{
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 64px;
+  z-index: 10;
+  pointer-events: auto;
+  background: transparent;
+}
+@media (max-width: 768px){
+  .iframe-shield{ height: 72px; }
+}
+
 
 /* ===== doc-list fluido a partir de 960px ===== */
 @media (max-width: 1200px) {
@@ -188,8 +199,7 @@
       <ul class="navbar-nav ml-auto">
         <li class="nav-item"><a class="nav-link" href="index.html" style="color:white;">INICIO</a></li>
         <li class="nav-item"><a class="nav-link" href="https://angelos2024.github.io/torah-Yehoshua/" style="color:white;">ÁREA DE ESTUDIO</a></li>
-        <li class="nav-item"><a class="nav-link" href="NA28español.html" style="color:white;">NESTLE-ALAND 28-ES</a></li>
-        <li class="nav-item"><a class="nav-link" href="https://productos-amber.vercel.app/" style="color:white;">INSPECTOR ALIMENTOS</a></li>
+        <li class="nav-item"><a class="nav-link" href="NA28español.html" style="color:white;">Nestle-Aland 28-ES</a></li>
         <li class="nav-item"><a class="nav-link" href="materiales.html" style="color:white;">MATERIALES</a></li>
         <li class="nav-item"><a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/c/EricdeJes%C3%BAsRodr%C3%ADguezMendoza/videos" style="color:white;">ESTUDIOS VIDEOS</a></li>
         <li class="nav-item"><a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://yehoshuamaranata.blogspot.com" style="color:white;">BIBLIOTECA DE ERIC</a></li>
@@ -204,9 +214,9 @@
         <h6>Cartas disponibles NA28 (Español)</h6>
         <!-- Dejamos los botones; el JS asigna los IDs correctos de vista/descarga -->
         <a href="#" class="doc-btn active" data-name="Gálatas">Gálatas</a>
-        <a href="#" class="doc-btn" data-name="Efesios" data-id="EFESIOS">Efesios</a>
         <a href="#" class="doc-btn" data-name="Hebreos">Hebreos</a>
         <a href="#" class="doc-btn" data-name="1 Tesalonicenses">1 Tesalonicenses</a>
+        <a href="#" class="doc-btn" data-name="Efesios" data-id="EFESIOS">Efesios</a>
         <div class="doc-divider"></div>
         <div class="download-wrap">
           <a id="btnDescargar" class="btn-descargar" href="#" target="_blank" rel="noopener noreferrer">Descargar</a> 
@@ -222,7 +232,12 @@
         <div class="viewer-frame-wrap">
           <!-- Escudo transparente que evita hacer click en el icono de pop-out del visor de Drive -->
           <div class="iframe-shield" title="Descarga deshabilitada"></div>
-          <iframe id="pdfFrame" class="viewer-frame" allow="autoplay" src="about:blank"></iframe>
+          <iframe id="pdfFrame" class="viewer-frame"
+        allow="autoplay"
+        sandbox="allow-scripts allow-same-origin"
+        referrerpolicy="no-referrer"
+        src="about:blank">
+</iframe>
         </div>
       </section>
     </div>
@@ -329,7 +344,3 @@
   </script>
 </body>
 </html>
-
-
-
-
