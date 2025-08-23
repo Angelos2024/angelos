@@ -90,7 +90,7 @@ body {
 }
 
 
-@import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
+
 
 #descarga {
     font-family: 'Sriracha', cursive !important;
@@ -179,7 +179,7 @@ body {
         }
 
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap');
+
 
 
 .texto-edicion {
@@ -208,15 +208,32 @@ body {
 }
 /* En móviles muy pequeños, las tarjetas serán de una sola columna */
 @media (max-width: 570px) {
-    .navbar {
-        width: 620px !important; /* Ocuparán todo el ancho */
-    }
+  .navbar,
+  .hero-section { width: 100% !important; }
 }
+@media (max-width: 550px) {
+  .hero-section { width: 100% !important; }
+}
+@media (max-width: 500px) {
+  .hero-section { width: 100% !important; }
+}
+@media (max-width: 480px) {
+  .hero-section { width: 100% !important; }
+}
+@media (max-width: 460px) {
+  .hero-section { width: 100% !important; }
+}
+/* Asegura layout correcto del header en móvil/tablet */
+@media (max-width: 991.98px){
+  .navbar { display: flex; align-items: center; }
+  .navbar-toggler { margin-left: auto; } /* se pega al borde derecho */
+}
+
 .navbar-nav {
     margin: 0 auto; /* Centra los elementos */
     display: flex;
     justify-content: center; /* Asegura que los elementos estén centrados */
-    gap: 50px; /* Espaciado entre elementos */
+    gap: 20px; /* Espaciado entre elementos */
 }
 
 
@@ -315,12 +332,7 @@ footer {
 
 }
 /* En móviles muy pequeños, las tarjetas serán de una sola columna */
-@media (max-width: 570px) {
-    .hero-section {
-        height: 380px !important; /* Mantiene el tamaño del contenedor */
-        width: 620px !important;
-    }
-}
+
 @media (max-width: 550px) {
     .hero-section {
         height: 380px !important; /* Mantiene el tamaño del contenedor */
@@ -353,7 +365,7 @@ footer {
     }
 }
 
- @import url('link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;600&display=swap" rel="stylesheet"');
+ 
 .text-box {
     font-family: 'Signika', sans-serif; /* Aplica la fuente */
      font-weight: 400 !important; /* Hace el texto más delgado */
@@ -440,11 +452,10 @@ footer {
         right: 15px;
   
     }
-    @media (max-width: 600px) {
-  .navbar-toggler {
-    display: none !important;
-  }
+@media (max-width: 600px) {
+  .navbar-toggler { display: block !important; }
 }
+
 
     @media (max-width: 540px) {
   #navio {
@@ -531,3 +542,10 @@ font-size: 13px !important;
         .buttons button:hover {
             background-color: #0056b3;
         }
+/* Tamaño de fuente del menú principal en pantallas grandes */
+@media (min-width: 992px) {
+  .navbar .nav-link {
+    font-size: 13px;   /* Ajusta el número a tu preferencia */
+    letter-spacing: 0.5px; /* Opcional: espacio entre letras */
+  }
+}
