@@ -7,6 +7,14 @@ html, body {
     overflow-x: hidden; /* Solo oculta el desplazamiento horizontal */
     overflow-y: auto; /* Permite desplazamiento vertical */
 }
+/* Hace que el cursor sea una manita (pointer) al pasar sobre el visor */
+.viewer-frame-wrap {
+  cursor: grab;              /* manita abierta */
+}
+
+.viewer-frame-wrap:active {
+  cursor: grabbing;          /* manita cerrada al hacer click */
+}
 
 @media (max-width: 460px) {
     #intro3 .col-6 {
