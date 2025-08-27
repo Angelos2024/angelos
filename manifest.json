@@ -1,20 +1,48 @@
 {
-  "name": "Angelos Web App",
-  "short_name": "Angelos",
+  "id": "https://www.torah-con-yehoshua-hamashiaj.com/",
+  "name": "Torah con Yehoshúa'",
+  "short_name": "Torah con Yehoshúa'",
+  "description": "Este es un espacio para el estímulo de la investigación de las Escrituras de su Santidad Hashem Tzva'ot quien es Yehoshúa' Hamashíaj vivo y verdadero",
   "start_url": "/",
-  "display": "browser",
+  "scope": "/",
+  "dir": "ltr",
+  "display": "fullscreen",
+  "display_override": [
+    "fullscreen",
+    "browser",
+    "window-controls-overlay"
+  ],
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "theme_color": "#00695c",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
+  ],
+  "lang": "es",
+  "categories": [
+    "lifestyle"
   ]
 }
