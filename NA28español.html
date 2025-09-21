@@ -276,7 +276,7 @@
         'Gálatas': '1YvPcV2A5RrN00wzSp_l31giW8pIRA72k',
         'Hebreos': '1GV3Bca7qhBDVyJmxCAyO4HFBkR_zrfWy',
         '1 Tesalonicenses': '11ki16xeaUkFEeKJgM9AYxTgVS6QySShU',
-        'efesios':'1XoKy2wTeFkWvHm0c-xlmNbSBNRHOmt4U'
+        'Efesios': '1XoKy2wTeFkWvHm0c-xlmNbSBNRHOmt4U'
       }
     };
 
@@ -308,21 +308,17 @@
       const titulo = document.getElementById('tituloDoc');
       const btnDesc = document.getElementById('btnDescargar');
 
-      function loadDoc(name) {
-        if (name === 'Efesios') {
-          alert('En proceso, estamos trabajando en este documento...');
-          return;
-        }
-        const prevId = IDS.visible[name];
-        const dlId = IDS.protegido[name];
-        if (!prevId || !dlId) {
-          alert('Falta configurar los IDs de Drive para: ' + name);
-          return;
-        }
-        frame.src = buildPreviewUrl(prevId); // Vista sin descarga
-        titulo.textContent = name + ' (NA28)';
-        btnDesc.href = buildViewUrl(dlId);   // Descarga SOLO del protegido
-      }
+function loadDoc(name) {
+  const prevId = IDS.visible[name];
+  const dlId = IDS.protegido[name];
+  if (!prevId || !dlId) {
+    alert('Falta configurar los IDs de Drive para: ' + name);
+    return;
+  }
+  frame.src = buildPreviewUrl(prevId); // Vista sin descarga
+  titulo.textContent = name + ' (NA28)';
+  btnDesc.href = buildViewUrl(dlId);   // Descarga SOLO del protegido
+}
 
       // Cargar inicial
       loadDoc('Gálatas');
@@ -345,4 +341,5 @@
   </script>
 </body>
 </html>
+
 
