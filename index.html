@@ -1,512 +1,1819 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es" data-theme="cream">
 <head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#0b3d91">
+  <meta charset="utf-8"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Lector de Pasajes</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> 
+  <link rel="stylesheet" href="./RKANT/out/rkant-es.css?v=1">
+   <link rel="stylesheet" href="./backup-panel.css?v=1">
+   <link rel="stylesheet" href="./index.css?v=1">
+      <link rel="stylesheet" href="./menu.css?v=1">
 
 
-    <title>Torah con Yehoshúa HaMashiaj</title>
-    <!-- Enlace a CSS de Bootstrap -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Enlace a tu archivo CSS personalizado -->
-    <link href="css/styles.css" rel="stylesheet">
-    <link href="css/responsives.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
 
-   <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;600;700&display=swap" rel="stylesheet">
-<!-- Bootstrap JS (asegúrate de incluir jQuery y Popper.js si usas Bootstrap 4) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- ✅ ANTES del script grande: DB + UI (notas + highlights) -->
+<script defer src="./annotations-db.js?v=2"></script>
+<script defer src="./annotations-ui.js?v=4"></script>
+<script defer src="./listanotas.js?v=1"></script>
+  <script defer src="./backup-panel.js?v=1"></script>
+  <script defer src="./interlinear-view.js?v=1"></script>
+  <script src="./greek-lexicon-ui.js"></script>
+   <script src="./hebrew-lexicon-ui.js"></script>
+<script src="./diccionario/greek-lexicon.js?v=12"></script>
+
+
 <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const area = document.getElementById("area");
-
-            area.addEventListener("click", function (event) {
-                event.preventDefault(); // ❌ Evita la navegación automática
-
-                let width = Math.min(screen.width, window.innerWidth); // 📌 Detecta tamaño real de pantalla
-                let userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-                // 🔥 Detectar si es un iPhone con Chrome
-                let isChromeiOS = /CriOS/.test(userAgent) && /iPhone/.test(userAgent);
-
-                // 🔥 Si es iPhone con Chrome, confiar solo en `window.innerWidth`
-                if (isChromeiOS) {
-                    width = window.innerWidth;
-                }
-
-                // 📌 Si es celular, ir a la versión móvil
-                if (width <= 991) {
-                    window.location.href = "https://angelos2024.github.io/torah-Yehoshua/versionmovil.html";
-                } else {
-                    // 📌 Si es PC, ir a la versión normal
-                    window.location.href = "https://angelos2024.github.io/torah-Yehoshua/";
-                }
-            });
-        });
-   
-
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.GreekLexicon?.init) window.GreekLexicon.init();
+  });
 </script>
+
+
+
+
+
 </head>
+
+
 <body>
+  <!-- TOP SEARCH BAR -->
+  <header class="topbar">
+    <div class="container sitewrap py-2">
+      <div class="header-main d-flex flex-column flex-lg-row align-items-lg-center gap-2 gap-lg-3">
+        <div class="d-flex align-items-center gap-2 flex-grow-1">
+          <div class="site-brand" aria-label="Lector">
+            <img src="logo.png" alt="Lector"/>
+          </div>
+          <form id="searchForm" class="search-form d-flex gap-2 flex-grow-1">
+            <div class="search-input-wrap flex-grow-1">
+              <input id="searchInput" class="form-control" value="Mateo 1" placeholder="Buscar: ej. 1 Corintios 13 / 1Co 13:1-7"/>
+              <div class="book-menu-wrap">
+                <button id="bookMenuToggle" class="book-menu-toggle" type="button" aria-label="Abrir menú de libros" aria-expanded="false" aria-controls="bookMenuDropdown">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M5.5 4.5C5.5 3.67 6.17 3 7 3H19a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a1.5 1.5 0 0 0 0 3H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 3v16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </button>
 
-    <!-- Menú Inferior -->
-   <!-- Menú Inferior SOLO en móviles -->
 
+                <div id="bookMenuDropdown" class="book-menu-dropdown" hidden>
+                  <div class="book-menu-grid">
+                    <div class="book-columns">
+                      <section class="book-column" aria-label="Antiguo Testamento">
+                        <div class="book-column-title">Antiguo Testamento</div>
+                        <div id="bookListOT" class="book-list"></div>
+                      </section>
+                      <section class="book-column" aria-label="Nuevo Testamento">
+                        <div class="book-column-title">Nuevo Testamento</div>
+                        <div id="bookListNT" class="book-list"></div>
+                      </section>
+                    </div>
+                    <section class="chapter-panel" aria-live="polite">
+                      <div id="chapterTitle" class="chapter-title">Capítulos</div>
+                      <div id="chapterList" class="chapter-list">
+                        <div class="chapter-empty">Selecciona un libro.</div>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </div>
+                        <select id="versionSelect" class="form-select" style="max-width:180px">
+              <option value="RVR1960" selected>RVR1960</option>
+            </select>
+            <button class="btn btn-primary" type="submit">Buscar</button>
+          </form>
+        </div>
 
-
-    <!-- Barra de navegación -->
-    <nav id="navio" class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="d-flex align-items-center text-white">
-    <img src="https://imgur.com/60ChKBP.png" alt="Icono" width="35" height="35" class="mr-3">
-    <div class="texto-edicion">
-        <span>Compilación</span><br>
-        <span class="edicion-numero"> Eric XXI</span>
-    </div>
-</div>
- 
-
- 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Botón "X" para cerrar el menú -->
-        <button class="close-menu">&times;</button>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="index.html" style="color:white;">INICIO</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://angelos2024.github.io/torah-Yehoshua/"style="color:white;">ÁREA DE ESTUDIO</a></li>
-                <li class="nav-item"><a class="nav-link" href="NA28español.html" style="color:white;">NESTLE-ALAND 28-ES</a></li>
-                <li class="nav-item"><a class="nav-link" href="https://productos-amber.vercel.app/" style="color:white;">INSPECTOR ALIMENTOS</a></li>
-                <li class="nav-item"><a class="nav-link" href="materiales.html"style="color:white;">MATERIALES</a></li>
-                <li class="nav-item"><a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/c/EricdeJes%C3%BAsRodr%C3%ADguezMendoza/videos"style="color:white;">ESTUDIOS VIDEOS</a></li>
-                <li class="nav-item"><a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://yehoshuamaranata.blogspot.com" style="color:white;">BIBLIOTECA DE ERIC</a></li>
+        <div class="top-actions d-flex gap-2">
+          <div class="dropdown">
+            <button class="btn btn-soft btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="themeMenuBtn">
+              Fondo
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="themeMenuBtn">
+              <li>
+                <button class="dropdown-item d-flex align-items-center" type="button" data-theme="cream">
+                  <span class="theme-dot" style="background:#edddce;"></span>Crema principal
+                </button>
+              </li>
+              <li>
+                <button class="dropdown-item d-flex align-items-center" type="button" data-theme="white">
+                  <span class="theme-dot" style="background:#ffffff;"></span>Blanco
+                </button>
+              </li>
             </ul>
+          </div>
+          <button id="btnCopyText" class="btn btn-soft btn-sm" type="button">Copiar</button>
+          <button id="btnAboutExtractor" class="btn btn-soft btn-sm" type="button">Acerca de</button>
+                  </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container sitewrap my-3 my-lg-4">
+    <!-- Header: título + versión (sin navegación) -->
+    <div class="d-flex flex-column gap-2 mb-3" style="margin-top:-20px;">
+      <div class="d-flex flex-column flex-md-row justify-content-between gap-2 align-items-md-start">
+        <div>
+          <div class="passage-title" id="pageTitle">—</div>
+          <div class="meta-row">
+            Versión: <span class="fw-semibold" id="metaVersion">—</span>
+          </div>
+          <div class="page-nav mt-2" aria-label="Navegación de pasaje">
+            <button id="btnPrevPage" class="btn btn-outline-primary btn-sm" type="button" disabled>
+              <span aria-hidden="true">←</span>
+              <span>Anterior</span>
+            </button>
+            <button id="btnNextPage" class="btn btn-outline-primary btn-sm" type="button" disabled>
+              <span>Siguiente</span>
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
         </div>
-    </nav>
-
-
-
-<style>
-/* Móvil y tablets: 0–991.98 px => SIEMPRE hamburguesa */
-@media (max-width: 991.98px){
-  .navbar { position: sticky; top: 0; z-index: 1040; }
-
-  /* Asegura que el botón exista y sea visible */
-  .navbar-toggler { display: block !important; }
-
-  /* Icono hamburguesa visible aun si otro CSS lo pisa */
-  .navbar-light .navbar-toggler-icon{
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0,0,0,0.85)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-  }
-
-  /* Estética del panel colapsado */
-  .navbar-collapse{
-    background: #4b2743;
-    border-radius: 8px;
-    padding: 10px;
-  }
-
-  .navbar .nav-link{ color: #fff !important; }
-}
-@media (min-width: 992px){
-  .close-menu{ display:none !important; }
-}
-
-
-
-    </style>
-
-
-   <header class="hero-section">
-    <div class="overlay">
-        <h1 class="display-4" style="font-family: 'Cormorant Garamond', serif; font-weight: 540; /* SemiBold */ font-size: 74px; color: black;" >
-
-        BIENVENIDOS A LA TORAH</h1>
-
-     <p class="lead text-box" style="font-family: 'Signika', sans-serif; font-size: 23px; font-weight: 540; color: black; text-shadow: 4px 4px 5px white, -4px -4px 5px white, 4px -4px 5px white, -4px 4px 5px white; padding: 5px;">
-    Este es un espacio para el estímulo de la investigación de las Escrituras de su Santidad Hashem<br> 
-    Tzva'ot quien es Yehoshúa' Hamashíaj vivo y verdadero.
-</p>
-        <h6 class="display-4" style="font-family: 'Signika', sans-serif; font-size: 23px; font-weight: 540; color: black; text-shadow: 4px 4px 5px white, -4px -4px 5px white, 4px -4px 5px white, -4px 4px 5px white; padding: 5px;" >
-
-       NOTA: ABRA CAMBIOS DRASTICOS EN EL SITIO WEB, ESPERALOS PRONTO</h1>
-
-<br> 
-<br> 
-<br> 
-<a href="https://angelos2024.github.io/torah-Yehoshua/">
-<a href="#" id="area" class="btn btn-success">
-    ÁREA DE ESTUDIO 
-    <img src="https://imgur.com/5N0pMlA.png" alt="Icono" class="icono" style="width: 40px; height: 40px; margin-left: 10px;">
-</a>
-
-
-
-
-    </div>
-</header>
-
-        <section  id="intro">
-
-<div class="container" id="entrada">
-        <p id="hu">
-
-            Este contenido de la escritura, está basado en los estudios de nuestro <b>Javer Eric de Jesús Rodríguez Mendoza</b>, utiliza textos originales en hebreo y variantes importantes del texto masorético, como la Septuaginta y los Targúms. Se ha tenido en cuenta la Biblia Hebraica Stuttgartensia, siendo una de las múltiples facetas de este evangelio lleno de virtudes.
-        </p>
-        <p id="hu">
-            Aunque <b>está sujeta a cambios y actualizaciones conforme al estudio de la Torah</b>, se procura mantener la concordancia y el uso de las mismas palabras, aun cuando suene extraño en español.
-        </p>
-        <p id="hu">
-            Basada en contenidos digitales a disposición en videos y el sitio oficial del Hno. Eric de Jesús Rodríguez.
-        </p>
-
-        <a href="https://yehoshuamaranata.blogspot.com" class="link" id="likned" target="_blank">
-            yehoshuamaranata.blogspot.com
-        </a>
-
-         </div>
-         <img class="imagen" id="algodon" src="https://imgur.com/WnKF21w.jpg" alt="Descripción" style="width: 400px; height: 400px; ">
-
-    </section>
-   
-
-    <!-- Sección de descarga de calendario -->
-<!-- Contenedor principal que alinea el video y el contenido -->
-<div class="contenido-video">
-    <!-- Contenedor del video -->
-    <div class="video-box">
-       <iframe src="https://www.youtube.com/embed/PFE8Y5b05Rg?start=629" frameborder="0" allowfullscreen></iframe>
-
+      </div>
     </div>
 
-    <!-- Contenedor del contenido -->
-    <section id="intro2" class="container">
-        <p id="descarga">DESCARGA EL CALENDARIO HEBREO</p>
-       <a href="https://drive.google.com/uc?export=view&id=11mIJVmatnpo-TUNw5auNRgLuyX2XpUED"
-   class="btn btn-primary m-2"
-   target="_blank"
-   rel="noopener noreferrer"
-   style="background-color:black;">
-   2025-2026
-</a>
-        
-        <a href="https://drive.google.com/file/d/1YVrZhoebA0wq5b3t4euPxA2_YJn7j7yR/view?usp=sharing" 
-           class="btn btn-secondary m-2" 
-           target="_blank" rel="noopener noreferrer">
-           2024-2025
-        </a>
+    <div class="row g-3 flex-nowrap content-layout">
+      <!-- LEFT TOOLS (compact) -->
+      <aside class="col-4 col-lg-2 tools-column">
+        <div class="sticky-aside d-flex flex-column gap-3">
+          <section class="panel tools-panel">
+            <div class="panel-header">Herramientas</div>
+            <div class="panel-body d-grid gap-2">
+              <a class="btn btn-outline-primary w-100" href="analisis/buscador_comparativo.html">Análisis textual</a>
+            <button id="btnNotas" type="button" class="btn btn-outline-primary">
+    Notas
+  </button>
+              <!-- Panel desplegable (queda exactamente debajo del botón) -->
+  <div id="notasPanel" class="notas-panel d-none">
+    <div class="notas-toolbar">
+      <input id="notasSearch" class="form-control form-control-sm" placeholder="Buscar cita o palabra...">
+    </div>
+    <div id="notasList" class="list-group notas-list"></div>
+  </div>
 
-        <a href="https://drive.google.com/file/d/14mL3EjIBDKs1oCpNl_QlvKg_F8UyhJ40/view?usp=sharing" 
-           class="btn btn-secondary m-2" 
-           target="_blank" rel="noopener noreferrer">
-           2023-2024
-        </a>
+              <button class="btn btn-primary w-100" type="button" id="btnRKANTEs">
+                Aparato crítico RKANT
+</button>
 
-        <a href="https://f286d263-8e1f-4a0f-ac1e-556c22fb0351.filesusr.com/ugd/f4825b_cefac0511eaa4694b7f1fa464d1ff50c.pdf" 
-           class="btn btn-secondary m-2" 
-           target="_blank" rel="noopener noreferrer">
-           2022-2023
-        </a>
-    </section>
+            </div>
+          </section>
+
+          <div id="backupPanelMount"></div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <div class="col-8 col-lg-10 main-column">
+        <section class="panel">
+          <div class="panel-header d-flex justify-content-between align-items-center gap-2">
+            <span id="panelHeaderTitle">Texto del pasaje</span>
+
+            <div class="d-flex align-items-center gap-2">
+              <span class="text-muted" style="font-weight:400; font-size:.9rem" id="statusLine"></span>
+              <span id="feedbackBadge" class="feedback-badge" style="display:none"></span>
+              <button id="btnToggleOrig" class="btn btn-soft btn-sm" type="button" aria-expanded="true">
+                Ocultar original
+              </button>
+              <button id="btnViewMode" class="btn btn-soft btn-sm" type="button">Interlineal (AT)</button>
+            </div>
+          </div>
+
+<div class="panel-body">
+
+  <!-- ===== TEXTO BÍBLICO NORMAL (RVR + ORIGINAL) ===== -->
+  <div id="biblePanel">
+    <div class="parallel">
+      <!-- IZQUIERDA: Español -->
+      <div id="spanishCol" class="parallel-col">
+        <div class="fw-semibold mb-2" id="leftLabel">RVR1960</div>
+        <div class="passage-text" id="passageTextRV">
+          <div class="text-muted">Cargando datos…</div>
+        </div>
+      </div>
+
+      <!-- DERECHA: Original -->
+      <div id="origCol" class="parallel-col">
+        <div class="fw-semibold mb-2" id="rightLabel">Original</div>
+        <div class="orig-text" id="passageTextOrig">
+          <div class="text-muted">Cargando datos…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PANEL RKANT-ES (OCULTO POR DEFECTO) ===== -->
+  <div id="rkantPanel" class="d-none mt-3">
+
+    <!-- Selectores -->
+    <div class="row g-2 mb-2">
+      <div class="col-12 col-md-4">
+        <select id="rkantBook" class="form-select form-select-sm"></select>
+      </div>
+      <div class="col-6 col-md-4">
+        <select id="rkantChapter" class="form-select form-select-sm"></select>
+      </div>
+      <div class="col-6 col-md-4">
+        <select id="rkantVerse" class="form-select form-select-sm"></select>
+      </div>
+    </div>
+
+    <!-- Contenido RKANT -->
+    <div id="rkantViewer"></div>
+
+  </div>
+
 </div>
 
-<!-- 🔹 Botón de Armonía del Evangelio -->
-<section class="container text-center my-4">
-    <h3 style="font-family: 'Signika', sans-serif; font-weight: 600;">Armonía del Evangelio</h3>
-    <p style="font-size: 16px; color: #333;">
-        Consulta una guía cronológica con los eventos de los cuatro evangelios en armonía.
-    </p>
-    <a href="https://besoratyeshua.com" 
-       class="btn armonia-btn" 
-       target="_blank" 
-       rel="noopener noreferrer">
-        Ver Armonía de los Evangelio 
-    </a>
-</section>
+        </section>
 
-<style>
-.armonia-btn {
-    background-color: black;
-    color: white;
-    font-size: 18px;
-    padding: 10px 20px;
-    border: 2px solid black;
-    transition: all 0.3s ease;
+      </div>
+    </div>
+  </main>
+
+  <script>
+/***********************
+ * Config
+ ***********************/
+const params = new URLSearchParams(window.location.search);
+
+const RV_BASE = params.get('rvBase') || './librosRV1960/';
+const GRIEGO_PATH = './IdiomaORIGEN/Bgriega.json';
+
+// ✅ Hebreo por libro (con nikkud): IdiomaORIGEN/genesis.json, exodo.json, amos.json, etc.
+const HEBREO_BOOK_BASE = params.get('heBase') || './IdiomaORIGEN/';
+
+// Si quieres forzar ocultar original por defecto: ?orig=0
+const ORIGINAL_ENABLED_DEFAULT = (params.get('orig') ?? '1') !== '0';
+
+// Estado actual (se puede cambiar desde el buscador)
+const initialBookParam = (params.get('book') || '').trim();
+const initialNameParam = (params.get('name') || '').trim();
+let currentBookSlug = initialBookParam || 'mateo';
+let currentBookName = initialNameParam || prettyBookName(currentBookSlug);
+
+const DEFAULT_REFERENCE_SEARCH = 'Mateo 1';
+const LAST_REFERENCE_STORAGE_KEY = 'lectorLastReferenceSearch';
+
+function saveLastReferenceProgress(searchText){
+  const normalized = normalizeSpaces(searchText || '');
+  if(!normalized || !parseSearch(normalized)) return;
+  try{
+    localStorage.setItem(LAST_REFERENCE_STORAGE_KEY, normalized);
+  }catch{}
 }
 
-.armonia-btn:hover {
-    background-color: white;
-    color: black;
-    text-decoration: none;
-    border: 2px solid black;
+function getLastReferenceProgress(){
+  try{
+    const saved = normalizeSpaces(localStorage.getItem(LAST_REFERENCE_STORAGE_KEY) || '');
+    if(saved && parseSearch(saved)) return saved;
+  }catch{}
+  return '';
 }
-</style>
+/***********************
+ * Canon + aliases (Genesis -> Apocalipsis)
+ ***********************/
+const NT_BOOKS = new Set([
+  'mateo','marcos','lucas','juan','hechos',
+  'romanos','1_corintios','2_corintios','galatas','efesios','filipenses','colosenses',
+  '1_tesalonicenses','2_tesalonicenses','1_timoteo','2_timoteo','tito','filemon',
+  'hebreos','santiago','1_pedro','2_pedro','1_juan','2_juan','3_juan','judas','apocalipsis'
+]);
+function isNT(slug){ return NT_BOOKS.has(slug); }
 
-    <!-- Sección de documentos antiguos -->
-    <section id="intro3" class="container my-5" style="background-color: #cdbaa9;" >
-        <p class="text-center" style="font-family: 'Cormorant Garamond', serif; font-weight: 540; /* SemiBold */ font-size: 36px; color: black;" >MANUSCRITOS ANTIGUOS</p>
-        <div class="row">
-            <!-- Primer documento -->
-            <div class="col-6 col-md-6 col-lg-4 mb-4" id="antig">
-                <div id="antig" class="card h-100"style="width:300px ; height: 450px;">
-                    <img id="antig2" src="https://imgur.com/yfwHwqv.jpg" class="card-img-top" alt="Códex Sinaíticus"style="width:298px ; height: 324px;">
-                    <div class="card-body">
-                        <h5 class="card-title">Códex Sinaíticus del siglo IV</h5>
-                        <a id="boton0" href="https://www.codexsinaiticus.org/en/manuscript.aspx"target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-block">Ver</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Segundo documento -->
-            <div class="col-6 col-md-6 col-lg-4 mb-4"id="antig">
-                <div id="antig" class="card h-100"style="width:298px ; height: 324px;">
-                    <img id="antig2" src="https://imgur.com/347C48x.jpg" class="card-img-top" alt="Manuscritos del Mar Muerto"style="width:298px ; height: 324px;">
-                    <div class="card-body">
-                        <h5 class="card-title">Los manuscritos del Mar Muerto</h5>
-                        <a id="boton0" href="http://dss.collections.imj.org.il/es/isaiah#3:24" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-block">Ver</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Tercer documento -->
-            <div class="col-6 col-md-6 col-lg-4 mb-4" id="antig">
-                <div id="antig" class="card h-100"style="width:298px ; height: 324px;">
-                    <img id="antig2" src="https://imgur.com/z0Yimyw.jpg" class="card-img-top" alt="Septuaginta Analítica"style="width:298px ; height: 324px;">
-                    <div class="card-body">
-                        <h5 class="card-title">Códex Aleppo</h5>
-                        <a id="boton0"href="https://drive.google.com/file/d/12WeaQ4UfuGbgDHKtcFeocnLT8bbUGrDW/view"  target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-block">Ver</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+function normalizeKey(s){
+  return (s || '')
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,'')
+    .replace(/\./g,'')
+    .replace(/\s+/g,'')
+    .trim();
+}
+function prettyBookName(slug){
+  return (slug || '').replace(/_/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+function slugifyBookName(name){
+  return (name || '')
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,'')
+    .replace(/\./g,'')
+    .trim()
+    .replace(/\s+/g,' ')
+    .replace(/^(\d)\s+/, '$1 ')
+    .replace(/\s/g,'_');
+}
 
- <!-- Sección de documentos antiguos -->
-    <section id="intro3" class="container my-5" style="background-color: #cdbaa9;" >
-        
-        <div class="row">
-            <!-- Primer documento -->
-            <div class="col-6 col-md-6 col-lg-4 mb-4" id="antig">
-                <div id="antig" class="card h-100" style="width:298px ; height: 324px;">
-                    <img id="antig2" src="https://imgur.com/2oq90Cj.jpg" class="card-img-top" alt="Códex Sinaíticus" style="width:298px ; height: 324px;">
-                    <div class="card-body">
-                        <h5 class="card-title">La Septuaquinta Analitica El AT</h5>
-                        <a id="boton0" href="https://www.obohu.cz/bible/index.php?styl=LXXK&kap=28&k=Pr" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-block">Ver</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Segundo documento -->
-            <div class="col-6 col-md-6 col-lg-4 mb-4" id="antig">
-                <div id="antig" class="card h-100"style="width:298px ; height: 324px;">
-                    <img id="antig2" src="https://imgur.com/g06l4IC.png" class="card-img-top" alt="Manuscritos del Mar Muerto" style="width:298px ; height: 324px;">
-                    <div class="card-body">
-                        <h5 class="card-title">Códex Leningrado</h5>
-                        <a id="boton0" href="https://drive.google.com/file/d/1Sk_Awe7_O2Dm-cKV_MvBId2nO3UrZpdl/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-block">Ver</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Tercer documento -->
-            <div class="col-6 col-md-6 col-lg-4 mb-4" id="antig">
-                <div id="antig" class="card h-100"style="width:298px ; height: 324px;">
-                    <img id="antig2" src="https://imgur.com/Udc0OAl.jpg" class=" " s="card-img-top" alt="Septuaginta Analítica" style="width:298px ; height: 324px;">
-                    <div class="card-body">
-                        <h5 class="card-title">Papiro 45</h5>
-                        <a id="boton0" href="https://viewer.cbl.ie/viewer/object/BP_I_ff_16-17/1/LOG_0000/" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-block">Ver</a>
-                    </div>
-                </div>
-            </div>
+// Aliases amplios (comunes). La clave es "normalizada" (sin espacios ni tildes)
+const BOOK_ALIASES = {
+  // Pentateuco
+ // ===== PENTATEUCO AMPLIADO =====
 
-            <div class="col-6 col-md-6 col-lg-4 mb-4" id="antig">
-                <div id="antig" class="card h-100"style="width:298px ; height: 324px;">
-                    <img id="antig2" src="https://imgur.com/sP7cQcd.jpg" class="card-img-top" alt="Septuaginta Analítica" style="width:298px ; height: 324px;">
-                    <div class="card-body">
-                        <h5 class="card-title">libro de Tsefanyah en el códice de Leningrado.</h5>
-                        <a id="boton0" href="https://drive.google.com/file/d/1aNYmp-ExTFSsUMgim0JeZIwUEHDLkv9q/view" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-block">Ver</a>
-                    </div>
-                </div>
-            </div>
+// GÉNESIS
+'genesis':'genesis',
+'gen':'genesis',
+'gn':'genesis',
+'ge':'genesis',
+'gene':'genesis',
+'genes':'genesis',
+'genesi':'genesis',
+'gensis':'genesis', 
+'genessis':'genesis',
+'geness':'genesis',
+'genesiis':'genesis',
+'genesislibro':'genesis',
+'genesis1':'genesis',
+'genbook':'genesis',
+'genbookof':'genesis',
+
+// ÉXODO
+'exodo':'exodo',
+'exo':'exodo',
+'ex':'exodo',
+'exod':'exodo',
+'exodo':'exodo',
+'exodoo':'exodo',
+'exd':'exodo',
+'exbook':'exodo',
+'exodus':'exodo',
+'exodous':'exodo',
+'exodoo':'exodo',
+
+// LEVÍTICO
+'levitico':'levitico',
+'lev':'levitico',
+'lv':'levitico',
+'le':'levitico',
+'levi':'levitico',
+'levit':'levitico',
+'leviti':'levitico',
+'levitic':'levitico',
+'leviticus':'levitico',
+'leviticos':'levitico',
+'levbook':'levitico',
+
+// NÚMEROS
+'numeros':'numeros',
+'num':'numeros',
+'nm':'numeros',
+'nu':'numeros',
+'nume':'numeros',
+'numer':'numeros',
+'numero':'numeros',
+'numbers':'numeros',
+'number':'numeros',
+'numbook':'numeros',
+
+// DEUTERONOMIO
+'deuteronomio':'deuteronomio',
+'deut':'deuteronomio',
+'dt':'deuteronomio',
+'deu':'deuteronomio',
+'deuter':'deuteronomio',
+'deuteron':'deuteronomio',
+'deuterono':'deuteronomio',
+'deuteronomy':'deuteronomio',
+'deutoronomio':'deuteronomio',   // error común
+'deuteromio':'deuteronomio',     // error común
+'deutronomio':'deuteronomio',    // error común
+'deutero':'deuteronomio',
+'deutbook':'deuteronomio',
 
 
-                 <div class="col-6 col-md-6 col-lg-4 mb-4" id="antig">
-                <div id="antig" class="card h-100"style="width:298px ; height: 324px;">
-                    <img id="antig2" src="https://imgur.com/TE0k0V0.jpg" class="card-img-top" alt="Septuaginta Analítica"style="width:298px ; height: 324px;">
-                    <div class="card-body">
-                        <h5 class="card-title">Papiros y Rollos del Mar Muerto.</h5>
-                        <a id="boton0" href="https://www.deadseascrolls.org.il/explore-the-archive" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-block">Ver</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  // ===== HISTÓRICOS AMPLIADOS =====
+
+// JOSUÉ
+'josue':'josue',
+'jos':'josue',
+'josh':'josue',
+'joshua':'josue',
+'josu':'josue',
+'josua':'josue',       // error común
+'josue1':'josue',
+'bookofjoshua':'josue',
+
+// JUECES
+'jueces':'jueces',
+'jue':'jueces',
+'jdg':'jueces',
+'judges':'jueces',
+'judg':'jueces',
+'jdc':'jueces',
+'juec':'jueces',
+'jueceslibro':'jueces',
+
+// RUT
+'rut':'rut',
+'rt':'rut',
+'ruth':'rut',
+'rutlibro':'rut',
+
+// 1 SAMUEL
+'1samuel':'1_samuel',
+'1sam':'1_samuel',
+'1sa':'1_samuel',
+'1sm':'1_samuel',
+'1samuel':'1_samuel',
+'1samuelbook':'1_samuel',
+'1samuel1':'1_samuel',
+'1samuel2':'1_samuel',
+'1samuel3':'1_samuel',
+'1samuel4':'1_samuel',
+'1samuel5':'1_samuel',
+'1samuel6':'1_samuel',
+'1samuel7':'1_samuel',
+'1samuel8':'1_samuel',
+'1samuel9':'1_samuel',
+'1samuel10':'1_samuel',
+'1samuel11':'1_samuel',
+'1samuel12':'1_samuel',
+'1samuel13':'1_samuel',
+'1samuel14':'1_samuel',
+'1samuel15':'1_samuel',
+'1samuel16':'1_samuel',
+'1samuel17':'1_samuel',
+'1samuel18':'1_samuel',
+'1samuel19':'1_samuel',
+'1samuel20':'1_samuel',
+'1samuel21':'1_samuel',
+'1samuel22':'1_samuel',
+'1samuel23':'1_samuel',
+'1samuel24':'1_samuel',
+'1samuel25':'1_samuel',
+'1samuel26':'1_samuel',
+'1samuel27':'1_samuel',
+'1samuel28':'1_samuel',
+'1samuel29':'1_samuel',
+'1samuel30':'1_samuel',
+'1samuel31':'1_samuel',
+'1sam':'1_samuel', // ya lo tienes, aquí por claridad
+
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+
+// equivalentes ingleses
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+
+'1samuel':'1_samuel',
+'1samuel':'1_samuel',
+
+'1samuel':'1_samuel',
+
+// 2 SAMUEL
+'2samuel':'2_samuel',
+'2sam':'2_samuel',
+'2sa':'2_samuel',
+'2sm':'2_samuel',
+'2samuelbook':'2_samuel',
+'2samuel1':'2_samuel',
+'2samuel2':'2_samuel',
+'2samuel3':'2_samuel',
+'2samuel4':'2_samuel',
+'2samuel5':'2_samuel',
+'2samuel6':'2_samuel',
+'2samuel7':'2_samuel',
+'2samuel8':'2_samuel',
+'2samuel9':'2_samuel',
+'2samuel10':'2_samuel',
+'2samuel11':'2_samuel',
+'2samuel12':'2_samuel',
+'2samuel13':'2_samuel',
+'2samuel14':'2_samuel',
+'2samuel15':'2_samuel',
+'2samuel16':'2_samuel',
+'2samuel17':'2_samuel',
+'2samuel18':'2_samuel',
+'2samuel19':'2_samuel',
+'2samuel20':'2_samuel',
+'2samuel21':'2_samuel',
+'2samuel22':'2_samuel',
+'2samuel23':'2_samuel',
+'2samuel24':'2_samuel',
+'2samuel':'2_samuel',
+'2samuel':'2_samuel',
+'2samuel':'2_samuel',
+
+// equivalentes ingleses
+'2samuel':'2_samuel',
+'2samuel':'2_samuel',
+'2samuel':'2_samuel',
+'2samuel':'2_samuel',
+'2samuel':'2_samuel',
+'2samuel':'2_samuel',
+'2samuel':'2_samuel',
+
+// 1 REYES
+'1reyes':'1_reyes',
+'1rey':'1_reyes',
+'1ki':'1_reyes',
+'1kgs':'1_reyes',
+'1kings':'1_reyes',
+'1king':'1_reyes',
+'1reyesbook':'1_reyes',
+'1reyes1':'1_reyes',
+'1reyes2':'1_reyes',
+'1reyes3':'1_reyes',
+'1reyes4':'1_reyes',
+'1reyes5':'1_reyes',
+'1reyes6':'1_reyes',
+'1reyes7':'1_reyes',
+'1reyes8':'1_reyes',
+'1reyes9':'1_reyes',
+'1reyes10':'1_reyes',
+'1reyes11':'1_reyes',
+'1reyes12':'1_reyes',
+'1reyes13':'1_reyes',
+'1reyes14':'1_reyes',
+'1reyes15':'1_reyes',
+'1reyes16':'1_reyes',
+'1reyes17':'1_reyes',
+'1reyes18':'1_reyes',
+'1reyes19':'1_reyes',
+'1reyes20':'1_reyes',
+'1reyes21':'1_reyes',
+'1reyes22':'1_reyes',
+
+// 2 REYES
+'2reyes':'2_reyes',
+'2rey':'2_reyes',
+'2ki':'2_reyes',
+'2kgs':'2_reyes',
+'2kings':'2_reyes',
+'2king':'2_reyes',
+'2reyesbook':'2_reyes',
+'2reyes1':'2_reyes',
+'2reyes2':'2_reyes',
+'2reyes3':'2_reyes',
+'2reyes4':'2_reyes',
+'2reyes5':'2_reyes',
+'2reyes6':'2_reyes',
+'2reyes7':'2_reyes',
+'2reyes8':'2_reyes',
+'2reyes9':'2_reyes',
+'2reyes10':'2_reyes',
+'2reyes11':'2_reyes',
+'2reyes12':'2_reyes',
+'2reyes13':'2_reyes',
+'2reyes14':'2_reyes',
+'2reyes15':'2_reyes',
+'2reyes16':'2_reyes',
+'2reyes17':'2_reyes',
+'2reyes18':'2_reyes',
+'2reyes19':'2_reyes',
+'2reyes20':'2_reyes',
+'2reyes21':'2_reyes',
+'2reyes22':'2_reyes',
+'2reyes23':'2_reyes',
+'2reyes24':'2_reyes',
+'2reyes25':'2_reyes',
+
+// 1 CRÓNICAS
+'1cronicas':'1_cronicas',
+'1cro':'1_cronicas',
+'1cr':'1_cronicas',
+'1cron':'1_cronicas',
+'1chron':'1_cronicas',
+'1chronicles':'1_cronicas',
+'1chronicle':'1_cronicas',
+'1cronicasbook':'1_cronicas',
+'1cronicas1':'1_cronicas',
+'1cronicas2':'1_cronicas',
+'1cronicas3':'1_cronicas',
+'1cronicas4':'1_cronicas',
+'1cronicas5':'1_cronicas',
+'1cronicas6':'1_cronicas',
+'1cronicas7':'1_cronicas',
+'1cronicas8':'1_cronicas',
+'1cronicas9':'1_cronicas',
+'1cronicas10':'1_cronicas',
+'1cronicas11':'1_cronicas',
+'1cronicas12':'1_cronicas',
+'1cronicas13':'1_cronicas',
+'1cronicas14':'1_cronicas',
+'1cronicas15':'1_cronicas',
+'1cronicas16':'1_cronicas',
+'1cronicas17':'1_cronicas',
+'1cronicas18':'1_cronicas',
+'1cronicas19':'1_cronicas',
+'1cronicas20':'1_cronicas',
+'1cronicas21':'1_cronicas',
+'1cronicas22':'1_cronicas',
+'1cronicas23':'1_cronicas',
+'1cronicas24':'1_cronicas',
+'1cronicas25':'1_cronicas',
+'1cronicas26':'1_cronicas',
+'1cronicas27':'1_cronicas',
+'1cronicas28':'1_cronicas',
+'1cronicas29':'1_cronicas',
+
+// 2 CRÓNICAS
+'2cronicas':'2_cronicas',
+'2cro':'2_cronicas',
+'2cr':'2_cronicas',
+'2cron':'2_cronicas',
+'2chron':'2_cronicas',
+'2chronicles':'2_cronicas',
+'2chronicle':'2_cronicas',
+'2cronicasbook':'2_cronicas',
+'2cronicas1':'2_cronicas',
+'2cronicas2':'2_cronicas',
+'2cronicas3':'2_cronicas',
+'2cronicas4':'2_cronicas',
+'2cronicas5':'2_cronicas',
+'2cronicas6':'2_cronicas',
+'2cronicas7':'2_cronicas',
+'2cronicas8':'2_cronicas',
+'2cronicas9':'2_cronicas',
+'2cronicas10':'2_cronicas',
+'2cronicas11':'2_cronicas',
+'2cronicas12':'2_cronicas',
+'2cronicas13':'2_cronicas',
+'2cronicas14':'2_cronicas',
+'2cronicas15':'2_cronicas',
+'2cronicas16':'2_cronicas',
+'2cronicas17':'2_cronicas',
+'2cronicas18':'2_cronicas',
+'2cronicas19':'2_cronicas',
+'2cronicas20':'2_cronicas',
+'2cronicas21':'2_cronicas',
+'2cronicas22':'2_cronicas',
+'2cronicas23':'2_cronicas',
+'2cronicas24':'2_cronicas',
+'2cronicas25':'2_cronicas',
+'2cronicas26':'2_cronicas',
+'2cronicas27':'2_cronicas',
+'2cronicas28':'2_cronicas',
+'2cronicas29':'2_cronicas',
+'2cronicas30':'2_cronicas',
+'2cronicas31':'2_cronicas',
+'2cronicas32':'2_cronicas',
+'2cronicas33':'2_cronicas',
+'2cronicas34':'2_cronicas',
+'2cronicas35':'2_cronicas',
+'2cronicas36':'2_cronicas',
+
+// ESDRAS
+'esdras':'esdras',
+'esd':'esdras',
+'ezra':'esdras',
+'esdr':'esdras',
+'esdra':'esdras',
+'esdrasbook':'esdras',
+
+// NEHEMÍAS
+'nehemias':'nehemias',
+'neh':'nehemias',
+'nehe':'nehemias',
+'nehem':'nehemias',
+'nehemiah':'nehemias',
+'nehemiasbook':'nehemias',
+
+// ESTER
+'ester':'ester',
+'est':'ester',
+'esth':'ester',
+'esther':'ester',
+'estherbook':'ester',
+
+  // Poéticos
+  'job':'job','jb':'job',
+  'salmos':'salmos','salmo':'salmos','sal':'salmos','ps':'salmos',
+  'proverbios':'proverbios','prov':'proverbios','pr':'proverbios',
+  'eclesiastes':'eclesiastes','ecl':'eclesiastes','ec':'eclesiastes',
+  'cantares':'cantares','cantar':'cantares','cnt':'cantares','cant':'cantares',
+
+  // Profetas mayores
+  'isaias':'isaias','isa':'isaias',
+  'jeremias':'jeremias','jer':'jeremias',
+  'lamentaciones':'lamentaciones','lam':'lamentaciones',
+  'ezequiel':'ezequiel','eze':'ezequiel','ez':'ezequiel',
+  'daniel':'daniel','dan':'daniel',
+
+  // Profetas menores
+  'oseas':'oseas','os':'oseas',
+  'joel':'joel','jl':'joel',
+  'amos':'amos','am':'amos',
+  'abdias':'abdias','abd':'abdias','obadias':'abdias','obad':'abdias',
+  'jonas':'jonas','jon':'jonas',
+  'miqueas':'miqueas','miq':'miqueas','mic':'miqueas',
+  'nahum':'nahum','nah':'nahum',
+  'habacuc':'habacuc','hab':'habacuc',
+  'sofonias':'sofonias','sof':'sofonias','zep':'sofonias',
+  'hageo':'hageo','hag':'hageo',
+  'zacarias':'zacarias','zac':'zacarias','zec':'zacarias',
+  'malaquias':'malaquias','mal':'malaquias',
+
+  // Evangelios / Hechos
+ // ===== EVANGELIOS + HECHOS AMPLIADO =====
+
+// MATEO
+'mateo':'mateo',
+'mt':'mateo',
+'mat':'mateo',
+'matt':'mateo',
+'mate':'mateo',
+'mateos':'mateo',       // error común
+'mateoo':'mateo',       // error común
+'matthew':'mateo',
+'evangeliodemateo':'mateo',
+'evangeliosegunmateo':'mateo',
+'evangeliomateo':'mateo',
+
+// MARCOS
+'marcos':'marcos',
+'mr':'marcos',
+'mk':'marcos',
+'marc':'marcos',
+'mark':'marcos',
+'marcoss':'marcos',     // error común
+'marcoss':'marcos',
+'evangeliodemarcos':'marcos',
+'evangeliosegunmarcos':'marcos',
+'evangeliomarcos':'marcos',
+
+// LUCAS
+'lucas':'lucas',
+'lc':'lucas',
+'lk':'lucas',
+'luk':'lucas',
+'luke':'lucas',
+'luc':'lucas',
+'lucass':'lucas',       // error común
+'evangeliodelucas':'lucas',
+'evangeliosegunlucas':'lucas',
+'evangeliolucas':'lucas',
+
+// JUAN
+'juan':'juan',
+'jn':'juan',
+'jhn':'juan',
+'joh':'juan',
+'john':'juan',
+'juann':'juan',         // error común
+'evangeliodejuan':'juan',
+'evangeliosegunjuan':'juan',
+'evangeliojuan':'juan',
+'evangelioyojanan':'juan', // por si alguien usa transliteración
+'yojanan':'juan',
+
+// HECHOS
+'hechos':'hechos',
+'hch':'hechos',
+'actos':'hechos',
+'act':'hechos',
+'acts':'hechos',
+'actsofapostles':'hechos',
+'hechosdelosapostoles':'hechos',
+'hechosapostoles':'hechos',
+'librodehechos':'hechos',
+'hech':'hechos',
+
+  // Paulinas
+  'romanos':'romanos','rom':'romanos',
+  '1corintios':'1_corintios','1cor':'1_corintios','1co':'1_corintios',
+  '2corintios':'2_corintios','2cor':'2_corintios','2co':'2_corintios',
+  'galatas':'galatas','gal':'galatas',
+  'efesios':'efesios','efe':'efesios','eph':'efesios',
+  'filipenses':'filipenses','fil':'filipenses','php':'filipenses',
+  'colosenses':'colosenses','col':'colosenses',
+  '1tesalonicenses':'1_tesalonicenses','1tes':'1_tesalonicenses','1th':'1_tesalonicenses',
+  '2tesalonicenses':'2_tesalonicenses','2tes':'2_tesalonicenses','2th':'2_tesalonicenses',
+  '1timoteo':'1_timoteo','1tim':'1_timoteo',
+  '2timoteo':'2_timoteo','2tim':'2_timoteo',
+  'tito':'tito','tit':'tito',
+  'filemon':'filemon','flm':'filemon','phm':'filemon',
+  'hebreos':'hebreos','heb':'hebreos',
+
+  // Generales + Apocalipsis
+  'santiago':'santiago','stg':'santiago','jas':'santiago',
+  '1pedro':'1_pedro','1pe':'1_pedro','1pet':'1_pedro',
+  '2pedro':'2_pedro','2pe':'2_pedro','2pet':'2_pedro',
+  '1juan':'1_juan','1jn':'1_juan','1j':'1_juan',
+  '2juan':'2_juan','2jn':'2_juan','2j':'2_juan',
+  '3juan':'3_juan','3jn':'3_juan','3j':'3_juan',
+  'judas':'judas','jud':'judas',
+  'apocalipsis':'apocalipsis','apo':'apocalipsis','apoc':'apocalipsis','rev':'apocalipsis',
+
+  // ===== ALIASES EXTRA (NORMALIZADOS) =====
+  'gene':'genesis',
+  'genes':'genesis',
+    'gensis':'genesis',
+
+  'exod':'exodo',
+
+  'levi':'levitico',
+  'levit':'levitico',
+
+  'numer':'numeros',
+
+  'deu':'deuteronomio',
+  'deuter':'deuteronomio',
+
+  'josu':'josue',
+  'juec':'jueces',
+
+  '1cron':'1_cronicas',
+  '2cron':'2_cronicas',
+
+  'salm':'salmos',
+
+  'prover':'proverbios',
+  'pro':'proverbios',
+
+  'ecle':'eclesiastes',
+
+  'isai':'isaias',
+  'jere':'jeremias',
+  'ezeq':'ezequiel',
+
+  // ===== FORMAS “CON ESPACIO” (PERO NORMALIZADAS SIN ESPACIO) =====
+  '1sam':'1_samuel', // cubre "1 sam" si tu normalizador quita espacios
+  '2sam':'2_samuel',
+  '1rey':'1_reyes',  // cubre "1 rey"
+  '2rey':'2_reyes',
+  '1cro':'1_cronicas', // cubre "1 cro"
+  '2cro':'2_cronicas',
+  '1tes':'1_tesalonicenses', // cubre "1 tes"
+  '2tes':'2_tesalonicenses',
+  '1tim':'1_timoteo', // cubre "1 tim"
+  '2tim':'2_timoteo',
+  '1ped':'1_pedro', // cubre "1 ped"
+  '2ped':'2_pedro',
+  '1juan':'1_juan', // cubre "1 juan"
+  '2juan':'2_juan',
+  '3juan':'3_juan',
+
+  // ===== APOCALIPSIS EXTENDIDO =====
+  'ap':'apocalipsis',
+  'apoca':'apocalipsis',
+  'apocal':'apocalipsis',
+  'apocalip':'apocalipsis'
+};
+
+    const BOOK_ORDER = [
+  'genesis','exodo','levitico','numeros','deuteronomio',
+  'josue','jueces','rut','1_samuel','2_samuel','1_reyes','2_reyes','1_cronicas','2_cronicas',
+  'esdras','nehemias','ester','job','salmos','proverbios','eclesiastes','cantares',
+  'isaias','jeremias','lamentaciones','ezequiel','daniel','oseas','joel','amos','abdias',
+  'jonas','miqueas','nahum','habacuc','sofonias','hageo','zacarias','malaquias',
+  'mateo','marcos','lucas','juan','hechos','romanos','1_corintios','2_corintios',
+  'galatas','efesios','filipenses','colosenses','1_tesalonicenses','2_tesalonicenses',
+  '1_timoteo','2_timoteo','tito','filemon','hebreos','santiago','1_pedro','2_pedro',
+  '1_juan','2_juan','3_juan','judas','apocalipsis'
+];
+function resolveBookSlug(bookRaw){
+  const key = normalizeKey(bookRaw);
+  if(BOOK_ALIASES[key]) return BOOK_ALIASES[key];
+
+  // Manejo "1 cor" -> "1cor"
+  const key2 = key.replace(/^([123])/, '$1');
+  if(BOOK_ALIASES[key2]) return BOOK_ALIASES[key2];
+
+  return slugifyBookName(bookRaw);
+}
+    function normalizeBookSlugInput(bookRaw, fallbackName=''){
+  const raw = String(bookRaw || '').trim();
+  if(raw){
+    if(/^\d+$/.test(raw)){
+      const idx = Number(raw) - 1;
+      if(idx >= 0 && idx < BOOK_ORDER.length) return BOOK_ORDER[idx];
+    }
+
+    const resolved = resolveBookSlug(raw);
+    if(BOOK_ORDER.includes(resolved)) return resolved;
+  }
+
+  const fallback = String(fallbackName || '').trim();
+  if(fallback){
+    const resolvedFallback = resolveBookSlug(fallback);
+    if(BOOK_ORDER.includes(resolvedFallback)) return resolvedFallback;
+  }
+
+  return '';
+}
+
+currentBookSlug = normalizeBookSlugInput(initialBookParam, initialNameParam) || '1_corintios';
+if(!initialNameParam){
+  currentBookName = prettyBookName(currentBookSlug);
+}
 
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    var closeMenuBtn = document.querySelector(".close-menu");
-    var navbarCollapse = document.querySelector("#navbarNav");
-    var menuToggle = document.querySelector(".navbar-toggler"); // Botón de menú hamburguesa
+/***********************
+ * Mapeos para Original (book_name dentro de los JSON grandes)
+ ***********************/
+const NT_TR_BOOKNAME = {
+  mateo: 'Matthew', marcos: 'Mark', lucas: 'Luke', juan: 'John', hechos: 'Acts',
+  romanos: 'Romans', '1_corintios': '1 Corinthians', '2_corintios': '2 Corinthians',
+  galatas: 'Galatians', efesios: 'Ephesians', filipenses: 'Philippians', colosenses: 'Colossians',
+  '1_tesalonicenses': '1 Thessalonians', '2_tesalonicenses': '2 Thessalonians',
+  '1_timoteo': '1 Timothy', '2_timoteo': '2 Timothy', tito: 'Titus', filemon: 'Philemon',
+  hebreos: 'Hebrews', santiago: 'James', '1_pedro': '1 Peter', '2_pedro': '2 Peter',
+  '1_juan': '1 John', '2_juan': '2 John', '3_juan': '3 John', judas: 'Jude', apocalipsis: 'Revelation'
+};
 
-    // Ocultar el botón "X" al inicio
-    closeMenuBtn.style.display = "none";
+/***********************
+ * DOM
+ ***********************/
+const form = document.getElementById('searchForm');
+const searchInput = document.getElementById('searchInput');
+const versionSelect = document.getElementById('versionSelect');
+const metaVersion = document.getElementById('metaVersion');
+const pageTitle = document.getElementById('pageTitle');
+const statusLine = document.getElementById('statusLine');
 
-    // Mostrar "X" cuando se abre el menú en pantallas pequeñas
-    menuToggle.addEventListener("click", function() {
-        if (window.innerWidth <= 992) {
-            closeMenuBtn.style.display = navbarCollapse.classList.contains("show") ? "none" : "block";
+const passageTextRV = document.getElementById('passageTextRV');
+const passageTextOrig = document.getElementById('passageTextOrig');
+
+const leftLabel = document.getElementById('leftLabel');
+const rightLabel = document.getElementById('rightLabel');
+
+
+const btnCopyText = document.getElementById('btnCopyText');
+const btnAboutExtractor = document.getElementById('btnAboutExtractor');
+const btnViewMode = document.getElementById('btnViewMode');
+const btnToggleOrig = document.getElementById('btnToggleOrig');
+    const btnPrevPage = document.getElementById('btnPrevPage');
+const btnNextPage = document.getElementById('btnNextPage');
+const themeMenuBtn = document.getElementById('themeMenuBtn');
+const themeMenu = themeMenuBtn?.nextElementSibling;
+const themeItems = document.querySelectorAll('.dropdown-item[data-theme]');
+/***********************
+ * Data / caches
+ ***********************/
+let lastRef = null;
+const rvCache = {};                 // slug -> chapters[][]
+let trData = null;                  // NT griego completo (verses[])
+const trChaptersCache = {};         // slug -> chapters[][]
+
+
+// ✅ Hebreo por libro (cada archivo ya trae text[][])
+const heBookCache = {};             // slug -> chapters[][]
+    const jsonCache = new Map();
+
+let bookDataRV = null;
+let bookDataOrig = null;
+let pendingRestoreState = null;
+let viewMode = 'parallel';
+/***********************
+ * Helpers
+ ***********************/
+function esc(s){
+  return (s ?? '')
+    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+    .replaceAll('"','&quot;').replaceAll("'","&#39;");
+}
+function fmtVerse(raw){
+  // normaliza: "/n", "\\n" y saltos reales -> "\n"
+  const normalized = String(raw ?? '').replace(/\/n|\\n/g, '\n');
+  // escapa HTML y luego convierte saltos a <br>
+  return esc(normalized).replace(/\n/g, '<br>');
+}
+const KNOWN_GREEK_ADDED_RANGES = [
+  { book: 'marcos', chapterStart: 16, verseStart: 9, chapterEnd: 16, verseEnd: 20 },
+  { book: 'juan', chapterStart: 7, verseStart: 53, chapterEnd: 8, verseEnd: 11 }
+];
+function isVerseWithinKnownGreekAddition(bookSlug, chapter, verse){
+  if(!bookSlug || !Number.isFinite(chapter) || !Number.isFinite(verse)) return false;
+  return KNOWN_GREEK_ADDED_RANGES.some((range) => {
+    if(range.book !== bookSlug) return false;
+    const current = chapter * 1000 + verse;
+    const start = range.chapterStart * 1000 + range.verseStart;
+    const end = range.chapterEnd * 1000 + range.verseEnd;
+    return current >= start && current <= end;
+  });
+}
+function renderGreekAddedSegments(raw, context = {}){
+  const source = String(raw ?? '');
+  const knownFullAddition = isVerseWithinKnownGreekAddition(
+    context.bookSlug,
+    Number(context.chapter),
+    Number(context.verse)
+  );
+
+  const phraseRe = /verso añadido no existe\./gi;
+ if(phraseRe.test(source)){
+    phraseRe.lastIndex = 0;
+    let out = '';
+    let last = 0;
+    for(const match of source.matchAll(phraseRe)){
+      const idx = match.index ?? 0;
+      out += esc(source.slice(last, idx));
+      out += `<span class="verse-added">${esc(match[0])}</span>`;
+      last = idx + match[0].length;
+    }
+    out += esc(source.slice(last));
+    return out;
+  }
+
+  const hasOpen = source.includes('[[');
+  const hasClose = source.includes(']]');
+  if(!hasOpen && !hasClose && !knownFullAddition){
+    return esc(source);
+  }
+
+  if((knownFullAddition && hasClose && !hasOpen) || (knownFullAddition && !hasOpen && !hasClose)){
+    return `<span class="verse-added">verso añadido no existe.</span>`;
+  }
+  let out = '';
+  let cursor = 0;
+  let inAdded = knownFullAddition && !hasOpen;
+  while(cursor < source.length){
+    if(source.startsWith('[[', cursor)){
+      inAdded = true;
+      cursor += 2;
+      continue;
+    }
+    if(source.startsWith(']]', cursor)){
+      inAdded = false;
+      cursor += 2;
+      continue;
+    }
+    let nextSpecial = source.length;
+    const nextOpen = source.indexOf('[[', cursor);
+    const nextClose = source.indexOf(']]', cursor);
+    if(nextOpen !== -1) nextSpecial = Math.min(nextSpecial, nextOpen);
+    if(nextClose !== -1) nextSpecial = Math.min(nextSpecial, nextClose);
+    const chunk = source.slice(cursor, nextSpecial);
+    out += inAdded
+      ? `<span class="verse-added">${esc(chunk)}</span>`
+      : esc(chunk);
+    cursor = nextSpecial;
+  }
+
+  if((hasOpen || hasClose) && !knownFullAddition){
+    out += ` <span class="verse-added">palabras añadidas</span>`;
+  }
+ return out;
+}
+function fmtOrigVerse(raw, isGreek, context = {}){
+  const normalized = String(raw ?? '').replace(/\/n|\\n/g, '\n');
+  if(!isGreek) return esc(normalized).replace(/\n/g, '<br>');
+  return renderGreekAddedSegments(normalized, context).replace(/\n/g, '<br>');
+}
+    function buildInterlinearWordMarkup(rows, fallbackText, isGreek){
+      const tokens = Array.isArray(rows?.tokens) ? rows.tokens : [];
+  const spanishTokens = Array.isArray(rows?.spanishTokens) ? rows.spanishTokens : [];
+      const originalWordClass = isGreek ? 'interlinear-greek' : 'interlinear-hebrew';
+  const directionClass = isGreek ? 'interlinear-dir-ltr' : 'interlinear-dir-rtl';
+  if(!tokens.length){
+    return `<span class="${originalWordClass}">${fmtOrigVerse(fallbackText || '-', isGreek, rows?.context || {})}</span>`;
+      }
+
+  const words = tokens.map((token, idx) => {
+    const originalWord = esc(token || '-');
+    const spanishWord = esc(spanishTokens[idx] || '-');
+    return `<span class="interlinear-word ${directionClass}"><span class="${originalWordClass}">${originalWord}</span><span class="interlinear-spanish">${spanishWord}</span></span>`;
+  });
+
+  return `<span class="interlinear-grid ${directionClass}">${words.join('')}</span>`;
+    }
+function updateViewModeButton(){
+  if(!btnViewMode) return;
+   btnViewMode.textContent = viewMode === 'interlinear' ? 'Paralelo' : 'Interlineal';
+}
+
+function isInterlinearAvailable(){
+  return true;
+}
+
+function setViewMode(mode){
+   const requestedInterlinear = mode === 'interlinear';
+  viewMode = (requestedInterlinear && isInterlinearAvailable()) ? 'interlinear' : 'parallel';
+  document.body.classList.toggle('interlinear-mode', viewMode === 'interlinear');
+  updateViewModeButton();
+  if(lastRef){
+    render({ chapter: lastRef.chapter, verseStart: lastRef.verseStart, verseEnd: lastRef.verseEnd });
+  }
+}
+function normalizeSpaces(s){
+  return (s || '').trim().replace(/\s+/g,' ');
+}
+    function buildLastReferenceSearch(){
+  if(!lastRef?.chapter) return '';
+  const chapter = Number(lastRef.chapter);
+  const verseStart = Number(lastRef.verseStart);
+  const verseEnd = Number(lastRef.verseEnd);
+  if(Number.isFinite(verseStart) && Number.isFinite(verseEnd) && verseStart > 0 && verseEnd >= verseStart){
+    if(verseStart === verseEnd) return `${prettyBookName(currentBookSlug)} ${chapter}:${verseStart}`;
+    return `${prettyBookName(currentBookSlug)} ${chapter}:${verseStart}-${verseEnd}`;
+  }
+  return `${prettyBookName(currentBookSlug)} ${chapter}`;
+}
+async function loadJson(path){
+ if (jsonCache.has(path)) return jsonCache.get(path);
+  const promise = fetch(path, { cache: 'force-cache' }).then(async (r) => {
+    if(!r.ok) throw new Error(`No se pudo cargar ${path} (HTTP ${r.status})`);
+    return await r.json();
+  });
+  jsonCache.set(path, promise);
+  try{
+    return await promise;
+  }catch(error){
+    jsonCache.delete(path);
+    throw error;
+  }
+}
+
+    function getFriendlySearchErrorMessage(error){
+  const rawMessage = String(error?.message || error || '');
+  if(rawMessage.includes('HTTP 404') && rawMessage.includes(RV_BASE)){
+    return 'intenta con una entrada valida.';
+  }
+  return rawMessage || 'intenta con una entrada valida.';
+}
+async function copy(text){
+  try{ await navigator.clipboard.writeText(text); }catch{}
+}
+    function saveReaderState(){
+  try{
+    const state = {
+      url: location.href,
+      scrollY: window.scrollY || 0,
+      origHidden: document.body.classList.contains('orig-hidden') ? 1 : 0,
+      currentBookSlug: currentBookSlug || null,
+      currentBookName: currentBookName || null,
+     lastSearch: (document.getElementById('searchInput')?.value || '').trim(),
+      lastReferenceSearch: buildLastReferenceSearch()
+    };
+    sessionStorage.setItem('lectorState', JSON.stringify(state));
+  }catch{}
+}
+function applyTheme(theme){
+ const allowedThemes = new Set(['cream', 'white']);
+  const safeTheme = allowedThemes.has(theme) ? theme : 'cream';
+  document.documentElement.dataset.theme = safeTheme;
+  localStorage.setItem('lectorTheme', safeTheme);
+}
+    async function getChapterCount(slug){
+  if(rvCache[slug]) return rvCache[slug].length;
+  const path = `${RV_BASE}${slug}.json`;
+  rvCache[slug] = await loadJson(path);
+  return rvCache[slug].length;
+}
+
+function buildSearchString(slug, chapter){
+  return `${prettyBookName(slug)} ${chapter}`;
+}
+
+function formatNavButtonLabel(direction, target){
+  const label = target ? `${prettyBookName(target.slug)} ${target.chapter}` : '';
+  const icon = direction === 'prev' ? '←' : '→';
+  const text = direction === 'prev' ? 'Anterior' : 'Siguiente';
+  const labelHtml = label ? ` <span class="d-none d-md-inline text-muted ms-1">${esc(label)}</span>` : '';
+  return direction === 'prev'
+    ? `<span aria-hidden="true">${icon}</span><span>${text}</span>${labelHtml}`
+    : `<span>${text}</span>${labelHtml}<span aria-hidden="true">${icon}</span>`;
+}
+
+function setNavButton(button, direction, target){
+  if(!button) return;
+  button.disabled = !target;
+  button.dataset.book = target?.slug || '';
+  button.dataset.chapter = target?.chapter || '';
+  button.innerHTML = formatNavButtonLabel(direction, target);
+  button.title = target ? `${prettyBookName(target.slug)} ${target.chapter}` : '';
+}
+
+async function updatePageNav(chapterCount){
+  if(!btnPrevPage || !btnNextPage || !lastRef) return;
+  const currentChapter = lastRef.chapter;
+  const idx = BOOK_ORDER.indexOf(currentBookSlug);
+  let prevTarget = null;
+  let nextTarget = null;
+
+  if(currentChapter > 1){
+    prevTarget = { slug: currentBookSlug, chapter: currentChapter - 1 };
+  }else if(idx > 0){
+    const prevSlug = BOOK_ORDER[idx - 1];
+    const prevChapterCount = await getChapterCount(prevSlug);
+    prevTarget = { slug: prevSlug, chapter: prevChapterCount };
+  }
+
+  if(currentChapter < chapterCount){
+    nextTarget = { slug: currentBookSlug, chapter: currentChapter + 1 };
+  }else if(idx >= 0 && idx < BOOK_ORDER.length - 1){
+    const nextSlug = BOOK_ORDER[idx + 1];
+    nextTarget = { slug: nextSlug, chapter: 1 };
+  }
+
+  setNavButton(btnPrevPage, 'prev', prevTarget);
+  setNavButton(btnNextPage, 'next', nextTarget);
+}
+
+async function navigateToPage(slug, chapter){
+  if(!slug || !chapter) return;
+  searchInput.value = buildSearchString(slug, chapter);
+  await ensureBookLoaded(slug, prettyBookName(slug));
+  leftLabel.textContent = versionSelect.value;
+  await render({ chapter, verseStart: null, verseEnd: null });
+}
+/***********************
+ * Builder: verses[] -> chapters[][]
+ ***********************/
+function buildChaptersFromVersesForBook(allVerses, bookName){
+  if(!bookName || !Array.isArray(allVerses)) return null;
+
+  const verses = allVerses.filter(v => v && v.book_name === bookName);
+
+  let maxCh = 0;
+  const maxVerseByCh = {};
+  for(const v of verses){
+    const ch = Number(v.chapter);
+    const vs = Number(v.verse);
+    if(Number.isFinite(ch) && ch > maxCh) maxCh = ch;
+    if(!maxVerseByCh[ch] || vs > maxVerseByCh[ch]) maxVerseByCh[ch] = vs;
+  }
+  if(maxCh <= 0) return null;
+
+  const chapters = Array.from({length: maxCh}, (_, i) => {
+    const ch = i+1;
+    const len = maxVerseByCh[ch] || 0;
+    return Array.from({length: len}, () => '');
+  });
+
+  for(const v of verses){
+    const ch = Number(v.chapter);
+    const vs = Number(v.verse);
+    if(ch >= 1 && ch <= chapters.length && vs >= 1 && vs <= chapters[ch-1].length){
+      chapters[ch-1][vs-1] = v.text || '';
+    }
+  }
+  return chapters;
+}
+
+/***********************
+ * Cargar libro: Español + (opcional) Original
+ ***********************/
+async function ensureBookLoaded(slug, displayName){
+  // Español (requerido)
+  if(!rvCache[slug]){
+    const path = `${RV_BASE}${slug}.json`;
+    rvCache[slug] = await loadJson(path);
+  }
+  bookDataRV = rvCache[slug];
+
+  // Original (opcional). Si falla, NO tumba el español.
+  bookDataOrig = null;
+
+  if(!ORIGINAL_ENABLED_DEFAULT){
+    rightLabel.textContent = 'Original (off)';
+    passageTextOrig.innerHTML = `<div class="text-muted">Original desactivado.</div>`;
+    return;
+  }
+
+  if(isNT(slug)){
+    rightLabel.textContent = 'Griego';
+    passageTextOrig.classList.remove('hebrew');
+    passageTextOrig.classList.add('greek');
+
+    try{
+      if(!trData) trData = await loadJson(GRIEGO_PATH);
+      if(!trChaptersCache[slug]){
+        const bookName = NT_TR_BOOKNAME[slug];
+        trChaptersCache[slug] = buildChaptersFromVersesForBook(trData.verses, bookName);
+      }
+      bookDataOrig = trChaptersCache[slug] || null;
+
+      if(!bookDataOrig){
+        passageTextOrig.innerHTML = `<div class="text-muted">Griego no disponible para este libro (revisa mapeo).</div>`;
+      }
+    }catch(err){
+      passageTextOrig.innerHTML = `<div class="text-muted">Griego no disponible: ${esc(err.message || String(err))}</div>`;
+      bookDataOrig = null;
+    }
+
+  } else {
+    // ✅ AT: Hebreo por libro: IdiomaORIGEN/<slug>.json, con raíz: { metadata, text: [[...],[...]] }
+    rightLabel.textContent = 'Hebreo';
+    passageTextOrig.classList.remove('greek');
+    passageTextOrig.classList.add('hebrew');
+
+    try{
+      if(!heBookCache[slug]){
+        const hebrewFileCandidates = [
+           `${HEBREO_BOOK_BASE}${slug.replaceAll('_',' ')}.json`,
+          `${HEBREO_BOOK_BASE}${slug}.json`
+        ];
+
+        let heBook = null;
+        let loadedPath = hebrewFileCandidates[0];
+        let lastErr = null;
+        for(const candidate of hebrewFileCandidates){
+          try{
+            heBook = await loadJson(candidate);
+            loadedPath = candidate;
+            break;
+          }catch(err){
+            lastErr = err;
+          }
         }
-    });
 
-    // Cerrar menú con "X" y ocultar el botón
-    closeMenuBtn.addEventListener("click", function() {
-        navbarCollapse.classList.remove("show");
-        closeMenuBtn.style.display = "none";
-    });
+        if(!heBook){
+          throw lastErr || new Error('No se pudo cargar el archivo hebreo.');
+        } 
 
-    // Ocultar el botón "X" si la pantalla es grande
-    window.addEventListener("resize", function() {
-        if (window.innerWidth > 992) {
-            closeMenuBtn.style.display = "none";
+        if(!heBook || !Array.isArray(heBook.text)){
+           throw new Error(`Estructura hebrea inválida en ${loadedPath}: falta "text" como array (chapters[][]).`);
         }
-    });
+
+        // Normaliza a strings (por si hay nulls)
+        heBookCache[slug] = heBook.text.map(ch => Array.isArray(ch) ? ch.map(v => (v ?? '')) : []);
+      }
+
+      bookDataOrig = heBookCache[slug] || null;
+
+      if(!bookDataOrig){
+        passageTextOrig.innerHTML = `<div class="text-muted">Hebreo no disponible para este libro.</div>`;
+      }
+    }catch(err){
+      passageTextOrig.innerHTML = `<div class="text-muted">Hebreo no disponible: ${esc(err.message || String(err))}</div>`;
+      bookDataOrig = null;
+    }
+  }
+
+  currentBookSlug = slug;
+  currentBookName = displayName || prettyBookName(slug);
+}
+
+/***********************
+ * Parse búsqueda
+ ***********************/
+function parseSearch(raw){
+  const q = normalizeSpaces(raw);
+  if(!q) return null;
+ // ✅ Permite "cap" o "cap:verso" usando el libro actual (ej: enlaces desde búsquedas)
+  const chapterOnlyMatch = q.match(/^(\d+)(?::(\d+)(?:\s*-\s*(\d+))?)?\s*$/);
+  if(chapterOnlyMatch){
+    const chapter = parseInt(chapterOnlyMatch[1], 10);
+    const verseStart = chapterOnlyMatch[2] ? parseInt(chapterOnlyMatch[2], 10) : null;
+    const verseEnd = chapterOnlyMatch[3] ? parseInt(chapterOnlyMatch[3], 10) : (verseStart ? verseStart : null);
+    return {
+      slug: currentBookSlug,
+      bookDisplay: currentBookName || prettyBookName(currentBookSlug),
+      chapter,
+      verseStart,
+      verseEnd
+    };
+  }
+
+  const m = q.match(/^(.+?)(?:\s+)?(\d+)(?::(\d+)(?:\s*-\s*(\d+))?)?\s*$/);
+  if(!m) return null;
+
+  const bookRaw = m[1];
+  const slug = normalizeBookSlugInput(bookRaw, bookRaw) || resolveBookSlug(bookRaw);
+  const chapter = parseInt(m[2],10);
+  const verseStart = m[3] ? parseInt(m[3],10) : null;
+  const verseEnd = m[4] ? parseInt(m[4],10) : (verseStart ? verseStart : null);
+
+  return { slug, bookDisplay: bookRaw, chapter, verseStart, verseEnd };
+}
+
+/***********************
+ * Render
+ ***********************/
+function clearFeedback(){
+  const b = document.getElementById('feedbackBadge');
+  if(!b) return;
+  b.style.display = 'none';
+  b.className = 'feedback-badge';
+  b.innerHTML = '';
+}
+
+function showFeedback(kind, text){
+  const b = document.getElementById('feedbackBadge');
+  if(!b) return;
+  b.style.display = 'inline-flex';
+  b.className = 'feedback-badge ' + (kind === 'ok' ? 'ok feedback-animate-pop' : 'err feedback-animate-shake');
+  const icon = kind === 'ok' ? '<span class="icon-check" aria-hidden="true"></span>' : '<span class="icon-x" aria-hidden="true"></span>';
+  b.innerHTML = icon + '<span>' + esc(text) + '</span>';
+  setTimeout(() => b.classList.remove('feedback-animate-pop','feedback-animate-shake'), 350);
+}
+let syncVerseHeightsRaf = null;
+function scheduleSyncVerseHeights(){
+  if(syncVerseHeightsRaf) cancelAnimationFrame(syncVerseHeightsRaf);
+  syncVerseHeightsRaf = requestAnimationFrame(() => {
+    syncVerseHeightsRaf = null;
+    syncVerseHeights();
+  });
+}
+
+function syncVerseHeights(){
+  const rvLines = passageTextRV.querySelectorAll('.verse-line[data-side="rv"]');
+  const origLines = passageTextOrig.querySelectorAll('.verse-line[data-side="orig"]');
+
+rvLines.forEach((line) => {
+    line.style.minHeight = '';
+    line.style.paddingTop = '';
+    line.style.paddingBottom = '';
+  });
+  origLines.forEach((line) => {
+    line.style.minHeight = '';
+    line.style.paddingTop = '';
+    line.style.paddingBottom = '';
+  });
+
+if(!bookDataOrig || document.body.classList.contains('orig-hidden') || viewMode === 'interlinear') return;
+
+  const origByVerse = new Map();
+  origLines.forEach((line) => { origByVerse.set(line.dataset.v, line); });
+
+  rvLines.forEach((line) => {
+    const twin = origByVerse.get(line.dataset.v);
+    if(!twin) return;
+const rvHeight = line.getBoundingClientRect().height;
+    const origHeight = twin.getBoundingClientRect().height;
+    const maxHeight = Math.max(rvHeight, origHeight);
+    line.style.minHeight = `${maxHeight}px`;
+    twin.style.minHeight = `${maxHeight}px`;
+    const diff = Math.abs(rvHeight - origHeight);
+    if(diff < 1) return;
+
+    const topPad = Math.floor(diff / 2);
+    const bottomPad = diff - topPad;
+    const shorter = rvHeight < origHeight ? line : twin;
+    shorter.style.paddingTop = `${topPad}px`;
+    shorter.style.paddingBottom = `${bottomPad}px`;
+  });
+}
+async function render(ref){
+  if(!bookDataRV) return;
+
+  clearFeedback();
+
+  const chapterCount = bookDataRV.length;
+
+  // Validación: capítulo solicitado
+  if(ref.chapter < 1 || ref.chapter > chapterCount){
+    pageTitle.textContent = `${currentBookName} ${ref.chapter}`;
+   metaVersion.textContent = viewMode === 'interlinear' ? 'Interlineal' : versionSelect.value;
+  rightLabel.textContent = viewMode === 'interlinear' ? 'Texto original + Español' : (isNT(currentBookSlug) ? 'Griego' : 'Hebreo');
+    statusLine.textContent = `Capítulos: ${chapterCount}`;
+    passageTextRV.innerHTML = `<div class="text-muted">No existe el capítulo <strong>${esc(String(ref.chapter))}</strong> en <strong>${esc(currentBookName)}</strong>.</div>`;
+    passageTextOrig.innerHTML = `<div class="text-muted">—</div>`;
+    showFeedback('err', 'Verso / capítulo no encontrado');
+    return;
+  }
+
+  const ch = ref.chapter;
+  const versesRV = bookDataRV[ch-1] || [];
+  const verseCount = versesRV.length;
+
+  // Validación: versículo solicitado
+  if(ref.verseStart != null){
+    const v1req = ref.verseStart;
+    const v2req = ref.verseEnd ?? v1req;
+    if(v1req < 1 || v1req > verseCount || v2req < 1 || v2req > verseCount){
+      pageTitle.textContent = `${currentBookName} ${ch}:${v1req}${(v2req!==v1req?'-'+v2req:'')}`;
+      metaVersion.textContent = versionSelect.value;
+      statusLine.textContent = `Capítulos: ${chapterCount} · Cap ${ch}: ${verseCount} vers.`;
+      passageTextRV.innerHTML = `<div class="text-muted">No existe ese versículo en <strong>${esc(currentBookName)} ${ch}</strong>. Rango válido: 1–${verseCount}.</div>`;
+      passageTextOrig.innerHTML = `<div class="text-muted">—</div>`;
+      showFeedback('err', 'Verso / capítulo no encontrado');
+      return;
+    }
+  }
+
+  let v1 = ref.verseStart ?? 1;
+  let v2 = ref.verseEnd ?? verseCount;
+  if(v2 < v1) [v1, v2] = [v2, v1];
+
+  lastRef = { chapter: ch, verseStart: v1, verseEnd: v2 };
+
+  const range = (ref.verseStart == null)
+    ? `${currentBookName} ${ch}`
+    : `${currentBookName} ${ch}:${v1}${(v2 !== v1 ? '-' + v2 : '')}`;
+
+  pageTitle.textContent = range;
+ metaVersion.textContent = (viewMode === 'interlinear' && isInterlinearAvailable()) ? 'Interlineal' : versionSelect.value;
+
+  // Español
+  let htmlRV = '';
+  for(let v=v1; v<=v2; v++){
+    const t = versesRV[v-1] ?? '';
+ htmlRV += `<p class="mb-2 verse-line" data-side="rv" data-book="${esc(currentBookSlug)}" data-ch="${ch}" data-v="${v}">
+    <span class="verse-num">${v}</span><span class="verse-text">${fmtVerse(t)}</span>
+    </p>`;
+
+  }
+  passageTextRV.innerHTML = htmlRV || `<div class="text-muted">Sin contenido para esta referencia.</div>`;
+
+  // Original / interlineal
+  if(bookDataOrig){
+    const versesOrig = bookDataOrig[ch-1] || [];
+    const isGreekBook = isNT(currentBookSlug);
+    let htmlOrig = '';
+    for(let v=v1; v<=v2; v++){
+      const t = versesOrig[v-1] ?? '';
+ if(viewMode === 'interlinear'){
+   if(window.InterlinearView?.buildInterlinearRows){
+           const rows = await window.InterlinearView.buildInterlinearRows(t, { isGreek: isGreekBook });
+     htmlOrig += `<p class="mb-2 verse-line interlinear-verse" data-side="orig" data-book="${esc(currentBookSlug)}" data-ch="${ch}" data-v="${v}">
+            <span class="verse-num">${v}</span>
+ <span class="interlinear-original ${isGreekBook ? 'interlinear-dir-ltr' : 'interlinear-dir-rtl'}">${buildInterlinearWordMarkup(rows, t, isGreekBook)}</span>
+ </p>`;
+        }else{
+          htmlOrig += `<p class="mb-2 verse-line interlinear-verse" data-side="orig" data-book="${esc(currentBookSlug)}" data-ch="${ch}" data-v="${v}">
+            <span class="verse-num">${v}</span>
+            <span class="interlinear-original ${isGreekBook ? 'interlinear-dir-ltr' : 'interlinear-dir-rtl'}">${fmtOrigVerse(t, isGreekBook, { bookSlug: currentBookSlug, chapter: ch, verse: v })}</span>
+                        <span class="interlinear-spanish">-</span>
+          </p>`;
+        }
+      }else{
+        htmlOrig += `<p class="mb-2 verse-line" data-side="orig" data-book="${esc(currentBookSlug)}" data-ch="${ch}" data-v="${v}">
+           <span class="verse-num">${v}</span><span class="verse-text">${fmtOrigVerse(t, isGreekBook, { bookSlug: currentBookSlug, chapter: ch, verse: v })}</span>
+                   </p>`;
+      }
+    }
+    passageTextOrig.innerHTML = htmlOrig || `<div class="text-muted">Sin contenido original para esta referencia.</div>`;
+    // ✅ Hacer cada palabra griega clickeable (antes de subrayados/notas)
+ if(viewMode === 'parallel' && window.GreekLexicon?.decoratePassage) {
+      window.GreekLexicon.decoratePassage(passageTextOrig, currentBookSlug, ch, v1, v2);
+    }
+  } else {
+    passageTextOrig.innerHTML = `<div class="text-muted">Original no disponible para esta referencia.</div>`;
+  }
+
+  statusLine.textContent = `Capítulos: ${chapterCount} · Cap ${ch}: ${verseCount} vers.`;
+  showFeedback('ok', 'Cita encontrada');
+  updatePageNav(chapterCount);
+
+  const userSearch = normalizeSpaces(searchInput.value) || range;
+    saveLastReferenceProgress(buildLastReferenceSearch() || userSearch);
+  history.replaceState(
+    null,
+    '',
+      `?book=${encodeURIComponent(currentBookSlug)}&name=${encodeURIComponent(currentBookName)}&search=${encodeURIComponent(userSearch)}&version=${encodeURIComponent(versionSelect.value)}&orig=${ORIGINAL_ENABLED_DEFAULT?'1':'0'}&view=${viewMode}`
+  );
+
+
+// ✅ Aplicar subrayados y notas guardadas (IndexedDB) después de renderizar el DOM
+if (window.AnnotationsUI_applyHighlightsToPassage) {
+  window.AnnotationsUI_applyHighlightsToPassage(currentBookSlug, ch, v1, v2);
+}
+if (window.AnnotationsUI_applyNotesToPassage) {
+  window.AnnotationsUI_applyNotesToPassage(currentBookSlug, ch, v1, v2);
+}
+  // ✅ Comentarios bíblicos (solo si hay JSON para ese capítulo)
+if (window.BibleComments?.attachCommentsToRV) {
+  window.BibleComments.attachCommentsToRV(passageTextRV, currentBookSlug, ch);
+}
+
+scheduleSyncVerseHeights();
+  if (bookDataOrig && passageTextOrig.classList.contains('greek') && document.fonts?.ready) {
+  document.fonts.ready.then(scheduleSyncVerseHeights).catch(() => {});
+}
+}
+
+
+async function runSearch(){
+  const raw = normalizeSpaces(searchInput.value);
+  if(!raw){
+    passageTextRV.innerHTML = `<div class="text-muted">Escribe una referencia.</div>`;
+    passageTextOrig.innerHTML = `<div class="text-muted">Escribe una referencia.</div>`;
+    return;
+  }
+
+  const ref = parseSearch(raw);
+
+  // ✅ Si NO es una referencia, se interpreta como búsqueda por palabra/frase
+  if(!ref){
+    const q = raw.trim();
+    if(q){
+      const p = new URLSearchParams();
+      p.set('q', q);
+      p.set('scope', 'auto');   // auto | all | es | gr | he (busqueda.html)
+      p.set('mode', 'auto');    // compatibilidad retroactiva
+      p.set('exact', '0');      // 1 si quieres exacta por defecto
+      // Puedes pasar también la versión si luego la usas en busqueda.html
+      p.set('version', versionSelect.value || 'RVR1960');
+
+    // ✅ Guardar estado del lector (para restaurar si el navegador recarga)
+saveReaderState();
+      window.location.href = `./busqueda.html?${p.toString()}`;
+      return;
+    }
+
+    // Si está vacío, muestra mensaje
+    const msg = `<div class="text-muted">Escribe una referencia o una palabra.</div>`;
+    passageTextRV.innerHTML = msg;
+    passageTextOrig.innerHTML = msg;
+    return;
+  }
+
+
+  try{
+    await ensureBookLoaded(ref.slug, ref.bookDisplay);
+    leftLabel.textContent = versionSelect.value;
+    await render(ref);
+  }catch(err){
+    const msg = `<div class="text-danger fw-semibold">Error:</div><div class="text-muted">${esc(getFriendlySearchErrorMessage(err))}</div>`;
+    passageTextRV.innerHTML = msg;
+    passageTextOrig.innerHTML = `<div class="text-muted">—</div>`;
+    statusLine.textContent = '';
+  }
+}
+
+/***********************
+ * URL + UI
+ ***********************/
+function setFromUrl(){
+  const p = new URLSearchParams(location.search);
+  const q = p.get('search');
+  const v = p.get('version');
+  const bk = p.get('book');
+  const nm = p.get('name');
+  const view = p.get('view');
+
+  if(bk) currentBookSlug = normalizeBookSlugInput(bk, nm || currentBookName) || currentBookSlug;
+  if(view === 'interlinear') viewMode = 'interlinear';
+  if(view === 'parallel') viewMode = 'parallel';
+  if(nm) currentBookName = nm.trim();
+  if(q) searchInput.value = q;
+  if(v) versionSelect.value = v;
+}
+
+    function hasReaderNavigationParams(){
+  const p = new URLSearchParams(location.search);
+  return ['book', 'search', 'name'].some((key) => normalizeSpaces(p.get(key) || '') !== '');
+}
+    
+function setOriginalVisible(isVisible){
+  document.body.classList.toggle('orig-hidden', !isVisible);
+  btnToggleOrig.setAttribute('aria-expanded', String(isVisible));
+  btnToggleOrig.textContent = isVisible ? 'Ocultar original' : 'Mostrar original';
+  scheduleSyncVerseHeights();
+}
+
+/***********************
+ * Events
+ ***********************/
+form.addEventListener('submit', (e) => { e.preventDefault(); runSearch(); });
+
+
+  if(themeMenuBtn && themeMenu){
+  themeMenuBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    themeMenu.classList.toggle('show');
+  });
+  document.addEventListener('click', (event) => {
+    if(!themeMenu.contains(event.target) && !themeMenuBtn.contains(event.target)){
+      themeMenu.classList.remove('show');
+    }
+  });
+}
+
+themeItems.forEach((item) => {
+  item.addEventListener('click', () => {
+    const theme = item.getAttribute('data-theme');
+    applyTheme(theme);
+    themeMenu?.classList.remove('show');
+  });
 });
 
-</script>
+btnCopyText.addEventListener('click', async () => {
+  const left = (passageTextRV.innerText || '').trim();
+  const right = (passageTextOrig.innerText || '').trim();
+  const includeOrig = !document.body.classList.contains('orig-hidden');
+  const combined =
+    includeOrig
+      ? `=== ${leftLabel.textContent} ===\n${left}\n\n=== ${rightLabel.textContent} ===\n${right}\n`
+      : `=== ${leftLabel.textContent} ===\n${left}\n`;
+  await copy(combined);
+});
 
-    <!-- 🔹 Sección de Agradecimiento -->
-<section id="agradecimiento" class="container my-5">
-    <h2 class="agradecimiento-titulo">Agradecimientos</h2>
+btnViewMode?.addEventListener('click', () => {
+  const nextMode = viewMode === 'parallel' ? 'interlinear' : 'parallel';
+  setViewMode(nextMode);
+});
 
-    <p class="agradecimiento-texto">
-        Gracias a todos los que han apoyado este proyecto de estudio y enseñanza de la Torah. 
-        Su esfuerzo y dedicación han hecho posible este espacio de aprendizaje. 
-        Que Hashem los guarde en su camino.
-    </p>
+btnToggleOrig.addEventListener('click', () => {
+  const isVisible = !document.body.classList.contains('orig-hidden');
+  setOriginalVisible(!isVisible);
+});
+btnAboutExtractor?.addEventListener('click', () => {
+  window.location.href = './acerca.html';
+});
 
-    <div class="agradecimiento-contenido">
-        <div class="agradecimiento-grupo">
-            <h3>Colaboradores iniciales:</h3>
-            <ul>
-                <li>Hna. Laura Cortez</li>
-                <li>Hna. Rebeca Morales</li>
-                <li>Hno. Angel Roan</li>
-            </ul>
-        </div>
+    window.addEventListener('resize', scheduleSyncVerseHeights);
+btnPrevPage?.addEventListener('click', () => {
+  const slug = btnPrevPage.dataset.book;
+  const chapter = Number(btnPrevPage.dataset.chapter);
+  if(!slug || !chapter) return;
+  navigateToPage(slug, chapter);
+});
 
-            <div class="agradecimiento-grupo">
-            <h3>Colaboradores en programación y aporte en Armonia de los evangelios:</h3>
-            <ul>
-                <li>Emanuel Udroaica</li>
+btnNextPage?.addEventListener('click', () => {
+  const slug = btnNextPage.dataset.book;
+  const chapter = Number(btnNextPage.dataset.chapter);
+  if(!slug || !chapter) return;
+  navigateToPage(slug, chapter);
+});
+    document.querySelector('a[href="analisis.html"]')?.addEventListener('click', () => {
+  saveReaderState();
+});
+/***********************
+ * Boot
+ ***********************/
+(async function boot(){
+  setFromUrl();
+    const hasExplicitNavigation = hasReaderNavigationParams();
+  setOriginalVisible(ORIGINAL_ENABLED_DEFAULT);
+   setViewMode(viewMode);
+  applyTheme(localStorage.getItem('lectorTheme') || 'cream');
 
-            </ul>
-        </div>
-        <div class="agradecimiento-grupo">
-            <h3>Colaboradores en transcripción de cartas:</h3>
-            <ul>
-                <li>Hna. Raquel Díaz</li>
-                <li>Hno. Isaac Bermúdez</li>
-                <li>Hna. Janet Correa</li>
-                <li>Hno. Hector Guifarro</li>
-            </ul>
-        </div>
-    </div>
+  leftLabel.textContent = versionSelect.value;
+  metaVersion.textContent = versionSelect.value;
 
-<div class="agradecimiento-grupo">
-    <div class="agradecimiento-traduccion">
-        <h3>Colaboradora en traducción del sitio al francés:</h3>
-        <p>Hna. Nancy Esquivel</p>
-    </div>
-    </div>
-</section>
-
-<style>
-#agradecimiento {
-    background-color: #f8f9fa; /* Fondo claro */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.agradecimiento-titulo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #075e54; /* Verde WhatsApp */
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-.agradecimiento-texto {
-    font-size: 16px;
-    color: #333;
-    text-align: justify;
-    margin-bottom: 20px;
-}
-
-/* 🔹 Contenedor de agradecimientos en columnas */
-.agradecimiento-contenido {
-    display: flex;
-    justify-content: space-between;
-    gap: 40px;
-}
-
-/* 🔹 Estilos para cada grupo de colaboradores */
-.agradecimiento-grupo {
-    flex: 1;
-    min-width: 280px; /* Evita que los grupos se rompan en columnas */
-}
-
-.agradecimiento-grupo h3 {
-    font-size: 18px;
-    font-weight: bold;
-    color: #444;
-    margin-bottom: 10px;
-}
-
-.agradecimiento-grupo ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.agradecimiento-grupo ul li {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 5px;
-}
-
-/* 🔹 Traducción se mantiene debajo */
-.agradecimiento-traduccion {
-    margin-top: 20px;
-    font-size: 16px;
-    color: #333;
-    text-align: left;
-}
-
-/* 🔹 Responsivo: en pantallas pequeñas los grupos se alinean en una sola columna */
-@media (max-width: 768px) {
-    .agradecimiento-contenido {
-        flex-direction: column;
-        gap: 20px;
+  try{
+     try{
+      const raw = sessionStorage.getItem('lectorState');
+      if(raw){
+        pendingRestoreState = JSON.parse(raw);
+    const safeRefSearch = normalizeSpaces(pendingRestoreState?.lastReferenceSearch || '');
+        const fallbackSearch = normalizeSpaces(pendingRestoreState?.lastSearch || '');
+       if (!hasExplicitNavigation) {
+                  const localProgressSearch = getLastReferenceProgress();
+          if (safeRefSearch && parseSearch(safeRefSearch) && searchInput) {
+            searchInput.value = safeRefSearch;
+          } else if (fallbackSearch && parseSearch(fallbackSearch) && searchInput) {
+            searchInput.value = fallbackSearch;
+            } else if (localProgressSearch && searchInput) {
+            searchInput.value = localProgressSearch;
+          } else if (searchInput) {
+            searchInput.value = DEFAULT_REFERENCE_SEARCH;
+          }
+          if (pendingRestoreState?.currentBookSlug) {
+            currentBookSlug = pendingRestoreState.currentBookSlug;
+          }
+          if (pendingRestoreState?.currentBookName) {
+            currentBookName = pendingRestoreState.currentBookName;
+          }
+        }
+        if (typeof pendingRestoreState?.origHidden === 'number') {
+          setOriginalVisible(pendingRestoreState.origHidden ? false : true);
+        }
+      }
+    }catch{}
+    if (!hasExplicitNavigation && searchInput) {
+      const safeCurrentSearch = normalizeSpaces(searchInput.value || '');
+      if (!parseSearch(safeCurrentSearch)) {
+        searchInput.value = getLastReferenceProgress() || DEFAULT_REFERENCE_SEARCH;
+      }
     }
-}
-</style>
+    passageTextRV.innerHTML = `<div class="text-muted">Cargando ${leftLabel.textContent}…</div>`;
+    passageTextOrig.innerHTML = `<div class="text-muted">Cargando Original…</div>`;
+    await ensureBookLoaded(currentBookSlug, currentBookName);
+    await runSearch();
+
+    // ✅ Restaurar scroll/estado si venimos de busqueda.html
+// ✅ Restaurar scroll/estado si venimos de busqueda.html
+try{
+ const st = pendingRestoreState;
+  if(st){
+
+    if(typeof st.scrollY === 'number'){
+      requestAnimationFrame(() => window.scrollTo(0, st.scrollY));
+    }
+
+    sessionStorage.removeItem('lectorState');
+  }
+}catch{}
+
+
+  }catch(err){
+    const msg = `<div class="text-danger fw-semibold">Error:</div><div class="text-muted">${esc(err.message || String(err))}</div>`;
+    passageTextRV.innerHTML = msg;
+    passageTextOrig.innerHTML = `<div class="text-muted">—</div>`;
+    statusLine.textContent = '';
+  }
+})();
+  </script>
+
+  <div id="ctxMenu" class="ctx-menu" style="display:none" aria-hidden="true"></div>
+  <script src="./textos-cruzados.js"></script>
+<script src="./comentarios/comentarios.js"></script>
+  <script defer src="./rkant-es-ui.js?v=1"></script>
+<script defer src="./menu.js?v=1"></script>
 
 
 
-    <!-- Pie de página -->
-    <footer class="
-::contentReference[oaicite:0]{index=0}
- 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-

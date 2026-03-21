@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador Diccionario Trilingüe</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Generador Diccionario Trilingüe (ES-HE-GR)</h1>
+
+    <section class="card">
+      <h2>Modo A: Carga por carpeta/archivo (offline)</h2>
+      <div class="grid">
+        <label>RV1960 folder (librosRV1960)
+          <input id="rvFolder" type="file" webkitdirectory directory multiple />
+        </label>
+        <label>Hebreo AT folder (IdiomaORIGEN)
+          <input id="heFolder" type="file" webkitdirectory directory multiple />
+        </label>
+        <label>LXX folder (LXX)
+          <input id="lxxFolder" type="file" webkitdirectory directory multiple />
+        </label>
+        <label>Bgriega.json (NT griego)
+          <input id="bgriegaFile" type="file" accept=".json" />
+        </label>
+        <label>masterdiccionario.json (opcional)
+          <input id="masterFile" type="file" accept=".json" />
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Modo B: Rutas del repo (con servidor)</h2>
+      <p class="muted">Usa este modo si ejecutas <code>python -m http.server</code> desde el repo.</p>
+      <div class="grid">
+        <label><input id="useRepoMode" type="checkbox" /> Usar modo rutas HTTP</label>
+        <label>Base URL
+          <input id="repoBase" type="text" value="http://localhost:8000" placeholder="http://localhost:8000" />
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Configuración</h2>
+      <div class="grid">
+        <label>Top-K equivalencias
+          <input id="topK" type="number" min="1" max="50" value="10" />
+        </label>
+        <label>minCount co-ocurrencia
+          <input id="minCount" type="number" min="1" max="100" value="1" />
+        </label>
+        <label>Longitud mínima token
+          <input id="minTokenLen" type="number" min="1" max="10" value="2" />
+        </label>
+        <label><input id="filterStopwords" type="checkbox" /> Filtrar stopwords ES comunes</label>
+      </div>
+      <div class="actions">
+        <button id="generateBtn">Generar</button>
+        <button id="downloadBtn" disabled>Descargar JSON</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Progreso</h2>
+      <progress id="progressBar" value="0" max="100"></progress>
+      <pre id="progressText">Listo para iniciar.</pre>
+    </section>
+
+    <section class="card">
+      <h2>Resumen</h2>
+      <pre id="summaryText">Sin resultados aún.</pre>
+    </section>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

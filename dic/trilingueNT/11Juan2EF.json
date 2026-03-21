@@ -1,0 +1,1387 @@
+[
+  {
+    "id": 34,
+    "texto_hebreo": "אָחוֹת",
+    "equivalencia_griega": "ἀδελφῆς",
+    "equivalencia_espanol": "hermana / de hermana",
+    "candidatos": [
+      "hermana",
+      "de hermana"
+    ]
+  },
+  {
+    "id": 48,
+    "texto_hebreo": "אַחֲרָיו",
+    "equivalencia_griega": "αὐτῷ",
+    "equivalencia_espanol": "tras él / después de él",
+    "candidatos": [
+      "tras él",
+      "después de él",
+      "en pos de él"
+    ]
+  },
+  {
+    "id": 60,
+    "texto_hebreo": "אֵינֶנּוּ",
+    "equivalencia_griega": "οὐ",
+    "equivalencia_espanol": "no está / no es / él no",
+    "candidatos": [
+      "no está",
+      "no es"
+    ]
+  },
+  {
+    "id": 68,
+    "texto_hebreo": "אַךְ",
+    "equivalencia_griega": "καὶ",
+    "equivalencia_espanol": "solamente / pero / ciertamente",
+    "candidatos": [
+      "solamente",
+      "pero",
+      "ciertamente"
+    ]
+  },
+  {
+    "id": 75,
+    "texto_hebreo": "אֶל",
+    "equivalencia_griega": "πρὸς",
+    "equivalencia_espanol": "a / hacia / contra",
+    "candidatos": [
+      "a",
+      "hacia",
+      "contra"
+    ]
+  },
+  {
+    "id": 86,
+    "texto_hebreo": "אֶל-מוּל",
+    "equivalencia_griega": "κατὰ",
+    "equivalencia_espanol": "hacia / frente a",
+    "candidatos": [
+      "hacia",
+      "frente a"
+    ]
+  },
+  {
+    "id": 115,
+    "texto_hebreo": "אֲנִי",
+    "equivalencia_griega": "ἐγὼ",
+    "equivalencia_espanol": "yo / yo soy",
+    "candidatos": [
+      "yo",
+      "yo soy"
+    ]
+  },
+  {
+    "id": 123,
+    "texto_hebreo": "אֵצֶל",
+    "equivalencia_griega": "παρὰ",
+    "equivalencia_espanol": "al lado de / junto a",
+    "candidatos": [
+      "al lado de",
+      "junto a"
+    ]
+  },
+  {
+    "id": 144,
+    "texto_hebreo": "אֲשֶׁר לוֹ",
+    "equivalencia_griega": "αὐτοῦ",
+    "equivalencia_espanol": "que le pertenece / lo que tiene",
+    "candidatos": [
+      "que tiene",
+      "lo que es suyo"
+    ]
+  },
+  {
+    "id": 168,
+    "texto_hebreo": "אֶת-אֲשֶׁר",
+    "equivalencia_griega": "ἃ",
+    "equivalencia_espanol": "lo que / aquello que",
+    "candidatos": [
+      "lo que",
+      "aquello que"
+    ]
+  },
+  {
+    "id": 359,
+    "texto_hebreo": "אֶת־הַשְּׁתִי",
+    "equivalencia_griega": "τὰς",
+    "equivalencia_espanol": "la urdimbre",
+    "candidatos": [
+      "la urdimbre"
+    ]
+  },
+  {
+    "id": 367,
+    "texto_hebreo": "אֹתוֹ",
+    "equivalencia_griega": "αὐτὸν",
+    "equivalencia_espanol": "lo / él / a él",
+    "candidatos": [
+      "lo",
+      "él"
+    ]
+  },
+  {
+    "id": 374,
+    "texto_hebreo": "אֶתְכֶם",
+    "equivalencia_griega": "ὑμᾶς",
+    "equivalencia_espanol": "os / a vosotros",
+    "candidatos": [
+      "os",
+      "a vosotros"
+    ]
+  },
+  {
+    "id": 483,
+    "texto_hebreo": "בַּיִת",
+    "equivalencia_griega": "οἰκίαν",
+    "equivalencia_espanol": "casa / interior",
+    "candidatos": [
+      "casa",
+      "interior"
+    ]
+  },
+  {
+    "id": 524,
+    "texto_hebreo": "בֶּן",
+    "equivalencia_griega": "ἐκ",
+    "equivalencia_espanol": "hijo / hijo de",
+    "candidatos": [
+      "hijo",
+      "hijo de"
+    ]
+  },
+  {
+    "id": 675,
+    "texto_hebreo": "גֵּר אִתְּךָ",
+    "equivalencia_griega": "ὑμῖν",
+    "equivalencia_espanol": "extranjero contigo",
+    "candidatos": [
+      "forastero contigo"
+    ]
+  },
+  {
+    "id": 779,
+    "texto_hebreo": "הוּא",
+    "equivalencia_griega": "ἐστιν",
+    "equivalencia_espanol": "él / ella / eso / es",
+    "candidatos": [
+      "él",
+      "es"
+    ]
+  },
+  {
+    "id": 792,
+    "texto_hebreo": "הַזֹּאת",
+    "equivalencia_griega": "αὐτῆς",
+    "equivalencia_espanol": "esta",
+    "candidatos": [
+      "esta"
+    ]
+  },
+  {
+    "id": 1806,
+    "texto_hebreo": "זֹאת",
+    "equivalencia_griega": "οὗτος",
+    "equivalencia_espanol": "esta / esto",
+    "candidatos": [
+      "así",
+      "tal"
+    ]
+  },
+  {
+    "id": 2020,
+    "texto_hebreo": "ט יִהְיֶה",
+    "equivalencia_griega": "ἔσται",
+    "equivalencia_espanol": "será / habrá de ser",
+    "candidatos": [
+      "sucederá"
+    ]
+  },
+  {
+    "id": 2028,
+    "texto_hebreo": "ט כִּי",
+    "equivalencia_griega": "ὅτι",
+    "equivalencia_espanol": "porque / pues / que",
+    "candidatos": [
+      "ciertamente"
+    ]
+  },
+  {
+    "id": 2032,
+    "texto_hebreo": "ט לֹא",
+    "equivalencia_griega": "μὴ",
+    "equivalencia_espanol": "no",
+    "candidatos": [
+      "para que no"
+    ]
+  },
+  {
+    "id": 2365,
+    "texto_hebreo": "כָּל אִישׁ",
+    "equivalencia_griega": "πᾶς",
+    "equivalencia_espanol": "todo hombre / cualquiera",
+    "candidatos": [
+      "cada varón"
+    ]
+  },
+  {
+    "id": 2407,
+    "texto_hebreo": "לֹא לוֹ",
+    "equivalencia_griega": "ἔχει",
+    "equivalencia_espanol": "no tiene / no posee",
+    "candidatos": [
+      "ajeno"
+    ]
+  },
+  {
+    "id": 2424,
+    "texto_hebreo": "לֵאמֹר",
+    "equivalencia_griega": "λέγων",
+    "equivalencia_espanol": "diciendo",
+    "candidatos": [
+      "de esta manera"
+    ]
+  },
+  {
+    "id": 2429,
+    "texto_hebreo": "לְאַשְׁמַת",
+    "equivalencia_griega": "τοῦ",
+    "equivalencia_espanol": "haciendo culpable a",
+    "candidatos": [
+      "para la transgresión de"
+    ]
+  },
+  {
+    "id": 2453,
+    "texto_hebreo": "לָהּ",
+    "equivalencia_griega": "αὐτῇ",
+    "equivalencia_espanol": "a ella / para ella",
+    "candidatos": [
+      "con ella"
+    ]
+  },
+  {
+    "id": 2500,
+    "texto_hebreo": "לְךָ",
+    "equivalencia_griega": "σοι",
+    "equivalencia_espanol": "a ti / para ti / tuyo",
+    "candidatos": [
+      "te"
+    ]
+  },
+  {
+    "id": 2525,
+    "texto_hebreo": "לְמַעַן",
+    "equivalencia_griega": "ἵνα",
+    "equivalencia_espanol": "a fin de que / para que",
+    "candidatos": [
+      "a fin de que",
+      "para que"
+    ]
+  },
+  {
+    "id": 2702,
+    "texto_hebreo": "מָלֵא",
+    "equivalencia_griega": "πλήρη",
+    "equivalencia_espanol": "lleno / completo",
+    "candidatos": [
+      "lleno",
+      "pleno"
+    ]
+  },
+  {
+    "id": 2939,
+    "texto_hebreo": "עַל פְּנֵי",
+    "equivalencia_griega": "εἰς",
+    "equivalencia_espanol": "sobre la faz de / delante de",
+    "candidatos": [
+      "sobre la faz de",
+      "ante"
+    ]
+  },
+  {
+    "id": 62,
+    "texto_hebreo": "אוֹתְךָ",
+    "equivalencia_griega": "σε",
+    "equivalencia_espanol": "a ti / te",
+    "candidatos": [
+      "a ti",
+      "te"
+    ]
+  },
+  {
+    "id": 115,
+    "texto_hebreo": "אִישׁ לְרֵעֵהוּ",
+    "equivalencia_griega": "ἀλλήλους",
+    "equivalencia_espanol": "el uno al otro / cada uno a su compañero",
+    "candidatos": [
+      "el uno al otro",
+      "cada uno a su compañero"
+    ]
+  },
+  {
+    "id": 182,
+    "texto_hebreo": "אֵלֵינוּ",
+    "equivalencia_griega": "ἡμῖν",
+    "equivalencia_espanol": "a nosotros",
+    "candidatos": [
+      "a nosotros"
+    ]
+  },
+  {
+    "id": 609,
+    "texto_hebreo": "אַתֶּם אֹמְרִים",
+    "equivalencia_griega": "λέγετε",
+    "equivalencia_espanol": "vosotros decís",
+    "candidatos": [
+      "vosotros decís"
+    ]
+  },
+  {
+    "id": 851,
+    "texto_hebreo": "בָּנִים",
+    "equivalencia_griega": "τέκνα",
+    "equivalencia_espanol": "hijos",
+    "candidatos": [
+      "hijos"
+    ]
+  },
+  {
+    "id": 889,
+    "texto_hebreo": "בְּעֶצֶם",
+    "equivalencia_griega": "ἐν",
+    "equivalencia_espanol": "en el mismo (día) / en el hueso",
+    "candidatos": [
+      "en el mismo"
+    ]
+  },
+  {
+    "id": 1051,
+    "texto_hebreo": "דְּרוֹר",
+    "equivalencia_griega": "ἐκλεκτῆς",
+    "equivalencia_espanol": "pura / fluida (mirra)",
+    "candidatos": [
+      "pura",
+      "fluida"
+    ]
+  },
+  {
+    "id": 1171,
+    "texto_hebreo": "הַזֹּאת",
+    "equivalencia_griega": "ταύτην",
+    "equivalencia_espanol": "esta",
+    "candidatos": [
+      "esta"
+    ]
+  },
+  {
+    "id": 1274,
+    "texto_hebreo": "הַמַּבְעִיר",
+    "equivalencia_griega": "ὁ",
+    "equivalencia_espanol": "el que encendió (el fuego)",
+    "candidatos": [
+      "el que encendió"
+    ]
+  },
+  {
+    "id": 1398,
+    "texto_hebreo": "הַפַּעַם",
+    "equivalencia_griega": "νῦν",
+    "equivalencia_espanol": "esta vez / ahora",
+    "candidatos": [
+      "esta vez"
+    ]
+  },
+  {
+    "id": 2846,
+    "texto_hebreo": "חֶסֶד",
+    "equivalencia_griega": "ἔλεος",
+    "equivalencia_espanol": "misericordia / bondad / lealtad",
+    "candidatos": [
+      "piedad",
+      "amor inalterable"
+    ]
+  },
+  {
+    "id": 3680,
+    "texto_hebreo": "לֹא",
+    "equivalencia_griega": "οὐκ",
+    "equivalencia_espanol": "no",
+    "candidatos": [
+      "jamás",
+      "nunca"
+    ]
+  },
+  {
+    "id": 3724,
+    "texto_hebreo": "לְבַדֶּךָ",
+    "equivalencia_griega": "μόνος",
+    "equivalencia_espanol": "solo tú / tú solo",
+    "candidatos": [
+      "solamente tú"
+    ]
+  },
+  {
+    "id": 3770,
+    "texto_hebreo": "לִהְיֹת",
+    "equivalencia_griega": "γενέσθαι",
+    "equivalencia_espanol": "para ser (def.)",
+    "candidatos": [
+      "a fin de ser"
+    ]
+  },
+  {
+    "id": 3941,
+    "texto_hebreo": "לַפֶּה",
+    "equivalencia_griega": "στόμα",
+    "equivalencia_espanol": "para la boca",
+    "candidatos": [
+      "al borde/apertura"
+    ]
+  },
+  {
+    "id": 4279,
+    "texto_hebreo": "מָצָאתִי",
+    "equivalencia_griega": "εὕρηκα",
+    "equivalencia_espanol": "yo he hallado",
+    "candidatos": [
+      "yo encontré"
+    ]
+  },
+  {
+    "id": 120,
+    "texto_hebreo": "אֶל כָּל אַךְ",
+    "equivalencia_griega": "πάντες",
+    "equivalencia_espanol": "a todos ciertamente",
+    "candidatos": [
+      "a todos"
+    ]
+  },
+  {
+    "id": 241,
+    "texto_hebreo": "אֲשֶׁר",
+    "equivalencia_griega": "ἣν",
+    "equivalencia_espanol": "que / el cual / Asher",
+    "candidatos": [
+      "que",
+      "el cual",
+      "'Asher"
+    ]
+  },
+  {
+    "id": 1405,
+    "texto_hebreo": "וְאוּלָם",
+    "equivalencia_griega": "ἀλλὰ",
+    "equivalencia_espanol": "pero / sin embargo",
+    "candidatos": [
+      "pero"
+    ]
+  },
+  {
+    "id": 2422,
+    "texto_hebreo": "זֹאת",
+    "equivalencia_griega": "αὕτη",
+    "equivalencia_espanol": "esta / esto",
+    "candidatos": [
+      "esta"
+    ]
+  },
+  {
+    "id": 2793,
+    "texto_hebreo": "טָהוֹר הוּא",
+    "equivalencia_griega": "ᾖ",
+    "equivalencia_espanol": "él es limpio",
+    "candidatos": [
+      "él es limpio",
+      "puro es"
+    ]
+  },
+  {
+    "id": 2967,
+    "texto_hebreo": "יָצְאוּ",
+    "equivalencia_griega": "ἐξῆλθον",
+    "equivalencia_espanol": "salieron",
+    "candidatos": [
+      "salieron",
+      "partieron"
+    ]
+  },
+  {
+    "id": 3212,
+    "texto_hebreo": "לְדַבֵּר",
+    "equivalencia_griega": "λαλῆσαι",
+    "equivalencia_espanol": "para hablar",
+    "candidatos": [
+      "para hablar"
+    ]
+  },
+  {
+    "id": 3421,
+    "texto_hebreo": "לְפִי",
+    "equivalencia_griega": "διὰ",
+    "equivalencia_espanol": "a filo de (espada) / según la proporción",
+    "candidatos": [
+      "conforme a"
+    ]
+  },
+  {
+    "id": 3941,
+    "texto_hebreo": "נַפְשֹׁתֵינוּ",
+    "equivalencia_griega": "ἡμῶν",
+    "equivalencia_espanol": "nuestras almas",
+    "candidatos": [
+      "nuestras almas"
+    ]
+  },
+  {
+    "id": 4513,
+    "texto_hebreo": "תּוֹרִישׁוּ",
+    "equivalencia_griega": "ἀπολέσητε",
+    "equivalencia_espanol": "echareis / destruireis",
+    "candidatos": [
+      "echareis",
+      "destruireis",
+      "desposeereis"
+    ]
+  },
+  {
+    "id": 93,
+    "texto_hebreo": "אֵינֶנּוּ",
+    "equivalencia_griega": "οὐχ",
+    "equivalencia_espanol": "no está / no es",
+    "candidatos": [
+      "no está"
+    ]
+  },
+  {
+    "id": 3126,
+    "texto_hebreo": "שָׂכִיר שָׂכָר",
+    "equivalencia_griega": "μισθὸν",
+    "equivalencia_espanol": "salario / jornal",
+    "candidatos": [
+      "salario",
+      "jornal"
+    ]
+  },
+  {
+    "id": 3360,
+    "texto_hebreo": "לָכַדְנוּ",
+    "equivalencia_griega": "ἐλάβομεν",
+    "equivalencia_espanol": "tomamos / capturamos",
+    "candidatos": [
+      "tomamos",
+      "capturamos"
+    ]
+  },
+  {
+    "id": 3371,
+    "texto_hebreo": "לִכְתֹּב",
+    "equivalencia_griega": "γράφων",
+    "equivalencia_espanol": "para escribir / escribiendo",
+    "candidatos": [
+      "para escribir",
+      "escribiendo"
+    ]
+  },
+  {
+    "id": 4166,
+    "texto_hebreo": "קֶדֶם",
+    "equivalencia_griega": "ἀρχῆς",
+    "equivalencia_espanol": "antigüedad / este / oriente",
+    "candidatos": [
+      "origen / frente"
+    ]
+  },
+  {
+    "id": 4368,
+    "texto_hebreo": "שֹׁמְעִים",
+    "equivalencia_griega": "ἠκούσατε",
+    "equivalencia_espanol": "escuchando / los que escuchan",
+    "candidatos": [
+      "escuchando",
+      "los que escuchan",
+      "oyentes"
+    ]
+  },
+  {
+    "id": 1958,
+    "texto_hebreo": "זָקֵן",
+    "equivalencia_griega": "πρεσβύτερος",
+    "equivalencia_espanol": "anciano / viejo",
+    "candidatos": [
+      "anciano",
+      "viejo"
+    ]
+  },
+  {
+    "id": 2708,
+    "texto_hebreo": "לִשְׁנֵי",
+    "equivalencia_griega": "τοῖς",
+    "equivalencia_espanol": "a los dos",
+    "candidatos": [
+      "dos"
+    ]
+  },
+  {
+    "id": 416,
+    "texto_hebreo": "בַּאֲשֶׁר",
+    "equivalencia_griega": "καθὼς",
+    "equivalencia_espanol": "segun / como",
+    "candidatos": [
+      "segun",
+      "como"
+    ]
+  },
+  {
+    "id": 2206,
+    "texto_hebreo": "יְהוָה שָׁלוֹם",
+    "equivalencia_griega": "εἰρήνη",
+    "equivalencia_espanol": "YHWH es paz",
+    "candidatos": [
+      "YHWH Shalom"
+    ]
+  },
+  {
+    "id": 255,
+    "texto_hebreo": "אֲשֶׁר כַּאֲשֶׁר",
+    "equivalencia_griega": "ὡς",
+    "equivalencia_espanol": "como / segun",
+    "candidatos": [
+      "como",
+      "segun"
+    ]
+  },
+  {
+    "id": 738,
+    "texto_hebreo": "בָּנִים",
+    "equivalencia_griega": "τέκνοις",
+    "equivalencia_espanol": "hijos",
+    "candidatos": [
+      "hijos"
+    ]
+  },
+  {
+    "id": 1985,
+    "texto_hebreo": "וַיָּשֶׁב אֲשֶׁר",
+    "equivalencia_griega": "τὴν",
+    "equivalencia_espanol": "la que / lo que",
+    "candidatos": [
+      "la que",
+      "lo que"
+    ]
+  },
+  {
+    "id": 2426,
+    "texto_hebreo": "חֲדָשָׁה",
+    "equivalencia_griega": "καινὴν",
+    "equivalencia_espanol": "nueva",
+    "candidatos": [
+      "nueva"
+    ]
+  },
+  {
+    "id": 2534,
+    "texto_hebreo": "אֲשֶׁר",
+    "equivalencia_griega": "οἱ",
+    "equivalencia_espanol": "que / el cual",
+    "candidatos": [
+      "que",
+      "el cual"
+    ]
+  },
+  {
+    "id": 42,
+    "texto_hebreo": "אָהֵב",
+    "equivalencia_griega": "ἀγαπῶ",
+    "equivalencia_espanol": "amo / ama",
+    "candidatos": [
+      "amo",
+      "ama"
+    ]
+  },
+  {
+    "id": 362,
+    "texto_hebreo": "אֶת",
+    "equivalencia_griega": "τὰ",
+    "equivalencia_espanol": "a todo / las cosas",
+    "candidatos": [
+      "a todo"
+    ]
+  },
+  {
+    "id": 3367,
+    "texto_hebreo": "נָפַל",
+    "equivalencia_griega": "πολλοὶ",
+    "equivalencia_espanol": "cayó mucho",
+    "candidatos": [
+      "cayo"
+    ]
+  },
+  {
+    "id": 3441,
+    "texto_hebreo": "עֲדִי",
+    "equivalencia_griega": "κόσμον",
+    "equivalencia_espanol": "atavio / adorno",
+    "candidatos": [
+      "atavio",
+      "joyas",
+      "gala"
+    ]
+  },
+  {
+    "id": 3567,
+    "texto_hebreo": "פְּעָלִים",
+    "equivalencia_griega": "ἔργοις",
+    "equivalencia_espanol": "obras / hechos / hazanas",
+    "candidatos": [
+      "obras",
+      "hazañas",
+      "acciones"
+    ]
+  },
+  {
+    "id": 197,
+    "texto_hebreo": "אֱמֶת",
+    "equivalencia_griega": "ἀλήθειαν",
+    "equivalencia_espanol": "verdad / fielmente",
+    "candidatos": [
+      "verdad",
+      "fidelidad"
+    ]
+  },
+  {
+    "id": 3031,
+    "texto_hebreo": "ט זֶה",
+    "equivalencia_griega": "οὗτός",
+    "equivalencia_espanol": "este",
+    "candidatos": [
+      "este",
+      "esto"
+    ]
+  },
+  {
+    "id": 147,
+    "texto_hebreo": "אָמְנָם",
+    "equivalencia_griega": "ἀληθείᾳ",
+    "equivalencia_espanol": "verdaderamente / en verdad",
+    "candidatos": [
+      "verdaderamente",
+      "en verdad"
+    ]
+  },
+  {
+    "id": 216,
+    "texto_hebreo": "אֲשֶׁר הִיא",
+    "equivalencia_griega": "ἡ",
+    "equivalencia_espanol": "la cual es / que ella",
+    "candidatos": [
+      "la cual es",
+      "que ella"
+    ]
+  },
+  {
+    "id": 86,
+    "texto_hebreo": "אִנּוּן",
+    "equivalencia_griega": "ἐστὶν",
+    "equivalencia_espanol": "son / ellos (Arameo)",
+    "candidatos": [
+      "son",
+      "ellos",
+      "estos"
+    ]
+  },
+  {
+    "id": 1206,
+    "texto_hebreo": "וּמִצְוֹת",
+    "equivalencia_griega": "ἐντολὰς",
+    "equivalencia_espanol": "y mandamientos",
+    "candidatos": [
+      "y mandamientos"
+    ]
+  },
+  {
+    "id": 2287,
+    "texto_hebreo": "רֹאִים",
+    "equivalencia_griega": "βλέπετε",
+    "equivalencia_espanol": "ven / están viendo",
+    "candidatos": [
+      "ven",
+      "están viendo"
+    ]
+  },
+  {
+    "id": 1104,
+    "texto_hebreo": "שִׂמְחָה (מחה)",
+    "equivalencia_griega": "χαρὰ",
+    "equivalencia_espanol": "alegría / gozo",
+    "candidatos": [
+      "alegría",
+      "gozo"
+    ]
+  },
+  {
+    "id": 1130,
+    "texto_hebreo": "מִן",
+    "equivalencia_griega": "τῶν",
+    "equivalencia_espanol": "de / desde",
+    "candidatos": [
+      "de",
+      "desde"
+    ]
+  },
+  {
+    "id": 459,
+    "texto_hebreo": "בָּךְ",
+    "equivalencia_griega": "σου",
+    "equivalencia_espanol": "en ti / contigo",
+    "candidatos": [
+      "en ti",
+      "contigo"
+    ]
+  },
+  {
+    "id": 1300,
+    "texto_hebreo": "וְיִגְאֶה",
+    "equivalencia_griega": "γὰρ",
+    "equivalencia_espanol": "y se levanta / y crece",
+    "candidatos": [
+      "y se enorgullece"
+    ]
+  },
+  {
+    "id": 3210,
+    "texto_hebreo": "מְשׁוּגָתִי",
+    "equivalencia_griega": "πλάνος",
+    "equivalencia_espanol": "mi error / mi desvío",
+    "candidatos": [
+      "mi yerro"
+    ]
+  },
+  {
+    "id": 3524,
+    "texto_hebreo": "עִמָּדִי מְאֹד",
+    "equivalencia_griega": "λίαν",
+    "equivalencia_espanol": "conmigo mucho",
+    "candidatos": [
+      "muy cerca de mi"
+    ]
+  },
+  {
+    "id": 598,
+    "texto_hebreo": "בָּא",
+    "equivalencia_griega": "ἔρχεται",
+    "equivalencia_español": "viene / vino / entró",
+    "candidatos": [
+      "viene",
+      "vino",
+      "entró",
+      "llega"
+    ]
+  },
+  {
+    "id": 748,
+    "texto_hebreo": "בּוֹטֵחַ",
+    "equivalencia_griega": "ἐλπίζω",
+    "equivalencia_español": "confiado / que confía",
+    "candidatos": [
+      "confiado",
+      "el que confía"
+    ]
+  },
+  {
+    "id": 1548,
+    "texto_hebreo": "הַבָּנִים",
+    "equivalencia_griega": "τέκνων",
+    "equivalencia_español": "los hijos",
+    "candidatos": [
+      "los hijos",
+      "los descendientes",
+      "los vástagos"
+    ]
+  },
+  {
+    "id": 3384,
+    "texto_hebreo": "חָפַצְתִּי",
+    "equivalencia_griega": "ἐβουλήθην",
+    "equivalencia_español": "me he complacido / he deseado",
+    "candidatos": [
+      "me he complacido",
+      "he deseado",
+      "quise"
+    ]
+  },
+  {
+    "id": 7063,
+    "texto_hebreo": "תָּאוּ",
+    "equivalencia_griega": "λαμβάνετε",
+    "equivalencia_español": "tomáis / aceptáis",
+    "candidatos": [
+      "tomáis",
+      "aceptáis"
+    ]
+  },
+  {
+    "id": 634,
+    "texto_hebreo": "חֵן",
+    "equivalencia_griega": "χάρις",
+    "equivalencia_espanol": "gracia / favor",
+    "candidatos": [
+      "gracia",
+      "favor"
+    ]
+  },
+  {
+    "id": 661,
+    "texto_hebreo": "יְחֻבַּר",
+    "equivalencia_griega": "κοινωνεῖ",
+    "equivalencia_espanol": "ser unido / estar asociado",
+    "candidatos": [
+      "ser unido",
+      "estar asociado"
+    ]
+  },
+  {
+    "id": 942,
+    "texto_hebreo": "מַאֲרִיךְ",
+    "equivalencia_griega": "μένων",
+    "equivalencia_espanol": "prolonga / alarga",
+    "candidatos": [
+      "prolonga"
+    ]
+  },
+  {
+    "id": 7,
+    "texto_hebreo": "אַהֲבָה",
+    "equivalencia_griega": "ἀγάπη",
+    "equivalencia_espanol": "amor",
+    "candidatos": [
+      "amor"
+    ]
+  },
+  {
+    "id": 558,
+    "texto_hebreo": "אִתּוֹ",
+    "equivalencia_griega": "ἔχων",
+    "equivalencia_español": "con él",
+    "candidatos": [
+      "con él",
+      "junto a él"
+    ]
+  },
+  {
+    "id": 4703,
+    "texto_hebreo": "מֵאֲשֶׁר",
+    "equivalencia_griega": "οὓς",
+    "equivalencia_español": "de los que / de lo que",
+    "candidatos": [
+      "de lo que"
+    ]
+  },
+  {
+    "id": 3633,
+    "texto_hebreo": "אֲשֶׁר",
+    "equivalencia_griega": "τῆς",
+    "equivalencia_español": "que / el cual / la cual",
+    "candidatos": [
+      "que",
+      "el cual",
+      "la cual",
+      "quien"
+    ]
+  },
+  {
+    "id": 2015,
+    "texto_hebreo": "מְהַלְּכִין",
+    "equivalencia_griega": "περιπατοῦντας",
+    "equivalencia_español": "caminando / paseando",
+    "candidatos": [
+      "caminando",
+      "paseando"
+    ]
+  },
+  {
+    "id": 82,
+    "texto_hebreo": "אֶת־אֶרֶץ",
+    "equivalencia_griega": "τὸν",
+    "equivalencia_español": "la tierra / el país",
+    "candidatos": [
+      "la tierra"
+    ]
+  },
+  {
+    "id": 214,
+    "texto_hebreo": "יְהוֹשֻׁעַ",
+    "equivalencia_griega": "Ἰησοῦ",
+    "equivalencia_español": "Josué",
+    "candidatos": [
+      "Yehoshua'"
+    ]
+  }
+]
+[
+  {
+    "id": 1,
+    "texto_hebreo": "אַהֲבָה",
+    "equivalencia_griega": "ἀγάπῃ",
+    "equivalencia_espanol": "amor",
+    "candidatos": ["amor", "afecto"]
+  },
+  {
+    "id": 2,
+    "texto_hebreo": "נֹאהַב",
+    "equivalencia_griega": "ἀγαπῶμεν",
+    "equivalencia_espanol": "amemos",
+    "candidatos": ["amemos", "tengamos amor"]
+  },
+  {
+    "id": 3,
+    "texto_hebreo": "עוֹלָם",
+    "equivalencia_griega": "αἰῶνα",
+    "equivalencia_espanol": "siglo, eternidad",
+    "candidatos": ["eternidad", "siempre"]
+  },
+  {
+    "id": 4,
+    "texto_hebreo": "מְשִׁיחַ שֶׁקֶר",
+    "equivalencia_griega": "ἀντίχριστος",
+    "equivalencia_espanol": "anticristo",
+    "candidatos": ["anticristo", "opositor"]
+  },
+  {
+    "id": 5,
+    "texto_hebreo": "מִן",
+    "equivalencia_griega": "ἀπ᾽",
+    "equivalencia_espanol": "de, desde",
+    "candidatos": ["de", "desde"]
+  },
+  {
+    "id": 6,
+    "texto_hebreo": "תְּקַבְּלוּ",
+    "equivalencia_griega": "ἀπολάβητε",
+    "equivalencia_espanol": "recibáis",
+    "candidatos": ["recibáis", "obtengáis"]
+  },
+  {
+    "id": 7,
+    "texto_hebreo": "שׁוֹאֵל לְשָׁלוֹם",
+    "equivalencia_griega": "Ἀσπάζεταί",
+    "equivalencia_espanol": "saluda",
+    "candidatos": ["saluda", "envía saludos"]
+  },
+  {
+    "id": 8,
+    "texto_hebreo": "לִכְתֹּב",
+    "equivalencia_griega": "γράφειν",
+    "equivalencia_espanol": "escribir",
+    "candidatos": ["escribir"]
+  },
+  {
+    "id": 9,
+    "texto_hebreo": "לֶקַח",
+    "equivalencia_griega": "διδαχῇ",
+    "equivalencia_espanol": "doctrina, enseñanza",
+    "candidatos": ["doctrina", "enseñanza"]
+  },
+  {
+    "id": 10,
+    "texto_hebreo": "לֶקַח",
+    "equivalencia_griega": "διδαχὴν",
+    "equivalencia_espanol": "doctrina, enseñanza",
+    "candidatos": ["doctrina", "enseñanza"]
+  },
+  {
+    "id": 11,
+    "texto_hebreo": "עַצְמְכֶם",
+    "equivalencia_griega": "ἑαυτούς",
+    "equivalencia_espanol": "a vosotros mismos",
+    "candidatos": ["vosotros mismos"]
+  },
+  {
+    "id": 12,
+    "texto_hebreo": "יָדְעוּ",
+    "equivalencia_griega": "ἐγνωκότες",
+    "equivalencia_espanol": "conocido, los que conocen",
+    "candidatos": ["conocido", "entendido"]
+  },
+  {
+    "id": 13,
+    "texto_hebreo": "אִם",
+    "equivalencia_griega": "Εἴ",
+    "equivalencia_espanol": "si",
+    "candidatos": ["si"]
+  },
+  {
+    "id": 14,
+    "texto_hebreo": "פָּעַלְנוּ",
+    "equivalencia_griega": "εἰργασάμεθα",
+    "equivalencia_espanol": "hemos obrado",
+    "candidatos": ["hemos obrado", "trabajado"]
+  },
+  {
+    "id": 15,
+    "texto_hebreo": "הָיָה לָנוּ",
+    "equivalencia_griega": "εἴχομεν",
+    "equivalencia_espanol": "teníamos",
+    "candidatos": ["teníamos"]
+  },
+  {
+    "id": 16,
+    "texto_hebreo": "בְּחִירָה",
+    "equivalencia_griega": "Ἐκλεκτῇ",
+    "equivalencia_espanol": "Elegida",
+    "candidatos": ["Elegida", "Escogida"]
+  },
+  {
+    "id": 17,
+    "texto_hebreo": "מִצְוָה",
+    "equivalencia_griega": "ἐντολή",
+    "equivalencia_espanol": "mandamiento",
+    "candidatos": ["mandamiento", "precepto"]
+  },
+  {
+    "id": 18,
+    "texto_hebreo": "מִצְוָה",
+    "equivalencia_griega": "ἐντολὴν",
+    "equivalencia_espanol": "mandamiento",
+    "candidatos": ["mandamiento", "orden"]
+  },
+  {
+    "id": 19,
+    "texto_hebreo": "בָּא",
+    "equivalencia_griega": "ἐρχόμενον",
+    "equivalencia_espanol": "viniendo",
+    "candidatos": ["viniendo", "que viene"]
+  },
+  {
+    "id": 20,
+    "texto_hebreo": "שׁוֹאֵל",
+    "equivalencia_griega": "ἐρωτῶ",
+    "equivalencia_espanol": "ruego, pido",
+    "candidatos": ["ruego", "solicito"]
+  },
+  {
+    "id": 21,
+    "texto_hebreo": "יִהְיֶה",
+    "equivalencia_griega": "Ἔσται",
+    "equivalencia_espanol": "será, estará",
+    "candidatos": ["será", "estará"]
+  },
+  {
+    "id": 22,
+    "texto_hebreo": "שָׂמַחְתִּי",
+    "equivalencia_griega": "Ἐχάρην",
+    "equivalencia_espanol": "me regocijé",
+    "candidatos": ["me regocijé", "me alegré"]
+  },
+  {
+    "id": 23,
+    "texto_hebreo": "אֱלֹהִים",
+    "equivalencia_griega": "Θεὸν",
+    "equivalencia_espanol": "Dios",
+    "candidatos": ["'Elohim"]
+  },
+  {
+    "id": 24,
+    "texto_hebreo": "אֱלֹהִים",
+    "equivalencia_griega": "Θεοῦ",
+    "equivalencia_espanol": "de Dios",
+    "candidatos": ["'Elohim"]
+  },
+  {
+    "id": 25,
+    "texto_hebreo": "יֵשׁוּעַ",
+    "equivalencia_griega": "Ἰησοῦν",
+    "equivalencia_espanol": "Jesús",
+    "candidatos": ["Yeshua'"]
+  },
+  {
+    "id": 26,
+    "texto_hebreo": "גְּבִירָה",
+    "equivalencia_griega": "κυρία",
+    "equivalencia_espanol": "señora",
+    "candidatos": ["señora", "dama"]
+  },
+  {
+    "id": 27,
+    "texto_hebreo": "גְּבִירָה",
+    "equivalencia_griega": "κυρίᾳ",
+    "equivalencia_espanol": "señora",
+    "candidatos": ["señora", "dama"]
+  },
+  {
+    "id": 28,
+    "texto_hebreo": "עִם",
+    "equivalencia_griega": "μεθ᾽",
+    "equivalencia_espanol": "con",
+    "candidatos": ["con"]
+  },
+  {
+    "id": 29,
+    "texto_hebreo": "דְּיוֹ",
+    "equivalencia_griega": "μέλανος",
+    "equivalencia_espanol": "tinta",
+    "candidatos": ["tinta", "negro"]
+  },
+  {
+    "id": 30,
+    "texto_hebreo": "עוֹמֶדֶת",
+    "equivalencia_griega": "μένουσαν",
+    "equivalencia_espanol": "permaneciendo",
+    "candidatos": ["permaneciendo", "quedando"]
+  },
+  {
+    "id": 31,
+    "texto_hebreo": "הַ",
+    "equivalencia_griega": "Ὁ",
+    "equivalencia_espanol": "el",
+    "candidatos": ["el"]
+  },
+  {
+    "id": 32,
+    "texto_hebreo": "מוֹדִים",
+    "equivalencia_griega": "ὁμολογοῦντες",
+    "equivalencia_espanol": "confesando",
+    "candidatos": ["confesando", "declarando"]
+  },
+  {
+    "id": 33,
+    "texto_hebreo": "כִּי",
+    "equivalencia_griega": "Ὅτι",
+    "equivalencia_espanol": "porque, que",
+    "candidatos": ["porque", "que"]
+  },
+  {
+    "id": 34,
+    "texto_hebreo": "אָב",
+    "equivalencia_griega": "Πατέρα",
+    "equivalencia_espanol": "Padre",
+    "candidatos": ["'Abba (arameo: אַבָּא)", "Padre"]
+  },
+  {
+    "id": 35,
+    "texto_hebreo": "אָב",
+    "equivalencia_griega": "Πατρός",
+    "equivalencia_espanol": "Padre",
+    "candidatos": ["'Abba (arameo: אַבָּא)", "Padre"]
+  },
+  {
+    "id": 36,
+    "texto_hebreo": "מְלֵאָה",
+    "equivalencia_griega": "πεπληρωμένη",
+    "equivalencia_espanol": "completa, llena",
+    "candidatos": ["completa", "cumplida"]
+  },
+  {
+    "id": 37,
+    "texto_hebreo": "תִּתְהַלְּכוּ",
+    "equivalencia_griega": "περιπατῆτε",
+    "equivalencia_espanol": "andéis",
+    "candidatos": ["andéis", "caminéis"]
+  },
+  {
+    "id": 38,
+    "texto_hebreo": "נִתְהַלֵּךְ",
+    "equivalencia_griega": "περιπατῶμεν",
+    "equivalencia_espanol": "andemos",
+    "candidatos": ["andemos", "caminemos"]
+  },
+  {
+    "id": 39,
+    "texto_hebreo": "מַתְעִים",
+    "equivalencia_griega": "πλάνοι",
+    "equivalencia_espanol": "engañadores",
+    "candidatos": ["engañadores", "seductores"]
+  },
+  {
+    "id": 40,
+    "texto_hebreo": "רַבּוֹת",
+    "equivalencia_griega": "Πολλὰ",
+    "equivalencia_espanol": "muchas cosas",
+    "candidatos": ["muchas cosas", "mucho"]
+  },
+  {
+    "id": 41,
+    "texto_hebreo": "רָעִים",
+    "equivalencia_griega": "πονηροῖς",
+    "equivalencia_espanol": "malos",
+    "candidatos": ["malos", "perversos"]
+  },
+  {
+    "id": 42,
+    "texto_hebreo": "עוֹבֵר",
+    "equivalencia_griega": "προάγων",
+    "equivalencia_espanol": "se extravía, se adelanta",
+    "candidatos": ["se adelanta", "se desvía"]
+  },
+  {
+    "id": 43,
+    "texto_hebreo": "בָּשָׂר",
+    "equivalencia_griega": "σαρκί",
+    "equivalencia_espanol": "carne",
+    "candidatos": ["carne", "cuerpo"]
+  },
+  {
+    "id": 44,
+    "texto_hebreo": "הַ",
+    "equivalencia_griega": "τῇ",
+    "equivalencia_espanol": "la",
+    "candidatos": ["la"]
+  },
+  {
+    "id": 45,
+    "texto_hebreo": "אִישׁ",
+    "equivalencia_griega": "τις",
+    "equivalencia_espanol": "alguno, alguien",
+    "candidatos": ["alguno", "alguien"]
+  },
+  {
+    "id": 46,
+    "texto_hebreo": "בֵּן",
+    "equivalencia_griega": "Υἱὸν",
+    "equivalencia_espanol": "Hijo",
+    "candidatos": ["Bera (arameo: בְּרָא)", "Hijo"]
+  },
+  {
+    "id": 47,
+    "texto_hebreo": "בֵּן",
+    "equivalencia_griega": "Υἱοῦ",
+    "equivalencia_espanol": "Hijo",
+    "candidatos": ["Bera (arameo: בְּרָא)", "Hijo"]
+  },
+  {
+    "id": 48,
+    "texto_hebreo": "מֵבִיא",
+    "equivalencia_griega": "φέρει",
+    "equivalencia_espanol": "trae",
+    "candidatos": ["trae", "porta"]
+  },
+  {
+    "id": 49,
+    "texto_hebreo": "שָׁלוֹם",
+    "equivalencia_griega": "χαίρειν",
+    "equivalencia_espanol": "bienvenida, salud",
+    "candidatos": ["saludo", "gozo"]
+  },
+  {
+    "id": 50,
+    "texto_hebreo": "נְיָר",
+    "equivalencia_griega": "χάρτου",
+    "equivalencia_espanol": "papel, papiro",
+    "candidatos": ["papel", "papiro"]
+  },
+  {
+    "id": 51,
+    "texto_hebreo": "מָשִׁיחַ",
+    "equivalencia_griega": "Χριστὸν",
+    "equivalencia_espanol": "Cristo",
+    "candidatos": ["Meshija (arameo: מְשִׁיחָא)", "Ungido"]
+  },
+  {
+    "id": 52,
+    "texto_hebreo": "מָשִׁיחַ",
+    "equivalencia_griega": "Χριστοῦ",
+    "equivalencia_espanol": "Cristo",
+    "candidatos": ["Meshija (arameo: מְשִׁיחָא)", "Ungido"]
+  }
+]

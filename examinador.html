@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examinador interlineal hebreo</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:20px;line-height:1.4}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+    select,button,input{padding:8px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{border:1px solid #ddd;padding:6px 8px;vertical-align:top}
+    th{background:#f4f4f4;text-align:left}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .muted{color:#666}
+  </style>
+</head>
+<body>
+  <h1>Examinador de huecos interlineales (hebreo → español)</h1>
+  <p class="muted">Detecta palabras que quedarían en <b>-</b> usando el mismo criterio de mapeo del interlineal.</p>
+
+  <div class="row">
+    <label>Libro:
+      <select id="bookSelect"></select>
+    </label>
+    <button id="scanBookBtn">Escanear libro</button>
+    <button id="scanAllBtn">Escanear todo el AT</button>
+        <button id="exportAllBtn">Extraer todo en JSON</button>
+  </div>
+
+  <div class="row">
+    <label>Filtrar palabra hebrea: <input id="filterInput" placeholder="ej: אצמית" /></label>
+    <span id="summary" class="muted"></span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Libro</th>
+        <th>Cap</th>
+        <th>Ver</th>
+        <th>Palabra</th>
+        <th>Token normalizado</th>
+        <th>Texto del verso</th>
+      </tr>
+    </thead>
+    <tbody id="resultsBody"></tbody>
+  </table>
+
+  <script src="./examiner.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+.backup-panel .panel-body{
+  padding:.85rem;
+}
+
+.backup-panel .backup-hint{
+  font-size:.7rem;
+  color:#6b7280;
+  margin-bottom:.6rem;
+}
+
+.backup-panel .backup-actions .btn{
+  padding:.35rem .6rem;
+  font-size:.9rem;
+}
+
+.backup-panel .backup-status{
+  font-size:.85rem;
+  min-height:1.2em;
+}
+
+.backup-panel .backup-status.is-ok{
+  color:#0f766e;
+}
+
+.backup-panel .backup-status.is-error{
+  color:#b91c1c;
+}

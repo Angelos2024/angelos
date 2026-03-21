@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="es" data-theme="cream">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Buscador diccionario trilingüe</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+   :root{
+      --bd:#e6e8eb;
+      --muted:#6b7280;
+      --bg:#f8fafc;
+      --surface:#ffffff;
+      --text:#0f172a;
+      --primary:#2563eb;
+      --primary-contrast:#ffffff;
+      --soft-bg:#f1f5f9;
+      --soft-hover:#e9eef5;
+      --outline:#cbd5f5;
+    }
+    [data-theme="cream"]{
+      --bd:#d5c1b1;
+      --muted:#6d5d52;
+      --bg:#edddce;
+      --surface:#cdbaa9;
+      --text:#2c1d1f;
+      --primary:#4b2743;
+      --primary-contrast:#fdf6f2;
+      --soft-bg:#e0cdbd;
+      --soft-hover:#d6c2b2;
+      --outline:#4b2743;
+    }
+    [data-theme="white"]{
+      --bd:#e6e8eb;
+      --muted:#6b7280;
+      --bg:#f8fafc;
+      --surface:#ffffff;
+      --text:#0f172a;
+      --primary:#2563eb;
+      --primary-contrast:#ffffff;
+      --soft-bg:#f1f5f9;
+      --soft-hover:#e9eef5;
+      --outline:#cbd5f5;
+    }
+    body{ background:var(--bg); color:var(--text); }
+    .topbar{
+      background:#ffffff;
+      border-bottom:1px solid var(--bd);
+      position:sticky; top:0; z-index:1000;
+    }
+    .sitewrap{ max-width: 1280px; }
+    .panel{
+     background:var(--surface);
+      border:1px solid var(--bd);
+      border-radius:12px;
+    }
+    .panel-header{
+      border-bottom:1px solid var(--bd);
+      padding:.75rem 1rem;
+      font-weight:600;
+    }
+   .panel-body{ padding:1rem; background:var(--surface); }
+    .btn-soft{ background:var(--soft-bg); border:1px solid var(--bd); color:var(--text); }
+    .btn-soft:hover{ background:var(--soft-hover); }
+    .btn-primary{
+      background:var(--primary);
+      border-color:var(--primary);
+      color:var(--primary-contrast);
+    }
+    .btn-outline-primary{
+      color:var(--primary);
+      border-color:var(--primary);
+    }
+    [data-theme="cream"] .btn-primary,
+    [data-theme="cream"] .btn-outline-primary{
+      background:#4b2743;
+      border-color:#4b2743;
+      color:#ffffff;
+    }
+    [data-theme="cream"] .btn-primary:hover,
+    [data-theme="cream"] .btn-outline-primary:hover{
+      background:#ffffff;
+      border-color:#4b2743;
+      color:#000000;
+    }
+    [data-theme="white"] .btn-primary,
+    [data-theme="white"] .btn-outline-primary{
+      background:#ffffff;
+      border-color:#2563eb;
+      color:#2563eb;
+    }
+    [data-theme="white"] .btn-primary:hover,
+    [data-theme="white"] .btn-outline-primary:hover{
+      background:#eff6ff;
+      border-color:#2563eb;
+      color:#1d4ed8;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      padding:.15rem .6rem;
+      border-radius:999px;
+      font-size:.8rem;
+ background:var(--soft-bg);
+      color:var(--text);
+      border:1px solid var(--bd);
+    }
+    .muted{ color:var(--muted); }
+    .lexicon-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:.75rem;
+    }
+    .example-card{
+    border:1px solid #000000;
+    background:var(--soft-bg);
+      border-radius:10px;
+      padding:.65rem .75rem;
+      font-size:.9rem;
+    }
+       [data-theme="cream"] .panel-header{
+      border-bottom:1px solid #7c4f2b;
+    }
+    [data-theme="cream"] .panel-body{
+      background:#ffffff;
+      color:#000000;
+    }
+    [data-theme="cream"] .panel-body .muted{
+      color:#000000;
+    }
+    [data-theme="cream"] .tag{
+      background:#ffffff;
+      color:#000000;
+      border-color:#000000;
+    }
+    [data-theme="cream"] .example-card{
+      background:#ffffff;
+      color:#000000;
+      border-color:#000000;
+    }
+    .greek{
+      font-family: 'Gentium Plus','SBL Greek','Times New Roman',serif;
+      font-size:1.05rem;
+    }
+    .hebrew{
+      direction:rtl;
+      unicode-bidi:plaintext;
+      font-family: 'SBL Hebrew','Ezra SIL','Times New Roman',serif;
+      font-size:1.08rem;
+    }
+     .search-row{
+      display:grid;
+      grid-template-columns:minmax(0, 1.28fr) minmax(320px, .82fr);
+      gap:.65rem;
+      align-items:stretch;
+    }
+    .search-column,
+    .donut-column{
+      display:flex;
+      flex-direction:column;
+      min-width:0;
+    }
+    #occurrenceDonutMount .occurrence-donut.card-like{
+      margin-top:0;
+      height:100%;
+    }
+ #occurrenceDonutMount .occurrence-donut-layout{
+      grid-template-columns:minmax(150px, .8fr) minmax(145px, .92fr);
+      gap:.5rem;
+      align-items:start;
+    }
+    #occurrenceDonutMount .donut-svg{ width:clamp(132px, 15vw, 170px); height:clamp(132px, 15vw, 170px); }
+    #occurrenceDonutMount .donut-total{ font-size:1.6rem; }
+    #occurrenceDonutMount .legend-row{ font-size:.8rem; }
+    .helper-list li{ margin-bottom:.35rem; }
+
+     .trilingual-brief{
+      border:1px solid #000000;
+      background:var(--soft-bg);
+      border-radius:10px;
+      padding:.65rem .75rem;
+      margin-bottom:.85rem;
+    }
+    .trilingual-brief .trilingual-title{ font-weight:600; }
+    .trilingual-brief .trilingual-line{ margin-top:.2rem; }
+     .comparison-pre{
+      white-space:pre-wrap;
+      word-break:break-word;
+      margin:0;
+      font-family:inherit;
+      font-size:.92rem;
+      line-height:1.45;
+      padding:.8rem .9rem;
+      max-height:460px;
+      overflow:auto;
+      background:color-mix(in srgb, var(--soft-bg) 75%, #ffffff);
+      border:1px solid color-mix(in srgb, var(--text) 16%, #ffffff);
+      border-radius:12px;
+    }
+    .comparison-pre--greek{
+      direction:ltr;
+      unicode-bidi:plaintext;
+      border-left:5px solid color-mix(in srgb, var(--text) 25%, #ffffff);
+    }
+    .comparison-pre--hebrew{
+      direction:rtl;
+      unicode-bidi:plaintext;
+      border-left:5px solid color-mix(in srgb, var(--text) 25%, #ffffff);
+    }
+    .dictionary-comparison-table td + td{
+      border-left:1px solid color-mix(in srgb, var(--text) 16%, #ffffff);
+    }
+    .dictionary-comparison-table td{
+      padding:0.6rem;
+    }
+
+ .dictionary-comparison-wrap{
+      border:1px solid color-mix(in srgb, var(--text) 15%, #ffffff);
+      border-radius:12px;
+      overflow:hidden;
+      background:#ffffff;
+    }
+    .dictionary-comparison-table thead th{
+      background:color-mix(in srgb, var(--soft-bg) 70%, #ffffff);
+      border-bottom:1px solid color-mix(in srgb, var(--text) 18%, #ffffff);
+      font-weight:700;
+      text-transform:uppercase;
+      font-size:.78rem;
+      letter-spacing:.02em;
+    }
+    .dictionary-comparison-table td{
+      vertical-align:top;
+      background:#ffffff;
+    }
+
+    [data-theme="cream"] .trilingual-brief{
+      background:#ffffff;
+      color:#000000;
+      border-color:#000000;
+    }
+    .form-control,
+    .form-select{
+      background:#ffffff;
+      border-color:color-mix(in srgb, var(--text) 55%, #ffffff);
+      color:var(--text);
+    }
+    .form-control::placeholder{ color:color-mix(in srgb, var(--muted) 80%, transparent); }
+    .analysis-title{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      text-align:center;
+      line-height:1.2;
+    }
+    .occurrence-donut.card-like{
+      border:1px solid var(--bd);
+      border-radius:12px;
+      padding:.75rem;
+      background:#fff;
+      margin-top:.75rem;
+    }
+    .occurrence-donut-layout{
+      display:grid;
+      grid-template-columns:minmax(230px, 1fr) minmax(180px, 1fr);
+      gap:.75rem;
+      align-items:center;
+    }
+    .donut-stage{ position:relative; display:grid; place-items:center; }
+    .donut-svg{ width:220px; height:220px; }
+    .donut-center{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      pointer-events:none;
+    }
+    .donut-total{ font-weight:700; font-size:2rem; line-height:1; }
+    .donut-subtitle{
+      font-size:.8rem;
+      color:#1e293b;
+      margin-top:.25rem;
+      padding:.18rem .5rem;
+      border-radius:999px;
+      background:color-mix(in srgb, #ffffff 55%, #cbd5e1 45%);
+      border:1px solid color-mix(in srgb, #64748b 28%, #ffffff);
+      font-weight:600;
+      box-shadow:0 1px 2px rgba(15, 23, 42, .14);
+      max-width:86%;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .donut-center [data-role="reset"]{ pointer-events:auto; }
+    .donut-legend{ display:grid; gap:.45rem; align-content:start; }
+    .legend-row{
+      width:100%;
+      border:1px solid var(--bd);
+      border-radius:10px;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.35rem .45rem;
+      font-size:.86rem;
+      text-align:left;
+    }
+    .legend-dot{ width:.7rem; height:.7rem; border-radius:50%; flex:0 0 .7rem; }
+    .legend-label{ flex:1; }
+    .legend-value{ font-weight:700; }
+    @media (max-width: 767.98px){
+      .analysis-title{
+        position:static;
+        transform:none;
+        width:100%;
+        margin-top:.5rem;
+      }
+    }
+    @keyframes spin{
+      to{ transform:rotate(360deg); }
+    }
+     /* Responsive tablet + desktop (celulares fuera de alcance) */
+    :root{
+      --layout-min-tablet: 768px;
+    }
+
+    @media (max-width: 767.98px){
+      body{
+        min-width: var(--layout-min-tablet);
+        overflow-x:auto;
+      }
+      .container.sitewrap{
+        min-width: var(--layout-min-tablet);
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px){
+      .sitewrap{ max-width: 980px; }
+      .panel-header{ padding:.65rem .85rem; }
+      .panel-body{ padding:.85rem; }
+      .search-row{ grid-template-columns:minmax(0, 1.1fr) minmax(300px, .9fr); }
+      .occurrence-donut-layout{ grid-template-columns:1fr; }
+    }
+
+    @media (min-width: 1025px) and (max-width: 1366px){
+      .sitewrap{ max-width: 1240px; }
+    }
+
+    @media (min-width: 1367px) and (max-width: 1920px){
+      .sitewrap{ max-width: 1460px; }
+    }
+
+    @media (min-width: 1921px) and (max-width: 2499px){
+      .sitewrap{ max-width: 1720px; }
+      .panel-body{ padding:1.1rem 1.15rem; }
+      .panel-header{ font-size:1.03rem; }
+    }
+     @media (min-width: 2500px){
+      .sitewrap{ max-width: 2100px; }
+      .topbar .btn,
+      .topbar .form-control,
+      .topbar .form-select{ font-size:1.05rem; }
+      .panel-header{ padding:.9rem 1.2rem; font-size:1.08rem; }
+      .panel-body{ padding:1.3rem; }
+      .lexicon-grid{ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+      .greek,
+      .hebrew{ font-size:1.2rem; }
+    }
+     
+  
+    .results-table th, .results-table td{ vertical-align:middle; text-align:center; }
+    .results-table td.he{ direction:rtl; unicode-bidi:plaintext; font-family:'SBL Hebrew','Ezra SIL','Times New Roman',serif; font-size:1.08rem; text-align:center; }
+    .results-table td.gr{ font-family:'Gentium Plus','SBL Greek','Times New Roman',serif; font-size:1.05rem; text-align:center; }
+    .results-table td.gr.justify-long-greek{ text-align:justify; text-justify:inter-word; }
+    .results-table td.es{ font-size:.95rem; text-align:center; }
+    .results-scroll{ max-height:520px; overflow:auto; border:1px solid #000000; border-radius:12px; background:#fff; }
+    .results-table thead th{ text-align:center; border-bottom:1px solid #000000; }
+    .results-table th + th,
+    .results-table td + td{ border-left:1px solid #000000; }
+    .results-table tbody tr + tr td{ border-top:1px solid color-mix(in srgb, var(--text) 10%, #ffffff); }
+    .trace-box{ white-space:pre-wrap; font-family:ui-monospace,Consolas,monospace; }
+    .search-controls .form-check-input{ margin-top:.2rem; }
+    .pill-inline{ display:inline-flex; align-items:center; gap:.5rem; padding:.35rem .75rem; border:1px solid var(--bd); border-radius:999px; background:#fff; }
+    .search-hit{
+      background:color-mix(in srgb, #ffe08a 72%, #ffffff);
+      color:inherit;
+      padding:0 .08em;
+      border-radius:4px;
+      font-weight:700;
+    }
+    [data-theme="cream"] .results-scroll{ border-color:#000000; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container sitewrap py-2 d-flex flex-wrap gap-2 align-items-center position-relative">
+      <a class="btn btn-soft btn-sm" href="index.html">Volver al lector</a>
+      <div class="analysis-title">
+        <div class="fw-semibold">Buscador diccionario trilingüe</div>
+        <div class="small muted">Hebreo · LXX · Español</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container sitewrap my-3 my-lg-4">
+    <section class="panel mb-3">
+      <div class="panel-header">Buscador y criterio</div>
+      <div class="panel-body">
+        <div class="search-row">
+          <div class="search-column">
+            <div class="search-controls d-flex flex-column gap-3">
+              <div>
+                <label for="query" class="form-label fw-semibold">Buscar palabra</label>
+                <div class="input-group">
+                  <input id="query" class="form-control" type="text" placeholder="Ej: מִכְתָּבִים / θεὸς / Dios" />
+                  <button id="searchBtn" class="btn btn-primary" type="button">Buscar</button>
+                  <button id="exampleBtn" class="btn btn-soft" type="button">Probar ejemplo</button>
+                </div>
+                <div class="form-text">Acepta hebreo, griego y español. En español busca una sola palabra.</div>
+              </div>
+
+
+              <div>
+                <label class="form-label fw-semibold">Opciones</label>
+                <div class="d-flex flex-wrap gap-2">
+                  <label class="pill-inline"><input id="normalize" class="form-check-input" type="checkbox" checked> usar normalización (niqqud/cantillación)</label>
+                  <label class="pill-inline"><input id="splitHyphenated" class="form-check-input" type="checkbox" checked> separar maqaf/guiones</label>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+          <div class="donut-column" id="occurrenceDonutMount"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="analysisResultsSection" class="row g-3">
+      <div class="col-12 col-lg-4">
+        <section id="lemmaSummaryPanel" class="panel h-100">
+          <div class="panel-header">Diagnóstico de filtros</div>
+          <div class="panel-body">
+            <div class="d-flex flex-column gap-2">
+              <div id="diag" class="small muted">Cargue los archivos y luego busque una palabra.</div>
+              <details class="mt-2">
+                <summary>Trazas (candidatos generados)</summary>
+                <div id="trace" class="small trace-box mt-2">—</div>
+              </details>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-12 col-lg-8">
+        <section class="panel">
+          <div class="panel-header">Resultados</div>
+          <div class="panel-body">
+            <div class="small muted mb-2">Coincidencias del diccionario trilingüe en hebreo, griego y español.</div>
+            <div class="results-scroll">
+              <table class="table table-sm mb-0 results-table">
+                <thead>
+                  <tr>
+                    <th style="width:30%">Texto hebreo</th>
+                    <th style="width:35%">Griego (LXX)</th>
+                    <th>Español (traducción)</th>
+                  </tr>
+                </thead>
+                <tbody id="resultsTbody">
+                  <tr><td colspan="3" class="muted">Sin resultados aún.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="./analisis-donut.js"></script>
+  <script>
+    (function(){
+      const allowedThemes = new Set(['cream', 'white']);
+      let stored = null;
+      try { stored = window.localStorage?.getItem('lectorTheme'); } catch (_) { stored = null; }
+      const theme = allowedThemes.has(stored) ? stored : 'cream';
+      document.documentElement.dataset.theme = theme;
+      const mount = document.getElementById('occurrenceDonutMount');
+      if (mount && window.AnalisisOccurrenceDonut?.create) {
+        const donut = window.AnalisisOccurrenceDonut.create(mount);
+        donut?.setData?.({ es: [], he: [], gr: [] });
+      }
+    })();
+  </script>
+  <script src="buscador.js"></script>
+  <script src="buscador2.js"></script>
+  <script src="buscador3.js"></script>
+  <script src="trilingue.js"></script>
+  <script src="buscador-resumen.js"></script>
+
+  <script>
+    (function(){
+      function applyGreekColumnAlignment(){
+        const tbody = document.getElementById('resultsTbody');
+        if (!tbody) return;
+        tbody.querySelectorAll('td.gr').forEach(td => {
+          const text = (td.textContent || '').replace(/\s+/g, ' ').trim();
+          const words = text ? text.split(' ').filter(Boolean) : [];
+          td.classList.toggle('justify-long-greek', words.length > 3);
+        });
+      }
+
+      const tbody = document.getElementById('resultsTbody');
+      if (tbody && 'MutationObserver' in window) {
+        const observer = new MutationObserver(applyGreekColumnAlignment);
+        observer.observe(tbody, { childList: true, subtree: true, characterData: true });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyGreekColumnAlignment, { once: true });
+      } else {
+        applyGreekColumnAlignment();
+      }
+    })();
+  </script>
+</body>
+</html>

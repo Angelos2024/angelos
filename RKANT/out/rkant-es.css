@@ -1,0 +1,77 @@
+/* RKANT-Es (scoped): replica 1.html pero sin tocar body del sitio */
+
+/* Caja principal del aparato */
+.rkantes-container{
+  background-color:#fff;
+  padding:10px;
+  border-radius:5px;
+  box-shadow:0 0 10px rgba(0,0,0,0.2);
+  margin-bottom:50px;
+
+  font-family: Arial, sans-serif;
+  line-height:1.6;
+  color:#333;
+}
+
+/* IMPORTANTE: tus fragmentos traen <div class="container">...
+   Bootstrap aplica .container con max-width/paddings.
+   Neutralizamos eso SOLO dentro de RKANT. */
+.rkantes-container .container{
+  max-width: none !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* títulos */
+.rkantes-container h2,
+.rkantes-container h3{
+  color:#333 !important;
+  margin: 10px 0 8px 0 !important;
+}
+
+/* griego */
+.rkantes-container .greek{
+  font-family:"Times New Roman", serif !important;
+  font-size:1.4em !important;
+  color:#444 !important;
+}
+
+/* =========================
+   TABLA (igual a 1.html)
+   ========================= */
+
+/* Bootstrap a veces mete estilos generales; forzamos aquí */
+.rkantes-container table{
+  width:100% !important;
+  border-collapse:collapse !important;
+  margin-top:10px !important;
+
+  /* evita que Bootstrap aplique bordes/espaciados raros */
+  border-spacing:0 !important;
+}
+
+/* celdas */
+.rkantes-container table th,
+.rkantes-container table td{
+  border:1px solid #ddd !important;
+  padding:8px !important;
+  vertical-align: top !important;
+
+  /* asegura fondo blanco en celdas normales */
+  background: #fff !important;
+}
+
+/* encabezado */
+.rkantes-container table th{
+  background-color:#f4f4f4 !important;
+  font-weight:600 !important;
+}
+
+/* enlaces / crossrefs */
+.rkantes-container .crossrefs{
+  color:#0066cc !important;
+}

@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Cobertura simple — YA TENGO vs ME FALTA</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial,sans-serif;margin:18px;max-width:1050px}
+    h1{font-size:20px;margin:0 0 10px}
+    .muted{color:#666;font-size:12px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .card{border:1px solid #ddd;border-radius:14px;padding:14px;flex:1;min-width:320px}
+    textarea{width:100%;min-height:150px;font-family:ui-monospace,Consolas,monospace;font-size:12px}
+    button{padding:10px 14px;border:0;border-radius:12px;background:#111;color:#fff;cursor:pointer}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .big{font-size:16px;font-weight:700;margin:6px 0}
+    .pill{display:inline-block;border:1px solid #ddd;border-radius:999px;padding:4px 10px;margin:4px 6px 0 0;font-size:12px}
+    .bar{height:14px;background:#eee;border-radius:999px;overflow:hidden}
+    .fill{height:14px;background:#111;width:0%}
+    .split{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .good{color:#0a7a0a;font-weight:800}
+    .bad{color:#b00020;font-weight:800}
+    .mini{font-size:11px;color:#666}
+    .book{border-top:1px dashed #ddd;padding-top:12px;margin-top:12px}
+  </style>
+</head>
+<body>
+  <h1>📚 Cobertura: <span class="good">YA TENGO</span> vs <span class="bad">ME FALTA</span></h1>
+  <div class="muted">Compara por <b>palabras hebreas del texto</b> (estos JSON no traen Strong).</div>
+
+  <div class="row" style="margin-top:12px">
+    <div class="card">
+      <div class="big">1) 📦 Sube tus archivos BASE (lo que YA tienes)</div>
+      <div class="muted">Ej: tus JSON locales de Génesis + Éxodo (o tu diccionario en el formato que contenga texto hebreo).</div>
+      <input id="baseFiles" type="file" multiple accept=".json,application/json,.txt"/>
+
+      <div style="margin-top:10px" class="split">
+        <label class="pill"><input id="normalize" type="checkbox" checked> Normalizar (quita niqqud/signos)</label>
+        <span id="baseInfo" class="mini">BASE: (sin cargar)</span>
+      </div>
+
+      <div class="mini" style="margin-top:10px">
+        ✅ Recomendado: deja “Normalizar” activado.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="big">2) 🌐 Pega URLs de libros para medir</div>
+      <div class="muted">1 URL por línea. (Se ignora cualquier línea vacía.)</div>
+      <textarea id="urls" spellcheck="false">
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/genesis.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/exodo.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/1%20cronicas.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/2%20cronicas.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/1%20reyes.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/2%20reyes.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/1%20samuel.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/2%20samuel.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/abdias.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/amos.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/cantares.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/daniel.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/deuteronomio.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/eclesiastes.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/esdras.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/ester.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/ezequiel.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/habacuc.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/hageo.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/isaias.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/jeremias.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/job.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/joel.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/jonas.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/josue.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/jueces.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/lamentaciones.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/levitico.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/malaquias.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/miqueas.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/nahum.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/nehemias.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/numeros.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/oseas.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/proverbios.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/rut.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/salmos.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/sofonias.json
+https://raw.githubusercontent.com/Angelos2024/estudio/refs/heads/main/IdiomaORIGEN/zacarias.json
+      </textarea>
+
+      <div class="split" style="margin-top:10px">
+        <button id="runBtn" disabled>Calcular</button>
+        <span id="status" class="mini"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="big">3) ✅ Resultado GLOBAL</div>
+
+    <div class="split">
+      <span class="pill">YA TENGO: <span id="gHave" class="good">0</span>/100</span>
+      <span class="pill">ME FALTA: <span id="gMiss" class="bad">100</span>/100</span>
+      <span class="mini" id="gCounts">—</span>
+    </div>
+
+    <div class="bar" style="margin-top:8px"><div id="gBar" class="fill"></div></div>
+
+    <div id="books"></div>
+  </div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  const baseFilesEl = $("baseFiles");
+  const urlsEl = $("urls");
+  const runBtn = $("runBtn");
+  const statusEl = $("status");
+  const normalizeCb = $("normalize");
+  const baseInfoEl = $("baseInfo");
+
+  const gHaveEl = $("gHave");
+  const gMissEl = $("gMiss");
+  const gBarEl = $("gBar");
+  const gCountsEl = $("gCounts");
+  const booksEl = $("books");
+
+  // Hebreo
+  const RE_HEB = /[\u0590-\u05FF]/;
+  // Diacríticos hebreos + cantilación + puntos shin/sin + meteg, etc.
+  const RE_DIAC = /[\u0591-\u05BD\u05BF\u05C1-\u05C2\u05C4-\u05C7]/g;
+  // Invisibles/BIDI (se ven igual pero rompen igualdad)
+  const RE_INVIS = /[\u200E\u200F\u202A-\u202E\u2066-\u2069\u200C\u200D\uFEFF]/g;
+  // Puntuación hebrea + común
+  const RE_PUNCT = /[׃׀״׳.,;:!?(){}\[\]\"'“”‘’…]/g;
+  const RE_SPACES = /[\s\u00A0]+/g;
+// BASE = set de palabras conocidas
+  let knownSet = new Set();
+
+  function normalizeText(s) {
+    if (!s) return "";
+    let x = String(s);
+
+    // 1) limpia invisibles/BOM y normaliza compatibilidad
+    x = x.replace(RE_INVIS, "");
+    try { x = x.normalize("NFKD"); } catch(_) {}
+
+    x = x.trim();
+
+    if (normalizeCb.checked) {
+      // maqaf -> espacio (para no pegar palabras)
+      x = x.replace(/\u05BE/g, " ");
+      x = x.replace(RE_DIAC, "");
+      x = x.replace(RE_PUNCT, "");
+      x = x.replace(/\s+/g, " ").trim();
+    } else {
+      x = x.replace(RE_PUNCT, "");
+      x = x.replace(/\s+/g, " ").trim();
+    }
+    return x;
+  }
+
+  function preprocessBracketPairs(line){
+    // Si hay "X [Y]" usa solo Y (forma vocalizada/real) y descarta X.
+    // Ej: אשכללו [שַׁכְלִילוּ]  =>  שַׁכְלִילוּ
+    return String(line).replace(/(^|\s)\S+\s+\[([^\]]+)\]/g, (m, sp, inside) => sp + inside);
+  }
+
+  function tokenizeLine(line) {
+    const prepared = preprocessBracketPairs(line);
+    const t = normalizeText(prepared);
+    if (!t) return [];
+    const parts = t.split(RE_SPACES).filter(Boolean);
+    const out = [];
+    for (const p of parts) if (RE_HEB.test(p)) out.push(p);
+    return out;
+  }
+// Prefijos típicos hebreos (después de normalizar y quitar niqqud)
+const PREFIX_LETTERS = new Set(["ו","ה","ב","ל","כ","מ","ש"]);
+
+function isPrefixToken(tok){
+  if (!tok) return false;
+  const m = String(tok).match(/[\u05D0-\u05EA]/); // primera letra hebrea
+  if (!m) return false;
+  return PREFIX_LETTERS.has(m[0]) && String(tok).replace(/\s+/g,"").length <= 2;
+}
+function isKnownOrStripped(tok){
+  if (knownSet.has(tok)) return true;
+
+  // Quitar 1 o 2 prefijos comunes al inicio y probar
+  // (sirve para: הבדלח -> בדלח, והארץ -> הארץ, וכו)
+  let s = tok;
+
+  for (let step = 0; step < 2; step++) {
+    const m = s.match(/^([\u05D0-\u05EA])(.*)$/); // primera letra hebrea + resto
+    if (!m) break;
+
+    const first = m[1];
+    const rest = m[2];
+    if (!PREFIX_LETTERS.has(first) || !rest) break;
+
+    if (knownSet.has(rest)) return true;
+    s = rest;
+  }
+
+  return false;
+}
+
+
+function addTokenAndComposites(tokens){
+  for (let i = 0; i < tokens.length; i++) {
+    const t0 = tokens[i];
+    if (!t0) continue;
+
+    knownSet.add(t0);
+
+    const t1 = tokens[i+1];
+    const t2 = tokens[i+2];
+
+    // 1) prefijo + palabra
+    if (isPrefixToken(t0) && t1) {
+      knownSet.add(t0 + t1);
+    }
+
+    // ✅ NUEVO: palabra + palabra (sin prefijos)
+    if (t1) {
+      knownSet.add(t0 + t1);
+    }
+
+    // 2) prefijo + prefijo + palabra
+    if (isPrefixToken(t0) && isPrefixToken(t1) && t2) {
+      knownSet.add(t0 + t1 + t2);
+      knownSet.add(t0 + (t1 + t2));
+    }
+
+    // ✅ NUEVO: prefijo + (palabra+palabra)
+    if (isPrefixToken(t0) && t1 && t2) {
+      knownSet.add(t0 + t1 + t2); // ואחריכן
+      knownSet.add(t1 + t2);      // אחריכן
+    }
+  }
+}
+
+
+  // Extrae versos de libros del repo: { text: [ [versos...], ... ] }
+  function versesFromBookJson(bookJson) {
+    const verses = [];
+    const t = bookJson && bookJson.text;
+    if (!Array.isArray(t)) return verses;
+    for (const ch of t) {
+      if (!Array.isArray(ch)) continue;
+      for (const v of ch) if (typeof v === "string") verses.push(v);
+    }
+    return verses;
+  }
+
+  // Extrae “texto hebreo” de archivos BASE aunque no sean exactamente text[][]
+  // Heurística: recolecta strings cortos con hebreo y los tokeniza
+function addHebrewFromAnyJsonToKnown(obj) {
+  const stack = [obj];
+
+  while (stack.length) {
+    const cur = stack.pop();
+    if (cur == null) continue;
+
+    // 1) Strings: tokeniza y agrega tokens + compuestos
+    if (typeof cur === "string") {
+      if (RE_HEB.test(cur)) {
+        const toks = tokenizeLine(cur);
+        addTokenAndComposites(toks);
+      }
+      continue;
+    }
+
+    // 2) Arrays: apila elementos
+    if (Array.isArray(cur)) {
+      for (const v of cur) stack.push(v);
+      continue;
+    }
+
+    // 3) Objetos
+    if (typeof cur === "object") {
+
+      // ✅ CASO 1: tu formato local (verso con words:[{forma/hebreo...}])
+      // Ej: {"book":"Gn","chapter":1,"verse":1,"words":[{forma:"בְּ"}, {forma:"רֵאשִׁית"}, ...]}
+      if (Array.isArray(cur.words)) {
+        const arr = [];
+
+        for (const w of cur.words) {
+          const raw = (w && (w.forma || w.hebreo)) ? (w.forma || w.hebreo) : "";
+          if (!raw) continue;
+
+          const n = normalizeText(raw);
+
+          // por si viene con maqaf o espacios
+          const toks = n
+            .split(RE_SPACES)
+            .filter(Boolean)
+            .filter(x => RE_HEB.test(x));
+
+          for (const tk of toks) arr.push(tk);
+        }
+
+        // guarda tokens y también compuestos:
+        // - prefijo+palabra (ב+ראשית => בראשית)
+        // - prefijo+prefijo+palabra (ו+ה+ארץ => והארץ)
+        addTokenAndComposites(arr);
+        continue; // no sigas recorriendo este objeto, ya lo procesaste
+      }
+
+      // ✅ CASO 2: cualquier otro objeto: recorre profundo
+      for (const v of Object.values(cur)) stack.push(v);
+    }
+  }
+}
+
+  async function readLocalJson(file) {
+    const txt = await file.text();
+    const clean = String(txt).replace(/^\uFEFF/, "");
+    return JSON.parse(clean);
+  }
+
+  async function fetchJson(url) {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const txt = await r.text();
+    const clean = String(txt).replace(/^\uFEFF/, "");
+    return JSON.parse(clean);
+  }
+
+  function pctInt(part, total) {
+    if (!total) return 0;
+    return Math.round((part / total) * 100);
+  }
+
+  function setGlobal(pctHave, haveTokens, totalTokens) {
+    gHaveEl.textContent = pctHave;
+    gMissEl.textContent = 100 - pctHave;
+    gBarEl.style.width = Math.max(0, Math.min(100, pctHave)) + "%";
+    gCountsEl.textContent = `Tokens: YA ${haveTokens.toLocaleString()} / TOTAL ${totalTokens.toLocaleString()}`;
+  }
+
+  function addBookCard(url, pctHave, haveTokens, totalTokens, missingSample) {
+    const div = document.createElement("div");
+    div.className = "book";
+    div.innerHTML = `
+      <div class="mini" style="word-break:break-all">${url}</div>
+
+      <div class="split" style="margin-top:6px">
+        <span class="pill">YA TENGO: <span class="good">${pctHave}</span>/100</span>
+        <span class="pill">ME FALTA: <span class="bad">${100-pctHave}</span>/100</span>
+        <span class="mini">YA ${haveTokens.toLocaleString()} / TOTAL ${totalTokens.toLocaleString()}</span>
+      </div>
+
+      <div class="bar" style="margin-top:8px"><div class="fill" style="width:${pctHave}%"></div></div>
+
+      <div class="mini" style="margin-top:8px">
+        Ejemplos de lo que te falta: ${missingSample ? missingSample : "—"}
+      </div>
+    `;
+    booksEl.appendChild(div);
+  }
+
+  function enableRun() {
+    runBtn.disabled = knownSet.size === 0;
+  }
+
+  baseFilesEl.addEventListener("change", async () => {
+    knownSet = new Set();
+    const files = Array.from(baseFilesEl.files || []);
+    if (!files.length) {
+      baseInfoEl.textContent = "BASE: (sin cargar)";
+      enableRun();
+      return;
+    }
+
+    baseInfoEl.textContent = "BASE: cargando…";
+    try {
+      for (const f of files) {
+        const json = await readLocalJson(f);
+        addHebrewFromAnyJsonToKnown(json);
+      }
+      baseInfoEl.textContent = `BASE: ${knownSet.size.toLocaleString()} palabras conocidas`;
+    } catch (e) {
+      baseInfoEl.textContent = "BASE: error leyendo archivos";
+      console.error(e);
+    }
+    enableRun();
+  });
+
+  runBtn.addEventListener("click", async () => {
+    booksEl.innerHTML = "";
+    statusEl.textContent = "Procesando…";
+    runBtn.disabled = true;
+
+    try {
+      const urls = urlsEl.value.split("\n").map(s=>s.trim()).filter(Boolean);
+
+      let gTotal = 0, gHave = 0;
+
+      for (const url of urls) {
+        const book = await fetchJson(url);
+        const verses = versesFromBookJson(book);
+
+        if (!verses.length) {
+          addBookCard(url, 0, 0, 0, "No se detectaron versos en text[][]");
+          continue;
+        }
+
+        let total = 0, have = 0;
+        const missingSet = new Set();
+
+        // Para “muestra de faltantes”, recolecta algunas palabras faltantes
+        for (const v of verses) {
+          const toks = tokenizeLine(v);
+          for (const t of toks) {
+            total++;
+           if (isKnownOrStripped(t)) have++;
+else if (missingSet.size < 14) missingSet.add(t);
+          }
+        }
+
+        const pctHave = pctInt(have, total);
+        addBookCard(url, pctHave, have, total, Array.from(missingSet).join(" · "));
+
+        gTotal += total;
+        gHave += have;
+      }
+
+      const gPctHave = pctInt(gHave, gTotal);
+      setGlobal(gPctHave, gHave, gTotal);
+
+      statusEl.textContent = "Listo.";
+    } catch (e) {
+      statusEl.textContent = "Error: " + (e?.message || String(e));
+    } finally {
+      runBtn.disabled = false;
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

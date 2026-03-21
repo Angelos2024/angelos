@@ -1,0 +1,122 @@
+<!-- comentarios/ui.html -->
+<style id="comments-ui-style">
+  /* Details como bloque debajo del versículo */
+  .cm-details{
+    display:block;
+    margin:.25rem 0 .15rem 2.05rem; /* alineado con el texto del verso */
+    border:0;
+    background:transparent;
+    box-shadow:none;
+  }
+
+  /* Summary = SOLO icono (sin caja, sin texto) */
+  .cm-summary{
+    list-style:none;
+    cursor:pointer;
+    user-select:none;
+
+    display:inline-flex;
+    align-items:center;
+
+    border:none;
+    background:transparent;
+    padding:0;
+
+    position:relative; /* tooltip */
+    opacity:.85;
+    margin-left:-2.15rem;   /* mueve el icono levemente a la izquierda */
+
+  }
+  .cm-summary:hover{ opacity:1; }
+
+  /* Oculta el marcador/flecha nativa del navegador */
+  .cm-summary::-webkit-details-marker{ display:none; }
+  .cm-summary::marker{ content:""; }
+
+  .mb-2 {
+    margin-bottom: -0.2rem !important;
+}
+  /* Icono PNG */
+  .cm-icon{
+    width:23px;
+    height:23px;
+        margin-top: -30px;
+    display:block;
+    opacity:.85;
+    transition: opacity .12s ease, transform .12s ease;
+  }
+  .cm-details[open] .cm-icon{
+    opacity:1;
+    transform: scale(1.05);
+  }
+
+  /* Tooltip (globo) */
+  .cm-summary[data-tip]:hover::after{
+  content: attr(data-tip);
+  position:absolute;
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+
+  padding:.30rem .45rem;
+  border-radius:8px;
+  background: rgba(0,0,0,.82);
+  color:#fff;
+  font-size:12px;
+  z-index:9999;
+
+  opacity:0;
+  animation: cmTipFade .9s ease forwards;
+}
+
+.cm-summary[data-tip]:hover::before{
+  content:"";
+  position:absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  border:6px solid transparent;
+  border-right-color: rgba(0,0,0,.82);
+
+  opacity:0;
+  animation: cmTipFade .9s ease forwards;
+}
+
+@keyframes cmTipFade{
+  0%   { opacity:0; }
+  15%  { opacity:1; }
+  70%  { opacity:1; }
+  100% { opacity:0; }
+}
+
+
+  /* Panel del comentario (siempre debajo) */
+  .cm-body{
+    margin-top:-.35rem;
+    margin-left:-2.0rem;
+     margin-right: 80px;
+    padding:.55rem .70rem;
+
+    border-radius:12px;
+    border:1px solid rgba(0,0,0,.10);
+    background:rgba(0,0,0,.03);
+
+    line-height:1.55;
+    font-size:.98em;
+  }
+</style>
+
+<template id="cm-template">
+  <details class="cm-details">
+    <summary class="cm-summary"
+             aria-label="Comentarios Eric de Jesús Rodríguez"
+             data-tip="Comentarios Eric de Jesús Rodríguez">
+      <img src="./comentarios/icons/comments.png"
+           class="cm-icon"
+           alt="Comentario bíblico">
+    </summary>
+    <span class="cm-extra-slot"></span>
+    <div class="cm-body"></div>
+  </details>
+</template>

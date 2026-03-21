@@ -1,0 +1,749 @@
+<!-- notaflotante.html -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+   <meta name="viewport" content="width=1024, initial-scale=1" />
+  <title>Nota flotante (arrastrable) + marcas rojas + leer nota</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#111a2e;
+      --panel2:#0f172a;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --border:rgba(255,255,255,.10);
+      --shadow:0 20px 50px rgba(0,0,0,.45);
+      --danger:#ef4444;
+      --accent:#60a5fa;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:linear-gradient(180deg, var(--bg), #070b14);
+      color:var(--text);
+      min-height:100vh;
+      padding:18px;
+    }
+    .wrap{max-width:1100px;margin:0 auto}
+    h1{font-size:18px;margin:0 0 12px 0;color:#f1f5f9;font-weight:700}
+    .hint{color:var(--muted);font-size:13px;line-height:1.45;margin-bottom:14px}
+    .toolbar{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--border);
+      padding:10px 12px; border-radius:12px; margin-bottom:14px
+    }
+    .btn{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:8px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:650;
+      font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .btn:hover{background:rgba(255,255,255,.09)}
+    .btn.primary{border-color:rgba(96,165,250,.35); background:rgba(96,165,250,.12)}
+    .btn.danger{border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.10)}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+
+    /* “Pasaje” demo */
+    .passage{
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      line-height:1.9;
+      font-size:16px;
+      color:#e2e8f0;
+      position:relative;
+    }
+    .verse{
+      display:block;
+      padding:6px 2px;
+      border-radius:10px;
+    }
+    .vnum{
+      color:#93c5fd;
+      font-weight:800;
+      margin-right:8px;
+      user-select:none;
+    }
+    .verse-text{display:inline}
+
+    /* Marca roja de que “tiene nota” */
+    .note-mark{
+      position:relative;
+      text-decoration: underline;
+      text-decoration-color: var(--danger);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+      cursor:pointer;
+      border-radius:6px;
+      padding:0 1px;
+    }
+    .note-mark:hover{
+      background:rgba(239,68,68,.08);
+    }
+
+    /* Icono “leer nota” al hover */
+    .note-mark .note-icon{
+      display:none;
+      position:absolute;
+      top:-18px;
+      right:-10px;
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(17,26,46,.95);
+      box-shadow:0 8px 18px rgba(0,0,0,.35);
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      color:#f8fafc;
+    }
+    .note-mark:hover .note-icon{display:flex}
+    .note-mark .note-icon:hover{
+      background:rgba(96,165,250,.18);
+      border-color:rgba(96,165,250,.35);
+    }
+
+    /* Ventana flotante */
+    .note-window{
+      position:fixed;
+      left:40px; top:60px;
+      width:min(520px, calc(100vw - 20px));
+      background:rgba(17,26,46,.98);
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      display:none;
+      z-index:9999;
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+    .note-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      background:rgba(255,255,255,.04);
+      border-bottom:1px solid var(--border);
+      cursor:move;
+      user-select:none;
+    }
+    .note-title{
+      display:flex; flex-direction:column; gap:2px;
+      min-width:0;
+    }
+    .note-title strong{
+      font-size:13px;
+      color:#f1f5f9;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .note-title span{
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .note-actions{
+      display:flex; gap:8px; align-items:center;
+    }
+    .iconbtn{
+      width:34px;height:34px;border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      cursor:pointer;color:var(--text);
+      display:flex;align-items:center;justify-content:center;
+      user-select:none;
+    }
+    .iconbtn:hover{background:rgba(255,255,255,.09)}
+    .note-body{padding:12px}
+    .meta{
+      font-size:12px;color:var(--muted);
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 10px;
+      margin-bottom:10px;
+      line-height:1.35;
+    }
+    textarea{
+      width:100%;
+      min-height:160px;
+      resize:vertical;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(15,23,42,.65);
+      color:var(--text);
+      padding:12px;
+      outline:none;
+      font-size:14px;
+      line-height:1.5;
+    }
+    textarea:focus{
+      border-color:rgba(96,165,250,.45);
+      box-shadow:0 0 0 3px rgba(96,165,250,.12);
+    }
+    .note-footer{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      padding:10px 12px 12px;
+      border-top:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+    }
+
+    /* Overlay para cerrar con click fuera (opcional) */
+    .overlay{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.25);
+      display:none;
+      z-index:9998;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Notas flotantes: arrastrar, guardar/cancelar, subrayado rojo + “leer nota”</h1>
+    <div class="hint">
+      1) Selecciona una palabra o fragmento en el pasaje. 2) Click en <b>“Añadir nota”</b>.
+      3) Guarda. Quedará <b>subrayado rojo</b>. Al pasar el cursor aparecerá un icono ✎ para abrir/editar/borrar.
+    </div>
+
+    <div class="toolbar">
+      <button id="btnAddNote" class="btn primary">✎ Añadir nota a selección</button>
+      <button id="btnClearSel" class="btn">⟲ Limpiar selección</button>
+      <button id="btnResetDemo" class="btn danger">🧹 Borrar todas las notas (demo)</button>
+      <span class="hint" style="margin:0">Guardado local: <b>IndexedDB</b> (store “notes”).</span>
+    </div>
+
+    <div class="passage" id="passage" data-book="amos" data-ch="1">
+      <span class="verse" data-v="1"><span class="vnum">1</span><span class="verse-text">Palabras de Amós, que fue entre los pastores de Tecoa, las cuales vio acerca de Israel…</span></span>
+      <span class="verse" data-v="2"><span class="vnum">2</span><span class="verse-text">Y dijo: Hashem rugirá desde Sión, y dará su voz desde Jerusalén…</span></span>
+      <span class="verse" data-v="3"><span class="vnum">3</span><span class="verse-text">Así ha dicho Hashem: Por tres pecados de Damasco, y por el cuarto, no revocaré su castigo…</span></span>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Ventana flotante -->
+  <div class="note-window" id="noteWin" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="note-header" id="noteHeader">
+      <div class="note-title">
+        <strong id="noteTitle">Nota</strong>
+        <span id="noteSub">—</span>
+      </div>
+      <div class="note-actions">
+        <button class="iconbtn" id="btnDelete" title="Borrar nota">🗑</button>
+        <button class="iconbtn" id="btnCloseX" title="Cerrar">✕</button>
+      </div>
+    </div>
+    <div class="note-body">
+      <div class="meta" id="noteMeta">—</div>
+      <textarea id="noteText" placeholder="Escribe aquí tu nota…"></textarea>
+    </div>
+    <div class="note-footer">
+      <button class="btn" id="btnCancel">Cancelar</button>
+      <button class="btn primary" id="btnSave">Guardar</button>
+    </div>
+  </div>
+
+  <script>
+    // =========================
+    // IndexedDB (simple y estable)
+    // =========================
+    const NotesDB = (() => {
+      const DB_NAME = 'bible_notes_db';
+      const DB_VER  = 1;
+      const STORE   = 'notes';
+
+      let db = null;
+
+      function open() {
+        if (db) return Promise.resolve(db);
+        return new Promise((resolve, reject) => {
+          const req = indexedDB.open(DB_NAME, DB_VER);
+
+          req.onupgradeneeded = () => {
+            const _db = req.result;
+            if (!_db.objectStoreNames.contains(STORE)) {
+              const store = _db.createObjectStore(STORE, { keyPath: 'id', autoIncrement: true });
+              store.createIndex('by_ref', ['book','ch','v'], { unique: false });
+              store.createIndex('by_anchor', ['book','ch','v','offset','length'], { unique: true });
+            }
+          };
+
+          req.onsuccess = () => {
+            db = req.result;
+            resolve(db);
+          };
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function put(note) {
+        const _db = await open();
+        return new Promise((resolve, reject) => {
+          const tx = _db.transaction(STORE, 'readwrite');
+          const st = tx.objectStore(STORE);
+          const req = st.put(note);
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function add(note) {
+        const _db = await open();
+        return new Promise((resolve, reject) => {
+          const tx = _db.transaction(STORE, 'readwrite');
+          const st = tx.objectStore(STORE);
+          const req = st.add(note);
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function getByAnchor(book, ch, v, offset, length) {
+        const _db = await open();
+        return new Promise((resolve, reject) => {
+          const tx = _db.transaction(STORE, 'readonly');
+          const st = tx.objectStore(STORE);
+          const idx = st.index('by_anchor');
+          const req = idx.get([book, ch, v, offset, length]);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function get(id) {
+        const _db = await open();
+        return new Promise((resolve, reject) => {
+          const tx = _db.transaction(STORE, 'readonly');
+          const st = tx.objectStore(STORE);
+          const req = st.get(id);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function del(id) {
+        const _db = await open();
+        return new Promise((resolve, reject) => {
+          const tx = _db.transaction(STORE, 'readwrite');
+          const st = tx.objectStore(STORE);
+          const req = st.delete(id);
+          req.onsuccess = () => resolve(true);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function listAll() {
+        const _db = await open();
+        return new Promise((resolve, reject) => {
+          const tx = _db.transaction(STORE, 'readonly');
+          const st = tx.objectStore(STORE);
+          const req = st.getAll();
+          req.onsuccess = () => resolve(req.result || []);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      async function clearAll() {
+        const _db = await open();
+        return new Promise((resolve, reject) => {
+          const tx = _db.transaction(STORE, 'readwrite');
+          const st = tx.objectStore(STORE);
+          const req = st.clear();
+          req.onsuccess = () => resolve(true);
+          req.onerror = () => reject(req.error);
+        });
+      }
+
+      return { open, add, put, get, del, getByAnchor, listAll, clearAll };
+    })();
+
+    // =========================
+    // Selección -> offset/length dentro del verso
+    // =========================
+    function getVerseFromSelection(range) {
+      const el = (range.commonAncestorContainer.nodeType === 1)
+        ? range.commonAncestorContainer
+        : range.commonAncestorContainer.parentElement;
+      return el?.closest?.('.verse') || null;
+    }
+
+    function getVerseTextEl(verseEl) {
+      return verseEl?.querySelector?.('.verse-text') || null;
+    }
+
+    function getOffsetInVerseText(verseTextEl, range) {
+      const pre = document.createRange();
+      pre.selectNodeContents(verseTextEl);
+      pre.setEnd(range.startContainer, range.startOffset);
+      return pre.toString().length;
+    }
+
+    // Envuelve offset/length con un span.note-mark (subrayado rojo)
+    function wrapOffsetLength(verseTextEl, offset, length, noteId) {
+      // walker sobre nodos texto (ya con posibles spans) para ubicar rangos
+      const walker = document.createTreeWalker(verseTextEl, NodeFilter.SHOW_TEXT, null);
+      let node, pos = 0;
+
+      let startNode=null, startOff=0, endNode=null, endOff=0;
+      const endPos = offset + length;
+
+      while ((node = walker.nextNode())) {
+        const nLen = node.nodeValue.length;
+        const nextPos = pos + nLen;
+
+        if (!startNode && offset >= pos && offset <= nextPos) {
+          startNode = node;
+          startOff = offset - pos;
+        }
+        if (!endNode && endPos >= pos && endPos <= nextPos) {
+          endNode = node;
+          endOff = endPos - pos;
+          break;
+        }
+        pos = nextPos;
+      }
+      if (!startNode || !endNode) return false;
+
+      const r = document.createRange();
+      r.setStart(startNode, startOff);
+      r.setEnd(endNode, endOff);
+
+      // Si ya está dentro de una nota, no dupliques
+      const ancestorEl = (r.commonAncestorContainer.nodeType === 1)
+        ? r.commonAncestorContainer
+        : r.commonAncestorContainer.parentElement;
+      const existing = ancestorEl?.closest?.('.note-mark');
+      if (existing) return false;
+
+      const span = document.createElement('span');
+      span.className = 'note-mark';
+      span.dataset.noteId = String(noteId);
+
+      const icon = document.createElement('span');
+      icon.className = 'note-icon';
+      icon.title = 'Leer / editar nota';
+      icon.textContent = '✎';
+      span.appendChild(icon);
+
+      try {
+        r.surroundContents(span);
+      } catch {
+        // fallback cuando surroundContents falla
+        const frag = r.extractContents();
+        span.appendChild(frag);
+        r.insertNode(span);
+      }
+
+      // Click en marca: abrir nota
+      span.addEventListener('click', async (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const id = Number(span.dataset.noteId);
+        const note = await NotesDB.get(id);
+        if (note) openNoteWindow({ mode:'edit', note, anchorEl: span });
+      });
+
+      return true;
+    }
+
+    function unwrapNoteMark(span) {
+      const parent = span.parentNode;
+      while (span.firstChild) {
+        // no muevas el icono suelto si queda antes de texto: quítalo
+        if (span.firstChild.classList && span.firstChild.classList.contains('note-icon')) {
+          span.removeChild(span.firstChild);
+          continue;
+        }
+        parent.insertBefore(span.firstChild, span);
+      }
+      parent.removeChild(span);
+    }
+
+    // =========================
+    // Ventana flotante arrastrable
+    // =========================
+    const overlay   = document.getElementById('overlay');
+    const noteWin   = document.getElementById('noteWin');
+    const noteHdr   = document.getElementById('noteHeader');
+    const noteTitle = document.getElementById('noteTitle');
+    const noteSub   = document.getElementById('noteSub');
+    const noteMeta  = document.getElementById('noteMeta');
+    const noteText  = document.getElementById('noteText');
+
+    const btnSave   = document.getElementById('btnSave');
+    const btnCancel = document.getElementById('btnCancel');
+    const btnCloseX = document.getElementById('btnCloseX');
+    const btnDelete = document.getElementById('btnDelete');
+
+    let winState = {
+      mode: 'new',     // 'new' | 'edit'
+      anchor: null,    // { book,ch,v,offset,length,quote }
+      note: null,      // note object (edit)
+      anchorEl: null,  // span.note-mark (edit)
+      tempRange: null, // Range (new)
+      tempVerseTextEl: null, // verseTextEl (new)
+    };
+
+    function showWindow() {
+      overlay.style.display = 'block';
+      noteWin.style.display = 'block';
+      noteWin.setAttribute('aria-hidden','false');
+      noteText.focus();
+    }
+    function closeWindow() {
+      overlay.style.display = 'none';
+      noteWin.style.display = 'none';
+      noteWin.setAttribute('aria-hidden','true');
+      winState = { mode:'new', anchor:null, note:null, anchorEl:null, tempRange:null, tempVerseTextEl:null };
+      noteText.value = '';
+    }
+
+    // Drag
+    (function makeDraggable() {
+      let dragging = false, startX=0, startY=0, origX=0, origY=0;
+
+      noteHdr.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        dragging = true;
+        const rect = noteWin.getBoundingClientRect();
+        startX = e.clientX; startY = e.clientY;
+        origX = rect.left; origY = rect.top;
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        const w = noteWin.getBoundingClientRect().width;
+        const h = noteWin.getBoundingClientRect().height;
+
+        const x = Math.max(8, Math.min(origX + dx, window.innerWidth - w - 8));
+        const y = Math.max(8, Math.min(origY + dy, window.innerHeight - h - 8));
+
+        noteWin.style.left = x + 'px';
+        noteWin.style.top  = y + 'px';
+      });
+
+      window.addEventListener('mouseup', () => dragging = false);
+    })();
+
+    overlay.addEventListener('mousedown', closeWindow);
+    btnCloseX.addEventListener('click', closeWindow);
+    btnCancel.addEventListener('click', closeWindow);
+
+    // Abrir ventana (nuevo o editar)
+    function openNoteWindow({ mode, anchor, note, anchorEl, range, verseTextEl }) {
+      winState.mode = mode;
+      winState.anchor = anchor || null;
+      winState.note = note || null;
+      winState.anchorEl = anchorEl || null;
+      winState.tempRange = range || null;
+      winState.tempVerseTextEl = verseTextEl || null;
+
+      if (mode === 'new') {
+        noteTitle.textContent = 'Nueva nota';
+        noteSub.textContent = `${anchor.book} ${anchor.ch}:${anchor.v}`;
+        noteMeta.textContent = `Selección: "${anchor.quote}"\nOffset: ${anchor.offset} | Len: ${anchor.length}`;
+        noteText.value = '';
+        btnDelete.style.display = 'none';
+      } else {
+        noteTitle.textContent = 'Editar nota';
+        noteSub.textContent = `${note.book} ${note.ch}:${note.v}`;
+        noteMeta.textContent = `Selección: "${note.quote}"\nOffset: ${note.offset} | Len: ${note.length}\nCreada: ${new Date(note.created_at).toLocaleString()}`;
+        noteText.value = note.text || '';
+        btnDelete.style.display = 'inline-flex';
+      }
+
+      showWindow();
+    }
+
+    // Guardar
+    btnSave.addEventListener('click', async () => {
+      const text = noteText.value.trim();
+      if (!text) {
+        alert('Escribe una nota antes de guardar.');
+        noteText.focus();
+        return;
+      }
+
+      if (winState.mode === 'new') {
+        const a = winState.anchor;
+        const exists = await NotesDB.getByAnchor(a.book, a.ch, a.v, a.offset, a.length);
+        if (exists) {
+          // Ya existe una nota para ese mismo ancla: abrir edición
+          openNoteWindow({ mode:'edit', note: exists, anchorEl: findMarkById(exists.id) });
+          return;
+        }
+
+        const note = {
+          book: a.book, ch: a.ch, v: a.v,
+          offset: a.offset, length: a.length,
+          quote: a.quote,
+          text,
+          created_at: Date.now(),
+          updated_at: Date.now()
+        };
+
+        const id = await NotesDB.add(note);
+
+        // marcar en el texto (subrayado rojo + icono)
+        wrapOffsetLength(winState.tempVerseTextEl, a.offset, a.length, id);
+
+        closeWindow();
+        clearSelection();
+      } else {
+        const note = winState.note;
+        note.text = text;
+        note.updated_at = Date.now();
+        await NotesDB.put(note);
+        closeWindow();
+      }
+    });
+
+    // Borrar
+    btnDelete.addEventListener('click', async () => {
+      if (winState.mode !== 'edit' || !winState.note) return;
+      const ok = confirm('¿Borrar esta nota?');
+      if (!ok) return;
+
+      const id = winState.note.id;
+      await NotesDB.del(id);
+
+      // quitar marca roja del texto
+      const el = winState.anchorEl || findMarkById(id);
+      if (el) unwrapNoteMark(el);
+
+      closeWindow();
+    });
+
+    function findMarkById(id) {
+      return document.querySelector(`.note-mark[data-note-id="${id}"]`);
+    }
+
+    // =========================
+    // UI principal (añadir nota)
+    // =========================
+    const btnAddNote = document.getElementById('btnAddNote');
+    const btnClearSel = document.getElementById('btnClearSel');
+    const btnResetDemo = document.getElementById('btnResetDemo');
+
+    function clearSelection() {
+      const sel = window.getSelection();
+      if (sel) sel.removeAllRanges();
+    }
+    btnClearSel.addEventListener('click', clearSelection);
+
+    btnAddNote.addEventListener('click', () => {
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
+        alert('Selecciona primero una palabra o fragmento.');
+        return;
+      }
+
+      const r = sel.getRangeAt(0);
+      const verseEl = getVerseFromSelection(r);
+      if (!verseEl) {
+        alert('La selección debe estar dentro de un versículo.');
+        return;
+      }
+
+      const verseTextEl = getVerseTextEl(verseEl);
+      if (!verseTextEl || !verseTextEl.contains(r.commonAncestorContainer)) {
+        alert('Selecciona solo dentro del texto del versículo (no el número).');
+        return;
+      }
+
+      const passage = document.getElementById('passage');
+      const book = passage.dataset.book || 'unknown';
+      const ch   = Number(passage.dataset.ch || 1);
+      const v    = Number(verseEl.dataset.v || 1);
+
+      const quote = String(sel).trim();
+      const offset = getOffsetInVerseText(verseTextEl, r);
+      const length = r.toString().length;
+
+      const anchor = { book, ch, v, offset, length, quote };
+
+      openNoteWindow({
+        mode:'new',
+        anchor,
+        range: r.cloneRange(),
+        verseTextEl
+      });
+    });
+
+    // Reset demo
+    btnResetDemo.addEventListener('click', async () => {
+      const ok = confirm('Esto borrará todas las notas guardadas y quitará marcas rojas. ¿Continuar?');
+      if (!ok) return;
+
+      await NotesDB.clearAll();
+      document.querySelectorAll('.note-mark').forEach(unwrapNoteMark);
+      clearSelection();
+      alert('Notas borradas.');
+    });
+
+    // =========================
+    // Cargar marcas al iniciar
+    // =========================
+    async function boot() {
+      await NotesDB.open();
+      const all = await NotesDB.listAll();
+
+      for (const note of all) {
+        const verseEl = document.querySelector(`.verse[data-v="${note.v}"]`);
+        const verseTextEl = getVerseTextEl(verseEl);
+        if (!verseTextEl) continue;
+
+        // envolver desde el final no es necesario aquí por ser una por una,
+        // pero si hay muchas en un verso, mejor ordenar por offset desc
+      }
+
+      // Para evitar offsets movidos: agrupar por v y ordenar desc
+      const byV = new Map();
+      for (const note of all) {
+        const key = `${note.book}|${note.ch}|${note.v}`;
+        if (!byV.has(key)) byV.set(key, []);
+        byV.get(key).push(note);
+      }
+      for (const [key, notes] of byV.entries()) {
+        const v = Number(key.split('|')[2]);
+        const verseEl = document.querySelector(`.verse[data-v="${v}"]`);
+        const verseTextEl = getVerseTextEl(verseEl);
+        if (!verseTextEl) continue;
+
+        // limpiar marcas previas (por si recarga)
+        verseTextEl.querySelectorAll('.note-mark').forEach(unwrapNoteMark);
+
+        notes.sort((a,b)=> (b.offset - a.offset));
+        for (const n of notes) {
+          wrapOffsetLength(verseTextEl, n.offset, n.length, n.id);
+        }
+      }
+    }
+    boot();
+
+    // Escape cierra
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && noteWin.style.display !== 'none') closeWindow();
+    });
+  </script>
+</body>
+</html>
