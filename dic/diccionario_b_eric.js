@@ -500,17 +500,19 @@ function findMatchesByModeAndLanguage(terms, preferredLang, mode) {
     const terms = buildPreferredTerms(rawQuery, primaryEntry, options);
 
     const matches = findMatchesForLanguage(terms, preferredLang);
-        const hit = matches[0] || null;
+ const strictMatches = preferredLang
+      ? matches.filter((entry) => (entry?.__lang || detectEntryLang(entry)) === preferredLang)
+      : matches;
+    const hit = strictMatches[0] || null;
 
     if (!hit) {
-const langLabel = preferredLang === 'gr' ? 'griegas' : preferredLang === 'he' ? 'hebreas' : '';
-      return `<div class="trilingual-brief mt-3"><div class="dict-entry-kicker">Diccionario · Prof. Eric de Jesús Rodríguez Mendoza</div><div class="muted">Sin coincidencias ${langLabel ? `en resultados ${langLabel}` : 'en la base de diccionario Eric'}.</div></div>`;
-          }
+ return '';
+    }
 
     const sourceText = getSourceText(hit);
     const detectedLang = hit?.__lang || detectEntryLang(hit) || preferredLang;
-        const prioritized = selectPrioritizedMatches(matches, detectedLang, 3, 4);
-    const renderedEntries = prioritized.map((entry, index) => {
+    const prioritized = selectPrioritizedMatches(strictMatches, detectedLang, 3, 4);
+     const renderedEntries = prioritized.map((entry, index) => {
       const entryLang = entry?.__lang || detectEntryLang(entry);
       const sourceTextValue = getSourceText(entry) || sourceText || '—';
       const normalizedSource = normalizeSourceDisplay(sourceTextValue, entryLang) || '—';
@@ -518,21 +520,16 @@ const langLabel = preferredLang === 'gr' ? 'griegas' : preferredLang === 'he' ? 
       const transliteracion = String(entry?.transliteracion || '').trim() || '—';
       const definicion = String(entry?.observacion || '').trim() || '—';
       const book = String(entry?.book || 'Sin contexto').trim() || 'Sin contexto';
-        const langLabel = entryLang === 'gr' ? 'Griego' : entryLang === 'he' ? 'Hebreo' : 'Sin clasificar';
-      const fallbackLabel = preferredLang && entryLang && preferredLang !== entryLang
-        ? ' <span class="tag">coincidencia por idioma alterno</span>'
-        : '';
+              const langLabel = entryLang === 'gr' ? 'Griego' : entryLang === 'he' ? 'Hebreo' : 'Sin clasificar';
 
       
-const contextLine = `<div class="trilingual-line"><strong>Contexto:</strong> ${esc(book)}</div>`;
-      const details = index === 0
+ const contextLine = `<div class="trilingual-line"><strong>Contexto:</strong> ${esc(book)}</div>`;
+       const details = index === 0
         ? `
-          <div class="trilingual-line"><strong>Idioma detectado:</strong> ${esc(langLabel)}${fallbackLabel}</div>
-          <div class="trilingual-line"><strong>Transliteración:</strong> ${esc(transliteracion)}</div>
+          <div class="trilingual-line"><strong>Idioma detectado:</strong> ${esc(langLabel)}</div>          <div class="trilingual-line"><strong>Transliteración:</strong> ${esc(transliteracion)}</div>
           <div class="trilingual-line"><strong>Equivalencia español:</strong> ${esc(spanish)}</div>
            <div class="trilingual-line"><strong>Fuente normalizada:</strong> ${esc(normalizedSource)}</div>
           ${contextLine}
-                    <div class="trilingual-line"><strong>Idioma detectado:</strong> ${esc(langLabel)}${fallbackLabel}</div>
           <div class="trilingual-line"><strong>Definición:</strong> ${esc(definicion).replace(/\n/g, '<br>')}</div>
         `
         : `
@@ -552,8 +549,8 @@ const contextLine = `<div class="trilingual-line"><strong>Contexto:</strong> ${e
         <div class="dict-entry-header">
           <div class="dict-entry-kicker">Diccionario · Prof. Eric de Jesús Rodríguez Mendoza</div>
         </div>
- ${renderedEntries}
-      </div> 
+  ${renderedEntries}
+      </div>
     `;
   }
 
