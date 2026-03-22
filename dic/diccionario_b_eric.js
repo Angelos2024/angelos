@@ -422,20 +422,37 @@ function findMatchesByLanguageOrder(terms) {
       .replace(/>/g, '&gt;');
   }
 
-   function findMatchesForLanguage(terms, preferredLang) {
-    if (preferredLang === 'he' || preferredLang === 'gr') {
-      const languageTerms = collectSearchTerms(terms, preferredLang);
-      const exactMatches = filterMatchesByLanguageAndTerms(preferredLang, languageTerms, 'exact');
-      if (exactMatches.length) return sortMatches(exactMatches);
+function findMatchesByModeAndLanguage(terms, preferredLang, mode) {
+    if (!(preferredLang === 'he' || preferredLang === 'gr')) return [];
 
-      const partialMatches = filterMatchesByLanguageAndTerms(preferredLang, languageTerms, 'partial');
-      if (partialMatches.length) return sortMatches(partialMatches);
+    const languageTerms = collectSearchTerms(terms, preferredLang);
+    const languageMatches = filterMatchesByLanguageAndTerms(preferredLang, languageTerms, mode);
+    if (languageMatches.length) return sortMatches(languageMatches);
 
-      const spanishTerms = collectSpanishTerms(terms);
-      const spanishMatches = filterMatchesByLanguageAndTerms('es', spanishTerms, 'exact');
-      if (spanishMatches.length) {
-        return sortMatches(spanishMatches).filter((entry) => (entry?.__lang || detectEntryLang(entry)) === preferredLang);
-      }
+    const spanishTerms = collectSpanishTerms(terms);
+    const spanishMatches = filterMatchesByLanguageAndTerms('es', spanishTerms, mode);
+    if (spanishMatches.length) {
+      return sortMatches(spanishMatches).filter((entry) => (entry?.__lang || detectEntryLang(entry)) === preferredLang);
+    }
+
+    return [];
+  }
+
+  function findMatchesForLanguage(terms, preferredLang) {
+      if (preferredLang === 'he' || preferredLang === 'gr') {
+     const exactMatches = findMatchesByModeAndLanguage(terms, preferredLang, 'exact');
+      if (exactMatches.length) return exactMatches;
+
+      const partialMatches = findMatchesByModeAndLanguage(terms, preferredLang, 'partial');
+      if (partialMatches.length) return partialMatches;
+
+      const fallbackLang = preferredLang === 'he' ? 'gr' : 'he';
+      const fallbackExactMatches = findMatchesByModeAndLanguage(terms, fallbackLang, 'exact');
+      if (fallbackExactMatches.length) return fallbackExactMatches;
+
+      const fallbackPartialMatches = findMatchesByModeAndLanguage(terms, fallbackLang, 'partial');
+      if (fallbackPartialMatches.length) return fallbackPartialMatches;
+
       return [];
     }
 
@@ -491,8 +508,8 @@ const langLabel = preferredLang === 'gr' ? 'griegas' : preferredLang === 'he' ? 
           }
 
     const sourceText = getSourceText(hit);
-    const detectedLang = preferredLang || hit?.__lang || detectEntryLang(hit);
-    const prioritized = selectPrioritizedMatches(matches, detectedLang, 3, 4);
+    const detectedLang = hit?.__lang || detectEntryLang(hit) || preferredLang;
+        const prioritized = selectPrioritizedMatches(matches, detectedLang, 3, 4);
     const renderedEntries = prioritized.map((entry, index) => {
       const entryLang = entry?.__lang || detectEntryLang(entry);
       const sourceTextValue = getSourceText(entry) || sourceText || '—';
@@ -501,15 +518,21 @@ const langLabel = preferredLang === 'gr' ? 'griegas' : preferredLang === 'he' ? 
       const transliteracion = String(entry?.transliteracion || '').trim() || '—';
       const definicion = String(entry?.observacion || '').trim() || '—';
       const book = String(entry?.book || 'Sin contexto').trim() || 'Sin contexto';
+        const langLabel = entryLang === 'gr' ? 'Griego' : entryLang === 'he' ? 'Hebreo' : 'Sin clasificar';
+      const fallbackLabel = preferredLang && entryLang && preferredLang !== entryLang
+        ? ' <span class="tag">coincidencia por idioma alterno</span>'
+        : '';
 
       
-            const contextLine = `<div class="trilingual-line"><strong>Contexto:</strong> ${esc(book)}</div>`;
+const contextLine = `<div class="trilingual-line"><strong>Contexto:</strong> ${esc(book)}</div>`;
       const details = index === 0
         ? `
+          <div class="trilingual-line"><strong>Idioma detectado:</strong> ${esc(langLabel)}${fallbackLabel}</div>
           <div class="trilingual-line"><strong>Transliteración:</strong> ${esc(transliteracion)}</div>
           <div class="trilingual-line"><strong>Equivalencia español:</strong> ${esc(spanish)}</div>
            <div class="trilingual-line"><strong>Fuente normalizada:</strong> ${esc(normalizedSource)}</div>
           ${contextLine}
+                    <div class="trilingual-line"><strong>Idioma detectado:</strong> ${esc(langLabel)}${fallbackLabel}</div>
           <div class="trilingual-line"><strong>Definición:</strong> ${esc(definicion).replace(/\n/g, '<br>')}</div>
         `
         : `
