@@ -422,33 +422,77 @@ function findMatchesByLanguageOrder(terms) {
       .replace(/>/g, '&gt;');
   }
 
-  function renderEricDictionaryCell(rawQuery, primaryEntry) {
-    const terms = [
+   function findMatchesForLanguage(terms, preferredLang) {
+    if (preferredLang === 'he' || preferredLang === 'gr') {
+      const languageTerms = collectSearchTerms(terms, preferredLang);
+      const exactMatches = filterMatchesByLanguageAndTerms(preferredLang, languageTerms, 'exact');
+      if (exactMatches.length) return sortMatches(exactMatches);
+
+      const partialMatches = filterMatchesByLanguageAndTerms(preferredLang, languageTerms, 'partial');
+      if (partialMatches.length) return sortMatches(partialMatches);
+
+      const spanishTerms = collectSpanishTerms(terms);
+      const spanishMatches = filterMatchesByLanguageAndTerms('es', spanishTerms, 'exact');
+      if (spanishMatches.length) {
+        return sortMatches(spanishMatches).filter((entry) => (entry?.__lang || detectEntryLang(entry)) === preferredLang);
+      }
+      return [];
+    }
+
+    return findMatchesByLanguageOrder(terms);
+  }
+
+  function buildPreferredTerms(rawQuery, primaryEntry, options = {}) {
+    const preferredLang = options?.lang === 'he' || options?.lang === 'gr' ? options.lang : '';
+    const tableValue = String(options?.tableValue || '').trim();
+    const languageSpecificTerms = preferredLang === 'gr'
+      ? [
+          tableValue,
+          primaryEntry?.gr,
+          primaryEntry?.greek,
+          primaryEntry?.griego,
+          primaryEntry?.equivalencia_griega,
+          primaryEntry?.texto_hebreo
+        ]
+      : preferredLang === 'he'
+        ? [
+            tableValue,
+            primaryEntry?.he,
+            primaryEntry?.hebrew,
+            primaryEntry?.hebreo,
+            primaryEntry?.palabra,
+            primaryEntry?.lemma,
+            primaryEntry?.lemmas,
+            primaryEntry?.texto_hebreo
+          ]
+        : [];
+
+    return [
+      ...languageSpecificTerms,
       rawQuery,
-      primaryEntry?.he,
-      primaryEntry?.hebrew,
-      primaryEntry?.hebreo,
-      primaryEntry?.gr,
-      primaryEntry?.greek,
-      primaryEntry?.griego,
-      primaryEntry?.texto_hebreo,
+      
       primaryEntry?.equivalencia_espanol,
       primaryEntry?.equivalencia_español,
-      primaryEntry?.equivalencia_griega,
       primaryEntry?.es,
       primaryEntry?.spanish
     ].filter(Boolean);
+ }
 
-const matches = findMatchesByLanguageOrder(terms);
-    const hit = matches[0] || null;
+  function renderEricDictionaryCell(rawQuery, primaryEntry, options = {}) {
+    const preferredLang = options?.lang === 'he' || options?.lang === 'gr' ? options.lang : '';
+    const terms = buildPreferredTerms(rawQuery, primaryEntry, options);
+
+    const matches = findMatchesForLanguage(terms, preferredLang);
+        const hit = matches[0] || null;
 
     if (!hit) {
-      return '<div class="trilingual-brief mt-3"><div class="dict-entry-kicker">Diccionario · Prof. Eric de Jesús Rodríguez Mendoza</div><div class="muted">Sin coincidencias en la base de diccionario Eric.</div></div>';
-    }
+const langLabel = preferredLang === 'gr' ? 'griegas' : preferredLang === 'he' ? 'hebreas' : '';
+      return `<div class="trilingual-brief mt-3"><div class="dict-entry-kicker">Diccionario · Prof. Eric de Jesús Rodríguez Mendoza</div><div class="muted">Sin coincidencias ${langLabel ? `en resultados ${langLabel}` : 'en la base de diccionario Eric'}.</div></div>`;
+          }
 
     const sourceText = getSourceText(hit);
-    const detectedLang = hit?.__lang || detectEntryLang(hit);
-     const prioritized = selectPrioritizedMatches(matches, detectedLang, 3, 4);
+    const detectedLang = preferredLang || hit?.__lang || detectEntryLang(hit);
+    const prioritized = selectPrioritizedMatches(matches, detectedLang, 3, 4);
     const renderedEntries = prioritized.map((entry, index) => {
       const entryLang = entry?.__lang || detectEntryLang(entry);
       const sourceTextValue = getSourceText(entry) || sourceText || '—';

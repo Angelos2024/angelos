@@ -1367,17 +1367,17 @@ function renderStructuredHebrewEntry(entry) {
 }
 
 function renderGreekComparisonCell(entry, rawQuery) {
-    const greek = entry?.gr || entry?.equivalencia_griega || entry?.greek || '—';
-        const blocks = [];
+    const greek = entry?.gr || entry?.equivalencia_griega || entry?.greek || entry?.texto_hebreo || '—';
+    const blocks = [];
     if (window.AnalisisDiccionarioAGriego?.renderGreekDictionaryCell) {
- blocks.push(window.AnalisisDiccionarioAGriego.renderGreekDictionaryCell(greek, rawQuery));
-    } else {
+        blocks.push(window.AnalisisDiccionarioAGriego.renderGreekDictionaryCell(greek, rawQuery));
+            } else {
         blocks.push(`<pre class="comparison-pre comparison-pre--greek">${escapeHtml(greek)}</pre>`);    
     }
 
 if (window.AnalisisDiccionarioBEric?.renderEricDictionaryCell) {
-        blocks.push(window.AnalisisDiccionarioBEric.renderEricDictionaryCell(rawQuery, entry));
-            }
+        blocks.push(window.AnalisisDiccionarioBEric.renderEricDictionaryCell(rawQuery, entry, { lang: 'gr', tableValue: greek }));
+    }
 
     return blocks.join('');
 }
@@ -1393,8 +1393,8 @@ async function updateDictionaryComparison(items, rawQuery) {
             await window.AnalisisDiccionarioBEric.ensureLoaded();
         }
         const ericBlock = window.AnalisisDiccionarioBEric?.renderEricDictionaryCell
-            ? window.AnalisisDiccionarioBEric.renderEricDictionaryCell(rawQuery, null)
-            : '<div class="comparison-pre comparison-pre--hebrew">Sin datos en el diccionario Eric.</div>';
+            ? window.AnalisisDiccionarioBEric.renderEricDictionaryCell(rawQuery, null, { lang: 'he', tableValue: rawQuery })
+                        : '<div class="comparison-pre comparison-pre--hebrew">Sin datos en el diccionario Eric.</div>';
 
         tbody.innerHTML = `
           <tr>
@@ -1441,11 +1441,13 @@ async function updateDictionaryComparison(items, rawQuery) {
         if (unifiedSupplement) {
         hebrewBlocks.push(unifiedSupplement);
     }
-
+if (window.AnalisisDiccionarioBEric?.renderEricDictionaryCell) {
+        hebrewBlocks.unshift(window.AnalisisDiccionarioBEric.renderEricDictionaryCell(rawQuery, primary, { lang: 'he', tableValue: hebrewCandidate }));
+    }
     const hebrewHtml = hebrewBlocks.length
         ? hebrewBlocks.join('')
-        : '<div class="comparison-pre comparison-pre--hebrew">Sin datos en el diccionario.</div>';  
-    tbody.innerHTML = `
+        : '<div class="comparison-pre comparison-pre--hebrew">Sin datos en el diccionario.</div>';
+            tbody.innerHTML = `
       <tr>
         <td>${renderGreekComparisonCell(primary, rawQuery)}</td>
         <td>${hebrewHtml}</td>
