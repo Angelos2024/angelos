@@ -134,6 +134,7 @@
   const state = {
     dictMap: new Map(),
     dictPointedMap: new Map(),
+   dictByStrong: new Map(),
     dictLoaded: false,
     indexes: {},
     textCache: new Map(),
@@ -381,11 +382,17 @@ function getDisplayedHebrewDefinition(entry, clickedWord = '') {
   function getHebrewLxx(entry) {
     return entry?.LXX || entry?.lxx || entry?.lxx_refs || null;
   }
-  function getHebrewStrong(entry) {
-    const raw = String(entry?.strong || entry?.strongs || entry?.strong_detail?.strong || '').trim();
+ function getStrongKey(value) {
+    const raw = String(value || '').trim();
     if (!raw) return '';
     const normalized = raw.toUpperCase();
-    return normalized.startsWith('H') ? normalized : `H${normalized}`;
+if (/^[HG]\d+$/.test(normalized)) return normalized;
+    if (/^\d+$/.test(normalized)) return `H${normalized}`;
+    return normalized;
+  }
+
+  function getHebrewStrong(entry) {
+    return getStrongKey(entry?.strong || entry?.strongs || entry?.strong_detail?.strong || '');
   }
 
   function registerRootCandidate(map, key, item) {
@@ -412,11 +419,23 @@ function getDisplayedHebrewDefinition(entry, clickedWord = '') {
     return state.rootsByStrong;
   }
   function resolveStrongReferenceLexeme(strongRef) {
-    const strongKey = String(strongRef || '').trim().toUpperCase();
-    if (!/^H\d+$/.test(strongKey)) return '';
+    const strongKey = getStrongKey(strongRef);
+     if (!/^H\d+$/.test(strongKey)) return '';
     const direct = state.rootsByStrong.get(strongKey) || [];
     const candidate = direct.find((item) => normalizeSimpleText(item?.lexeme)) || direct.find((item) => normalizeSimpleText(item?.root_lexeme));
-    return normalizeSimpleText(candidate?.lexeme || candidate?.root_lexeme || '');
+ const rootLexeme = normalizeSimpleText(candidate?.lexeme || candidate?.root_lexeme || '');
+    if (rootLexeme) return rootLexeme;
+
+    const dictEntry = state.dictByStrong.get(strongKey) || null;
+    if (!dictEntry) return '';
+    return normalizeSimpleText(
+      dictEntry?.strong_detail?.lemma
+      || dictEntry?.lemma
+      || dictEntry?.hebreo
+      || dictEntry?.palabra
+      || dictEntry?.forma
+      || ''
+    );
   }
 
   function replaceStrongReferencesWithLexemes(text) {
@@ -663,6 +682,8 @@ function isLikelyVerbEntry(entry) {
     if (state.dictLoaded) return state.dictMap;
     const data = await loadJson(HEBREW_DICT_PATH);
     (data || []).forEach((item) => {
+       const strongKey = getHebrewStrong(item);
+      if (strongKey && !state.dictByStrong.has(strongKey)) state.dictByStrong.set(strongKey, item);
     const rawKeys = buildHebrewEntryTokens(item);
       rawKeys.map((token) => normalizeHebrew(token)).forEach((key) => {
         if (!key) return;
@@ -871,6 +892,8 @@ function isLikelyVerbEntry(entry) {
         .he-lex-popup .rkant-row{ margin-top:4px; font-size:12px; line-height:1.3; }
         .he-lex-popup .muted{ opacity:.7; }
         .he-lex-popup .close{ background:transparent; border:0; color:#cbd6ff; cursor:pointer; font-size:16px; line-height:1; padding:0 2px; }
+        .he-lex-popup .he-lex-chip{ display:inline-flex; align-items:center; gap:4px; margin:2px 6px 2px 0; border:1px solid rgba(134,182,255,.45); background:rgba(71,123,214,.16); color:#e9eefc; border-radius:999px; padding:2px 10px; font-size:12px; cursor:pointer; }
+        .he-lex-popup .he-lex-chip:hover{ background:rgba(71,123,214,.28); }
                  .he-lex-popup .content.collapsed .details{ display:none; }
         .he-lex-popup .content.expanded .details{ display:block; }
         .he-lex-active-word{
@@ -1227,8 +1250,11 @@ function setPopupExpanded(expanded) {
  const rootData = getHebrewRootData(entry);
         const rootLexemes = uniqueList(rootData.map((item) => item?.root_lexeme));
         const rootDefinitions = uniqueList(rootData.map((item) => formatRootDefinitionSegment(item, 'root_first_segment')));
-                if (rootLexemeEl) rootLexemeEl.textContent = rootLexemes.join(' · ') || '—';
-        if (rootLexemeRowEl) rootLexemeRowEl.style.display = rootLexemes.length ? '' : 'none';
+      const rootLexemeMarkup = rootLexemes.length
+          ? rootLexemes.map((lexeme) => `<button type="button" class="he-lex-chip" data-he-lex-root="${escapeHtml(lexeme)}">${escapeHtml(lexeme)}</button>`).join(' ')
+          : '—';
+                if (rootLexemeEl) rootLexemeEl.innerHTML = rootLexemeMarkup;
+         if (rootLexemeRowEl) rootLexemeRowEl.style.display = rootLexemes.length ? '' : 'none';
         const rootLabelWord = rootLexemes[0] || '';
         if (rootDefinitionLabelEl) rootDefinitionLabelEl.textContent = rootLabelWord ? `Definición de ${rootLabelWord}:` : 'Definición de derivación:';
         if (rootDefinitionEl) rootDefinitionEl.textContent = rootDefinitions.join('\n\n') || '—';
