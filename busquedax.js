@@ -1766,10 +1766,22 @@ function mapLxxRefsToHebrewRefs(refs) {
     return samples;
   }
 
+  function splitEquivalenceTokens(value) {
+    return [...new Set(String(value || '')
+      .split(/\s*[•·,;\/|]\s*/g)
+      .map((item) => String(item || '').trim())
+      .filter(Boolean))];
+  }
+
+  function buildEquivalenceButtons(word, highlightQuery, lang) {
+    const tokens = splitEquivalenceTokens(word);
+    if (!tokens.length) return '<div class="muted">—</div>';
+    return `<div class="d-flex flex-wrap gap-2">${tokens.map((token) => `<button type="button" class="btn btn-outline-primary btn-sm bx-equivalence-chip" data-bx-equivalence="${escapeHtml(token)}" data-bx-lang="${escapeHtml(lang)}">${highlightText(token, highlightQuery, lang)}</button>`).join('')}</div>`;
+  }
   function buildCorrespondenceCard({ title, word, transliteration, samples, lang, highlightQuery }) {
     const wordLine = word
-      ? `<div class="${classForLang(lang)} fw-semibold">${highlightText(word, highlightQuery, lang)}</div>`
-      : '<div class="muted">—</div>';
+      ? `<div class="${classForLang(lang)} fw-semibold">${buildEquivalenceButtons(word, highlightQuery, lang)}</div>`
+     : '<div class="muted">—</div>';
     const translitLine = transliteration ? `<div class="small muted">Translit.: ${transliteration}</div>` : '';
     const sampleLines = samples.length
       ? samples.map((sample) => `<div class="small">${escapeHtml(sample.ref)} · ${highlightText(sample.text, highlightQuery, lang)}</div>`).join('')
@@ -2927,6 +2939,15 @@ if (enforceSpanishReferenceCorrespondence && enabledCorpora.has('he')) {
  
    function handleFilterClick(event) {
      // Panel derecho: filtros (All / OT / NT / Libro)
+     const equivalenceBtn = event.target.closest('button[data-bx-equivalence]');
+     if (equivalenceBtn) {
+       const nextValue = String(equivalenceBtn.dataset.bxEquivalence || '').trim();
+       if (nextValue && queryInput) {
+         queryInput.value = nextValue;
+         analyze();
+       }
+       return;
+     }
      const bxFilterBtn = event.target.closest('button[data-bx-filter]');
      if (bxFilterBtn) {
        const id = bxFilterBtn.dataset.bxFilter || 'all';
