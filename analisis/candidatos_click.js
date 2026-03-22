@@ -26,6 +26,8 @@
    let hebrewRootsPromise = null;
   let hebrewRootsIndex = null;
     let hebrewRootsStrongIndex = null;
+     let hebrewUnifiedPromise = null;
+  let hebrewUnifiedStrongIndex = null;
   let lxxFrequencyIndexPromise = null;
   let esFrequencyIndexPromise = null;
   let heFrequencyIndexPromise = null;
@@ -119,8 +121,14 @@ return Array.from(new Set(words));
       .normalize('NFC');
   }
   function normalizeStrongKey(value) {
-    const match = String(value || '').toUpperCase().match(/H\d+/);
-    return match ? match[0] : '';
+  const match = String(value || '').toUpperCase().match(/H?\s*0*(\d{1,4})/);
+    return match ? `H${match[1]}` : '';
+  }
+
+  function getUnifiedStrongEntryByStrong(strong) {
+    const key = normalizeStrongKey(strong);
+    if (!key) return null;
+    return hebrewUnifiedStrongIndex?.get(key) || null;
   }
 
   function getHebrewRootEntryByStrong(strong) {
@@ -133,6 +141,31 @@ return Array.from(new Set(words));
     const normalized = normalizeHebrew(text);
     if (!normalized) return [];
     return normalized.match(/[^ \t\r\n]+/g) || [];
+  }
+
+async function ensureHebrewUnifiedLoaded() {
+    if (hebrewUnifiedStrongIndex) return hebrewUnifiedStrongIndex;
+    if (!hebrewUnifiedPromise) {
+      hebrewUnifiedPromise = fetchJsonWithFallback([
+        '../diccionario/diccionario_unificado.min.json'
+      ]).then((payload) => {
+        const entries = Array.isArray(payload) ? payload : [];
+        const strongIndex = new Map();
+
+        entries.forEach((entry) => {
+          const strongKey = normalizeStrongKey(entry?.strong || entry?.strong_detail?.strong || '');
+          if (strongKey && !strongIndex.has(strongKey)) strongIndex.set(strongKey, entry);
+        });
+
+        hebrewUnifiedStrongIndex = strongIndex;
+        return strongIndex;
+      }).catch((error) => {
+        console.warn('No se pudo cargar diccionario/diccionario_unificado.min.json.', error);
+        hebrewUnifiedStrongIndex = new Map();
+        return hebrewUnifiedStrongIndex;
+      });
+    }
+    return hebrewUnifiedPromise;
   }
 
 
@@ -167,6 +200,31 @@ return Array.from(new Set(words));
     return hebrewRootsPromise;
   }
 
+async function ensureHebrewUnifiedLoaded() {
+    if (hebrewUnifiedStrongIndex) return hebrewUnifiedStrongIndex;
+    if (!hebrewUnifiedPromise) {
+      hebrewUnifiedPromise = fetchJsonWithFallback([
+        '../diccionario/diccionario_unificado.min.json'
+      ]).then((payload) => {
+        const entries = Array.isArray(payload) ? payload : [];
+        const strongIndex = new Map();
+
+        entries.forEach((entry) => {
+          const strongKey = normalizeStrongKey(entry?.strong || entry?.strong_detail?.strong || '');
+          if (strongKey && !strongIndex.has(strongKey)) strongIndex.set(strongKey, entry);
+        });
+
+        hebrewUnifiedStrongIndex = strongIndex;
+        return strongIndex;
+      }).catch((error) => {
+        console.warn('No se pudo cargar diccionario/diccionario_unificado.min.json.', error);
+        hebrewUnifiedStrongIndex = new Map();
+        return hebrewUnifiedStrongIndex;
+      });
+    }
+    return hebrewUnifiedPromise;
+  }
+
  function createRootReferenceButton(label, strong) {
     const strongKey = normalizeStrongKey(strong);
     if (!strongKey) return escapeHtml(label);
@@ -184,8 +242,8 @@ return Array.from(new Set(words));
 
     while ((match = strongPattern.exec(raw))) {
       const strong = normalizeStrongKey(match[0]);
-      const entry = getHebrewRootEntryByStrong(strong);
-      const replacement = entry?.lexeme ? createRootReferenceButton(entry.lexeme, strong) : escapeHtml(match[0]);
+      const label = getStrongReferenceLabel(strong);
+      const replacement = label ? createRootReferenceButton(label, strong) : escapeHtml(match[0]);
       html += escapeHtml(raw.slice(lastIndex, match.index));
       html += replacement;
       lastIndex = match.index + match[0].length;
@@ -194,6 +252,25 @@ return Array.from(new Set(words));
     html += escapeHtml(raw.slice(lastIndex));
     return html || '—';
   }
+  function renderUnifiedHebrewRootsPanel(entry, strongKey) {
+    const derivedEl = document.getElementById('hebrewRootDerivedFrom');
+    const definitionEl = document.getElementById('hebrewRootDefinition');
+    if (!derivedEl || !definitionEl) return;
+
+    if (!entry) {
+      renderHebrewRootsPanel(null);
+      return;
+    }
+
+    const lemma = entry?.strong_detail?.lemma || entry?.lemma || entry?.hebreo || entry?.forma || strongKey || '—';
+    const translit = entry?.strong_detail?.transliteracion || entry?.transliteracion || '';
+    const derivation = entry?.strong_detail?.derivacion || entry?.derivacion || '';
+    const definition = entry?.strong_detail?.definicion || entry?.definicion || entry?.strong_detail?.def_rv || entry?.def_rv || '—';
+
+    derivedEl.innerHTML = `<span class="hebrew">${escapeHtml(lemma)}</span>${translit ? ` <span class="muted">(${escapeHtml(translit)})</span>` : ''}`;
+    definitionEl.innerHTML = renderRootTextWithLinks([derivation, definition].filter(Boolean).join(' · '));
+  }
+
   function renderHebrewRootsPanel(entry) {
     const derivedEl = document.getElementById('hebrewRootDerivedFrom');
     const definitionEl = document.getElementById('hebrewRootDefinition');
@@ -225,9 +302,16 @@ return Array.from(new Set(words));
     derivedEl.textContent = 'Consultando…';
     definitionEl.textContent = 'Consultando…';
 
-    const index = await ensureHebrewRootsLoaded();
- const entry = (normalizedStrong && getHebrewRootEntryByStrong(normalizedStrong)) || index.get(normalizedWord) || null;
-    renderHebrewRootsPanel(entry);
+     await Promise.all([ensureHebrewRootsLoaded(), ensureHebrewUnifiedLoaded()]);
+    const index = hebrewRootsIndex || new Map();
+    const rootEntry = (normalizedStrong && getHebrewRootEntryByStrong(normalizedStrong)) || index.get(normalizedWord) || null;
+    if (rootEntry) {
+      renderHebrewRootsPanel(rootEntry);
+      return;
+    }
+
+    const unifiedEntry = normalizedStrong ? getUnifiedStrongEntryByStrong(normalizedStrong) : null;
+    renderUnifiedHebrewRootsPanel(unifiedEntry, normalizedStrong);
       }
 
   async function fetchJsonWithFallback(urls) {
