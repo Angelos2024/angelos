@@ -1021,7 +1021,16 @@ bookList.className = 'mt-2 d-grid gap-1';
      renderExamples(cards);
 
    }
- 
+ async function warmSearchAssets(term = '') {
+    const detectedLang = detectLang(String(term || '').trim());
+    const targetLangs = detectedLang && detectedLang !== 'es'
+      ? [detectedLang, 'es']
+      : ['es'];
+    const preloadTasks = targetLangs.map((lang) => loadIndex(lang).catch(() => null));
+    if (targetLangs.includes('gr')) preloadTasks.push(loadDictionary().catch(() => null));
+    if (targetLangs.includes('he')) preloadTasks.push(loadHebrewDictionary().catch(() => null));
+    await Promise.all(preloadTasks);
+  }
   async function analyze() {
     const term = queryInput.value.trim();
 if (!term) {
@@ -1104,9 +1113,22 @@ if (!term) {
         `Búsqueda: <span class="fw-semibold">${escapeHtml(term)}</span>`
       ];
 
+       let indexPromise = loadIndex(searchLang, options);
+      let dictionaryPromise = null;
       if (searchLang === 'gr') {
-        await loadDictionary(options);
-        throwIfAborted(options.signal);
+        dictionaryPromise = loadDictionary(options);
+      } else if (searchLang === 'he') {
+        dictionaryPromise = loadHebrewDictionary(options);
+      }
+
+      const [index] = await Promise.all([
+        indexPromise,
+        dictionaryPromise
+      ]);
+      throwIfAborted(options.signal);
+      
+      if (searchLang === 'gr') {
+       
         const entry = state.dictMap.get(normalized) || null;
         tags = [
           `Lema: <span class="fw-semibold">${entry?.lemma || term}</span>`,
@@ -1114,8 +1136,7 @@ if (!term) {
           `POS: ${extractPos(entry)}`
         ];
       } else if (searchLang === 'he') {
-        await loadHebrewDictionary(options);
-        throwIfAborted(options.signal);
+        
        const entry = state.hebrewDictMap.get(normalized) || null;
         tags = [
           `Palabra: <span class="fw-semibold">${entry?.hebrew || term}</span>`,
@@ -1128,8 +1149,6 @@ if (!term) {
       renderCorrespondence([]);
       renderExamples([]);
 
-
-      const index = await loadIndex(searchLang, options);
       throwIfAborted(options.signal);
       const refs = await getRefsForQuery(term, searchLang, index, options);
 
@@ -1249,12 +1268,31 @@ function updateDetectedLanguageLabel(lang) {
    
 
 analyzeBtn?.addEventListener('click', analyze);
+let warmupScheduled = false;
+const scheduleWarmSearchAssets = (term = '') => {
+  if (warmupScheduled) return;
+  warmupScheduled = true;
+  const runWarmup = () => {
+    void warmSearchAssets(term).finally(() => {
+      warmupScheduled = false;
+    });
+  };
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(runWarmup, { timeout: 1200 });
+    return;
+  }
+  setTimeout(runWarmup, 150);
+};
+queryInput?.addEventListener('focus', () => {
+  scheduleWarmSearchAssets(queryInput?.value || '');
+}, { once: true });
 queryInput?.addEventListener('input', () => {
      const term = queryInput?.value.trim() || '';
      if (!term) {
        setValidationMessage('');
        return;
      }
+       scheduleWarmSearchAssets(term);
      const validation = getSearchValidation(term);
      setValidationMessage(validation.ok ? '' : validation.message);
    });
@@ -1276,5 +1314,5 @@ queryInput?.addEventListener('input', () => {
     queryInput.value = q;
     analyze();
   }
-
+  scheduleWarmSearchAssets();
   applyQueryFromUrl();
