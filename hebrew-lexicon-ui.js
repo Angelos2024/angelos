@@ -155,6 +155,7 @@ trilingueFallback: null,
   const jsonCache = new Map();
   function normalizeHebrew(text) {
     return String(text || '')
+          .normalize('NFKC')
       .replace(/[\u0591-\u05BD\u05BF\u05C1-\u05C2\u05C4-\u05C7]/g, '')
       .replace(/[\s\u05BE]/g, '')
       .replace(/[׃,:;.!?()"“”]/g, '');
@@ -172,8 +173,8 @@ trilingueFallback: null,
   }
 
 function normalizeHebrewPointed(text) {
- return stripHebrewCantillation(text)
-    .replace(/[\s\u05BE]/g, '')
+ return stripHebrewCantillation(String(text || '').normalize('NFKC'))
+     .replace(/[\s\u05BE]/g, '')
       .replace(/[׃,:;.!?()"“”]/g, '');
    }
     function normalizeHebrewSkeleton(text) {
