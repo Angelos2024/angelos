@@ -7,7 +7,13 @@
   };
 
   const SEARCH_INDEX = {
-    es: '../search/index-es.json',
+       es: [
+      '../search/index-es.json',
+      '../search/indice/index-es.json',
+      '../search/indice/indice-es.json',
+      '../search/indice/rvr1960-es.json',
+      '../search/indice/rvr1960.json'
+    ],
     gr: '../search/index-gr.json',
     he: '../search/index-he.json'
   };
@@ -599,9 +605,92 @@ function getSpanishEquivalences(entry, fallback = '') {
 
   async function loadIndex(lang) {
     if (state.indexes[lang]) return state.indexes[lang];
+(() => {
+  const PANEL_IDS = {
+    panel: 'lemmaSummaryPanel',
+    tags: 'lemmaTags',
+    summary: 'lemmaSummary',
+    examples: 'lemmaExamples'
+  };
+
+  const SEARCH_INDEX = {
+    es: '../search/index-es.json',
+    es: [
+      '../search/index-es.json',
+      '../search/indice/index-es.json',
+      '../search/indice/indice-es.json',
+      '../search/indice/rvr1960-es.json',
+      '../search/indice/rvr1960.json'
+    ],
+    gr: '../search/index-gr.json',
+    he: '../search/index-he.json'
+  };
+
+
+  const TEXT_BASE = '../search/texts';
+    const NT_BOOKS = new Set([
+    'mateo', 'marcos', 'lucas', 'juan', 'hechos', 'romanos',
+    '1_corintios', '2_corintios', 'galatas', 'efesios', 'filipenses', 'colosenses',
+    '1_tesalonicenses', '2_tesalonicenses', '1_timoteo', '2_timoteo', 'tito', 'filemon',
+    'hebreos', 'santiago', '1_pedro', '2_pedro', '1_juan', '2_juan', '3_juan',
+    'judas', 'apocalipsis'
+  ]);
+  const LXX_FILES = [
+    'lxx_rahlfs_1935_1Chr.json',
+    'lxx_rahlfs_1935_1Esdr.json',
+    'lxx_rahlfs_1935_1Kgs.json',
+    'lxx_rahlfs_1935_1Macc.json',
+    'lxx_rahlfs_1935_1Sam.json',
+    'lxx_rahlfs_1935_2Chr.json',
+    'lxx_rahlfs_1935_2Esdr.json',
+    'lxx_rahlfs_1935_2Kgs.json',
+    'lxx_rahlfs_1935_2Macc.json',
+    'lxx_rahlfs_1935_2Sam.json',
+    'lxx_rahlfs_1935_3Macc.json',
+@@ -577,53 +583,65 @@ function getSpanishEquivalences(entry, fallback = '') {
+    if (/^[1234][A-Z]/.test(raw) || /^[A-Z][a-z]+/.test(raw)) return raw;
+    return raw.replace(/\b\w/g, (m) => m.toUpperCase());
+  }
+
+  function formatRef(book, chapter, verse) {
+    return `${prettifyBookLabel(book)} ${chapter}:${verse}`;
+  }
+
+  async function loadJson(url) {
+    if (jsonCache.has(url)) return jsonCache.get(url);
+    const promise = fetch(url, { cache: 'force-cache' }).then((res) => {
+      if (!res.ok) throw new Error(`No se pudo cargar ${url}`);
+      return res.json();
+    });
+    jsonCache.set(url, promise);
+    try {
+      return await promise;
+    } catch (error) {
+      jsonCache.delete(url);
+      throw error;
+    }
+  }
+
+  async function loadIndex(lang) {
+    if (state.indexes[lang]) return state.indexes[lang];
     const data = await loadJson(SEARCH_INDEX[lang]);
     state.indexes[lang] = data;
     return data;
+    const candidates = Array.isArray(SEARCH_INDEX[lang]) ? SEARCH_INDEX[lang] : [SEARCH_INDEX[lang]];
+    let lastError = null;
+
+    for (const url of candidates) {
+      if (!url) continue;
+      try {
+        const data = await loadJson(url);
+        state.indexes[lang] = data;
+        return data;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    throw lastError || new Error(`No se pudo cargar el índice para ${lang}`);
   }
 
   async function loadChapterText(lang, book, chapter) {

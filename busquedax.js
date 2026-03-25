@@ -4,8 +4,14 @@
    const HEBREW_DICT_URL = './diccionario/diccionario_unificado.min.json';
    const TRILINGUAL_EQUIV_URL = './diccionario/equivalencias_trilingue.min.json';
   const SEARCH_INDEX = {
-     es: './search/index-es.json',
-     gr: './search/index-gr.json',
+ es: [
+       './search/index-es.json',
+       './search/indice/index-es.json',
+       './search/indice/indice-es.json',
+       './search/indice/rvr1960-es.json',
+       './search/indice/rvr1960.json'
+     ],
+      gr: './search/index-gr.json',
      he: './search/index-he.json'
    };
   const LXX_SHARD_BASE_PATHS = ['./index', './search/index'];
@@ -1144,9 +1150,21 @@ const tokens = String(term || '').split(/\s+/).filter(Boolean);
   }
    async function loadIndex(lang, options = {}) {
     if (state.indexes[lang]) return state.indexes[lang];
-     const data = await loadJson(SEARCH_INDEX[lang], options);
-    state.indexes[lang] = data;
-     return data;
+ const candidates = Array.isArray(SEARCH_INDEX[lang]) ? SEARCH_INDEX[lang] : [SEARCH_INDEX[lang]];
+    let lastError = null;
+
+    for (const url of candidates) {
+      if (!url) continue;
+      try {
+        const data = await loadJson(url, options);
+        state.indexes[lang] = data;
+        return data;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    throw lastError || new Error(`No se pudo cargar el índice para ${lang}`);
    }
  
    async function loadChapterText(lang, book, chapter, options = {}) {
