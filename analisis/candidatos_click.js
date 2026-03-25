@@ -231,6 +231,17 @@ async function ensureHebrewUnifiedLoaded() {
     return `<button type="button" class="root-ref-link hebrew" data-role="hebrew-root-link" data-strong="${escapeHtml(strongKey)}">${escapeHtml(label)}</button>`;
   }
 
+function getStrongReferenceLabel(strong) {
+    const key = normalizeStrongKey(strong);
+    if (!key) return '';
+
+    const entry = getUnifiedStrongEntryByStrong(key);
+    if (!entry) return key;
+
+    const lemma = entry?.strong_detail?.lemma || entry?.lemma || entry?.hebreo || entry?.forma || key;
+    const translit = entry?.strong_detail?.transliteracion || entry?.transliteracion || '';
+    return translit ? `${lemma} (${translit})` : String(lemma);
+  }
   function renderRootTextWithLinks(text) {
     const raw = String(text || '').trim();
     if (!raw) return '—';
@@ -302,16 +313,21 @@ async function ensureHebrewUnifiedLoaded() {
     derivedEl.textContent = 'Consultando…';
     definitionEl.textContent = 'Consultando…';
 
-     await Promise.all([ensureHebrewRootsLoaded(), ensureHebrewUnifiedLoaded()]);
-    const index = hebrewRootsIndex || new Map();
-    const rootEntry = (normalizedStrong && getHebrewRootEntryByStrong(normalizedStrong)) || index.get(normalizedWord) || null;
-    if (rootEntry) {
-      renderHebrewRootsPanel(rootEntry);
-      return;
-    }
+    try {
+      await Promise.all([ensureHebrewRootsLoaded(), ensureHebrewUnifiedLoaded()]);
+      const index = hebrewRootsIndex || new Map();
+      const rootEntry = (normalizedStrong && getHebrewRootEntryByStrong(normalizedStrong)) || index.get(normalizedWord) || null;
+      if (rootEntry) {
+        renderHebrewRootsPanel(rootEntry);
+        return;
+      }
 
     const unifiedEntry = normalizedStrong ? getUnifiedStrongEntryByStrong(normalizedStrong) : null;
-    renderUnifiedHebrewRootsPanel(unifiedEntry, normalizedStrong);
+      renderUnifiedHebrewRootsPanel(unifiedEntry, normalizedStrong);
+    } catch (error) {
+      console.warn('No se pudo actualizar el panel de raíces hebreas.', error);
+      renderHebrewRootsPanel(null);
+    }
       }
 
   async function fetchJsonWithFallback(urls) {
