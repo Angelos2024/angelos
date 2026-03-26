@@ -442,13 +442,18 @@ function mapLxxRefsToHebrewRefs(refs) {
   function renderFiltersPanel(agg) {
     if (!filtersPanel) return;
     const { books, ot, nt, otCount, ntCount, allCount } = agg;
+        const collapsed = state.pagination.collapsedSections || { ot: true, nt: true };
 
  const mkBtn = (id, label, count, active, variant = '') => {
       const variantClass = variant ? ` bx-filter-item--${variant}` : '';
+      const isSectionToggle = id === 'ot' || id === 'nt';
+      const sectionCollapsed = isSectionToggle ? Boolean(collapsed[id]) : false;
+      const toggleLabel = isSectionToggle ? `<span class="bx-collapse-indicator">${sectionCollapsed ? '▸' : '▾'}</span>` : '';
             return `
         <button class="bx-filter-item${variantClass} ${active ? 'is-active' : ''}" type="button"
-                  data-bx-filter="${id}">
-          <span>${escapeHtml(label)}</span>
+ data-bx-filter="${id}" ${isSectionToggle ? `aria-expanded="${sectionCollapsed ? 'false' : 'true'}"` : ''}>
+           <span>${escapeHtml(label)}</span>
+           ${toggleLabel}
           <span class="bx-count">(${count})</span>
         </button>
       `;
@@ -460,15 +465,17 @@ function mapLxxRefsToHebrewRefs(refs) {
 
     const otItems = ot.map((b) => mkBtn(`book:${b.slug}`, b.label, b.count, state.pagination.selectedBook === b.slug)).join('');
     const ntItems = nt.map((b) => mkBtn(`book:${b.slug}`, b.label, b.count, state.pagination.selectedBook === b.slug)).join('');
+    const otHiddenAttr = collapsed.ot ? 'hidden' : '';
+    const ntHiddenAttr = collapsed.nt ? 'hidden' : '';
 
     filtersPanel.innerHTML = `
       <div class="d-grid gap-2">
          ${mkBtn('all', 'Todos', allCount, isAll, 'all')}
         ${mkBtn('ot', 'Toráh', otCount, isOT, 'ot')}
-        <div class="ps-1 d-grid gap-2">${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
-         ${mkBtn('nt', 'Evangelios', ntCount, isNT, 'nt')}
-        <div class="ps-1 d-grid gap-2">${ntItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
-      </div>
+ <div class="ps-1 d-grid gap-2" ${otHiddenAttr}>${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
+          ${mkBtn('nt', 'Evangelios', ntCount, isNT, 'nt')}
+        <div class="ps-1 d-grid gap-2" ${ntHiddenAttr}>${ntItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
+              </div>
     `;
   }
 

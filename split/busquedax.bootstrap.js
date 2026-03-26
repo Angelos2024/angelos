@@ -216,8 +216,9 @@ const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
     page: 1,
     selectedTestament: null, // 'ot' | 'nt' | null
     selectedBook: null,      // slug del libro o null
-    activeLang: null
-  },
+ activeLang: null,
+    collapsedSections: { ot: true, nt: true }
+      },
   // Cache de textos por verso para evitar recargas
   verseCache: {
     es: new Map(),
