@@ -140,6 +140,22 @@
 .bx-filter-item.bx-testament--ot{ font-weight:650; }
 .bx-filter-item.bx-testament--nt{ font-weight:650; }
 .bx-filter-item .bx-count{ font-size:.8rem; }
+.bx-filter-section-toggle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.5rem;
+  width:100%;
+  padding:.3rem .45rem;
+  border:1px dashed var(--bd);
+  border-radius:8px;
+  background:color-mix(in srgb, var(--soft-bg) 40%, #ffffff);
+  color:var(--muted);
+  font-size:.8rem;
+}
+.bx-filter-section-toggle:hover{ background:var(--soft-hover); }
+.bx-filter-section-chevron{ transition:transform .2s ease; }
+.bx-filter-section-chevron.is-open{ transform:rotate(180deg); }
 .bx-filter-item--all,
 .bx-filter-item--ot,
 .bx-filter-item--nt{ font-weight:700; color:#ffffff; border-width:0; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
