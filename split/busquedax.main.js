@@ -472,16 +472,19 @@ function mapLxxRefsToHebrewRefs(refs) {
 
     const otItems = ot.map((b) => mkBtn(`book:${b.slug}`, b.label, b.count, state.pagination.selectedBook === b.slug)).join('');
     const ntItems = nt.map((b) => mkBtn(`book:${b.slug}`, b.label, b.count, state.pagination.selectedBook === b.slug)).join('');
-    const otHiddenAttr = collapsed.ot ? 'hidden' : '';
-    const ntHiddenAttr = collapsed.nt ? 'hidden' : '';
+    ? ''
+      : `<div class="ps-1 d-grid gap-2" data-bx-section="ot">${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>`;
+    const ntSectionHtml = collapsed.nt
+      ? ''
+      : `<div class="ps-1 d-grid gap-2" data-bx-section="nt">${ntItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>`;
 
     filtersPanel.innerHTML = `
       <div class="d-grid gap-2">
          ${mkBtn('all', 'Todos', allCount, isAll, 'all')}
         ${mkBtn('ot', 'Toráh', otCount, isOT, 'ot')}
- <div class="ps-1 d-grid gap-2" data-bx-section="ot" ${otHiddenAttr}>${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
-           ${mkBtn('nt', 'Evangelios', ntCount, isNT, 'nt')}
-        <div class="ps-1 d-grid gap-2" data-bx-section="nt" ${ntHiddenAttr}>${ntItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
+  ${otSectionHtml}
+        ${mkBtn('nt', 'Evangelios', ntCount, isNT, 'nt')}
+        ${ntSectionHtml}
                       </div>
     `;
   }
