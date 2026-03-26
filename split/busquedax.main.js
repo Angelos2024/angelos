@@ -437,7 +437,14 @@ function mapLxxRefsToHebrewRefs(refs) {
  function resetFilterSectionsCollapsed() {
     state.pagination.collapsedSections = { ot: true, nt: true };
   }
-
+ function toggleFilterSection(sectionId) {
+    if (sectionId !== 'ot' && sectionId !== 'nt') return;
+    const current = state.pagination.collapsedSections || { ot: true, nt: true };
+    state.pagination.collapsedSections = {
+      ...current,
+      [sectionId]: !Boolean(current[sectionId])
+    };
+  }
 
   function renderFiltersPanel(agg) {
     if (!filtersPanel) return;
@@ -472,10 +479,10 @@ function mapLxxRefsToHebrewRefs(refs) {
       <div class="d-grid gap-2">
          ${mkBtn('all', 'Todos', allCount, isAll, 'all')}
         ${mkBtn('ot', 'Toráh', otCount, isOT, 'ot')}
- <div class="ps-1 d-grid gap-2" ${otHiddenAttr}>${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
-          ${mkBtn('nt', 'Evangelios', ntCount, isNT, 'nt')}
-        <div class="ps-1 d-grid gap-2" ${ntHiddenAttr}>${ntItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
-              </div>
+ <div class="ps-1 d-grid gap-2" data-bx-section="ot" ${otHiddenAttr}>${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
+           ${mkBtn('nt', 'Evangelios', ntCount, isNT, 'nt')}
+        <div class="ps-1 d-grid gap-2" data-bx-section="nt" ${ntHiddenAttr}>${ntItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
+                      </div>
     `;
   }
 
@@ -1215,12 +1222,24 @@ if (!term) {
        if (id === 'all') {
          state.pagination.selectedTestament = null;
          state.pagination.selectedBook = null;
+                  resetFilterSectionsCollapsed();
        } else if (id === 'ot' || id === 'nt') {
+                 toggleFilterSection(id);
+         const collapsed = state.pagination.collapsedSections || { ot: true, nt: true };
+         collapsed[id] = !collapsed[id];
+         state.pagination.collapsedSections = collapsed;
          state.pagination.selectedTestament = id;
          state.pagination.selectedBook = null;
        } else if (id.startsWith('book:')) {
-         state.pagination.selectedBook = id.slice(5);
-         state.pagination.selectedTestament = null;
+          const slug = id.slice(5);
+         state.pagination.selectedBook = slug;
+         state.pagination.selectedTestament = OT_SET.has(slug) ? 'ot' : (NT_SET.has(slug) ? 'nt' : null);
+         resetFilterSectionsCollapsed();
+          state.pagination.selectedTestament = OT_SET.has(state.pagination.selectedBook) ? 'ot' : (NT_SET.has(state.pagination.selectedBook) ? 'nt' : null);
+         const collapsed = state.pagination.collapsedSections || { ot: true, nt: true };
+         if (state.pagination.selectedTestament === 'ot') collapsed.ot = false;
+         if (state.pagination.selectedTestament === 'nt') collapsed.nt = false;
+         state.pagination.collapsedSections = collapsed;
        }
        state.pagination.page = 1;
        if (state.last?.groupsByCorpus) {
