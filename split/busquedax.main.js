@@ -452,7 +452,6 @@ function mapLxxRefsToHebrewRefs(refs) {
     const isAll = !state.pagination.selectedBook && !state.pagination.selectedTestament;
     const isOT = state.pagination.selectedTestament === 'ot';
     const isNT = state.pagination.selectedTestament === 'nt';
-        const collapsedSections = state.pagination.collapsedSections || { ot: true, nt: true };
 
     const otItems = ot.map((b) => mkBtn(`book:${b.slug}`, b.label, b.count, state.pagination.selectedBook === b.slug)).join('');
     const ntItems = nt.map((b) => mkBtn(`book:${b.slug}`, b.label, b.count, state.pagination.selectedBook === b.slug)).join('');
@@ -461,18 +460,10 @@ function mapLxxRefsToHebrewRefs(refs) {
       <div class="d-grid gap-2">
          ${mkBtn('all', 'Todos', allCount, isAll, 'all')}
         ${mkBtn('ot', 'Toráh', otCount, isOT, 'ot')}
- <button class="bx-filter-section-toggle" type="button" data-bx-section-toggle="ot" aria-expanded="${(!collapsedSections.ot).toString()}" aria-controls="bxFilterSectionOt">
-          <span>Libros de Toráh</span>
-          <span class="bx-filter-section-chevron${collapsedSections.ot ? '' : ' is-open'}" aria-hidden="true">▾</span>
-        </button>
-        <div id="bxFilterSectionOt" class="ps-1 d-grid gap-2"${collapsedSections.ot ? ' hidden' : ''}>${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
-                 ${mkBtn('nt', 'Evangelios', ntCount, isNT, 'nt')}
-<button class="bx-filter-section-toggle" type="button" data-bx-section-toggle="nt" aria-expanded="${(!collapsedSections.nt).toString()}" aria-controls="bxFilterSectionNt">
-          <span>Libros de Evangelios</span>
-          <span class="bx-filter-section-chevron${collapsedSections.nt ? '' : ' is-open'}" aria-hidden="true">▾</span>
-        </button>
-        <div id="bxFilterSectionNt" class="ps-1 d-grid gap-2"${collapsedSections.nt ? ' hidden' : ''}>${ntItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
-              </div>
+        <div class="ps-1 d-grid gap-2">${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
+         ${mkBtn('nt', 'Evangelios', ntCount, isNT, 'nt')}
+        <div class="ps-1 d-grid gap-2">${ntItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
+      </div>
     `;
   }
 
@@ -1157,7 +1148,6 @@ if (!term) {
  renderTags(tags);
       renderCorrespondence([]);
       renderExamples([]);
-      state.pagination.collapsedSections = { ot: true, nt: true };
 
       throwIfAborted(options.signal);
       const refs = await getRefsForQuery(term, searchLang, index, options);
@@ -1204,22 +1194,7 @@ if (!term) {
   }
 
  
- function handleFilterClick(event) {
-     const sectionToggleBtn = event.target.closest('button[data-bx-section-toggle]');
-     if (sectionToggleBtn) {
-       const sectionId = sectionToggleBtn.dataset.bxSectionToggle;
-       if (!state.pagination.collapsedSections) {
-         state.pagination.collapsedSections = { ot: true, nt: true };
-       }
-       if (sectionId === 'ot' || sectionId === 'nt') {
-         state.pagination.collapsedSections[sectionId] = !state.pagination.collapsedSections[sectionId];
-         if (state.last?.groupsByCorpus) {
-           void renderSearchUI(state.last.groupsByCorpus || [], state.last.highlightQueries || {}, state.last.relatedTerms || {});
-         }
-       }
-       return;
-     }
-
+   function handleFilterClick(event) {
      // Panel derecho: filtros (All / OT / NT / Libro)
      const bxFilterBtn = event.target.closest('button[data-bx-filter]');
      if (bxFilterBtn) {
