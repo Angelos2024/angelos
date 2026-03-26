@@ -472,7 +472,8 @@ function mapLxxRefsToHebrewRefs(refs) {
 
     const otItems = ot.map((b) => mkBtn(`book:${b.slug}`, b.label, b.count, state.pagination.selectedBook === b.slug)).join('');
     const ntItems = nt.map((b) => mkBtn(`book:${b.slug}`, b.label, b.count, state.pagination.selectedBook === b.slug)).join('');
-  
+    const otSectionHtml = collapsed.ot
+      ? ''
       : `<div class="ps-1 d-grid gap-2" data-bx-section="ot">${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>`;
     const ntSectionHtml = collapsed.nt
       ? ''
