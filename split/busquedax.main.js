@@ -1224,10 +1224,7 @@ if (!term) {
          state.pagination.selectedBook = null;
                   resetFilterSectionsCollapsed();
        } else if (id === 'ot' || id === 'nt') {
-                 toggleFilterSection(id);
-         const collapsed = state.pagination.collapsedSections || { ot: true, nt: true };
-         collapsed[id] = !collapsed[id];
-         state.pagination.collapsedSections = collapsed;
+                      toggleFilterSection(id);
          state.pagination.selectedTestament = id;
          state.pagination.selectedBook = null;
        } else if (id.startsWith('book:')) {
