@@ -208,8 +208,8 @@
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
 
     /* Layout paralelo (español izquierda / original derecha) con colapsado del original */
-    .parallel{ display:flex; flex-wrap:wrap; gap:1rem; }
-    .parallel-col{ flex:1 1 360px; min-width:320px; }
+.parallel{ display:flex; flex-wrap:nowrap; gap:1rem; }
+    .parallel-col{ flex:1 1 0; min-width:0; }
     .orig-hidden #origCol{ display:none !important; }
     .orig-hidden #spanishCol{ flex:1 1 100%; min-width:100%; }
      .interlinear-mode #spanishCol{ display:none !important; }
@@ -331,6 +331,13 @@
       }
       .reader-scroll-btn-left{ left:-1rem; }
       .reader-scroll-btn-right{ right:-1rem; }
+      .parallel{
+        flex-wrap:nowrap;
+      }
+      .parallel-col{
+        flex:1 1 0;
+        min-width:0;
+      }
     }
 
 
