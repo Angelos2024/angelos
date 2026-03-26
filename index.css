@@ -283,8 +283,47 @@
     .tools-panel .panel-body{ padding:.75rem; }
     .tools-panel .btn{ padding:.4rem .6rem; font-size:.9rem; }
 
-     .page-nav{ display:flex; flex-wrap:wrap; gap:.5rem; }
-    .page-nav .btn{ display:flex; align-items:center; gap:.35rem; }
+      .page-nav-label{
+      font-size:.82rem;
+      color:var(--muted);
+      letter-spacing:.01em;
+    } 
+    .reader-scroll-nav{
+      position:sticky;
+      top:50vh;
+      z-index:8;
+      height:0;
+      pointer-events:none;
+    }
+    .reader-scroll-btn{
+      position:absolute;
+      top:0;
+      transform:translateY(-50%);
+      width:44px;
+      height:52px;
+      border-radius:10px;
+      box-shadow:0 8px 18px rgba(0,0,0,.14);
+      background:var(--panel);
+      border-color:var(--bd);
+      pointer-events:auto;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.25rem;
+      line-height:1;
+    }
+    .reader-scroll-btn-left{ left:.4rem; }
+    .reader-scroll-btn-right{ right:.4rem; }
+    .reader-scroll-btn[disabled]{
+      opacity:.45;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    @media (max-width: 991.98px){
+      .reader-scroll-btn-left{ left:.2rem; }
+      .reader-scroll-btn-right{ right:.2rem; }
+    }
 
 
    

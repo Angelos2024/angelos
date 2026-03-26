@@ -124,16 +124,7 @@
           <div class="meta-row">
             Versión: <span class="fw-semibold" id="metaVersion">—</span>
           </div>
-          <div class="page-nav mt-2" aria-label="Navegación de pasaje">
-            <button id="btnPrevPage" class="btn btn-outline-primary btn-sm" type="button" disabled>
-              <span aria-hidden="true">←</span>
-              <span>Anterior</span>
-            </button>
-            <button id="btnNextPage" class="btn btn-outline-primary btn-sm" type="button" disabled>
-              <span>Siguiente</span>
-              <span aria-hidden="true">→</span>
-            </button>
-          </div>
+           <div class="page-nav-label mt-2" aria-hidden="true">Navegación de pasaje</div>
         </div>
       </div>
     </div>
@@ -185,6 +176,15 @@
           </div>
 
 <div class="panel-body">
+
+  <div class="reader-scroll-nav" aria-label="Navegación de pasaje">
+    <button id="btnPrevPage" class="btn btn-outline-primary btn-sm reader-scroll-btn reader-scroll-btn-left" type="button" disabled aria-label="Capítulo anterior">
+      <span aria-hidden="true">❮</span>
+    </button>
+    <button id="btnNextPage" class="btn btn-outline-primary btn-sm reader-scroll-btn reader-scroll-btn-right" type="button" disabled aria-label="Capítulo siguiente">
+      <span aria-hidden="true">❯</span>
+    </button>
+  </div>
 
   <!-- ===== TEXTO BÍBLICO NORMAL (RVR + ORIGINAL) ===== -->
   <div id="biblePanel">
@@ -1177,13 +1177,9 @@ function buildSearchString(slug, chapter){
 }
 
 function formatNavButtonLabel(direction, target){
-  const label = target ? `${prettyBookName(target.slug)} ${target.chapter}` : '';
-  const icon = direction === 'prev' ? '←' : '→';
-  const text = direction === 'prev' ? 'Anterior' : 'Siguiente';
-  const labelHtml = label ? ` <span class="d-none d-md-inline text-muted ms-1">${esc(label)}</span>` : '';
-  return direction === 'prev'
-    ? `<span aria-hidden="true">${icon}</span><span>${text}</span>${labelHtml}`
-    : `<span>${text}</span>${labelHtml}<span aria-hidden="true">${icon}</span>`;
+  const icon = direction === 'prev' ? '❮' : '❯';
+  const srText = direction === 'prev' ? 'Anterior' : 'Siguiente';
+  return `<span aria-hidden="true">${icon}</span><span class="visually-hidden">${srText}</span>`;
 }
 
 function setNavButton(button, direction, target){
