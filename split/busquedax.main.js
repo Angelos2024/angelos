@@ -434,6 +434,11 @@ function mapLxxRefsToHebrewRefs(refs) {
     return { lang, books, ot, nt, otCount, ntCount, allCount };
   }
 
+ function resetFilterSectionsCollapsed() {
+    state.pagination.collapsedSections = { ot: true, nt: true };
+  }
+
+
   function renderFiltersPanel(agg) {
     if (!filtersPanel) return;
     const { books, ot, nt, otCount, ntCount, allCount } = agg;
@@ -1148,6 +1153,7 @@ if (!term) {
  renderTags(tags);
       renderCorrespondence([]);
       renderExamples([]);
+            resetFilterSectionsCollapsed();
 
       throwIfAborted(options.signal);
       const refs = await getRefsForQuery(term, searchLang, index, options);
