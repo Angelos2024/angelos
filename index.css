@@ -299,21 +299,22 @@
       position:absolute;
       top:0;
       transform:translateY(-50%);
-      width:44px;
-      height:52px;
-      border-radius:10px;
-      box-shadow:0 8px 18px rgba(0,0,0,.14);
-      background:var(--panel);
+      width:30px;
+      height:74px;
+      border-radius:999px;
+      box-shadow:0 6px 14px rgba(0,0,0,.12);
+      background:color-mix(in srgb, var(--panel) 92%, white);
       border-color:var(--bd);
       pointer-events:auto;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      font-size:1.25rem;
+      font-size:1rem;
       line-height:1;
+            padding:0;  
     }
-    .reader-scroll-btn-left{ left:.4rem; }
-    .reader-scroll-btn-right{ right:.4rem; }
+    .reader-scroll-btn-left{ left:-1.35rem; }
+    .reader-scroll-btn-right{ right:-1.35rem; }
     .reader-scroll-btn[disabled]{
       opacity:.45;
       cursor:not-allowed;
@@ -321,8 +322,12 @@
     }
 
     @media (max-width: 991.98px){
-      .reader-scroll-btn-left{ left:.2rem; }
-      .reader-scroll-btn-right{ right:.2rem; }
+    .reader-scroll-btn{
+        width:28px;
+        height:66px;
+      }
+      .reader-scroll-btn-left{ left:-1rem; }
+      .reader-scroll-btn-right{ right:-1rem; }
     }
 
 
@@ -546,6 +551,13 @@
       .backup-panel .backup-actions .btn{
         font-size:.82rem;
       }
+      .reader-scroll-btn{
+        width:26px;
+        height:60px;
+        font-size:.92rem;
+      }
+      .reader-scroll-btn-left{ left:-.78rem; }
+      .reader-scroll-btn-right{ right:-.78rem; }
     }
 
 @media (min-width: 800px) and (max-width: 1000px){
@@ -621,6 +633,12 @@
       .passage-text,
  .orig-text{ font-size:.94rem; line-height:1.62; }
       .feedback-badge{ font-size:.74rem; padding:.18rem .42rem; }
+      .reader-scroll-btn{
+        width:28px;
+        height:64px;
+      }
+      .reader-scroll-btn-left{ left:-.92rem; }
+      .reader-scroll-btn-right{ right:-.92rem; }
 }
 
     @media (min-width: 1001px) and (max-width: 1024px){
@@ -651,6 +669,13 @@
 .orig-text{ font-size:1.12rem; line-height:1.95; }
       .parallel{ gap:1.25rem; }
       .parallel-col{ min-width:420px; }
+       .reader-scroll-btn{
+        width:34px;
+        height:82px;
+        font-size:1.05rem;
+      }
+      .reader-scroll-btn-left{ left:-1.6rem; }
+      .reader-scroll-btn-right{ right:-1.6rem; }
     }
 
     @media (min-width: 1921px) and (max-width: 2499px){
@@ -662,6 +687,13 @@
       .parallel-col{ min-width:500px; }
       aside.col-lg-2{ width:20%; }
       .col-lg-10{ width:80%; }
+      .reader-scroll-btn{
+        width:36px;
+        height:88px;
+        font-size:1.12rem;
+      }
+      .reader-scroll-btn-left{ left:-1.85rem; }
+      .reader-scroll-btn-right{ right:-1.85rem; }
     }
     @media (min-width: 2500px){
       .sitewrap{ max-width: 2420px; }
@@ -677,5 +709,12 @@
       .parallel-col{ min-width: 620px; }
       aside.col-lg-2{ width:18%; }
       .col-lg-10{ width:82%; }
+      .reader-scroll-btn{
+        width:40px;
+        height:98px;
+        font-size:1.2rem;
+      }
+      .reader-scroll-btn-left{ left:-2.15rem; }
+      .reader-scroll-btn-right{ right:-2.15rem; }
     }
   </style>
