@@ -320,6 +320,9 @@
       cursor:not-allowed;
       box-shadow:none;
     }
+    .mb-3 {
+    margin-bottom: 0.5rem !important;
+}
 
     @media (max-width: 991.98px){
     .reader-scroll-btn{
