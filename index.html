@@ -269,15 +269,15 @@ function saveLastReferenceProgress(searchText){
   if(!normalized || !parseSearch(normalized)) return;
   try{
     localStorage.setItem(LAST_REFERENCE_STORAGE_KEY, normalized);
-  }catch{}
+  }catch(_err){}
 }
 
 function getLastReferenceProgress(){
   try{
     const saved = normalizeSpaces(localStorage.getItem(LAST_REFERENCE_STORAGE_KEY) || '');
     if(saved && parseSearch(saved)) return saved;
-  }catch{}
-  return '';
+  }catch(_err){}
+    return '';
 }
 /***********************
  * Canon + aliases (Genesis -> Apocalipsis)
@@ -1149,7 +1149,7 @@ async function loadJson(path){
   return rawMessage || 'intenta con una entrada valida.';
 }
 async function copy(text){
-  try{ await navigator.clipboard.writeText(text); }catch{}
+  try{ await navigator.clipboard.writeText(text); }catch(_err){}
 }
     function saveReaderState(){
   try{
@@ -1163,7 +1163,7 @@ async function copy(text){
       lastReferenceSearch: buildLastReferenceSearch()
     };
     sessionStorage.setItem('lectorState', JSON.stringify(state));
-  }catch{}
+    }catch(_err){}
 }
 function applyTheme(theme){
  const allowedThemes = new Set(['cream', 'white']);
@@ -1818,7 +1818,7 @@ btnReadFullChapter?.addEventListener('click', async () => {
           setOriginalVisible(pendingRestoreState.origHidden ? false : true);
         }
       }
-    }catch{}
+      }catch(_err){}
     if (!hasExplicitNavigation && searchInput) {
       const safeCurrentSearch = normalizeSpaces(searchInput.value || '');
       if (!parseSearch(safeCurrentSearch)) {
@@ -1842,7 +1842,7 @@ try{
 
     sessionStorage.removeItem('lectorState');
   }
-}catch{}
+}catch(_err){}
 
 
   }catch(err){
