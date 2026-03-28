@@ -1510,9 +1510,10 @@ async function render(ref){
  passageTextRV.innerHTML = `<div class="text-muted">No existe ese versículo en <strong>${esc(currentBookName)} ${ch}</strong>. Rango válido: 1–${verseCount}.</div>`;
       passageTextOrig.innerHTML = `<div class="text-muted">—</div>`;
       toggleFullChapterCta(false);
-      showFeedback('err', 'Verso / capítulo no encontrado');
+  showFeedback('err', 'Verso / capítulo no encontrado');
       return;
     }
+  }
 
   let v1 = ref.verseStart ?? 1;
   let v2 = ref.verseEnd ?? verseCount;
@@ -1520,7 +1521,7 @@ async function render(ref){
 
 lastRef = { chapter: ch, verseStart: v1, verseEnd: v2 };
   const isPartialRange = !(v1 === 1 && v2 === verseCount);
-  
+
   const range = (ref.verseStart == null)
     ? `${currentBookName} ${ch}`
     : `${currentBookName} ${ch}:${v1}${(v2 !== v1 ? '-' + v2 : '')}`;
