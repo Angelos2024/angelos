@@ -186,7 +186,7 @@
   </div>
 
   <!-- ===== TEXTO BÍBLICO NORMAL (RVR + ORIGINAL) ===== -->
-  <div id="biblePanel">
+ <div id="biblePanel">
     <div class="parallel">
       <!-- IZQUIERDA: Español -->
       <div id="spanishCol" class="parallel-col">
@@ -202,7 +202,12 @@
         <div class="orig-text" id="passageTextOrig">
           <div class="text-muted">Cargando datos…</div>
         </div>
-      </div>
+  </div>
+    </div>
+    <div id="fullChapterCta" class="full-chapter-cta d-none">
+      <button id="btnReadFullChapter" class="btn btn-outline-secondary btn-sm full-chapter-btn" type="button">
+        Leer capítulo completo
+      </button>
     </div>
   </div>
 
@@ -954,6 +959,8 @@ const btnViewMode = document.getElementById('btnViewMode');
 const btnToggleOrig = document.getElementById('btnToggleOrig');
     const btnPrevPage = document.getElementById('btnPrevPage');
 const btnNextPage = document.getElementById('btnNextPage');
+const fullChapterCta = document.getElementById('fullChapterCta');
+const btnReadFullChapter = document.getElementById('btnReadFullChapter');
 const themeMenuBtn = document.getElementById('themeMenuBtn');
 const themeMenu = themeMenuBtn?.nextElementSibling;
 const themeItems = document.querySelectorAll('.dropdown-item[data-theme]');
@@ -1404,6 +1411,23 @@ function showFeedback(kind, text){
   b.innerHTML = icon + '<span>' + esc(text) + '</span>';
   setTimeout(() => b.classList.remove('feedback-animate-pop','feedback-animate-shake'), 350);
 }
+
+function toggleFullChapterCta(visible){
+  if(!fullChapterCta || !btnReadFullChapter) return;
+  if(!visible){
+    fullChapterCta.classList.add('d-none');
+    btnReadFullChapter.removeAttribute('data-chapter');
+    btnReadFullChapter.removeAttribute('data-book');
+    btnReadFullChapter.removeAttribute('data-book-name');
+    return;
+  }
+  if(!lastRef) return;
+
+  btnReadFullChapter.dataset.chapter = String(lastRef.chapter || '');
+  btnReadFullChapter.dataset.book = currentBookSlug || '';
+  btnReadFullChapter.dataset.bookName = currentBookName || prettyBookName(currentBookSlug);
+  fullChapterCta.classList.remove('d-none');
+}
 let syncVerseHeightsRaf = null;
 function scheduleSyncVerseHeights(){
   if(syncVerseHeightsRaf) cancelAnimationFrame(syncVerseHeightsRaf);
@@ -1464,8 +1488,9 @@ async function render(ref){
    metaVersion.textContent = viewMode === 'interlinear' ? 'Interlineal' : versionSelect.value;
   rightLabel.textContent = viewMode === 'interlinear' ? 'Texto original + Español' : (isNT(currentBookSlug) ? 'Griego' : 'Hebreo');
     statusLine.textContent = `Capítulos: ${chapterCount}`;
-    passageTextRV.innerHTML = `<div class="text-muted">No existe el capítulo <strong>${esc(String(ref.chapter))}</strong> en <strong>${esc(currentBookName)}</strong>.</div>`;
+   passageTextRV.innerHTML = `<div class="text-muted">No existe el capítulo <strong>${esc(String(ref.chapter))}</strong> en <strong>${esc(currentBookName)}</strong>.</div>`;
     passageTextOrig.innerHTML = `<div class="text-muted">—</div>`;
+    toggleFullChapterCta(false);
     showFeedback('err', 'Verso / capítulo no encontrado');
     return;
   }
@@ -1482,19 +1507,20 @@ async function render(ref){
       pageTitle.textContent = `${currentBookName} ${ch}:${v1req}${(v2req!==v1req?'-'+v2req:'')}`;
       metaVersion.textContent = versionSelect.value;
       statusLine.textContent = `Capítulos: ${chapterCount} · Cap ${ch}: ${verseCount} vers.`;
-      passageTextRV.innerHTML = `<div class="text-muted">No existe ese versículo en <strong>${esc(currentBookName)} ${ch}</strong>. Rango válido: 1–${verseCount}.</div>`;
+ passageTextRV.innerHTML = `<div class="text-muted">No existe ese versículo en <strong>${esc(currentBookName)} ${ch}</strong>. Rango válido: 1–${verseCount}.</div>`;
       passageTextOrig.innerHTML = `<div class="text-muted">—</div>`;
+      toggleFullChapterCta(false);
       showFeedback('err', 'Verso / capítulo no encontrado');
       return;
     }
-  }
 
   let v1 = ref.verseStart ?? 1;
   let v2 = ref.verseEnd ?? verseCount;
   if(v2 < v1) [v1, v2] = [v2, v1];
 
-  lastRef = { chapter: ch, verseStart: v1, verseEnd: v2 };
-
+lastRef = { chapter: ch, verseStart: v1, verseEnd: v2 };
+  const isPartialRange = !(v1 === 1 && v2 === verseCount);
+  
   const range = (ref.verseStart == null)
     ? `${currentBookName} ${ch}`
     : `${currentBookName} ${ch}:${v1}${(v2 !== v1 ? '-' + v2 : '')}`;
@@ -1575,6 +1601,7 @@ if (window.BibleComments?.attachCommentsToRV) {
 }
 
 scheduleSyncVerseHeights();
+  toggleFullChapterCta(isPartialRange);
   if (bookDataOrig && passageTextOrig.classList.contains('greek') && document.fonts?.ready) {
   document.fonts.ready.then(scheduleSyncVerseHeights).catch(() => {});
 }
@@ -1583,9 +1610,10 @@ scheduleSyncVerseHeights();
 
 async function runSearch(){
   const raw = normalizeSpaces(searchInput.value);
-  if(!raw){
+ if(!raw){
     passageTextRV.innerHTML = `<div class="text-muted">Escribe una referencia.</div>`;
     passageTextOrig.innerHTML = `<div class="text-muted">Escribe una referencia.</div>`;
+    toggleFullChapterCta(false);
     return;
   }
 
@@ -1613,6 +1641,7 @@ saveReaderState();
     const msg = `<div class="text-muted">Escribe una referencia o una palabra.</div>`;
     passageTextRV.innerHTML = msg;
     passageTextOrig.innerHTML = msg;
+    toggleFullChapterCta(false);
     return;
   }
 
@@ -1622,10 +1651,11 @@ saveReaderState();
     leftLabel.textContent = versionSelect.value;
     await render(ref);
   }catch(err){
-    const msg = `<div class="text-danger fw-semibold">Error:</div><div class="text-muted">${esc(getFriendlySearchErrorMessage(err))}</div>`;
+const msg = `<div class="text-danger fw-semibold">Error:</div><div class="text-muted">${esc(getFriendlySearchErrorMessage(err))}</div>`;
     passageTextRV.innerHTML = msg;
     passageTextOrig.innerHTML = `<div class="text-muted">—</div>`;
     statusLine.textContent = '';
+    toggleFullChapterCta(false);
   }
 }
 
@@ -1722,7 +1752,25 @@ btnNextPage?.addEventListener('click', () => {
   const slug = btnNextPage.dataset.book;
   const chapter = Number(btnNextPage.dataset.chapter);
   if(!slug || !chapter) return;
-  navigateToPage(slug, chapter);
+navigateToPage(slug, chapter);
+});
+
+btnReadFullChapter?.addEventListener('click', async () => {
+  const chapter = Number(btnReadFullChapter.dataset.chapter);
+  const bookSlug = btnReadFullChapter.dataset.book || currentBookSlug;
+  const bookName = btnReadFullChapter.dataset.bookName || currentBookName;
+  if(!chapter || !bookSlug) return;
+
+  searchInput.value = `${bookName} ${chapter}`;
+  try{
+    await ensureBookLoaded(bookSlug, bookName);
+    await runSearch();
+  }catch(err){
+    const msg = `<div class="text-danger fw-semibold">Error:</div><div class="text-muted">${esc(getFriendlySearchErrorMessage(err))}</div>`;
+    passageTextRV.innerHTML = msg;
+    passageTextOrig.innerHTML = `<div class="text-muted">—</div>`;
+    toggleFullChapterCta(false);
+  }
 });
     document.querySelector('a[href="analisis.html"]')?.addEventListener('click', () => {
   saveReaderState();
