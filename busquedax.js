@@ -143,8 +143,8 @@
    const TORAH = ['genesis', 'exodo', 'levitico', 'numeros', 'deuteronomio'];
    const HISTORICAL = [
      'josue', 'jueces', 'rut', '1_samuel', '2_samuel', '1_reyes', '2_reyes',
-     '1_cronicas', '2_cronicas', 'esdras', 'nehemias', 'ester', 'hechos'
-   ];
+     '1_cronicas', '2_cronicas', 'esdras', 'nehemias', 'ester'
+         ];
    const WISDOM = ['job', 'salmos', 'proverbios', 'eclesiastes', 'cantares'];
    const PROPHETS = [
      'isaias', 'jeremias', 'lamentaciones', 'ezequiel', 'daniel', 'oseas', 'joel', 'amos',
@@ -169,13 +169,13 @@ const CANONICAL_BOOK_ORDER = [
   ...WISDOM,
   ...PROPHETS,
   ...GOSPELS,
+    ...ACTS,
   ...LETTERS,
   ...APOCALYPSE
 ];
 const CANON_INDEX = new Map(CANONICAL_BOOK_ORDER.map((slug, i) => [slug, i]));
 const OT_SET = new Set([...TORAH, ...HISTORICAL, ...WISDOM, ...PROPHETS]);
-const NT_SET = new Set([...GOSPELS, ...LETTERS, ...APOCALYPSE]);
-
+const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
   const NT_BOOKS = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
   const LXX_BOOKS = [
     '1Chr', '1Esdr', '1Kgs', '1Macc', '1Sam', '2Chr', '2Esdr', '2Kgs', '2Macc', '2Sam',
@@ -1828,6 +1828,51 @@ function mapLxxRefsToHebrewRefs(refs) {
       const v1 = Number(va) || 0, v2 = Number(vb) || 0;
       return v1 - v2;
     });
+  }
+
+function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
+    const allRefs = Array.isArray(refs) ? refs : [];
+    if (allRefs.length <= max) return allRefs.slice();
+    if (lang !== 'es') return allRefs.slice(0, max);
+
+    const otRefs = [];
+    const ntRefs = [];
+    const extraRefs = [];
+
+    allRefs.forEach((ref) => {
+      const [book] = String(ref || '').split('|');
+      const slug = LXX_TO_HEBREW_SLUG[book] || book;
+      if (OT_SET.has(slug)) {
+        otRefs.push(ref);
+        return;
+      }
+      if (NT_SET.has(slug)) {
+        ntRefs.push(ref);
+        return;
+      }
+      extraRefs.push(ref);
+    });
+
+    if (!otRefs.length || !ntRefs.length) return allRefs.slice(0, max);
+
+    const ntRatio = ntRefs.length / allRefs.length;
+    let ntQuota = Math.round(max * ntRatio);
+    ntQuota = Math.max(1, Math.min(ntQuota, ntRefs.length, max - 1));
+    let otQuota = Math.min(otRefs.length, max - ntQuota);
+
+    const picked = [
+      ...otRefs.slice(0, otQuota),
+      ...ntRefs.slice(0, ntQuota)
+    ];
+
+    if (picked.length < max) {
+      const extraOt = otRefs.slice(otQuota);
+      const extraNt = ntRefs.slice(ntQuota);
+      const refill = [...extraOt, ...extraNt, ...extraRefs];
+      picked.push(...refill.slice(0, max - picked.length));
+    }
+
+    return picked.slice(0, max);
   }
 
   function getActiveLangForNewUI() {
