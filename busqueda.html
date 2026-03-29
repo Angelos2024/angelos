@@ -238,8 +238,8 @@ let target = './index.html';
       const rawState = sessionStorage.getItem('lectorState');
       if(rawState){
         const state = JSON.parse(rawState);
-        const refSearch = String(state?.lastReferenceSearch || '').trim();
-        const book = String(state?.currentBookSlug || '').trim();
+        const refSearch = String(state?.lastReferenceSearch || localStorage.getItem('lectorLastReferenceSearch') || '').trim();
+                const book = String(state?.currentBookSlug || '').trim();
         const name = String(state?.currentBookName || '').trim();
 
         if(refSearch){

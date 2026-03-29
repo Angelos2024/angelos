@@ -1738,6 +1738,7 @@ btnToggleOrig.addEventListener('click', () => {
   setOriginalVisible(!isVisible);
 });
 btnAboutExtractor?.addEventListener('click', () => {
+  saveReaderState();
   window.location.href = './acerca.html';
 });
 
@@ -1773,8 +1774,10 @@ btnReadFullChapter?.addEventListener('click', async () => {
     toggleFullChapterCta(false);
   }
 });
-    document.querySelector('a[href="analisis.html"]')?.addEventListener('click', () => {
+  document.querySelector('a[href="analisis/buscador_comparativo.html"]')?.addEventListener('click', (event) => {
+  event.preventDefault();
   saveReaderState();
+  window.location.href = './analisis/buscador_comparativo.html';
 });
 /***********************
  * Boot

@@ -714,8 +714,8 @@ font-size:.96rem;
   </div>
   <header class="topbar">
     <div class="container sitewrap py-2 d-flex flex-wrap gap-2 align-items-center position-relative">
-      <a class="btn btn-soft btn-sm" href="../index.html">Volver al lector</a>
-            <div class="analysis-title">
+      <a class="btn btn-soft btn-sm" id="backToReaderFromAnalysis" href="../index.html">Volver al lector</a>
+                  <div class="analysis-title">
         <div class="fw-semibold">Área de análisis textual</div>
         <div class="small muted">LXX · Hebreo · RKANT · RVR1960</div>
       </div>
@@ -845,6 +845,36 @@ font-size:.96rem;
                 window.AnalisisComparativoOccurrenceDonut = donut;
         donut?.setData?.({ es: [], he: [], gr_rkant: [], gr_lxx: [] });
               }
+
+              function buildReaderReturnUrl() {
+        let target = '../index.html';
+        try {
+          const rawState = sessionStorage.getItem('lectorState');
+          const state = rawState ? JSON.parse(rawState) : null;
+          const refSearch = String(state?.lastReferenceSearch || localStorage.getItem('lectorLastReferenceSearch') || '').trim();
+          const book = String(state?.currentBookSlug || '').trim();
+          const name = String(state?.currentBookName || '').trim();
+
+          if (refSearch) {
+            const p = new URLSearchParams();
+            if (book) p.set('book', book);
+            if (name) p.set('name', name);
+            p.set('search', refSearch);
+            p.set('version', 'RVR1960');
+            p.set('orig', '1');
+            target = `../index.html?${p.toString()}`;
+          }
+        } catch (_) {}
+        return target;
+      }
+
+      const backToReader = document.getElementById('backToReaderFromAnalysis');
+      if (backToReader) {
+        backToReader.addEventListener('click', (event) => {
+          event.preventDefault();
+          window.location.href = buildReaderReturnUrl();
+        });
+      }
     })();
   </script>
   <script src="buscador.js"></script>

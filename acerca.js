@@ -80,3 +80,33 @@ if (menu && menuItems.length && panels.length) {
     activatePanel(hashPanel, { updateHash: false });
   });
 }
+
+function buildReaderReturnUrl() {
+  let target = './index.html';
+  try {
+    const rawState = sessionStorage.getItem('lectorState');
+    const state = rawState ? JSON.parse(rawState) : null;
+    const refSearch = String(state?.lastReferenceSearch || localStorage.getItem('lectorLastReferenceSearch') || '').trim();
+    const book = String(state?.currentBookSlug || '').trim();
+    const name = String(state?.currentBookName || '').trim();
+
+    if (refSearch) {
+      const p = new URLSearchParams();
+      if (book) p.set('book', book);
+      if (name) p.set('name', name);
+      p.set('search', refSearch);
+      p.set('version', 'RVR1960');
+      p.set('orig', '1');
+      target = `./index.html?${p.toString()}`;
+    }
+  } catch (_) {}
+  return target;
+}
+
+const backToReaderLink = document.querySelector('a.btn-back[href="./index.html"]');
+if (backToReaderLink) {
+  backToReaderLink.addEventListener('click', (event) => {
+    event.preventDefault();
+    window.location.href = buildReaderReturnUrl();
+  });
+}
