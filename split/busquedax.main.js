@@ -1192,8 +1192,9 @@ if (!term) {
       await renderSearchUI(groupsByCorpus, highlightQueries, relatedTerms, options);
      
       
-  const safeRefs = refs.slice(0, MAX_REFS_PER_CORPUS);
-      const groups = await buildBookGroups(safeRefs, searchLang, null, options);
+ const shouldCapRefs = searchLang !== 'es';
+      const safeRefs = shouldCapRefs ? refs.slice(0, MAX_REFS_PER_CORPUS) : refs;
+            const groups = await buildBookGroups(safeRefs, searchLang, null, options);
       groupsByCorpus[0].groups = groups;
       groupsByCorpus[0].loading = false;
       state.last = { term, lang: searchLang, refs, groupsByCorpus, highlightQueries, relatedTerms };
