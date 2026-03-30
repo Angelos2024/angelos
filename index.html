@@ -1632,10 +1632,18 @@ async function runSearch(){
       // Puedes pasar también la versión si luego la usas en busqueda.html
       p.set('version', versionSelect.value || 'RVR1960');
 
-    // ✅ Guardar estado del lector (para restaurar si el navegador recarga)
-saveReaderState();
-      window.location.href = `./busqueda.html?${p.toString()}`;
-      return;
+// ✅ Guardar estado del lector (para restaurar si el navegador recarga)
+    saveReaderState();
+
+    // ⚡ Precargar shard antes de redirigir
+    const _firstLetter = q.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zñ]/g, '')[0] || '_';
+    const _shardUrl = `./search/shards/index-es-${_firstLetter}.json`;
+    fetch(_shardUrl, { cache: 'force-cache', priority: 'high' }).catch(() => {});
+
+    // Pequeña pausa para que el fetch arranque antes de navegar
+    await new Promise(r => setTimeout(r, 80));
+    window.location.href = `./busqueda.html?${p.toString()}`;
+    return;
     }
 
     // Si está vacío, muestra mensaje
