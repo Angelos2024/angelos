@@ -447,27 +447,44 @@ const tokens = String(term || '').split(/\s+/).filter(Boolean);
     throw lastError || new Error(`No se pudo cargar el índice para ${lang}`);
    }
 
-   async function loadEsShard(term, options = {}) {
-  const letter = (normalizeSpanish(String(term || ''))[0] || '_').toLowerCase();
-  const cacheKey = 'es_shard_' + letter;
-  if (state.indexes[cacheKey]) return state.indexes[cacheKey];
-  try {
-    const url = './search/shards/index-es-' + letter + '.json';
-    const data = await loadJson(url, options);
-    state.indexes[cacheKey] = data;
-    return data;
-  } catch (e) {
-    return loadIndex('es', options);
+async function loadEsShard(term, options = {}) {
+  // Obtener todas las letras únicas de todos los tokens del término
+  const tokens = String(term || '')
+    .split(/\s+/)
+    .map(t => normalizeSpanish(t.trim()))
+    .filter(t => t.length >= 3);
+
+  // Si no hay tokens válidos, usar primera letra del término
+  const letters = tokens.length > 0
+    ? [...new Set(tokens.map(t => t[0] || '_'))]
+    : [(normalizeSpanish(String(term || ''))[0] || '_').toLowerCase()];
+
+  // Cargar todos los shards necesarios en paralelo
+  const shards = await Promise.all(
+    letters.map(async (letter) => {
+      const cacheKey = 'es_shard_' + letter;
+      if (state.indexes[cacheKey]) return state.indexes[cacheKey];
+      try {
+        const url = './search/shards/index-es-' + letter + '.json';
+        const data = await loadJson(url, options);
+        state.indexes[cacheKey] = data;
+        return data;
+      } catch (e) {
+        return null;
+      }
+    })
+  );
+
+  // Combinar todos los shards en un solo índice
+  const combined = { tokens: {} };
+  for (const shard of shards) {
+    if (!shard) continue;
+    Object.assign(combined.tokens, shard.tokens || {});
   }
+  return combined;
 }
 
-   // ── NUEVO: precarga silenciosa al primer teclazo ──────────────────────────
-  function warmUpIndex(lang) {
-    if (!lang || state.indexes[lang]) return; // ya en cache, nada que hacer
-    loadIndex(lang).catch(() => {}); // dispara descarga, ignora errores silenciosamente
-  }
-// ─────────────────────────────────────────────────────────────────────────
- 
+
    async function loadChapterText(lang, book, chapter, options = {}) {
     const key = `${lang}/${book}/${chapter}`;
      if (state.textCache.has(key)) return state.textCache.get(key);

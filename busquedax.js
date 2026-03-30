@@ -1,3 +1,8 @@
+// ⚠️ IMPORTANTE: los archivos split/* tienen optimizaciones manuales.
+// Si regeneras los splits desde este archivo perderás:
+// - loadEsShard() en busquedax.core.js
+// - warmSearchAssets() modificada en busquedax.main.js
+// Ver: search/shards/ para el índice partido por letra.
 
  (() => {
    const DICT_URL = './diccionario/masterdiccionario.json';
