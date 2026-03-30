@@ -282,7 +282,7 @@ async function loadJson(url, options = {}) {
     }
 
    if (jsonCache.has(url)) return jsonCache.get(url);
-    const promise = fetch(url, { cache: 'force-cache', signal }).then((res) => {
+    const promise = fetch(url, { cache: 'force-cache', signal, priority: 'high'}).then((res) => {
      if (!res.ok) throw new Error(`No se pudo cargar ${url}`);
       return res.json();
     });
@@ -446,6 +446,13 @@ const tokens = String(term || '').split(/\s+/).filter(Boolean);
 
     throw lastError || new Error(`No se pudo cargar el índice para ${lang}`);
    }
+
+   // ── NUEVO: precarga silenciosa al primer teclazo ──────────────────────────
+  function warmUpIndex(lang) {
+    if (!lang || state.indexes[lang]) return; // ya en cache, nada que hacer
+    loadIndex(lang).catch(() => {}); // dispara descarga, ignora errores silenciosamente
+  }
+// ─────────────────────────────────────────────────────────────────────────
  
    async function loadChapterText(lang, book, chapter, options = {}) {
     const key = `${lang}/${book}/${chapter}`;

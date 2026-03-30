@@ -1302,34 +1302,23 @@ function updateDetectedLanguageLabel(lang) {
    
 
 analyzeBtn?.addEventListener('click', analyze);
-let warmupScheduled = false;
-const scheduleWarmSearchAssets = (term = '') => {
-  if (warmupScheduled) return;
-  warmupScheduled = true;
-  const runWarmup = () => {
-    void warmSearchAssets(term).finally(() => {
-      warmupScheduled = false;
-    });
-  };
-  if (typeof requestIdleCallback === 'function') {
-    requestIdleCallback(runWarmup, { timeout: 1200 });
+// Precarga inmediata: dispara al focus sin esperar idle
+queryInput?.addEventListener('focus', () => {
+  void warmSearchAssets(queryInput?.value || '');
+}, { once: true });
+
+queryInput?.addEventListener('input', () => {
+  const term = queryInput?.value.trim() || '';
+  if (!term) {
+    setValidationMessage('');
     return;
   }
-  setTimeout(runWarmup, 150);
-};
-queryInput?.addEventListener('focus', () => {
-  scheduleWarmSearchAssets(queryInput?.value || '');
-}, { once: true });
-queryInput?.addEventListener('input', () => {
-     const term = queryInput?.value.trim() || '';
-     if (!term) {
-       setValidationMessage('');
-       return;
-     }
-       scheduleWarmSearchAssets(term);
-     const validation = getSearchValidation(term);
-     setValidationMessage(validation.ok ? '' : validation.message);
-   });
+  // Precarga inmediata sin esperar idle
+  void warmSearchAssets(term);
+  const validation = getSearchValidation(term);
+  setValidationMessage(validation.ok ? '' : validation.message);
+});
+
    queryInput?.addEventListener('keydown', (event) => {
      if (event.key === 'Enter') {
        event.preventDefault();
@@ -1348,5 +1337,6 @@ queryInput?.addEventListener('input', () => {
     queryInput.value = q;
     analyze();
   }
+
   scheduleWarmSearchAssets();
   applyQueryFromUrl();
