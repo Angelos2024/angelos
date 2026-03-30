@@ -1338,5 +1338,5 @@ queryInput?.addEventListener('input', () => {
     analyze();
   }
 
-  scheduleWarmSearchAssets();
+void warmSearchAssets();
   applyQueryFromUrl();
