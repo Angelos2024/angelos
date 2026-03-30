@@ -991,7 +991,10 @@ function esc(s){
 }
 function fmtVerse(raw){
   // normaliza: "/n", "\\n" y saltos reales -> "\n"
-  const normalized = String(raw ?? '').replace(/\/n|\\n/g, '\n');
+  const normalized = String(raw ?? '')
+    .replace(/\/n|\\n/g, '\n')
+    // Limpia marcadores residuales con guion bajo (ej. "_Texto__")
+    .replace(/_+/g, '');
   // escapa HTML y luego convierte saltos a <br>
   return esc(normalized).replace(/\n/g, '<br>');
 }
