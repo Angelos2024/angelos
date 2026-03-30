@@ -517,8 +517,8 @@ function getSpanishEquivalences(entry, fallback = '') {
     const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
     if (!tokens.length) return [];
 
-    const index = await loadIndex('es');
-    const candidateRefs = getSpanishIndexRefs(index, tokens);
+    const index = await loadEsShard(query);
+        const candidateRefs = getSpanishIndexRefs(index, tokens);
     if (!candidateRefs.length) return [];
 
     const exactMatches = [];
@@ -623,6 +623,45 @@ function getSpanishEquivalences(entry, fallback = '') {
     throw lastError || new Error(`No se pudo cargar el índice para ${lang}`);
   }
 
+async function loadEsShard(term) {
+  const tokens = String(term || '')
+    .split(/\s+/)
+    .map(t => normalizeSpanish(t.trim()))
+    .filter(t => t.length >= 3);
+
+  const letters = tokens.length > 0
+    ? [...new Set(tokens.map(t => t[0] || '_'))]
+    : [(normalizeSpanish(String(term || ''))[0] || '_').toLowerCase()];
+
+  let loadedCount = 0;
+  let anyError = false;
+
+  const shards = await Promise.all(
+    letters.map(async (letter) => {
+      const cacheKey = 'es_shard_' + letter;
+      if (state.indexes[cacheKey]) { loadedCount++; return state.indexes[cacheKey]; }
+      try {
+        const url = '../search/shards/index-es-' + letter + '.json';
+        const data = await loadJson(url);
+        state.indexes[cacheKey] = data;
+        loadedCount++;
+        return data;
+      } catch (e) {
+        anyError = true;
+        return null;
+      }
+    })
+  );
+
+  if (loadedCount === 0 || anyError) return loadIndex('es');
+
+  const combined = { tokens: {} };
+  for (const shard of shards) {
+    if (!shard) continue;
+    Object.assign(combined.tokens, shard.tokens || {});
+  }
+  return combined;
+}
   async function loadChapterText(lang, book, chapter) {
     const key = `${lang}/${book}/${chapter}`;
     if (state.textCache.has(key)) return state.textCache.get(key);
@@ -739,8 +778,8 @@ function getSpanishEquivalences(entry, fallback = '') {
   async function searchRefsInTextIndex(lang, query, maxRefs = 3) {
     const raw = String(query || '').trim();
     if (!raw) return [];
-    const index = await loadIndex(lang);
-    let refs = [];
+    const index = lang === 'es' ? await loadEsShard(raw) : await loadIndex(lang);
+        let refs = [];
     if (lang === 'gr') {
       refs = getGreekRefs(normalizeGreek(raw), index);
     } else if (lang === 'he') {
