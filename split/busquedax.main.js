@@ -1044,16 +1044,20 @@ bookList.className = 'mt-2 d-grid gap-1';
      renderExamples(cards);
 
    }
- async function warmSearchAssets(term = '') {
-    const detectedLang = detectLang(String(term || '').trim());
-    const targetLangs = detectedLang && detectedLang !== 'es'
-      ? [detectedLang, 'es']
-      : ['es'];
-    const preloadTasks = targetLangs.map((lang) => loadIndex(lang).catch(() => null));
-    if (targetLangs.includes('gr')) preloadTasks.push(loadDictionary().catch(() => null));
-    if (targetLangs.includes('he')) preloadTasks.push(loadHebrewDictionary().catch(() => null));
-    await Promise.all(preloadTasks);
-  }
+async function warmSearchAssets(term = '') {
+  const detectedLang = detectLang(String(term || '').trim());
+  const targetLangs = detectedLang && detectedLang !== 'es'
+    ? [detectedLang, 'es']
+    : ['es'];
+  const preloadTasks = targetLangs.map((lang) =>
+    lang === 'es'
+      ? loadEsShard(String(term || '').trim()).catch(() => null)
+      : loadIndex(lang).catch(() => null)
+  );
+  if (targetLangs.includes('gr')) preloadTasks.push(loadDictionary().catch(() => null));
+  if (targetLangs.includes('he')) preloadTasks.push(loadHebrewDictionary().catch(() => null));
+  await Promise.all(preloadTasks);
+}
   async function analyze() {
     const term = queryInput.value.trim();
 if (!term) {
@@ -1136,8 +1140,10 @@ if (!term) {
         `Búsqueda: <span class="fw-semibold">${escapeHtml(term)}</span>`
       ];
 
-       let indexPromise = loadIndex(searchLang, options);
-      let dictionaryPromise = null;
+let indexPromise = searchLang === 'es'
+  ? loadEsShard(term, options)
+  : loadIndex(searchLang, options);
+        let dictionaryPromise = null;
       if (searchLang === 'gr') {
         dictionaryPromise = loadDictionary(options);
       } else if (searchLang === 'he') {

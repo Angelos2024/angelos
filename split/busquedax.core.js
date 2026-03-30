@@ -447,6 +447,20 @@ const tokens = String(term || '').split(/\s+/).filter(Boolean);
     throw lastError || new Error(`No se pudo cargar el índice para ${lang}`);
    }
 
+   async function loadEsShard(term, options = {}) {
+  const letter = (normalizeSpanish(String(term || ''))[0] || '_').toLowerCase();
+  const cacheKey = 'es_shard_' + letter;
+  if (state.indexes[cacheKey]) return state.indexes[cacheKey];
+  try {
+    const url = './search/shards/index-es-' + letter + '.json';
+    const data = await loadJson(url, options);
+    state.indexes[cacheKey] = data;
+    return data;
+  } catch (e) {
+    return loadIndex('es', options);
+  }
+}
+
    // ── NUEVO: precarga silenciosa al primer teclazo ──────────────────────────
   function warmUpIndex(lang) {
     if (!lang || state.indexes[lang]) return; // ya en cache, nada que hacer
