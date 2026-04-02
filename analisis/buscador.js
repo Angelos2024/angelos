@@ -387,22 +387,44 @@ function addTokenAndComposites(tokens, outSet){
     const compact = nfc(v.replace(/[\s־\-‐‑‒–—]+/g, ''));
     if (compact && compact !== v) outSet.add(compact);
   };
+   const addDefiniteArticleVariants = (token) => {
+    const t = nfc(String(token || '').trim());
+    if (!t || !/^ה[א-ת]{2,}$/.test(t)) return;
+    add(t.slice(1));
+  };
 
   for (let i=0; i<tokens.length; i++){
     const t0 = tokens[i];
     if (!t0) continue;
     add(t0);
+        addDefiniteArticleVariants(t0);
     const t1 = tokens[i+1];
     const t2 = tokens[i+2];
-    if (isPrefixToken(t0) && t1) add(t0 + t1);
-    if (t1) add(t0 + t1);
+   if (isPrefixToken(t0) && t1) {
+      const combo01 = t0 + t1;
+      add(combo01);
+      addDefiniteArticleVariants(combo01);
+    }
+    if (t1) {
+      const combo01 = t0 + t1;
+      add(combo01);
+      addDefiniteArticleVariants(combo01);
+    }
     if (isPrefixToken(t0) && isPrefixToken(t1) && t2) {
-      add(t0 + t1 + t2);
-      add(t0 + (t1 + t2));
+       const combo012 = t0 + t1 + t2;
+      const comboNested = t0 + (t1 + t2);
+      add(combo012);
+      add(comboNested);
+      addDefiniteArticleVariants(combo012);
+      addDefiniteArticleVariants(comboNested);
     }
     if (isPrefixToken(t0) && t1 && t2) {
-      add(t0 + t1 + t2);
-      add(t1 + t2);
+      const combo012 = t0 + t1 + t2;
+      const combo12 = t1 + t2;
+      add(combo012);
+      add(combo12);
+      addDefiniteArticleVariants(combo012);
+      addDefiniteArticleVariants(combo12);
     }
   }
 }
