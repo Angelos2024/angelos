@@ -86,10 +86,16 @@
     if(!key) return;
     const normalized = normalizeGloss(gloss);
     if(!normalized || normalized === '-') return;
-    const previous = rankedMap.get(key);
-    if(!previous || score > previous.score){
-      rankedMap.set(key, { gloss: normalized, score });
+   let byGloss = rankedMap.get(key);
+    if(!byGloss){
+      byGloss = new Map();
+      rankedMap.set(key, byGloss);
     }
+    const previous = byGloss.get(normalized) || { score, count: 0 };
+    byGloss.set(normalized, {
+      score: Math.max(previous.score, score),
+      count: previous.count + 1
+    });
   }
 
 
@@ -137,11 +143,31 @@ function getHebrewTokenLookupForms(orig){
     const pointedMap = new Map();
     const unpointedMap = new Map();
 
-    for(const [key, value] of pointedRankedMap.entries()){
-      pointedMap.set(key, value.gloss);
+   for(const [key, byGloss] of pointedRankedMap.entries()){
+      let winner = null;
+      for(const [gloss, meta] of byGloss.entries()){
+        if(
+          !winner ||
+          meta.score > winner.score ||
+          (meta.score === winner.score && meta.count > winner.count)
+        ){
+          winner = { gloss, score: meta.score, count: meta.count };
+        }
+      }
+      if(winner) pointedMap.set(key, winner.gloss);
     }
-    for(const [key, value] of unpointedRankedMap.entries()){
-      unpointedMap.set(key, value.gloss);
+     for(const [key, byGloss] of unpointedRankedMap.entries()){
+      let winner = null;
+      for(const [gloss, meta] of byGloss.entries()){
+        if(
+          !winner ||
+          meta.score > winner.score ||
+          (meta.score === winner.score && meta.count > winner.count)
+        ){
+          winner = { gloss, score: meta.score, count: meta.count };
+        }
+      }
+      if(winner) unpointedMap.set(key, winner.gloss);
     }
 
     return { pointedMap, unpointedMap };
