@@ -418,14 +418,15 @@ function getHebrewTokenLookupForms(orig){
 
     return '';
   }
-  
+
   function pluralizeSpanishNoun(noun){
     const clean = String(noun || '').trim();
     if(!clean) return clean;
     if(/[sx]$/i.test(clean)) return clean;
     if(/z$/i.test(clean)) return `${clean.slice(0, -1)}ces`;
-    if(/[aeiouáéíóú]$/i.test(clean)) return `${clean}s`;
-    return `${clean}es`;
+  if(/[aeiouáéó]$/i.test(clean)) return `${clean}s`;
+    if(/[íú]$/i.test(clean)) return `${clean}es`;
+        return `${clean}es`;
   }
 
   function applyHebrewNominalFeaturesToGloss(token, gloss){
@@ -435,20 +436,19 @@ function getHebrewTokenLookupForms(orig){
     const plain = normalizeToken(token, true);
     if(!plain) return cleanGloss;
 
-    const hasArticle = /^ה/.test(plain) || /^ו?ה/.test(plain);
-    const isPlural = /(ים|ות)$/.test(plain);
+ const originalArticleMatch = cleanGloss.match(/^(el|la|los|las|un|una|unos|unas)\s+/i);
+    const originalArticle = originalArticleMatch ? originalArticleMatch[1].toLowerCase() : null;
+    const withNoArticle = cleanGloss.replace(/^(el|la|los|las|un|una|unos|unas)\s+/i, '').trim();
+        const isPlural = /(ים|ות)$/.test(plain);
     const isDual = /ים$/.test(plain) && /ַיִם|ָיִם/.test(String(token || ''));
     const shouldBePlural = isPlural || isDual;
 
-    const withNoArticle = cleanGloss.replace(/^(el|la|los|las|un|una|unos|unas)\s+/i, '').trim();
     const base = shouldBePlural ? pluralizeSpanishNoun(withNoArticle) : withNoArticle;
-
-    if(!hasArticle) return base;
-
-    const feminineByEnding = /a$/i.test(base);
+    if(!originalArticle) return base;
+    const isFeminine = ['la', 'las', 'una', 'unas'].includes(originalArticle);
     const article = shouldBePlural
-      ? (feminineByEnding ? 'las' : 'los')
-      : (feminineByEnding ? 'la' : 'el');
+     ? (isFeminine ? 'las' : 'los')
+      : (isFeminine ? 'la' : 'el');
 
     return `${article} ${base}`;
   }
