@@ -1455,14 +1455,8 @@ function renderResults(groupsByCorpus, highlightQueries = state.last?.highlightQ
       header.textContent = langLabels[lang] || lang;
       wrapper.appendChild(header);
 
-    if (corpus.loading) {
-        const loading = document.createElement('div');
-        loading.className = 'muted small';
-        loading.textContent = 'Cargando resultados...';
-        wrapper.appendChild(loading);
-        resultsByCorpus.appendChild(wrapper);
-        return;
-      }
+       if (corpus.loading) return;
+      
       const filteredGroups = groups.filter((group) => {
         if (state.filter === 'todo') return true;
         return group.category === state.filter;

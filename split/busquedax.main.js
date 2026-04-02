@@ -522,7 +522,7 @@ function mapLxxRefsToHebrewRefs(refs) {
       const key = `${book}|${chapter}`;
       return { ref, book, chapter, verse, key };
     }).filter((p) => p.book && Number.isFinite(p.chapter) && Number.isFinite(p.verse));
-    
+
     parsed.forEach((p) => {
       const canonicalRef = `${p.book}|${p.chapter}|${p.verse}`;
       if (cache.has(canonicalRef)) return;
@@ -720,14 +720,7 @@ function renderResults(groupsByCorpus, highlightQueries = state.last?.highlightQ
       header.textContent = langLabels[lang] || lang;
       wrapper.appendChild(header);
 
-    if (corpus.loading) {
-        const loading = document.createElement('div');
-        loading.className = 'muted small';
-        loading.textContent = 'Cargando resultados...';
-        wrapper.appendChild(loading);
-        resultsByCorpus.appendChild(wrapper);
-        return;
-      }
+       if (corpus.loading) return;
       const filteredGroups = groups.filter((group) => {
         if (state.filter === 'todo') return true;
         return group.category === state.filter;
