@@ -329,7 +329,11 @@ function getHebrewTokenLookupForms(orig){
        const fallbackKeys = getHebrewFallbackLookupKeys(plainKey);
       for(const key of fallbackKeys){
         if(map.unpointedMap?.has(key)) return map.unpointedMap.get(key);
+          const rebuilt = rebuildHebrewTokenGlossFromSuffix(key, token, map);
+        if(rebuilt) return rebuilt;
       }
+       const rebuiltDirect = rebuildHebrewTokenGlossFromSuffix(plainKey, token, map);
+      if(rebuiltDirect) return rebuiltDirect;
       return '-';
     }
 
@@ -351,6 +355,70 @@ function getHebrewTokenLookupForms(orig){
     return Array.from(keys);
   }
 
+ function normalizePossessiveSpanish(value){
+    const clean = String(value || '').trim().toLowerCase();
+    if(!clean) return '';
+    if(clean.startsWith('nuestro') || clean.startsWith('nuestra')) return 'nuestra';
+    if(clean.startsWith('vuestro') || clean.startsWith('vuestra')) return 'vuestra';
+    if(clean.startsWith('mi')) return 'mi';
+    if(clean.startsWith('tu')) return 'tu';
+    if(clean.startsWith('su')) return 'su';
+    return clean;
+  }
+
+  function stripSpanishLeadingArticle(value){
+    return String(value || '')
+      .replace(/^(el|la|los|las|un|una|unos|unas)\s+/i, '')
+      .trim();
+  }
+
+  function rebuildHebrewTokenGlossFromSuffix(plainToken, originalToken, map){
+    const token = String(plainToken || '');
+    if(!token || token.length < 3) return '';
+
+    const suffixRules = [
+      { suffix: 'נו', type: 'poss', gloss: 'nuestra' },
+      { suffix: 'כם', type: 'poss', gloss: 'vuestra' },
+      { suffix: 'כן', type: 'poss', gloss: 'vuestra' },
+      { suffix: 'ם', type: 'poss', gloss: 'su' },
+      { suffix: 'ן', type: 'poss', gloss: 'su' },
+      { suffix: 'י', type: 'poss', gloss: 'mi' },
+      { suffix: 'ך', type: 'poss', gloss: 'tu' },
+      { suffix: 'ו', type: 'poss', gloss: 'su' },
+      { suffix: 'ה', type: 'mixed', gloss: 'la' }
+    ];
+
+    for(const rule of suffixRules){
+      if(!token.endsWith(rule.suffix) || token.length <= rule.suffix.length + 1) continue;
+
+      const stem = token.slice(0, -rule.suffix.length);
+      const stemGloss = map.unpointedMap?.get(stem);
+      if(!stemGloss || stemGloss === '-') continue;
+
+      const original = String(originalToken || '');
+      const forcePossessiveHe = /הּ[\u0591-\u05C7]*$/.test(original);
+      const forceObjectHe = /הָ[\u0591-\u05C7]*$/.test(original);
+      const normalizedStemGloss = stripSpanishLeadingArticle(stemGloss);
+
+      if(rule.type === 'mixed'){
+        if(forcePossessiveHe){
+          return `su ${normalizedStemGloss}`.trim();
+        }
+        if(forceObjectHe){
+          return `${normalizedStemGloss} la`.trim();
+        }
+        return `su ${normalizedStemGloss}`.trim();
+      }
+
+      const poss = normalizePossessiveSpanish(rule.gloss);
+      if(rule.type === 'poss'){
+        return `${poss} ${normalizedStemGloss}`.trim();
+      }
+    }
+
+    return '';
+  }
+  
   function pluralizeSpanishNoun(noun){
     const clean = String(noun || '').trim();
     if(!clean) return clean;
