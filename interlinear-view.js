@@ -311,16 +311,78 @@ function getHebrewTokenLookupForms(orig){
 
   function mapTokenToSpanish(token, map, isHebrew, isGreek = false){
     if(isHebrew){
-      const pointedKey = normalizeToken(token, true, false, true);
-      const plainKey = normalizeToken(token, true);
-      if(pointedKey && map.pointedMap?.has(pointedKey)) return map.pointedMap.get(pointedKey);
-      if(plainKey && map.unpointedMap?.has(plainKey)) return map.unpointedMap.get(plainKey);
-      return '-';
+      const direct = mapHebrewTokenToSpanish(token, map);
+      return applyHebrewNominalFeaturesToGloss(token, direct);
     }
 
     const key = normalizeToken(token, false, isGreek);
     if(!key) return '-';
     return map.get(key) || '-';
+  }
+
+  function mapHebrewTokenToSpanish(token, map){
+      if(!token) return '-';
+      const pointedKey = normalizeToken(token, true, false, true);
+      const plainKey = normalizeToken(token, true);
+      if(pointedKey && map.pointedMap?.has(pointedKey)) return map.pointedMap.get(pointedKey);
+      if(plainKey && map.unpointedMap?.has(plainKey)) return map.unpointedMap.get(plainKey);
+       const fallbackKeys = getHebrewFallbackLookupKeys(plainKey);
+      for(const key of fallbackKeys){
+        if(map.unpointedMap?.has(key)) return map.unpointedMap.get(key);
+      }
+      return '-';
+    }
+
+    function getHebrewFallbackLookupKeys(plainToken){
+    const token = String(plainToken || '');
+    if(!token) return [];
+    const keys = new Set();
+    const add = (value) => {
+      if(value && value.length > 1) keys.add(value);
+    };
+
+    add(token.replace(/^ו/, ''));
+    add(token.replace(/^ה/, ''));
+    add(token.replace(/^[בכלמש]/, ''));
+    add(token.replace(/^ו[בכלמש]/, ''));
+    add(token.replace(/^[בכלמש]ה/, ''));
+    add(token.replace(/^ו[בכלמש]ה/, ''));
+
+    return Array.from(keys);
+  }
+
+  function pluralizeSpanishNoun(noun){
+    const clean = String(noun || '').trim();
+    if(!clean) return clean;
+    if(/[sx]$/i.test(clean)) return clean;
+    if(/z$/i.test(clean)) return `${clean.slice(0, -1)}ces`;
+    if(/[aeiouáéíóú]$/i.test(clean)) return `${clean}s`;
+    return `${clean}es`;
+  }
+
+  function applyHebrewNominalFeaturesToGloss(token, gloss){
+    const cleanGloss = normalizeGloss(gloss);
+    if(!token || cleanGloss === '-' || /\s/.test(cleanGloss)) return cleanGloss;
+
+    const plain = normalizeToken(token, true);
+    if(!plain) return cleanGloss;
+
+    const hasArticle = /^ה/.test(plain) || /^ו?ה/.test(plain);
+    const isPlural = /(ים|ות)$/.test(plain);
+    const isDual = /ים$/.test(plain) && /ַיִם|ָיִם/.test(String(token || ''));
+    const shouldBePlural = isPlural || isDual;
+
+    const withNoArticle = cleanGloss.replace(/^(el|la|los|las|un|una|unos|unas)\s+/i, '').trim();
+    const base = shouldBePlural ? pluralizeSpanishNoun(withNoArticle) : withNoArticle;
+
+    if(!hasArticle) return base;
+
+    const feminineByEnding = /a$/i.test(base);
+    const article = shouldBePlural
+      ? (feminineByEnding ? 'las' : 'los')
+      : (feminineByEnding ? 'la' : 'el');
+
+    return `${article} ${base}`;
   }
 
   async function buildInterlinearRows(originalText, options = {}){
