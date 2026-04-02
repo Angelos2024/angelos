@@ -515,13 +515,14 @@ function mapLxxRefsToHebrewRefs(refs) {
     const result = [];
     const byChapter = new Map(); // key: book|chapter -> [verseNumbers]
     const parsed = refs.map((ref) => {
-      const [book, cRaw, vRaw] = String(ref).split('|');
-      const chapter = Number(cRaw);
+ const [bookRaw, cRaw, vRaw] = String(ref).split('|');
+      const book = String(bookRaw || '').trim();  
+            const chapter = Number(cRaw);
       const verse = Number(vRaw);
       const key = `${book}|${chapter}`;
       return { ref, book, chapter, verse, key };
-    });
-
+    }).filter((p) => p.book && Number.isFinite(p.chapter) && Number.isFinite(p.verse));
+    
     parsed.forEach((p) => {
       const canonicalRef = `${p.book}|${p.chapter}|${p.verse}`;
       if (cache.has(canonicalRef)) return;
@@ -557,11 +558,8 @@ function mapLxxRefsToHebrewRefs(refs) {
           });
         }
       } catch (e) {
-        // Deja vacío si falla.
-        versesNeeded.forEach((v) => {
-          const canonicalRef = `${book}|${chapter}|${v}`;
-          if (!cache.has(canonicalRef)) cache.set(canonicalRef, '');
-        });
+     if (isAbortError(e)) throw e;
+        // Evita cachear vacío ante fallos transitorios para permitir reintentos.
       }
     }
 
