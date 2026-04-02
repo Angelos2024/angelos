@@ -103,8 +103,14 @@ return Array.from(new Set(words));
   }
 
   function normalizeHebrew(text) {
-    return String(text || '')
-      .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u200C\u200D\uFEFF]/g, '')
+     let value = String(text || '')
+      .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u200C\u200D\uFEFF]/g, '');
+
+    try {
+      value = value.normalize('NFKC');
+    } catch (_) {}
+
+    return value
       .replace(/[\u05BE\-—]/g, ' ')
       .replace(/\u05BA/g, '\u05B9')
       .replace(/[^\u05D0-\u05EA\u05B0-\u05BB\u05BC\u05C1\u05C2\u05C7\s]/g, '')
