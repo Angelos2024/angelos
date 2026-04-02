@@ -126,6 +126,32 @@ return Array.from(new Set(words));
       .trim()
       .normalize('NFC');
   }
+
+  function removeLeadingHebrewArticle(token) {
+    const value = String(token || '').trim();
+    if (!value) return '';
+    const match = value.match(/^ה[\u0591-\u05C7]*/u);
+    if (!match) return value;
+    const stripped = value.slice(match[0].length).trim();
+    return stripped || value;
+  }
+
+  function buildHebrewRootLookupKeys(raw) {
+    const normalized = normalizeHebrewRootKey(raw);
+    if (!normalized) return [];
+
+    const keys = new Set([normalized]);
+    const articleStripped = normalizeHebrewRootKey(removeLeadingHebrewArticle(normalized));
+    if (articleStripped) keys.add(articleStripped);
+
+    const prefixedArticleMatch = normalized.match(/^([ובכלמש])ה[\u0591-\u05C7]*(.+)$/u);
+    if (prefixedArticleMatch?.[2]) {
+      const withoutArticleAfterPrefix = normalizeHebrewRootKey(`${prefixedArticleMatch[1]}${prefixedArticleMatch[2]}`);
+      if (withoutArticleAfterPrefix) keys.add(withoutArticleAfterPrefix);
+    }
+
+    return Array.from(keys);
+  }
   function normalizeStrongKey(value) {
   const match = String(value || '').toUpperCase().match(/H?\s*0*(\d{1,4})/);
     return match ? `H${match[1]}` : '';
@@ -309,10 +335,10 @@ function getStrongReferenceLabel(strong) {
     if (!derivedEl || !definitionEl) return;
 
      const rawValue = String(wordOrStrong || '').trim();
-    const normalizedWord = normalizeHebrewRootKey(rawValue);
-    const normalizedStrong = normalizeStrongKey(rawValue);
-    if ((!normalizedWord || normalizedWord === '—') && !normalizedStrong) {
-      renderHebrewRootsPanel(null);
+    const lookupKeys = buildHebrewRootLookupKeys(rawValue);
+        const normalizedStrong = normalizeStrongKey(rawValue);
+    if ((!lookupKeys.length || lookupKeys[0] === '—') && !normalizedStrong) {
+          renderHebrewRootsPanel(null);
       return;
     }
 
@@ -322,8 +348,14 @@ function getStrongReferenceLabel(strong) {
     try {
       await Promise.all([ensureHebrewRootsLoaded(), ensureHebrewUnifiedLoaded()]);
       const index = hebrewRootsIndex || new Map();
-      const rootEntry = (normalizedStrong && getHebrewRootEntryByStrong(normalizedStrong)) || index.get(normalizedWord) || null;
-      if (rootEntry) {
+let rootEntry = (normalizedStrong && getHebrewRootEntryByStrong(normalizedStrong)) || null;
+      if (!rootEntry) {
+        for (const key of lookupKeys) {
+          rootEntry = index.get(key) || null;
+          if (rootEntry) break;
+        }
+      }
+            if (rootEntry) {
         renderHebrewRootsPanel(rootEntry);
         return;
       }
