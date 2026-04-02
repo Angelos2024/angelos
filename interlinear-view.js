@@ -6,6 +6,17 @@
     '21_Eclesiastés.json','22_Cantares.json','23_Isaías.json','24_Jeremías.json','25_Lamentaciones.json','26_Ezequiel.json','27_Daniel.json','28_Oseas.json','29_Joel.json','30_Amós.json',
     '31_Abdías.json','32_Jonás.json','33_Miqueas.json','34_Nahúm.json','35_Habacuc.json','36_Sofonías.json','37_Hageo.json','38_Zacarías.json','39_Malaquías.json'
   ];
+  const HEBREW_INTERLINEAR_FILE_BY_SLUG = {
+    genesis:'01_Génesis.json', exodo:'02_Éxodo.json', levitico:'03_Levítico.json', numeros:'04_Números.json', deuteronomio:'05_Deuteronomio.json',
+    josue:'06_Josué.json', jueces:'07_Jueces.json', rut:'08_Rut.json', '1_samuel':'09_1_Samuel.json', '2_samuel':'10_2_Samuel.json',
+    '1_reyes':'11_1_Reyes.json', '2_reyes':'12_2_Reyes.json', '1_cronicas':'13_1_Crónicas.json', '2_cronicas':'14_2_Crónicas.json',
+    esdras:'15_Esdras.json', nehemias:'16_Nehemías.json', ester:'17_Ester.json', job:'18_Job.json', salmos:'19_Salmos.json',
+    proverbios:'20_Proverbios.json', eclesiastes:'21_Eclesiastés.json', cantares:'22_Cantares.json', isaias:'23_Isaías.json',
+    jeremias:'24_Jeremías.json', lamentaciones:'25_Lamentaciones.json', ezequiel:'26_Ezequiel.json', daniel:'27_Daniel.json',
+    oseas:'28_Oseas.json', joel:'29_Joel.json', amos:'30_Amós.json', abdias:'31_Abdías.json', jonas:'32_Jonás.json',
+    miqueas:'33_Miqueas.json', nahum:'34_Nahúm.json', habacuc:'35_Habacuc.json', sofonias:'36_Sofonías.json',
+    hageo:'37_Hageo.json', zacarias:'38_Zacarías.json', malaquias:'39_Malaquías.json'
+  };
   const GREEK_DICT_PATH = './diccionario/diccionarioG_unificado.min.json';
 
   let dictionariesPromise = null;
@@ -231,6 +242,27 @@ function getHebrewTokenLookupForms(orig){
     return segmented.length > 1 ? segmented : [token];
   }
 
+ const hebrewInterlinearBookCache = new Map();
+
+  async function loadHebrewInterlinearBookBySlug(slug){
+    const file = HEBREW_INTERLINEAR_FILE_BY_SLUG[slug];
+    if(!file) return null;
+    if(!hebrewInterlinearBookCache.has(file)){
+      hebrewInterlinearBookCache.set(
+        file,
+        loadJson(`${HEBREW_INTERLINEAR_BASE}/${file}`).catch(() => null)
+      );
+    }
+    return hebrewInterlinearBookCache.get(file);
+  }
+
+  async function getHebrewRawVerse(slug, chapter, verse){
+    const book = await loadHebrewInterlinearBookBySlug(slug);
+    const chapterNode = book?.chapters?.[String(chapter)] || null;
+    const verseNode = chapterNode?.[String(verse)] || null;
+    const raw = String(verseNode?.raw || '').trim();
+    return raw || '';
+  }
   async function getHebrewInterlinearMaps(){
     const books = await Promise.all(
       HEBREW_INTERLINEAR_BOOK_FILES.map((file) => loadJson(`${HEBREW_INTERLINEAR_BASE}/${file}`).catch(() => null))
@@ -282,6 +314,7 @@ function getHebrewTokenLookupForms(orig){
   }
 
   window.InterlinearView = {
-    buildInterlinearRows
+    buildInterlinearRows,
+    getHebrewRawVerse
   };
 })();
