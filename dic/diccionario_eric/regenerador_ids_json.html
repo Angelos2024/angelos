@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regenerador de IDs JSON</title>
+  <style>
+    :root{
+      --bg:#0f1115;
+      --panel:#171a21;
+      --soft:#222734;
+      --text:#e8ecf1;
+      --muted:#a9b3c2;
+      --ok:#1f9d55;
+      --warn:#d69e2e;
+      --danger:#e53e3e;
+      --accent:#4f8cff;
+      --border:#2a3140;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:24px;
+    }
+    h1{
+      margin:0 0 8px 0;
+      font-size:28px;
+    }
+    p{
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      margin-top:20px;
+    }
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 10px 25px rgba(0,0,0,.18);
+    }
+    .toolbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:16px 0;
+    }
+    button, .file-label{
+      background:var(--soft);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-weight:700;
+      font-size:14px;
+    }
+    button.primary{ background:var(--accent); border-color:transparent; }
+    button.success{ background:var(--ok); border-color:transparent; }
+    button:hover, .file-label:hover{ filter:brightness(1.08); }
+    textarea{
+      width:100%;
+      min-height:520px;
+      resize:vertical;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#0c0f14;
+      color:var(--text);
+      padding:14px;
+      font-family:Consolas, Monaco, monospace;
+      font-size:14px;
+      line-height:1.45;
+    }
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:14px;
+    }
+    .pill{
+      background:#0c0f14;
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:8px 12px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .status{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:12px;
+      font-size:14px;
+      white-space:pre-wrap;
+      line-height:1.5;
+    }
+    .status.ok{ background:rgba(31,157,85,.12); border:1px solid rgba(31,157,85,.35); }
+    .status.warn{ background:rgba(214,158,46,.12); border:1px solid rgba(214,158,46,.35); }
+    .status.err{ background:rgba(229,62,62,.12); border:1px solid rgba(229,62,62,.35); }
+    input[type=file]{ display:none; }
+    .small{ font-size:12px; color:var(--muted); }
+    @media (max-width: 900px){
+      .grid{ grid-template-columns:1fr; }
+      textarea{ min-height:320px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Regenerador de IDs JSON</h1>
+    <p>
+      Carga o pega el JSON. La herramienta intenta recuperar los objetos válidos, reordena los IDs desde <strong>1</strong> hasta el final, elimina en <strong>observacion</strong> de forma estricta cualquier bloque que empiece con <code>[cite:</code> y termine en <code>]</code>, como <code>[cite: 1942, 1945]</code> y devuelve un JSON correctamente cerrado manteniendo la misma estructura de cada objeto.
+    </p>
+
+    <div class="toolbar">
+      <label class="file-label" for="fileInput">Cargar archivo .json</label>
+      <input id="fileInput" type="file" accept=".json,application/json,text/plain" />
+      <button class="primary" id="processBtn">Regenerar IDs</button>
+      <button id="formatBtn">Formatear salida</button>
+      <button id="copyBtn">Copiar salida</button>
+      <button class="success" id="downloadBtn">Descargar JSON corregido</button>
+      <button id="clearBtn">Limpiar</button>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Entrada</h2>
+        <textarea id="input" placeholder='Pega aquí tu JSON. También sirve si está parcialmente roto, con un "[" extra o ids repetidos.'></textarea>
+        <div class="small">Consejo: si el archivo está dañado, no importa. El procesador intentará rescatar cada objeto <code>{ ... }</code> válido.</div>
+      </div>
+
+      <div class="card">
+        <h2>Salida</h2>
+        <textarea id="output" placeholder="Aquí aparecerá el JSON corregido..." readonly></textarea>
+        <div id="status" class="status warn">Esperando archivo o texto.</div>
+        <div class="meta">
+          <div class="pill" id="countPill">Objetos: 0</div>
+          <div class="pill" id="dupPill">IDs repetidos detectados: 0</div>
+          <div class="pill" id="missingPill">Saltos detectados: 0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+    const statusBox = document.getElementById('status');
+    const countPill = document.getElementById('countPill');
+    const dupPill = document.getElementById('dupPill');
+    const missingPill = document.getElementById('missingPill');
+    const fileInput = document.getElementById('fileInput');
+
+    function setStatus(msg, type='warn'){
+      statusBox.className = 'status ' + type;
+      statusBox.textContent = msg;
+    }
+
+    function updateMeta({count=0, duplicates=0, missing=0} = {}){
+      countPill.textContent = `Objetos: ${count}`;
+      dupPill.textContent = `IDs repetidos detectados: ${duplicates}`;
+      missingPill.textContent = `Saltos detectados: ${missing}`;
+    }
+
+    function normalizeLineBreaks(text){
+      return text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    }
+
+    function stripBom(text){
+      return text.replace(/^\uFEFF/, '');
+    }
+
+    function tryParseWhole(text){
+      try {
+        const parsed = JSON.parse(text);
+        if (Array.isArray(parsed)) return parsed.filter(v => v && typeof v === 'object' && !Array.isArray(v));
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
+    function extractObjectsRobust(text){
+      const objects = [];
+      let depth = 0;
+      let inString = false;
+      let escape = false;
+      let start = -1;
+
+      for (let i = 0; i < text.length; i++){
+        const ch = text[i];
+
+        if (inString){
+          if (escape){
+            escape = false;
+          } else if (ch === '\\'){
+            escape = true;
+          } else if (ch === '"'){
+            inString = false;
+          }
+          continue;
+        }
+
+        if (ch === '"'){
+          inString = true;
+          continue;
+        }
+
+        if (ch === '{'){
+          if (depth === 0) start = i;
+          depth++;
+          continue;
+        }
+
+        if (ch === '}'){
+          if (depth > 0) depth--;
+          if (depth === 0 && start !== -1){
+            const candidate = text.slice(start, i + 1);
+            try {
+              const obj = JSON.parse(candidate);
+              if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+                objects.push(obj);
+              }
+            } catch {
+              // se ignora fragmento inválido
+            }
+            start = -1;
+          }
+        }
+      }
+      return objects;
+    }
+
+    function analyzeIds(items){
+      const ids = items
+        .map(x => Number(x.id))
+        .filter(n => Number.isFinite(n));
+
+      const seen = new Map();
+      let duplicates = 0;
+
+      for (const id of ids){
+        seen.set(id, (seen.get(id) || 0) + 1);
+      }
+      for (const count of seen.values()){
+        if (count > 1) duplicates += (count - 1);
+      }
+
+      let missing = 0;
+      if (ids.length){
+        const max = Math.max(...ids);
+        for (let i = 1; i <= max; i++){
+          if (!seen.has(i)) missing++;
+        }
+      }
+
+      return { duplicates, missing };
+    }
+
+    
+    function cleanObservationCitations(value){
+      if (typeof value !== 'string') return value;
+
+      let text = value;
+
+      // Regla estricta:
+      // elimina desde "[cite:" hasta el primer cierre "]" cuyo contenido termine en número.
+      // Ejemplos:
+      // [cite: 1677]
+      // [cite: 1677, 1678, 1705, 1706]
+      // [cite: cualquier texto 916]
+      text = text.replace(/\s*\[cite:[^\]]*?\d\]/gim, '');
+
+      // Pasada de respaldo por si hay variantes con espacios en "cite :"
+      text = text.replace(/\s*\[\s*cite\s*:[^\]]*?\d\]/gim, '');
+
+      return text
+        .replace(/[ \t]{2,}/g, ' ')
+        .replace(/\s+([.,;:!?])/g, '$1')
+        .replace(/\(\s+/g, '(')
+        .replace(/\s+\)/g, ')')
+        .trim();
+    }
+
+    function sanitizeObjects(items){
+      return items.map((obj, index) => {
+        const clone = JSON.parse(JSON.stringify(obj));
+        clone.id = index + 1;
+
+        if (Object.prototype.hasOwnProperty.call(clone, 'observacion')) {
+          clone.observacion = cleanObservationCitations(clone.observacion);
+        }
+
+        return clone;
+      });
+    }
+
+    function processJson(){
+      const raw = stripBom(normalizeLineBreaks(input.value)).trim();
+
+      if (!raw){
+        output.value = '';
+        updateMeta({count:0, duplicates:0, missing:0});
+        setStatus('No hay contenido para procesar.', 'warn');
+        return;
+      }
+
+      let items = tryParseWhole(raw);
+      let recoveredMode = false;
+
+      if (!items){
+        items = extractObjectsRobust(raw);
+        recoveredMode = true;
+      }
+
+      if (!items || !items.length){
+        output.value = '';
+        updateMeta({count:0, duplicates:0, missing:0});
+        setStatus('No fue posible recuperar objetos JSON válidos. Revisa si el archivo tiene comillas sin cerrar o bloques incompletos.', 'err');
+        return;
+      }
+
+      const before = analyzeIds(items);
+      const fixed = sanitizeObjects(items);
+      output.value = JSON.stringify(fixed, null, 2);
+
+      updateMeta({
+        count: fixed.length,
+        duplicates: before.duplicates,
+        missing: before.missing
+      });
+
+      const modeText = recoveredMode
+        ? 'Modo rescate activado: se reconstruyó la lista a partir de objetos válidos detectados dentro del texto.'
+        : 'JSON leído correctamente sin necesidad de rescate.';
+
+      setStatus(
+        `${modeText}\nSe regeneraron los IDs desde 1 hasta ${fixed.length}, se limpiaron las citas tipo [cite: ...] dentro de observacion y se cerró la estructura JSON como un arreglo válido.`,
+        'ok'
+      );
+    }
+
+    document.getElementById('processBtn').addEventListener('click', processJson);
+
+    document.getElementById('formatBtn').addEventListener('click', () => {
+      if (!output.value.trim()){
+        setStatus('No hay salida para formatear.', 'warn');
+        return;
+      }
+      try{
+        const parsed = JSON.parse(output.value);
+        output.value = JSON.stringify(parsed, null, 2);
+        setStatus('Salida formateada correctamente.', 'ok');
+      }catch{
+        setStatus('La salida actual no es un JSON válido.', 'err');
+      }
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      if (!output.value.trim()){
+        setStatus('No hay salida para copiar.', 'warn');
+        return;
+      }
+      try{
+        await navigator.clipboard.writeText(output.value);
+        setStatus('Salida copiada al portapapeles.', 'ok');
+      }catch{
+        setStatus('No se pudo copiar automáticamente. Puedes copiar manualmente.', 'warn');
+      }
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      if (!output.value.trim()){
+        setStatus('No hay salida para descargar.', 'warn');
+        return;
+      }
+      const blob = new Blob([output.value], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'diccionario_ids_corregidos.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setStatus('JSON corregido descargado.', 'ok');
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      input.value = '';
+      output.value = '';
+      fileInput.value = '';
+      updateMeta({count:0, duplicates:0, missing:0});
+      setStatus('Área limpiada.', 'warn');
+    });
+
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try{
+        const text = await file.text();
+        input.value = text;
+        setStatus(`Archivo cargado: ${file.name}`, 'ok');
+      }catch{
+        setStatus('No se pudo leer el archivo seleccionado.', 'err');
+      }
+    });
+  </script>
+</body>
+</html>
