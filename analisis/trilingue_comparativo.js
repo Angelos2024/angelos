@@ -1170,7 +1170,18 @@ function findHebrewUnifiedEntries(rawHebrew, options = {}) {
 
     const results = [];
     const seen = new Set();
+  const hasHebrewMatches = source.some(entry => {
+        const entryHebrew = new Set([
+            entry?.strong_detail?.lemma,
+            entry?.lemma,
+            entry?.hebreo,
+            entry?.forma,
+            ...(Array.isArray(entry?.hebreos) ? entry.hebreos : []),
+            ...(Array.isArray(entry?.formas) ? entry.formas : [])
+        ].flatMap(value => Array.from(buildHebrewLookupVariants(value))).filter(Boolean));
 
+        return Array.from(hebrewCandidates).some(candidate => entryHebrew.has(candidate));
+    });
     source.forEach(entry => {
         const entryHebrew = new Set([
             entry?.strong_detail?.lemma,
@@ -1184,8 +1195,8 @@ function findHebrewUnifiedEntries(rawHebrew, options = {}) {
         const entryStrong = normalizeStrongForLookup(entry?.strong);
 
         const hebrewMatch = Array.from(hebrewCandidates).some(candidate => entryHebrew.has(candidate));
-        const strongMatch = !!entryStrong && strongSet.has(entryStrong);
-        if (!hebrewMatch && !strongMatch) return;
+        const strongMatch = !hasHebrewMatches && !!entryStrong && strongSet.has(entryStrong);
+                if (!hebrewMatch && !strongMatch) return;
 
         const lemmaKey = normalizeHebrewLemmaForLookup(entry?.strong_detail?.lemma || entry?.lemma || entry?.hebreo || entry?.forma);
         const dedupeKey = `${entryStrong}|${lemmaKey}`;
