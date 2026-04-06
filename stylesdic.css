@@ -37,7 +37,19 @@ body {
   margin: 0 0 0.5rem;
   font-size: clamp(1.6rem, 2.8vw, 2.2rem);
 }
-
+.dic-back-btn{
+  border:1px solid rgba(255, 248, 244, 0.48);
+  background:rgba(255, 248, 244, 0.15);
+  color:var(--primary-contrast);
+  border-radius:999px;
+  padding:.42rem .82rem;
+  font-size:.9rem;
+  margin:0 0 .9rem;
+  cursor:pointer;
+}
+.dic-back-btn:hover{
+  background:rgba(255, 248, 244, 0.28);
+}
 .dic-subtitle {
   margin: 0 0 1.1rem;
   max-width: 70ch;

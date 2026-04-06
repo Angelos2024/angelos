@@ -61,6 +61,12 @@
       padding:.75rem 1rem;
       font-weight:600;
     }
+      .panel-header.panel-header--split{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+    }
    .panel-body{ padding:1rem; background:var(--surface); }
     .btn-soft{ background:var(--soft-bg); border:1px solid var(--bd); color:var(--text); }
     .btn-soft:hover{ background:var(--soft-hover); }
@@ -807,8 +813,15 @@ font-size:.96rem;
         </section>
 
         <section class="panel mt-3">
-          <div class="panel-header">Comparación de diccionarios</div>
-          <div class="panel-body">
+ <div class="panel-header panel-header--split">
+            <span>Comparación de diccionarios</span>
+            <a
+              class="btn btn-soft btn-sm"
+              id="openContextDictionaryBtn"
+              href="../buscadordic.html?from=.%2Fanalisis%2Fbuscador_comparativo.html"
+            >Diccionarios</a>
+          </div>
+                    <div class="panel-body">
   
             <div id="dictionaryComparisonMount" class="dictionary-comparison-wrap">
               <table class="table table-sm mb-0 dictionary-comparison-table">
@@ -873,6 +886,14 @@ font-size:.96rem;
         backToReader.addEventListener('click', (event) => {
           event.preventDefault();
           window.location.href = buildReaderReturnUrl();
+        });
+      }
+       const dictionaryBtn = document.getElementById('openContextDictionaryBtn');
+      if (dictionaryBtn) {
+        dictionaryBtn.addEventListener('click', (event) => {
+          event.preventDefault();
+          const from = encodeURIComponent('./analisis/buscador_comparativo.html');
+          window.location.href = `../buscadordic.html?from=${from}`;
         });
       }
     })();

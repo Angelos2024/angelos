@@ -9,6 +9,7 @@
 <body>
   <header class="dic-header">
     <div class="dic-wrap">
+            <button type="button" id="dicBackButton" class="dic-back-btn">← Volver</button>
       <h1>Diccionario Teológico Bíblico </h1>
       <p class="dic-subtitle">Extraído de los estudios del profesor Eric de Jesus Rodríguez.</p>
       <label class="dic-search-label" for="dicSearch">Buscar entrada</label>
@@ -239,6 +240,53 @@
       applyFilters();
     });
 
+ function buildReaderReturnUrl() {
+      let target = './index.html';
+      try {
+        const rawState = sessionStorage.getItem('lectorState');
+        const state = rawState ? JSON.parse(rawState) : null;
+        const refSearch = String(state?.lastReferenceSearch || localStorage.getItem('lectorLastReferenceSearch') || '').trim();
+        const book = String(state?.currentBookSlug || '').trim();
+        const name = String(state?.currentBookName || '').trim();
+
+        if (refSearch) {
+          const p = new URLSearchParams();
+          if (book) p.set('book', book);
+          if (name) p.set('name', name);
+          p.set('search', refSearch);
+          p.set('version', 'RVR1960');
+          p.set('orig', '1');
+          target = `./index.html?${p.toString()}`;
+        }
+      } catch (_) {}
+      return target;
+    }
+
+    function resolveBackTarget() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const from = params.get('from');
+        if (from) {
+          return decodeURIComponent(from);
+        }
+      } catch (_) {}
+
+      try {
+        const referrer = String(document.referrer || '');
+        if (referrer.includes('/analisis/buscador_comparativo.html')) {
+          return './analisis/buscador_comparativo.html';
+        }
+      } catch (_) {}
+
+      return buildReaderReturnUrl();
+    }
+
+    const backButton = document.getElementById('dicBackButton');
+    if (backButton) {
+      backButton.addEventListener('click', () => {
+        window.location.href = resolveBackTarget();
+      });
+    }
     init();
   </script>
 </body>
