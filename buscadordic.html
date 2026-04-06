@@ -165,17 +165,29 @@
 
       const lemma = stripHebrewDiacritics(active.texto_hebreo);
       const related = state.entries
-        .filter((entry) => entry.id !== active.id && stripHebrewDiacritics(entry.texto_hebreo) === lemma)
-        .slice(0, 12);
+        .filter((entry) => entry.id !== active.id && stripHebrewDiacritics(entry.texto_hebreo) === lemma);
 
-      const relatedHtml = related.length
-        ? related.map((entry) => `
+      const relatedSameBook = related.filter((entry) => entry.libro === active.libro);
+
+      const makeRelatedHtml = (entries, emptyMessage) => entries.length
+        ? entries.map((entry) => `
             <li class="dic-related-item">
-              <strong>${safe(entry.libro)}</strong>
-              <span>${safe(entry.equivalencia_espanol) || safe(entry.transliteracion) || '—'}</span>
+              <strong>${safe(entry.libro)} · ID ${safe(entry.id)}</strong>
+                            <span>${safe(entry.equivalencia_espanol) || safe(entry.transliteracion) || '—'}</span>
+                        <small>${safe(entry.observacion) || 'Sin observación.'}</small>
             </li>
           `).join('')
-        : '<li class="dic-related-item">No se encontraron entradas relacionadas para este lema.</li>';
+: `<li class="dic-related-item">${emptyMessage}</li>`;
+
+      const relatedHtml = makeRelatedHtml(
+        related,
+        'No se encontraron entradas relacionadas para este lema.'
+      );
+
+      const sameBookHtml = makeRelatedHtml(
+        relatedSameBook,
+        'Este lema no se repite en el mismo libro.'
+      );
 
       detailEl.className = '';
       detailEl.innerHTML = `
@@ -193,7 +205,11 @@
 
         <section class="dic-related">
           <h3>Entradas relacionadas por lema</h3>
-          <ul>${relatedHtml}</ul>
+                    <ul>${relatedHtml}</ul>
+        </section>
+          <section class="dic-related">
+          <h3>Repeticiones del lema en el mismo libro</h3>
+          <ul>${sameBookHtml}</ul>
         </section>
       `;
     }
