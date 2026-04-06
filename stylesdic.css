@@ -1,0 +1,255 @@
+:root {
+  --bd: #d5c1b1;
+  --muted: #6d5d52;
+  --bg: #edddce;
+  --surface: #f6ece2;
+  --surface-strong: #efe1d3;
+  --text: #2c1d1f;
+  --primary: #4b2743;
+  --primary-contrast: #fff8f4;
+  --shadow: 0 14px 30px rgba(75, 39, 67, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top, #f7ede4 0%, var(--bg) 62%);
+}
+
+.dic-wrap {
+  width: min(1280px, 96vw);
+  margin: 0 auto;
+}
+
+.dic-header {
+  background: linear-gradient(130deg, #4b2743, #5f3855);
+  color: var(--primary-contrast);
+  padding: 2.5rem 0 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.dic-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+}
+
+.dic-subtitle {
+  margin: 0 0 1.1rem;
+  max-width: 70ch;
+  opacity: 0.9;
+}
+
+.dic-search-label {
+  display: block;
+  font-size: 0.92rem;
+  margin-bottom: 0.5rem;
+}
+
+.dic-search {
+  width: 100%;
+  border: none;
+  border-radius: 1rem;
+  padding: 1rem 1.1rem;
+  font-size: 1.02rem;
+  color: #2c1d1f;
+  box-shadow: inset 0 0 0 2px rgba(75, 39, 67, 0.08);
+}
+
+.dic-search:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.35);
+}
+
+.dic-filters {
+  padding: 0.95rem 0 0.5rem;
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.dic-filter-btn {
+  border: 1px solid #b4948b;
+  background: #f8eee5;
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.5rem 0.92rem;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.dic-filter-btn:hover {
+  transform: translateY(-1px);
+  background: #f2e3d7;
+}
+
+.dic-filter-btn.is-active {
+  background: var(--primary);
+  color: var(--primary-contrast);
+  border-color: var(--primary);
+}
+
+.dic-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.85fr);
+  gap: 1rem;
+  align-items: start;
+  padding: 0.25rem 0 1.5rem;
+}
+
+.dic-results-panel,
+.dic-detail-panel {
+  background: var(--surface);
+  border: 1px solid var(--bd);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.dic-results-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem 0.25rem;
+}
+
+.dic-results-head h2,
+.dic-detail-panel h2 {
+  margin: 0;
+  font-size: 1.12rem;
+}
+
+.dic-results-head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.dic-results {
+  padding: 0.65rem 0.8rem 1rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.dic-card {
+  border: 1px solid #d9c6b5;
+  border-radius: 0.8rem;
+  background: #fffdfb;
+  padding: 0.82rem 0.92rem;
+  cursor: pointer;
+  transition: 0.17s ease;
+}
+
+.dic-card:hover {
+  transform: translateY(-1px);
+  border-color: #a47a74;
+}
+
+.dic-card.is-active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(75, 39, 67, 0.22);
+  background: #fff7f1;
+}
+
+.dic-hebrew {
+  margin: 0;
+  direction: rtl;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.dic-translit {
+  margin: 0.32rem 0 0;
+  font-style: italic;
+  color: #513f3e;
+}
+
+.dic-meaning {
+  margin: 0.34rem 0 0;
+  font-weight: 600;
+}
+
+.dic-meta {
+  margin: 0.42rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.dic-detail-panel {
+  position: sticky;
+  top: 0.7rem;
+  padding: 1rem;
+}
+
+.dic-detail-empty,
+.dic-empty {
+  color: var(--muted);
+  margin: 0;
+}
+
+.dic-observation {
+  margin: 0.7rem 0 0;
+  line-height: 1.6;
+}
+
+.dic-tags {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.dic-tag {
+  display: inline-block;
+  font-size: 0.82rem;
+  border-radius: 999px;
+  background: var(--surface-strong);
+  border: 1px solid #d2b8aa;
+  padding: 0.28rem 0.6rem;
+}
+
+.dic-related {
+  margin-top: 1rem;
+  border-top: 1px solid var(--bd);
+  padding-top: 0.85rem;
+}
+
+.dic-related h3 {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+}
+
+.dic-related ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.dic-related-item {
+  border: 1px solid #dccabe;
+  border-radius: 0.62rem;
+  padding: 0.58rem 0.66rem;
+  background: #fffdfb;
+}
+
+.dic-related-item strong {
+  display: block;
+  margin-bottom: 0.22rem;
+}
+
+@media (max-width: 1024px) {
+  .dic-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .dic-detail-panel {
+    position: static;
+  }
+}

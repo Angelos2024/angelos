@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es" data-theme="cream">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diccionario contextual</title>
+  <link rel="stylesheet" href="./stylesdic.css" />
+</head>
+<body>
+  <header class="dic-header">
+    <div class="dic-wrap">
+      <h1>Diccionario Bíblico Contextual</h1>
+      <p class="dic-subtitle">Explora hebreo, transliteración, equivalencia y observación con contexto por libro.</p>
+      <label class="dic-search-label" for="dicSearch">Buscar entrada</label>
+      <input id="dicSearch" class="dic-search" type="search" placeholder="Buscar por id, hebreo, transliteración, español, observación o libro..." autocomplete="off" />
+    </div>
+  </header>
+
+  <section class="dic-filters dic-wrap" id="dicFilters" aria-label="Filtros por libro"></section>
+
+  <main class="dic-layout dic-wrap">
+    <section class="dic-results-panel" aria-live="polite">
+      <div class="dic-results-head">
+        <h2>Resultados</h2>
+        <p id="dicCount">Cargando...</p>
+      </div>
+      <div id="dicResults" class="dic-results"></div>
+    </section>
+
+    <aside class="dic-detail-panel" id="dicDetailPanel">
+      <h2>Detalle contextual</h2>
+      <div id="dicDetail" class="dic-detail-empty">Selecciona una tarjeta para ver sus detalles.</div>
+    </aside>
+  </main>
+
+  <script>
+    const LIBROS = ['Todos', 'Qohelet', 'Parashot', 'Apocalipsis', 'Shir Hashirim', '1 Tesalonicenses', '2 Tesalonicenses', 'Salmos'];
+    const SOURCES = [
+      { libro: 'Qohelet', url: './dic/Diccionarioboton/diccionario_qohelet.json' },
+      { libro: 'Parashot', url: './dic/Diccionarioboton/diccionario_parashot.json' },
+      { libro: 'Apocalipsis', url: './dic/Diccionarioboton/diccionario_apocalipsis.json' },
+      { libro: 'Shir Hashirim', url: './dic/Diccionarioboton/diccionario_shir_hashirim.json' },
+      { libro: '1 Tesalonicenses', url: './dic/Diccionarioboton/diccionario_1tesalonicenses.json' },
+      { libro: '2 Tesalonicenses', url: './dic/Diccionarioboton/diccionario_2tesalonicenses.json' },
+      { libro: 'Salmos', url: './dic/Diccionarioboton/diccionario_salmos.json' },
+    ];
+
+    const state = {
+      query: '',
+      filter: 'Todos',
+      entries: [],
+      filtered: [],
+      activeId: null,
+    };
+
+    const searchInput = document.getElementById('dicSearch');
+    const filtersEl = document.getElementById('dicFilters');
+    const resultsEl = document.getElementById('dicResults');
+    const detailEl = document.getElementById('dicDetail');
+    const countEl = document.getElementById('dicCount');
+
+    const safe = (value) => String(value ?? '');
+    const stripHebrewDiacritics = (text) => safe(text).normalize('NFD').replace(/[\u0591-\u05C7]/g, '').trim();
+
+    function makeFilterButtons() {
+      filtersEl.innerHTML = '';
+      LIBROS.forEach((libro) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `dic-filter-btn ${state.filter === libro ? 'is-active' : ''}`;
+        button.textContent = libro;
+        button.setAttribute('aria-pressed', String(state.filter === libro));
+        button.addEventListener('click', () => {
+          state.filter = libro;
+          applyFilters();
+          makeFilterButtons();
+        });
+        filtersEl.appendChild(button);
+      });
+    }
+
+    function entryMatches(entry, query) {
+      if (!query) return true;
+      const haystack = [
+        entry.id,
+        entry.texto_hebreo,
+        entry.transliteracion,
+        entry.equivalencia_espanol,
+        entry.observacion,
+        entry.libro,
+      ].map(safe).join(' ').toLowerCase();
+      return haystack.includes(query.toLowerCase());
+    }
+
+    function applyFilters() {
+      state.filtered = state.entries.filter((entry) => {
+        const byBook = state.filter === 'Todos' || entry.libro === state.filter;
+        return byBook && entryMatches(entry, state.query);
+      });
+
+      if (!state.filtered.some((entry) => entry.id === state.activeId)) {
+        state.activeId = state.filtered[0]?.id ?? null;
+      }
+
+      renderResults();
+      renderDetail();
+    }
+
+    function renderResults() {
+      countEl.textContent = `${state.filtered.length} resultado(s)`;
+
+      if (!state.filtered.length) {
+        resultsEl.innerHTML = '<p class="dic-empty">No hay resultados para los criterios actuales.</p>';
+        return;
+      }
+
+      resultsEl.innerHTML = '';
+      const fragment = document.createDocumentFragment();
+
+      state.filtered.forEach((entry) => {
+        const card = document.createElement('article');
+        card.className = `dic-card ${entry.id === state.activeId ? 'is-active' : ''}`;
+        card.tabIndex = 0;
+        card.setAttribute('role', 'button');
+
+        card.innerHTML = `
+          <p class="dic-hebrew">${safe(entry.texto_hebreo) || '—'}</p>
+          <p class="dic-translit">${safe(entry.transliteracion) || '—'}</p>
+          <p class="dic-meaning">${safe(entry.equivalencia_espanol) || '—'}</p>
+          <p class="dic-meta">${safe(entry.libro)} · ID ${safe(entry.id)}</p>
+        `;
+
+        const activate = () => {
+          state.activeId = entry.id;
+          renderResults();
+          renderDetail();
+        };
+
+        card.addEventListener('click', activate);
+        card.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            activate();
+          }
+        });
+
+        fragment.appendChild(card);
+      });
+
+      resultsEl.appendChild(fragment);
+    }
+
+    function renderDetail() {
+      const active = state.filtered.find((entry) => entry.id === state.activeId);
+      if (!active) {
+        detailEl.className = 'dic-detail-empty';
+        detailEl.textContent = 'Selecciona una tarjeta para ver sus detalles.';
+        return;
+      }
+
+      const lemma = stripHebrewDiacritics(active.texto_hebreo);
+      const related = state.entries
+        .filter((entry) => entry.id !== active.id && stripHebrewDiacritics(entry.texto_hebreo) === lemma)
+        .slice(0, 12);
+
+      const relatedHtml = related.length
+        ? related.map((entry) => `
+            <li class="dic-related-item">
+              <strong>${safe(entry.libro)}</strong>
+              <span>${safe(entry.equivalencia_espanol) || safe(entry.transliteracion) || '—'}</span>
+            </li>
+          `).join('')
+        : '<li class="dic-related-item">No se encontraron entradas relacionadas para este lema.</li>';
+
+      detailEl.className = '';
+      detailEl.innerHTML = `
+        <div class="dic-detail-main">
+          <p class="dic-hebrew">${safe(active.texto_hebreo) || '—'}</p>
+          <p class="dic-translit">${safe(active.transliteracion) || '—'}</p>
+          <p class="dic-meaning">${safe(active.equivalencia_espanol) || '—'}</p>
+          <p class="dic-observation">${safe(active.observacion) || 'Sin observación.'}</p>
+          <div class="dic-tags">
+            <span class="dic-tag">${safe(active.libro)}</span>
+            <span class="dic-tag">ID ${safe(active.id)}</span>
+            <span class="dic-tag">Lema ${lemma || '—'}</span>
+          </div>
+        </div>
+
+        <section class="dic-related">
+          <h3>Entradas relacionadas por lema</h3>
+          <ul>${relatedHtml}</ul>
+        </section>
+      `;
+    }
+
+    async function loadSources() {
+      const loaded = await Promise.all(
+        SOURCES.map(async (source) => {
+          const response = await fetch(source.url);
+          if (!response.ok) {
+            throw new Error(`No se pudo cargar ${source.url} (HTTP ${response.status})`);
+          }
+
+          const rows = await response.json();
+          if (!Array.isArray(rows)) return [];
+
+          return rows
+            .filter((entry) => entry && typeof entry === 'object')
+            .map((entry) => ({
+              id: entry.id,
+              texto_hebreo: entry.texto_hebreo,
+              transliteracion: entry.transliteracion,
+              equivalencia_espanol: entry.equivalencia_espanol,
+              observacion: entry.observacion,
+              libro: source.libro,
+            }));
+        })
+      );
+
+      return loaded.flat();
+    }
+
+    async function init() {
+      try {
+        state.entries = await loadSources();
+
+        makeFilterButtons();
+        applyFilters();
+      } catch (error) {
+        countEl.textContent = '0 resultado(s)';
+        resultsEl.innerHTML = '<p class="dic-empty">No se pudieron cargar los archivos del diccionario.</p>';
+        detailEl.className = 'dic-detail-empty';
+        detailEl.textContent = `Error: ${error.message}`;
+      }
+    }
+
+    searchInput.addEventListener('input', (event) => {
+      state.query = event.target.value.trim();
+      applyFilters();
+    });
+
+    init();
+  </script>
+</body>
+</html>

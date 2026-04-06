@@ -108,8 +108,8 @@
               </li>
             </ul>
           </div>
-          <button id="btnCopyText" class="btn btn-soft btn-sm" type="button">Copiar</button>
-          <button id="btnAboutExtractor" class="btn btn-soft btn-sm" type="button">Acerca de</button>
+          <button id="btnCopyText" class="btn btn-soft btn-sm" type="button">Diccionario</button>
+                    <button id="btnAboutExtractor" class="btn btn-soft btn-sm" type="button">Acerca de</button>
                   </div>
       </div>
     </div>
@@ -1735,15 +1735,9 @@ themeItems.forEach((item) => {
   });
 });
 
-btnCopyText.addEventListener('click', async () => {
-  const left = (passageTextRV.innerText || '').trim();
-  const right = (passageTextOrig.innerText || '').trim();
-  const includeOrig = !document.body.classList.contains('orig-hidden');
-  const combined =
-    includeOrig
-      ? `=== ${leftLabel.textContent} ===\n${left}\n\n=== ${rightLabel.textContent} ===\n${right}\n`
-      : `=== ${leftLabel.textContent} ===\n${left}\n`;
-  await copy(combined);
+btnCopyText.addEventListener('click', () => {
+  saveReaderState();
+  window.location.href = './buscadordic.html';
 });
 
 btnViewMode?.addEventListener('click', () => {
