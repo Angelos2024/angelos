@@ -76,6 +76,30 @@ body {
   outline: 3px solid rgba(255, 255, 255, 0.35);
 }
 
+.dic-search-form {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.dic-search-form .dic-search {
+  flex: 1;
+}
+
+.dic-search-btn {
+  border: 1px solid rgba(255, 248, 244, 0.5);
+  background: rgba(255, 248, 244, 0.16);
+  color: var(--primary-contrast);
+  border-radius: 0.9rem;
+  padding: 0.78rem 1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dic-search-btn:hover {
+  background: rgba(255, 248, 244, 0.28);
+}
 .dic-filters {
   padding: 0.95rem 0 0.5rem;
   display: flex;
@@ -119,6 +143,8 @@ body {
   border: 1px solid var(--bd);
   border-radius: 1rem;
   box-shadow: var(--shadow);
+   max-height: calc(100vh - 2rem);
+  overflow: auto;
 }
 
 .dic-results-head {
@@ -263,5 +289,16 @@ body {
 
   .dic-detail-panel {
     position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .dic-search-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dic-search-btn {
+    width: 100%;
   }
 }
