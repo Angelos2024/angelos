@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diccionario Online - Idea 1</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: white;
+      padding: 40px 20px 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .search-box {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 16px 18px;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 20px;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .filter-btn {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: #111827;
+      color: white;
+      border-color: #111827;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 20px;
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .results, .detail {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    }
+
+    .results h2, .detail h2 {
+      margin-bottom: 18px;
+      font-size: 1.2rem;
+    }
+
+    .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: .2s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      border-color: #94a3b8;
+      transform: translateY(-2px);
+    }
+
+    .hebrew {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+      direction: rtl;
+    }
+
+    .translit {
+      color: #475569;
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+
+    .meaning {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .meta {
+      font-size: .9rem;
+      color: #64748b;
+    }
+
+    .detail-box {
+      border-left: 4px solid #111827;
+      padding-left: 14px;
+      margin-bottom: 20px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .chip {
+      background: #e2e8f0;
+      color: #334155;
+      font-size: .85rem;
+      padding: 7px 10px;
+      border-radius: 999px;
+    }
+
+    .related-item {
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .related-item strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Diccionario Bíblico Contextual</h1>
+    <div class="search-box">
+      <input type="text" placeholder="Buscar por hebreo, transliteración, español o observación..." />
+    </div>
+  </header>
+
+  <section class="filters">
+    <button class="filter-btn active">Todos</button>
+    <button class="filter-btn">Qohelet</button>
+    <button class="filter-btn">Parashot</button>
+    <button class="filter-btn">Apocalipsis</button>
+    <button class="filter-btn">Shir Hashirim</button>
+    <button class="filter-btn">1 Tes</button>
+    <button class="filter-btn">2 Tes</button>
+    <button class="filter-btn">Salmos</button>
+  </section>
+
+  <main class="layout">
+    <section class="results">
+      <h2>Resultados</h2>
+
+      <div class="card">
+        <div class="hebrew">רוּחַ</div>
+        <div class="translit">Ruaj / Rúaj</div>
+        <div class="meaning">espíritu; ánimo; poder</div>
+        <div class="meta">Aparece en varios libros con matices distintos</div>
+      </div>
+
+      <div class="card">
+        <div class="hebrew">שָׁלוֹם</div>
+        <div class="translit">Shalom</div>
+        <div class="meaning">paz; completitud; ausencia de deudas</div>
+        <div class="meta">Tema transversal en varios corpus</div>
+      </div>
+
+      <div class="card">
+        <div class="hebrew">מָשִׁיחַ</div>
+        <div class="translit">Mashiaj</div>
+        <div class="meaning">Mesías; Ungido</div>
+        <div class="meta">Entrada con alta relación interlibros</div>
+      </div>
+    </section>
+
+    <aside class="detail">
+      <h2>Detalle contextual</h2>
+
+      <div class="detail-box">
+        <div class="hebrew">רוּחַ</div>
+        <div class="translit">Ruaj / Rúaj</div>
+        <div class="meaning">espíritu; poder; ánimo; viento</div>
+        <p style="margin-top:10px; line-height:1.6;">
+          Término con alta variación contextual. En algunos libros apunta a poder,
+          en otros a ánimo, impulso, fuerza o hálito.
+        </p>
+        <div class="chips">
+          <span class="chip">hebreo</span>
+          <span class="chip">tema transversal</span>
+          <span class="chip">alta frecuencia</span>
+        </div>
+      </div>
+
+      <h2 style="margin-top:20px;">Apariciones relacionadas</h2>
+
+      <div class="related-item">
+        <strong>Qohelet</strong>
+        mente; ánimo; motivación; poder
+      </div>
+
+      <div class="related-item">
+        <strong>Shir Hashirim</strong>
+        espíritu; viento; hálito
+      </div>
+
+      <div class="related-item">
+        <strong>1 Tesalonicenses</strong>
+        ánimo; motor; poder
+      </div>
+
+      <div class="related-item">
+        <strong>Apocalipsis</strong>
+        espíritu; poder
+      </div>
+    </aside>
+  </main>
+</body>
+</html>
