@@ -128,8 +128,8 @@
           <p class="dic-hebrew">${safe(entry.texto_hebreo) || '—'}</p>
           <p class="dic-translit">${safe(entry.transliteracion) || '—'}</p>
           <p class="dic-meaning">${safe(entry.equivalencia_espanol) || '—'}</p>
-          <p class="dic-meta">${safe(entry.libro)} · ID ${safe(entry.id)}</p>
-        `;
+          <p class="dic-meta">${safe(entry.observacion) || 'Sin observación.'}</p>
+                  `;
 
         const activate = () => {
           state.activeId = entry.id;
