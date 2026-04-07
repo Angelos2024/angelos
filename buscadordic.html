@@ -12,7 +12,6 @@
             <button type="button" id="dicBackButton" class="dic-back-btn">← Volver</button>
       <h1>Diccionario Teológico Bíblico por contextos </h1>
       <p class="dic-subtitle">Extraído de los estudios del profesor Eric de Jesus Rodríguez.</p>
-      <label class="dic-search-label" for="dicSearch">Buscar entrada</label>
       <form id="dicSearchForm" class="dic-search-form">
   <input id="dicSearch" class="dic-search" type="search" placeholder="Buscar por hebreo, transliteración, español, observación o libro..." autocomplete="off" />
           <button type="submit" id="dicSearchButton" class="dic-search-btn">Buscar</button>
@@ -205,7 +204,6 @@
       const related = state.entries
         .filter((entry) => entry.id !== active.id && stripHebrewDiacritics(entry.texto_hebreo) === lemma);
 
-      const relatedSameBook = related.filter((entry) => entry.libro === active.libro);
 
       const makeRelatedHtml = (entries, emptyMessage) => entries.length
         ? entries.map((entry) => `
@@ -222,10 +220,7 @@
         'No se encontraron entradas relacionadas para este lema.'
       );
 
-      const sameBookHtml = makeRelatedHtml(
-        relatedSameBook,
-        'Este lema no se repite en el mismo libro.'
-      );
+ 
 
       detailEl.className = '';
       detailEl.innerHTML = `
@@ -244,10 +239,7 @@
           <h3>Entradas relacionadas por lema</h3>
                     <ul>${relatedHtml}</ul>
         </section>
-          <section class="dic-related">
-          <h3>Repeticiones del lema en el mismo libro</h3>
-          <ul>${sameBookHtml}</ul>
-        </section>
+
       `;
     }
 
