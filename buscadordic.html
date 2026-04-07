@@ -74,6 +74,19 @@ const SOURCES = [
      const normalizeSearchText = (text) => safe(text).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
     const hasHebrewChars = (text) => /[\u0590-\u05FF]/.test(text);
     const hasSpanishMarkers = (text) => /[áéíóúñü¿¡]/i.test(text);
+      const capitalizeSentence = (text) => text.replace(/^([a-záéíóúñü])/i, (char) => char.toUpperCase());
+    const formatObservationHtml = (value) => {
+      const text = safe(value).trim();
+      if (!text) return 'Sin observación.';
+
+      const sentences = text
+        .split('.')
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .map((item) => `<span class="dic-observation-line">${capitalizeSentence(item)}.</span>`);
+
+      return sentences.length ? sentences.join('') : 'Sin observación.';
+    };
 
     function getSearchFieldPriority(queryRaw) {
       if (hasHebrewChars(queryRaw)) {
@@ -216,8 +229,8 @@ const SOURCES = [
             <li class="dic-related-item">
              <strong>${safe(entry.libro)}</strong>
               <div class="dic-related-meaning">${safe(entry.equivalencia_espanol) || safe(entry.transliteracion) || '—'}</div>
-              <small class="dic-related-observation">${safe(entry.observacion) || 'Sin observación.'}</small>
-            </li>
+              <small class="dic-related-observation">${formatObservationHtml(entry.observacion)}</small>
+                          </li>
           `).join('')
 : `<li class="dic-related-item">${emptyMessage}</li>`;
 
@@ -234,8 +247,8 @@ const SOURCES = [
           <p class="dic-hebrew">${safe(active.texto_hebreo) || '—'}</p>
           <p class="dic-translit">${safe(active.transliteracion) || '—'}</p>
           <p class="dic-meaning">${safe(active.equivalencia_espanol) || '—'}</p>
-          <p class="dic-observation">${safe(active.observacion) || 'Sin observación.'}</p>
-          <div class="dic-tags">
+          <p class="dic-observation">${formatObservationHtml(active.observacion)}</p>
+                    <div class="dic-tags">
             <span class="dic-tag">${safe(active.libro)}</span>
             <span class="dic-tag">Lema ${lemma || '—'}</span>
           </div>

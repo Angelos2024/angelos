@@ -248,6 +248,12 @@ body {
   margin: 0.7rem 0 0;
   line-height: 1.6;
 }
+.dic-observation-line {
+  display: block;
+  padding-bottom: 0.18rem;
+  margin-bottom: 0.18rem;
+  border-bottom: 1px solid #4b2743;
+}
 
 .dic-tags {
   margin-top: 0.75rem;
@@ -294,6 +300,9 @@ body {
 .dic-related-item strong {
   display: block;
   margin-bottom: 0.22rem;
+}
+.dic-related-observation {
+  display: block;
 }
 
 @media (max-width: 1024px) {
