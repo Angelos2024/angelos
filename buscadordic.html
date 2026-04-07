@@ -14,8 +14,8 @@
       <p class="dic-subtitle">Extraído de los estudios del profesor Eric de Jesus Rodríguez.</p>
       <label class="dic-search-label" for="dicSearch">Buscar entrada</label>
       <form id="dicSearchForm" class="dic-search-form">
-        <input id="dicSearch" class="dic-search" type="search" placeholder="Buscar por id, hebreo, transliteración, español, observación o libro..." autocomplete="off" />
-        <button type="submit" id="dicSearchButton" class="dic-search-btn">Buscar</button>
+  <input id="dicSearch" class="dic-search" type="search" placeholder="Buscar por hebreo, transliteración, español, observación o libro..." autocomplete="off" />
+          <button type="submit" id="dicSearchButton" class="dic-search-btn">Buscar</button>
       </form>
     </div>
   </header>
@@ -66,6 +66,20 @@
 
     const safe = (value) => String(value ?? '');
     const stripHebrewDiacritics = (text) => safe(text).normalize('NFD').replace(/[\u0591-\u05C7]/g, '').trim();
+     const normalizeSearchText = (text) => safe(text).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    const hasHebrewChars = (text) => /[\u0590-\u05FF]/.test(text);
+    const hasSpanishMarkers = (text) => /[áéíóúñü¿¡]/i.test(text);
+
+    function getSearchFieldPriority(queryRaw) {
+      if (hasHebrewChars(queryRaw)) {
+        return ['texto_hebreo', 'transliteracion', 'equivalencia_espanol'];
+      }
+      if (hasSpanishMarkers(queryRaw)) {
+        return ['equivalencia_espanol', 'transliteracion', 'texto_hebreo'];
+      }
+      return ['transliteracion', 'equivalencia_espanol', 'texto_hebreo'];
+    }
+
 
     function makeFilterButtons() {
       filtersEl.innerHTML = '';
@@ -84,25 +98,49 @@
       });
     }
 
-    function entryMatches(entry, query) {
-      if (!query) return true;
-      const haystack = [
-        entry.id,
-        entry.texto_hebreo,
-        entry.transliteracion,
-        entry.equivalencia_espanol,
-        entry.observacion,
-        entry.libro,
-      ].map(safe).join(' ').toLowerCase();
-      return haystack.includes(query.toLowerCase());
-    }
+ function rankEntryByQuery(entry, rawQuery) {
+      const query = normalizeSearchText(rawQuery);
+      if (!query) return { matches: true, fieldRank: -1, indexRank: -1 };
+
+      const orderedFields = getSearchFieldPriority(rawQuery);
+      for (let fieldIndex = 0; fieldIndex < orderedFields.length; fieldIndex += 1) {
+        const field = orderedFields[fieldIndex];
+        const value = normalizeSearchText(entry[field]);
+        const index = value.indexOf(query);
+        if (index >= 0) {
+          return { matches: true, fieldRank: fieldIndex, indexRank: index };
+        }
+      }
+
+      const secondaryFields = [entry.observacion, entry.libro];
+      for (const valueRaw of secondaryFields) {
+        const value = normalizeSearchText(valueRaw);
+        const index = value.indexOf(query);
+        if (index >= 0) {
+          return { matches: true, fieldRank: 99, indexRank: index };
+        }
+      }
+
+      return { matches: false, fieldRank: 999, indexRank: 999 };
+}
 
     function applyFilters() {
-      state.filtered = state.entries.filter((entry) => {
-        const byBook = state.filter === 'Todos' || entry.libro === state.filter;
-        return byBook && entryMatches(entry, state.query);
-      });
-
+        state.filtered = state.entries
+        .map((entry, sourceIndex) => ({
+          entry,
+          sourceIndex,
+          rank: rankEntryByQuery(entry, state.query),
+        }))
+        .filter(({ entry, rank }) => {
+          const byBook = state.filter === 'Todos' || entry.libro === state.filter;
+          return byBook && rank.matches;
+        })
+        .sort((a, b) => (
+          a.rank.fieldRank - b.rank.fieldRank
+          || a.rank.indexRank - b.rank.indexRank
+          || a.sourceIndex - b.sourceIndex
+        ))
+        .map(({ entry }) => entry);
       if (!state.filtered.some((entry) => entry.id === state.activeId)) {
         state.activeId = state.filtered[0]?.id ?? null;
       }
@@ -172,9 +210,9 @@
       const makeRelatedHtml = (entries, emptyMessage) => entries.length
         ? entries.map((entry) => `
             <li class="dic-related-item">
-              <strong>${safe(entry.libro)} · ID ${safe(entry.id)}</strong>
-                            <span>${safe(entry.equivalencia_espanol) || safe(entry.transliteracion) || '—'}</span>
-                        <small>${safe(entry.observacion) || 'Sin observación.'}</small>
+             <strong>${safe(entry.libro)}</strong>
+              <div class="dic-related-meaning">${safe(entry.equivalencia_espanol) || safe(entry.transliteracion) || '—'}</div>
+              <small class="dic-related-observation">${safe(entry.observacion) || 'Sin observación.'}</small>
             </li>
           `).join('')
 : `<li class="dic-related-item">${emptyMessage}</li>`;
@@ -198,7 +236,6 @@
           <p class="dic-observation">${safe(active.observacion) || 'Sin observación.'}</p>
           <div class="dic-tags">
             <span class="dic-tag">${safe(active.libro)}</span>
-            <span class="dic-tag">ID ${safe(active.id)}</span>
             <span class="dic-tag">Lema ${lemma || '—'}</span>
           </div>
         </div>

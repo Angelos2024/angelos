@@ -281,7 +281,17 @@ body {
   display: block;
   margin-bottom: 0.22rem;
 }
+.dic-related-meaning {
+  margin-top: 0.2rem;
+  font-weight: 600;
+}
 
+.dic-related-observation {
+  display: block;
+  margin-top: 0.52rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
 @media (max-width: 1024px) {
   .dic-layout {
     grid-template-columns: 1fr;
