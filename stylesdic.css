@@ -252,7 +252,7 @@ body {
   display: block;
   padding-bottom: 0.18rem;
   margin-bottom: 0.18rem;
-  border-bottom: 1px solid #4b2743;
+  border-bottom: 1px solid #fffdfb;
 }
 
 .dic-tags {
@@ -300,6 +300,14 @@ body {
 .dic-related-item strong {
   display: block;
   margin-bottom: 0.22rem;
+}
+.dic-related-meaning {
+  display: inline-block;
+  margin: 0.2rem 0 0.32rem;
+  padding: 0.22rem 0.5rem;
+  border-radius: 0.42rem;
+  background: #4b2743;
+  color: #ffffff;
 }
 .dic-related-observation {
   display: block;
