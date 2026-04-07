@@ -29,13 +29,19 @@ body {
 .dic-header {
   background: linear-gradient(130deg, #4b2743, #5f3855);
   color: var(--primary-contrast);
-  padding: 0.85rem 0 0.65rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.55rem 0 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+.dic-header-top {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
 }
 
 .dic-header h1 {
-  margin: 0 0 0.2rem;
-    font-size: clamp(1.6rem, 2.8vw, 1.0rem);
+  margin: 0;
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  line-height: 1.2;
 }
 .dic-back-btn{
   border:1px solid rgba(255, 248, 244, 0.48);
@@ -44,16 +50,24 @@ body {
   border-radius:999px;
   padding:.42rem .82rem;
   font-size:.9rem;
-  margin:0 0 .42rem;
+    margin:0;
     cursor:pointer;
+      flex: 0 0 auto;
 }
 .dic-back-btn:hover{
   background:rgba(255, 248, 244, 0.28);
 }
+.dic-total {
+  margin: 0 0 0 auto;
+  font-size: 0.86rem;
+  opacity: 0.92;
+  white-space: nowrap;
+}
 .dic-subtitle {
-  margin: 0 0 0.42rem;
-  max-width: 70ch;
+  margin: 0.22rem 0 0.35rem;
+    max-width: 70ch;
   opacity: 0.9;
+    font-size: 0.92rem;
 }
 
 .dic-search-label {
@@ -299,6 +313,15 @@ body {
   }
 
   .dic-search-btn {
+    width: 100%;
+  }
+   .dic-header-top {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+  }
+
+  .dic-total {
+    margin-left: 0;
     width: 100%;
   }
 }

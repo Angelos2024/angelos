@@ -9,8 +9,11 @@
 <body>
   <header class="dic-header">
     <div class="dic-wrap">
-            <button type="button" id="dicBackButton" class="dic-back-btn">← Volver</button>
-      <h1>Diccionario Teológico Bíblico por contextos </h1>
+            <div class="dic-header-top">
+        <button type="button" id="dicBackButton" class="dic-back-btn">← Volver</button>
+        <h1>Diccionario Teológico Bíblico por contextos</h1>
+        <p id="dicTotalEntries" class="dic-total">0 entradas disponibles</p>
+      </div>
       <p class="dic-subtitle">Extraído de los estudios del profesor Eric de Jesus Rodríguez.</p>
       <form id="dicSearchForm" class="dic-search-form">
   <input id="dicSearch" class="dic-search" type="search" placeholder="Buscar por hebreo, transliteración, español, observación o libro..." autocomplete="off" />
@@ -62,6 +65,7 @@
     const resultsEl = document.getElementById('dicResults');
     const detailEl = document.getElementById('dicDetail');
     const countEl = document.getElementById('dicCount');
+        const totalEntriesEl = document.getElementById('dicTotalEntries');
 
     const safe = (value) => String(value ?? '');
     const stripHebrewDiacritics = (text) => safe(text).normalize('NFD').replace(/[\u0591-\u05C7]/g, '').trim();
@@ -273,10 +277,13 @@
     async function init() {
       try {
         state.entries = await loadSources();
+         totalEntriesEl.textContent = `${state.entries.length} entradas disponibles`;
+
 
         makeFilterButtons();
         applyFilters();
       } catch (error) {
+                totalEntriesEl.textContent = '0 entradas disponibles';
         countEl.textContent = '0 resultado(s)';
         resultsEl.innerHTML = '<p class="dic-empty">No se pudieron cargar los archivos del diccionario.</p>';
         detailEl.className = 'dic-detail-empty';
