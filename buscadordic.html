@@ -40,16 +40,18 @@
   </main>
 
   <script>
-    const LIBROS = ['Todos', 'Qohelet', 'Parashot', 'Apocalipsis', 'Shir Hashirim', '1 Tesalonicenses', '2 Tesalonicenses', 'Salmos'];
-    const SOURCES = [
-      { libro: 'Qohelet', url: './dic/Diccionarioboton/diccionario_qohelet.json' },
-      { libro: 'Parashot', url: './dic/Diccionarioboton/diccionario_parashot.json' },
-      { libro: 'Apocalipsis', url: './dic/Diccionarioboton/diccionario_apocalipsis.json' },
-      { libro: 'Shir Hashirim', url: './dic/Diccionarioboton/diccionario_shir_hashirim.json' },
-      { libro: '1 Tesalonicenses', url: './dic/Diccionarioboton/diccionario_1tesalonicenses.json' },
-      { libro: '2 Tesalonicenses', url: './dic/Diccionarioboton/diccionario_2tesalonicenses.json' },
-      { libro: 'Salmos', url: './dic/Diccionarioboton/diccionario_salmos.json' },
-    ];
+  const LIBROS = ['Todos', 'Parashot', 'Salmos', 'Qohelet', 'Shir Hashirim', '1 Tesalonicenses', '2 Tesalonicenses', 'Efesios', 'Apocalipsis'];
+
+const SOURCES = [
+  { libro: 'Parashot', url: './dic/Diccionarioboton/diccionario_parashot.json' },
+  { libro: 'Salmos', url: './dic/Diccionarioboton/diccionario_salmos.json' },
+  { libro: 'Qohelet', url: './dic/Diccionarioboton/diccionario_qohelet.json' },
+  { libro: 'Shir Hashirim', url: './dic/Diccionarioboton/diccionario_shir_hashirim.json' },
+  { libro: '1 Tesalonicenses', url: './dic/Diccionarioboton/diccionario_1tesalonicenses.json' },
+  { libro: '2 Tesalonicenses', url: './dic/Diccionarioboton/diccionario_2tesalonicenses.json' },
+  { libro: 'Efesios', url: './dic/Diccionarioboton/diccionario_efesios.json' },
+  { libro: 'Apocalipsis', url: './dic/Diccionarioboton/diccionario_apocalipsis.json' },
+];
 
     const state = {
       query: '',

@@ -11,6 +11,7 @@
   const JSON_SOURCES = [
     { url: '../dic/diccionario_eric/diccionario_1tesalonicenses.json', book: '1 Tesalonicenses' },
     { url: '../dic/diccionario_eric/diccionario_2tesalonicenses.json', book: '2 Tesalonicenses' },
+        { url: '../dic/diccionario_eric/diccionario_efesios.json', book: 'Efesios' },
     { url: '../dic/diccionario_eric/diccionario_apocalipsis.json', book: 'Apocalipsis' },
     { url: '../dic/diccionario_eric/diccionario_salmos.json', book: 'Salmos' },
     { url: '../dic/diccionario_eric/diccionario_qohelet.json', book: 'Qohelet' },
