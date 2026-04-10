@@ -26,6 +26,7 @@
    let hebrewRootsPromise = null;
   let hebrewRootsIndex = null;
     let hebrewRootsStrongIndex = null;
+      let hebrewRootsByRootKeyIndex = null;
      let hebrewUnifiedPromise = null;
   let hebrewUnifiedStrongIndex = null;
   let lxxFrequencyIndexPromise = null;
@@ -149,8 +150,49 @@ return Array.from(new Set(words));
       const withoutArticleAfterPrefix = normalizeHebrewRootKey(`${prefixedArticleMatch[1]}${prefixedArticleMatch[2]}`);
       if (withoutArticleAfterPrefix) keys.add(withoutArticleAfterPrefix);
     }
-
+ const baseConsonants = normalized.replace(/\s+/g, '');
+    const stems = buildHebrewRootCandidateStems(baseConsonants);
+    stems.forEach((stem) => {
+      const stemKey = normalizeHebrewRootKey(stem);
+      if (stemKey) keys.add(stemKey);
+    });
     return Array.from(keys);
+  }
+  function buildHebrewRootCandidateStems(token) {
+    const value = String(token || '').trim();
+    if (!value) return [];
+
+    const out = new Set();
+    const queue = [value];
+    const seen = new Set();
+    const removablePrefixes = ['ו', 'ב', 'כ', 'ל', 'מ', 'ש', 'ה', 'ת', 'י', 'נ', 'א'];
+    const removableSuffixes = [
+      'נו', 'ני', 'תם', 'תן', 'ת', 'תי', 'ך', 'כם', 'כן', 'ם', 'ן', 'ה', 'ו', 'י'
+    ];
+
+    while (queue.length) {
+      const current = queue.shift();
+      if (!current || seen.has(current)) continue;
+      seen.add(current);
+      if (current.length >= 3) out.add(current);
+
+      if (current.length > 3 && removablePrefixes.includes(current[0])) {
+        queue.push(current.slice(1));
+      }
+      for (const suffix of removableSuffixes) {
+        if (current.length - suffix.length < 3) continue;
+        if (current.endsWith(suffix)) queue.push(current.slice(0, -suffix.length));
+      }
+    }
+
+    return Array.from(out);
+  }
+
+  function extractLeadingHebrewToken(text) {
+    const normalized = normalizeHebrewRootKey(text);
+    if (!normalized) return '';
+    const match = normalized.match(/^[\u05D0-\u05EA]+/u);
+    return match ? match[0] : '';
   }
   function normalizeStrongKey(value) {
   const match = String(value || '').toUpperCase().match(/H?\s*0*(\d{1,4})/);
@@ -184,6 +226,7 @@ async function ensureHebrewUnifiedLoaded() {
         const entries = Array.isArray(payload) ? payload : [];
         const strongIndex = new Map();
 
+
         entries.forEach((entry) => {
           const strongKey = normalizeStrongKey(entry?.strong || entry?.strong_detail?.strong || '');
           if (strongKey && !strongIndex.has(strongKey)) strongIndex.set(strongKey, entry);
@@ -210,23 +253,28 @@ async function ensureHebrewUnifiedLoaded() {
         const entries = Array.isArray(payload) ? payload : [];
         const index = new Map();
         const strongIndex = new Map();
+        const rootKeyIndex = new Map();
 
         entries.forEach((entry) => {
           const key = normalizeHebrewRootKey(entry?.lexeme || '');
-        const strongKey = normalizeStrongKey(entry?.strong || '');
+ const strongKey = normalizeStrongKey(entry?.strong || '');
+          const rootToken = extractLeadingHebrewToken(entry?.root_first_segment || '');
 
           if (key && !index.has(key)) index.set(key, entry);
           if (strongKey && !strongIndex.has(strongKey)) strongIndex.set(strongKey, entry);
            });
+          if (rootToken && !rootKeyIndex.has(rootToken)) rootKeyIndex.set(rootToken, entry);
         
         hebrewRootsIndex = index;
         hebrewRootsStrongIndex = strongIndex;
+        hebrewRootsByRootKeyIndex = rootKeyIndex;
         return index;
       }).catch((error) => {
         console.warn('No se pudo cargar dic/hebrew_roots.json.', error);
         hebrewRootsIndex = new Map();
-         hebrewRootsStrongIndex = new Map();
-        return hebrewRootsIndex;
+ hebrewRootsStrongIndex = new Map();
+        hebrewRootsByRootKeyIndex = new Map();
+                return hebrewRootsIndex;
       });
     }
     return hebrewRootsPromise;
@@ -348,10 +396,12 @@ function getStrongReferenceLabel(strong) {
     try {
       await Promise.all([ensureHebrewRootsLoaded(), ensureHebrewUnifiedLoaded()]);
       const index = hebrewRootsIndex || new Map();
+            const rootIndex = hebrewRootsByRootKeyIndex || new Map();
 let rootEntry = (normalizedStrong && getHebrewRootEntryByStrong(normalizedStrong)) || null;
       if (!rootEntry) {
         for (const key of lookupKeys) {
           rootEntry = index.get(key) || null;
+          if (!rootEntry) rootEntry = rootIndex.get(key) || null;
           if (rootEntry) break;
         }
       }

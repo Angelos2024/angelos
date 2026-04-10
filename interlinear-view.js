@@ -329,7 +329,9 @@ function getHebrewTokenLookupForms(orig){
   }
 
   function mapHebrewTokenToSpanish(token, map){
-      if(!token) return '-';
+      if(!token) return '-';  
+      const negativeExistential = mapHebrewNegativeExistentialToken(token);
+      if(negativeExistential) return negativeExistential;
       const pointedKey = normalizeToken(token, true, false, true);
       const plainKey = normalizeToken(token, true);
       if(pointedKey && map.pointedMap?.has(pointedKey)) return map.pointedMap.get(pointedKey);
@@ -348,7 +350,44 @@ function getHebrewTokenLookupForms(orig){
       if(rebuiltCompoundDirect) return rebuiltCompoundDirect;
       return '-';
     }
+function mapHebrewNegativeExistentialToken(token){
+    const pointed = normalizeToken(token, true, false, true);
+    const plain = normalizeToken(token, true);
+    if(!plain) return '';
 
+    const prefixedWithVav = /^ו/.test(plain);
+    const corePlain = prefixedWithVav ? plain.slice(1) : plain;
+    const corePointed = prefixedWithVav
+      ? pointed.replace(/^ו[\u0591-\u05C7]*/, '')
+      : pointed;
+    if(!corePlain) return '';
+
+    const variants = {
+      // Formas puntuadas (prioridad alta).
+      'אֵינָם': 'ellos no están',
+      'אֵינֶנּוּ': 'él no está',
+      'אֵינֵנוּ': 'nosotros no estamos',
+      'אֵינָהּ': 'ella no está',
+      'אֵינֶנִּי': 'yo no estoy',
+      'אֵינְךָ': 'tú no estás',
+      'אֵינֵךְ': 'tú no estás',
+
+      // Formas sin puntos (fallback).
+      'אינם': 'ellos no están',
+      'אינן': 'ellas no están',
+      'איננו': 'él no está / no estamos',
+      'אינה': 'ella no está',
+      'אינני': 'yo no estoy',
+      'אינך': 'tú no estás',
+      'אינכם': 'ustedes no están (m)',
+      'אינכן': 'ustedes no están (f)'
+    };
+
+    const resolved = variants[corePointed] || variants[corePlain] || '';
+    if(!resolved) return '';
+    return prefixedWithVav ? `y ${resolved}` : resolved;
+  }
+ 
     function getHebrewFallbackLookupKeys(plainToken){
     const token = String(plainToken || '');
     if(!token) return [];
