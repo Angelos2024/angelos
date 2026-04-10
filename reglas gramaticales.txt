@@ -1,0 +1,96 @@
+{
+  "version": "3.0_Biblical_Exegesis_Advanced",
+  "descripcion": "Módulos avanzados: Vav Consecutiva, Flexiones Verbales, Sufijos Plurales y Sintaxis",
+  
+  "logica_especial_VAV_CONSECUTIVA": {
+    "concepto": "Invierte el tiempo del verbo (Pasado -> Futuro, o Futuro -> Pasado)",
+    "reglas": [
+      {
+        "caso": "FUTURO_A_PASADO",
+        "condicion": "Se une a un verbo en Yiqtol (Imperfecto)",
+        "resultado": "Prefijo Vav + Pathach ( ַ ) + Dagesh Forte en la letra siguiente (וַיּ)",
+        "excepcion": "Si la letra siguiente es Aleph (א), el Pathach se alarga a Qamets (וָא) por rechazo al Dagesh",
+        "ejemplo": "וַיֹּאמֶר (Vayomer) - 'Y él dijo' (Vav + Futuro = Pasado)"
+      },
+      {
+        "caso": "PASADO_A_FUTURO",
+        "condicion": "Se une a un verbo en Qatal (Perfecto)",
+        "resultado": "Se vocaliza como la Vav Conjunción estándar (וְ / וּ)",
+        "nota_fonetica": "Suele desplazar el acento a la última sílaba",
+        "ejemplo": "וְשָׁמַרְתָּ (Veshamarta) - 'Y tú guardarás' (Vav + Pasado = Futuro)"
+      }
+    ]
+  },
+
+  "logica_flexiones_verbales_basicas": {
+    "nota": "Afijos que determinan la persona, género y número (Tiempo QAL)",
+    "tiempo_qatal_perfecto": {
+      "concepto": "Acción completada (Pasado). Se conjuga mediante SUFIJOS.",
+      "terminaciones": {
+        "1cs_yo": "תִּי (-ti)",
+        "2ms_tu_m": "תָּ (-ta)",
+        "2fs_tu_f": "תְּ (-t)",
+        "3ms_el": "(Raíz pura, sin sufijo)",
+        "3fs_ella": "ָה (-ah)",
+        "1cp_nosotros": "נוּ (-nu)",
+        "2mp_vosotros_m": "תֶּם (-tem)",
+        "2fp_vosotros_f": "תֶּן (-ten)",
+        "3cp_ellos_ellas": "וּ (-u)"
+      }
+    },
+    "tiempo_yiqtol_imperfecto": {
+      "concepto": "Acción incompleta (Futuro/Presente). Se conjuga principalmente mediante PREFIJOS.",
+      "identificadores": {
+        "1cs_yo": "Prefijo Aleph (א)",
+        "2ms_tu_m": "Prefijo Tav (ת)",
+        "3ms_el": "Prefijo Yod (י)",
+        "1cp_nosotros": "Prefijo Nun (נ)"
+      }
+    }
+  },
+
+  "logica_sufijos_pronominales_plurales": {
+    "nota": "Se añaden a sustantivos PLURALES. Se distinguen por la Yod (י) intercalada.",
+    "tabla_sufijos": {
+      "1cs_mis": "ַי (-ai)",
+      "2ms_tus_m": "ֶיךָ (-ekha)",
+      "2fs_tus_f": "ַיִךְ (-ayikh)",
+      "3ms_sus_m": "ָיו (-av)",
+      "3fs_sus_f": "ֶיהָ (-eyha)",
+      "1cp_nuestros": "ֵינוּ (-einu)",
+      "2mp_vuestros_m": "ֵיכֶם (-eikhem)",
+      "2fp_vuestros_f": "ֵיכֶן (-eikhen)",
+      "3mp_sus_pl_m": "ֵיהֶם (-eihem)",
+      "3fp_sus_pl_f": "ֵיהֶן (-eihen)"
+    },
+    "ejemplo_diagnostico": "סוּס (Caballo) -> סוּסוֹ (Su caballo) vs סוּסָיו (Sus caballos)"
+  },
+
+  "logica_declinacion_preposiciones": {
+    "concepto": "Preposiciones inseparables (B, L) + Sufijos Pronominales",
+    "ejemplo_lamed": {
+      "a_mi": "לִי (Li)",
+      "a_ti_m": "לְךָ (Lekha)",
+      "a_el": "לוֹ (Lo)",
+      "a_nosotros": "לָנוּ (Lanu)",
+      "a_ellos": "לָהֶם (Lahem)"
+    }
+  },
+
+  "sintaxis_particulas_criticas": {
+    "marcador_objeto_directo": {
+      "particula": "אֵת / אֶת־ (Et)",
+      "funcion": "Señala quién o qué recibe la acción del verbo. No tiene traducción al español.",
+      "regla_de_uso": "Aparece SOLO antes de sustantivos DEFINIDOS (con artículo, nombres propios o con sufijos pronominales).",
+      "ejemplo": "Bara Elohim ET ha-shamayim (Creó Dios [marcador] los cielos)"
+    }
+  },
+
+  "guia_diagnostico_interlinear_actualizada": {
+    "paso_01": "Identificar si la primera palabra es Vav. Evaluar vocalización para determinar si es Conjunción (y) o Consecutiva (cambio de tiempo).",
+    "paso_02": "Separar prefijos preposicionales (B, K, L, Min) verificando si hay Artículo Oculto.",
+    "paso_03": "Separar sufijos al final de la palabra. Si hay una Yod (י) antes del sufijo, el objeto poseído es Plural.",
+    "paso_04": "Con la raíz aislada, verificar si es un Verbo analizando los prefijos/sufijos de Qatal o Yiqtol.",
+    "paso_05": "Identificar partículas sintácticas como 'Et' para mapear la acción del Sujeto hacia el Objeto."
+  }
+}
