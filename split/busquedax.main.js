@@ -343,8 +343,11 @@ function mapLxxRefsToHebrewRefs(refs) {
               ? tokens.map((token) => token?.w).filter(Boolean).join(' ')
               : '';
           } else {
-            const verses = await loadChapterText(lang, book, chapter, options);
-            verseText = getVerseTextFromChapter(verses, verse) || '';
+let verses = await loadChapterText(lang, book, chapter, options);
+          let fallbackVerses = null;
+          const normalizedBook = String(book || '').trim().toLowerCase();
+          const canRetryWithNormalizedBook = normalizedBook && normalizedBook !== String(book || '').trim();
+                      verseText = getVerseTextFromChapter(verses, verse) || '';
           }
         } catch (error) {
           if (isAbortError(error)) throw error;
@@ -554,15 +557,17 @@ function mapLxxRefsToHebrewRefs(refs) {
           const verses = await loadChapterText(lang, book, chapter, options);
           versesNeeded.forEach((v) => {
             const canonicalRef = `${book}|${chapter}|${v}`;
-            let text = '';
-            if (Array.isArray(verses)) {
-              text = verses[v - 1] || '';
-            } else if (verses && typeof verses === 'object') {
-              text = verses[v] || verses[String(v)] || verses[String(v - 1)] || '';
+            let text = getVerseTextFromChapter(verses, v);
+            if (!text && canRetryWithNormalizedBook) {
+              if (fallbackVerses === null) {
+                fallbackVerses = loadChapterText(lang, normalizedBook, chapter, options).catch(() => false);
+              }
+              cache.set(canonicalRef, fallbackVerses);
+              return;
             }
 
-            cache.set(canonicalRef, text);
-          });
+            cache.set(canonicalRef, text || '');
+                      });
         }
       } catch (e) {
      if (isAbortError(e)) throw e;
