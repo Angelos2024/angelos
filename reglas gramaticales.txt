@@ -1,4 +1,191 @@
 {
+  "version": "2.0_Biblical_Exegesis",
+  "descripcion": "Lógica exhaustiva de preposiciones inseparables (BKL), Min y la Conjunción Vav",
+  "configuracion_fonetica": {
+    "clases_letras": {
+      "guturales": ["א", "ה", "ח", "ע"],
+      "resh": ["ר"],
+      "labiales": ["ב", "מ", "פ"],
+      "quiescentes_potenciales": ["א", "י"],
+      "sibilantes": ["ז", "ס", "צ", "שׁ", "שׂ"]
+    },
+    "reglas_oro": [
+      "No pueden existir dos Shevas seguidos al inicio de palabra",
+      "Las guturales y la Resh no aceptan Dagesh Forte",
+      "El artículo definido (He) desaparece si se le antepone B, K o L"
+    ]
+  },
+  "logica_preposiciones_BKL": {
+    "prefijos": ["בְּ", "כְּ", "לְ"],
+    "arbol_de_decision": [
+      {
+        "caso": "ESTÁNDAR",
+        "condicion": "Consonante inicial con vocal plena (no reducida)",
+        "resultado": "Prefijo + Sheva Vocal",
+        "ejemplo": "בְּמֶלֶךְ (En un rey)"
+      },
+      {
+        "caso": "REGLA_DOS_SHEVAS",
+        "condicion": "Palabra comienza con Sheva (Cְ)",
+        "resultado": "Prefijo toma Hireq ( ִ ). La segunda Sheva se vuelve Muda",
+        "excepcion": "Si la consonante es Yod (יְ), ver REGLA_YOD",
+        "ejemplo": "לִשְׁמוּאֵל (A Samuel)"
+      },
+      {
+        "caso": "REGLA_YOD_QUIESCENTE",
+        "condicion": "Palabra comienza con Yod + Sheva (יְ)",
+        "resultado": "Prefijo toma Hireq ( ִ ) + Yod pierde su Sheva y se vuelve Quiescente (vocal larga i)",
+        "ejemplo": "בִּיהוּדָה (En Judá - No se pronuncia la Y como consonante)"
+      },
+      {
+        "caso": "REGLA_CHATEF",
+        "condicion": "La gutural inicial tiene vocal reducida (Chatef)",
+        "resultado": "El prefijo toma la 'vocal corta' correspondiente al Chatef",
+        "subcasos": [
+          {"si": "Chatef Pathach ( ֲ )", "entonces": "Prefijo toma Pathach ( ַ )"},
+          {"si": "Chatef Segol ( ֱ )", "entonces": "Prefijo toma Segol ( ֶ )"},
+          {"si": "Chatef Qamets ( ֳ )", "entonces": "Prefijo toma Qamets-Chatuf ( ָ )"}
+        ],
+        "excepcion_Elohim": "En אֱלֹהִים, el prefijo toma Tsere ( ֵ ) y el Alef queda quiescente: לֵאלֹהִים"
+      },
+      {
+        "caso": "SINCOPE_ARTICULO",
+        "condicion": "La palabra tiene artículo definido (הַ / הָ)",
+        "resultado": "La preposición ELIMINA a la letra He y ROBA su vocalización",
+        "importancia_exegetica": "Si ves una preposición con Pathach/Qamets y Dagesh después, el artículo está 'escondido' allí",
+        "ejemplo": "כַּמֶּלֶךְ (Como EL rey, no como UN rey)"
+      }
+    ]
+  },
+  "logica_preposicion_MIN": {
+    "prefijo_aislado": "מִן",
+    "prefijo_unido": "מִ",
+    "arbol_de_decision": [
+      {
+        "caso": "ASIMILACION_FUERTE",
+        "condicion": "Consonante inicial NO es gutural ni Resh",
+        "resultado": "Prefijo מִ + Dagesh Forte en la siguiente letra (compensando la Nun perdida)",
+        "ejemplo": "מִמֶּלֶךְ (De un rey)"
+      },
+      {
+        "caso": "ALARGAMIENTO_COMPENSATORIO",
+        "condicion": "Consonante inicial es Gutural (א, ה, ע) o Resh (ר)",
+        "resultado": "La vocal del prefijo cambia de Hireq ( ִ ) a Tsere ( ֵ ) para compensar que no puede haber Dagesh",
+        "ejemplo": "מֵאִישׁ (De un hombre), מֵרֹאשׁ (Desde el principio)"
+      },
+      {
+        "caso": "DUPLICACION_VIRTUAL",
+        "condicion": "Consonante inicial es Het (ח) o a veces He (ה)",
+        "resultado": "Se mantiene Hireq ( ִ ) pero NO hay dagesh. Se asume que la letra está duplicada 'virtualmente'",
+        "ejemplo": "מִחוּץ (Desde fuera)"
+      }
+    ]
+  },
+  "logica_especial_VAV_CONJUNCION": {
+    "nota": "Aunque es conjunción ('y'), sigue lógica de prefijos",
+    "reglas": {
+      "shurek": "Ante labiales (B, M, P) o cualquier consonante con Sheva, la Vav se convierte en Shurek (וּ)",
+      "chatef": "Ante gutural con Chatef, toma la vocal corta del Chatef (igual que BKL)",
+      "tonica": "Ante palabra con acento en la primera sílaba, puede tomar Qamets (וָ)"
+    }
+  },
+  "guia_de_errores_comunes_lectura": {
+    "error_01": "Confundir Sheva mudo con vocal tras preposición (En REG_02, la segunda es muda).",
+    "error_02": "No identificar el artículo definido oculto tras la vocal de la preposición (Crucial para exégesis).",
+    "error_03": "Pronunciar la Yod en casos de quiescencia (B-Yehudah es incorrecto, es Bi-hudah)."
+  }
+}
+
+
+Palabra en el Texto,Componentes (Prefijo + Raíz),ID de Regla Aplicada,Explicación Lógica (Debugger),Traducción Precisa
+בְּרֵאשִׁית,בְּ + רֵאשִׁית,REG_01_DEFAULT,La palabra empieza con ר (Resh) con vocal larga. La preposición mantiene su Sheva estándar.,En [un] principio (Indefinido).
+הַשָּׁמַיִם,הַ + שָׁמַיִם,SINCOPE_ARTICULO,(Base para la siguiente regla). El artículo pone un Dagesh Forte en la שׁ.,Los cielos.
+וְהָאָרֶץ,וְ + הָאָרֶץ,REG_01_DEFAULT,"La conjunción ""Vav"" (y) se une a una gutural con vocal plena. Se queda como וְ.",Y la tierra.
+וְחֹשֶׁךְ,וְ + חֹשֶׁךְ,REG_01_DEFAULT,La Vav ante una ח (gutural) con vocal plena.,Y [la] oscuridad.
+עַל-פְּנֵי,עַל + פְּנֵי,REG_02_SHEVA,"(Contexto) Si pusiéramos una preposición aquí, chocaría con la Sheva de la פּ.",Sobre la faz de...
+וְרוּחַ,וְ + רוּחַ,REG_01_DEFAULT,Vav ante ר.,Y [el] espíritu.
+מֵרַחֶפֶת,מִ + רַחֶפֶת,ALARGAMIENTO,"מִן + ר (Resh). Como la Resh no acepta Dagesh, el Hireq (i) sube a Tsere (e).",...se movía desde/sobre...
+
+
+
+El "Edge Case" más importante: El Artículo Oculto
+Si estuviéramos leyendo Génesis 1:1 y en lugar de בְּרֵאשִׁית (Bereshit) dijera בַּרֵאשִׁית (Ba-reshit), la lógica programática detectaría un cambio crítico:
+
+Input: בַּרֵאשִׁית (Preposición con Pathach - vocal 'a').
+Trigger: SINCOPE_ARTICULO.
+Análisis: La preposición "robó" la vocal del artículo הַ.
+Resultado Exegético: No significaría "En un principio", sino "En EL principio" (específico, conocido).
+Nota de "Debugger" Bíblico: En el hebreo masorético, la falta del artículo en la primera palabra de la Biblia es un tema de debate teológico milenario que se detecta gracias a esta simple regla de vocalización.
+
+{
+  "version": "2.1_Interlinear_Expansion",
+  "descripcion": "Módulos faltantes para el análisis de sustantivos (flexión/posesión) y verbos (binyanim)",
+  "logica_estado_constructo_smikhut": {
+    "concepto": "Relación 'X de Y' donde el primer sustantivo (Regente) cambia su forma",
+    "reglas_de_cambio": [
+      {
+        "tipo": "Masculino Singular",
+        "cambio": "Reducción de vocales largas a breves o Sheva",
+        "ejemplo": "Davar (Palabra) -> Devar [ha-melekh] (La palabra del [rey])"
+      },
+      {
+        "tipo": "Femenino Singular",
+        "terminacion_original": "ָה (-ah)",
+        "terminacion_constructo": "ַת (-at)",
+        "ejemplo": "Torah (Ley) -> Torat [Mosheh] (La ley de [Moisés])"
+      },
+      {
+        "tipo": "Masculino Plural",
+        "terminacion_original": "ִים (-im)",
+        "terminacion_constructo": "ֵי (-ei)",
+        "ejemplo": "Banim (Hijos) -> Bnei [Yisrael] (Hijos de [Israel])"
+      }
+    ]
+  },
+  "logica_sufijos_pronominales_sustantivos": {
+    "nota": "Se añaden al final del sustantivo para indicar posesión",
+    "tabla_sufijos_singular": {
+      "1cs_mio": "ִֺי (-i)",
+      "2ms_tuyo_m": "ְךָ (-kha)",
+      "2fs_tuyo_f": "ֵךְ (-ekh)",
+      "3ms_suyo_m": "ֺו (-o)",
+      "3fs_suyo_f": "ָהּ (-ah)",
+      "1cp_nuestro": "ֵנוּ (-enu)",
+      "2mp_vuestro_m": "ְכֶם (-khem)",
+      "2fp_vuestro_f": "ְכֶן (-khen)",
+      "3mp_suyo_pl_m": "ָם (-am)",
+      "3fp_suyo_pl_f": "ָן (-an)"
+    }
+  },
+  "logica_genero_y_numero": {
+    "identificadores_finales": [
+      { "forma": "Sustantivo base", "genero": "M", "numero": "Singular" },
+      { "forma": "ָה / ֶת (-ah / -et)", "genero": "F", "numero": "Singular" },
+      { "forma": "ִים (-im)", "genero": "M", "numero": "Plural" },
+      { "forma": "ֺות (-ot)", "genero": "F", "numero": "Plural" },
+      { "forma": "ַיִם (-ayim)", "genero": "Dual", "descripcion": "Pares: ojos, manos, oídos" }
+    ]
+  },
+  "logica_sistemas_verbales_binyanim": {
+    "descripcion": "Moldes que cambian el sentido de la raíz (3 letras)",
+    "modelos": [
+      { "nombre": "QAL (Paal)", "funcion": "Acción simple activa", "ejemplo": "Él escribió" },
+      { "nombre": "NIFAL", "funcion": "Pasiva o reflexiva de Qal", "identificador": "Prefijo Nun (נ)", "ejemplo": "Fue escrito" },
+      { "nombre": "PIEL", "funcion": "Acción intensiva", "identificador": "Dagesh en la 2da letra", "ejemplo": "Él hizo añicos" },
+      { "nombre": "HIFIL", "funcion": "Acción causativa", "identificador": "Prefijo He (ה) + Yod interna", "ejemplo": "Él hizo escribir (dictó)" },
+      { "nombre": "HITPAEL", "funcion": "Reflexiva intensiva", "identificador": "Prefijo Hit (הת)", "ejemplo": "Él se justificó" }
+    ]
+  },
+  "guia_diagnostico_interlinear": {
+    "paso_01": "Identificar Prefijos BKL/Vav/Min usando reglas_oro.",
+    "paso_02": "Verificar si hay Artículo Oculto por vocalización.",
+    "paso_03": "Analizar terminación para Género/Número o Sufijo Pronominal.",
+    "paso_04": "Si la palabra termina en -at o -ei, buscar sustantivo siguiente (Estado Constructo).",
+    "paso_05": "Aislar la raíz de 3 letras y aplicar modelo de Binyan."
+  }
+}
+
+{
   "version": "3.0_Biblical_Exegesis_Advanced",
   "descripcion": "Módulos avanzados: Vav Consecutiva, Flexiones Verbales, Sufijos Plurales y Sintaxis",
   
