@@ -213,8 +213,9 @@ const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
     selectedTestament: null, // 'ot' | 'nt' | null
     selectedBook: null,      // slug del libro o null
  activeLang: null,
-    collapsedSections: { ot: true, nt: true }
-      },
+collapsedSections: { ot: true, nt: true },
+    enabledTestaments: { ot: true, nt: true }
+          },
   // Cache de textos por verso para evitar recargas
   verseCache: {
     es: new Map(),
@@ -269,6 +270,8 @@ dict: null,
   const analysisResultsSection = document.getElementById('bxAnalysisResultsSection');
   const lemmaSummaryPanel = document.getElementById('bxLemmaSummaryPanel');
     const languageScopeSelect = document.getElementById('bxLanguageScope');
+     const filterOTCheckbox = document.getElementById('bxFilterOT');
+  const filterNTCheckbox = document.getElementById('bxFilterNT');
 
   
   const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));

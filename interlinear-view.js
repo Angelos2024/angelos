@@ -308,6 +308,14 @@ function getHebrewTokenLookupForms(orig){
 
     return dictionariesPromise;
   }
+  async function preload(options = {}){
+    const slug = String(options?.slug || '').trim();
+    await getDictionaries();
+    if(slug && HEBREW_INTERLINEAR_FILE_BY_SLUG[slug]){
+      await loadHebrewInterlinearBookBySlug(slug);
+    }
+    return true;
+  }
 
   function mapTokenToSpanish(token, map, isHebrew, isGreek = false){
     if(isHebrew){
@@ -471,6 +479,7 @@ function getHebrewTokenLookupForms(orig){
 
   window.InterlinearView = {
     buildInterlinearRows,
-    getHebrewRawVerse
+     getHebrewRawVerse,
+    preload
   };
 })();

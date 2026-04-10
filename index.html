@@ -1236,6 +1236,28 @@ async function navigateToPage(slug, chapter){
   leftLabel.textContent = versionSelect.value;
   await render({ chapter, verseStart: null, verseEnd: null });
 }
+
+function preloadInterlinearAssetsFromStart(){
+  const warm = async () => {
+    try{
+      if(!trData){
+        trData = await loadJson(GRIEGO_PATH);
+      }
+    }catch(_err){}
+
+    try{
+      if(window.InterlinearView?.preload){
+        await window.InterlinearView.preload({ slug: currentBookSlug });
+      }
+    }catch(_err){}
+  };
+
+  if('requestIdleCallback' in window){
+    window.requestIdleCallback(() => { void warm(); }, { timeout: 1200 });
+  }else{
+    setTimeout(() => { void warm(); }, 350);
+  }
+}
 /***********************
  * Builder: verses[] -> chapters[][]
  ***********************/
@@ -1844,6 +1866,7 @@ btnReadFullChapter?.addEventListener('click', async () => {
     passageTextOrig.innerHTML = `<div class="text-muted">Cargando Original…</div>`;
     await ensureBookLoaded(currentBookSlug, currentBookName);
     await runSearch();
+    preloadInterlinearAssetsFromStart();
 
     // ✅ Restaurar scroll/estado si venimos de busqueda.html
 // ✅ Restaurar scroll/estado si venimos de busqueda.html

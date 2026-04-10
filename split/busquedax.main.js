@@ -174,6 +174,13 @@
     });
     return { ot, nt };
   }
+function filterRefsByEnabledTestaments(refs) {
+    const enabled = state.pagination.enabledTestaments || { ot: true, nt: true };
+    if (enabled.ot && enabled.nt) return refs;
+    if (!enabled.ot && !enabled.nt) return [];
+    const { ot, nt } = splitRefsByTestament(refs);
+    return enabled.ot ? ot : nt;
+  }
 
 function mapOtRefsToLxxRefs(refs) {
     return refs
@@ -1172,7 +1179,7 @@ let indexPromise = searchLang === 'es'
 
       throwIfAborted(options.signal);
       const refs = await getRefsForQuery(term, searchLang, index, options);
-
+      const filteredRefs = filterRefsByEnabledTestaments(refs);
 
       throwIfAborted(options.signal);
 
@@ -1190,14 +1197,14 @@ let indexPromise = searchLang === 'es'
      
       
  const shouldCapRefs = searchLang !== 'es';
-      const safeRefs = shouldCapRefs ? refs.slice(0, MAX_REFS_PER_CORPUS) : refs;
-            const groups = await buildBookGroups(safeRefs, searchLang, null, options);
+      const safeRefs = shouldCapRefs ? filteredRefs.slice(0, MAX_REFS_PER_CORPUS) : filteredRefs;
+                  const groups = await buildBookGroups(safeRefs, searchLang, null, options);
       groupsByCorpus[0].groups = groups;
       groupsByCorpus[0].loading = false;
-      state.last = { term, lang: searchLang, refs, groupsByCorpus, highlightQueries, relatedTerms };
+      state.last = { term, lang: searchLang, refs: filteredRefs, groupsByCorpus, highlightQueries, relatedTerms };
 
-      if (!refs.length && lemmaSummary) {
-        lemmaSummary.textContent = 'No se encontraron ocurrencias en el idioma seleccionado.';
+      if (!filteredRefs.length && lemmaSummary) {
+              lemmaSummary.textContent = 'No se encontraron ocurrencias en el idioma seleccionado.';
       }
 
       await renderSearchUI(groupsByCorpus, highlightQueries, relatedTerms, options);
@@ -1295,7 +1302,22 @@ function updateDetectedLanguageLabel(lang) {
     state.languageScope = 'auto';
   }
  
- 
+ function handleTestamentFilterChange() {
+  const enabled = state.pagination.enabledTestaments || { ot: true, nt: true };
+  enabled.ot = filterOTCheckbox ? Boolean(filterOTCheckbox.checked) : true;
+  enabled.nt = filterNTCheckbox ? Boolean(filterNTCheckbox.checked) : true;
+  state.pagination.enabledTestaments = enabled;
+  state.pagination.page = 1;
+  if (state.last?.groupsByCorpus) {
+    void analyze();
+  }
+}
+
+if (filterOTCheckbox) filterOTCheckbox.checked = true;
+if (filterNTCheckbox) filterNTCheckbox.checked = true;
+filterOTCheckbox?.addEventListener('change', handleTestamentFilterChange);
+filterNTCheckbox?.addEventListener('change', handleTestamentFilterChange);
+
    
 
 analyzeBtn?.addEventListener('click', analyze);
