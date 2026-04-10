@@ -103,6 +103,16 @@
    .verse-num{ color:var(--accent); font-weight:700; margin-right:.25rem; font-size:.85em; }
     .btn-soft{ background:#4b2743; border:1px solid; border-color:#4b2743; color:#ffffff; }
     .btn-soft:hover{ background:#ffffff; }
+      #btnAboutExtractor{
+      background:#000000;
+      border-color:#000000;
+      color:#ffffff;
+    }
+    #btnAboutExtractor:hover{
+      background:#1f2937;
+      border-color:#1f2937;
+      color:#ffffff;
+    }
  #btnToggleOrig,
     #btnViewMode{
       width: 9.5rem;
@@ -171,6 +181,18 @@
       color:#1d4ed8;
     }
     
+    [data-theme="white"] #btnAboutExtractor,
+    [data-theme="cream"] #btnAboutExtractor{
+      background:#000000;
+      border-color:#000000;
+      color:#ffffff;
+    }
+    [data-theme="white"] #btnAboutExtractor:hover,
+    [data-theme="cream"] #btnAboutExtractor:hover{
+      background:#1f2937;
+      border-color:#1f2937;
+      color:#ffffff;
+    }
     .text-muted{
       color:var(--muted) !important;
     }
