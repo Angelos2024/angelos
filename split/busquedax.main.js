@@ -568,6 +568,18 @@ let verses = await loadChapterText(lang, book, chapter, options);
 
             cache.set(canonicalRef, text || '');
                       });
+          if (canRetryWithNormalizedBook) {
+            for (const v of versesNeeded) {
+              const canonicalRef = `${book}|${chapter}|${v}`;
+              const maybePromise = cache.get(canonicalRef);
+              if (!maybePromise || typeof maybePromise?.then !== 'function') continue;
+              const loadedFallback = await maybePromise;
+              const resolvedText = loadedFallback && loadedFallback !== false
+                ? getVerseTextFromChapter(loadedFallback, v)
+                : '';
+              cache.set(canonicalRef, resolvedText || '');
+            }
+          }
         }
       } catch (e) {
      if (isAbortError(e)) throw e;
