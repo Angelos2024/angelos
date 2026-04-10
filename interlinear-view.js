@@ -339,9 +339,13 @@ function getHebrewTokenLookupForms(orig){
         if(map.unpointedMap?.has(key)) return map.unpointedMap.get(key);
           const rebuilt = rebuildHebrewTokenGlossFromSuffix(key, token, map);
         if(rebuilt) return rebuilt;
+        const rebuiltCompound = rebuildHebrewTokenGlossFromCompoundSuffix(key, token, map);
+        if(rebuiltCompound) return rebuiltCompound;
       }
        const rebuiltDirect = rebuildHebrewTokenGlossFromSuffix(plainKey, token, map);
       if(rebuiltDirect) return rebuiltDirect;
+      const rebuiltCompoundDirect = rebuildHebrewTokenGlossFromCompoundSuffix(plainKey, token, map);
+      if(rebuiltCompoundDirect) return rebuiltCompoundDirect;
       return '-';
     }
 
@@ -422,6 +426,30 @@ function getHebrewTokenLookupForms(orig){
       if(rule.type === 'poss'){
         return `${poss} ${normalizedStemGloss}`.trim();
       }
+    }
+
+    return '';
+  }
+
+  function rebuildHebrewTokenGlossFromCompoundSuffix(plainToken, originalToken, map){
+    const token = String(plainToken || '');
+    if(!token || token.length < 4) return '';
+
+    const compoundRules = [
+      { suffix: 'יהם', gloss: 'su' },
+      { suffix: 'יהן', gloss: 'su' },
+      { suffix: 'יכם', gloss: 'vuestra' },
+      { suffix: 'יכן', gloss: 'vuestra' }
+    ];
+
+    for(const rule of compoundRules){
+      if(!token.endsWith(rule.suffix) || token.length <= rule.suffix.length + 1) continue;
+      const stem = token.slice(0, -rule.suffix.length) + 'י';
+      const stemGloss = map.unpointedMap?.get(stem);
+      if(!stemGloss || stemGloss === '-') continue;
+      const normalizedStemGloss = stripSpanishLeadingArticle(stemGloss);
+      const poss = normalizePossessiveSpanish(rule.gloss);
+      return `${poss} ${normalizedStemGloss}`.trim();
     }
 
     return '';
