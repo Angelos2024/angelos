@@ -358,7 +358,8 @@ function groupForBook(book) {
 
 
  function resetFilterSectionsCollapsed() {
-    state.pagination.collapsedSections = { ot: true, nt: true };
+    // Iniciar expandidas para que los libros sean visibles inmediatamente
+    state.pagination.collapsedSections = { ot: false, nt: false };
   }
  function toggleFilterSection(sectionId) {
     if (sectionId !== 'ot' && sectionId !== 'nt') return;
@@ -1107,12 +1108,9 @@ let indexPromise = searchLang === 'es'
       await renderSearchUI(groupsByCorpus, highlightQueries, relatedTerms, options);
      
       
-const MAX_REFS_ES = 250;
-      const MAX_REFS_GR_HE = 400;
-      const safeRefs = searchLang === 'es'
-        ? filteredRefs.slice(0, MAX_REFS_ES)
-        : filteredRefs.slice(0, MAX_REFS_GR_HE);
-                  const groups = await buildBookGroups(safeRefs, searchLang, null, options);
+// Sin cap artificial: buildBookGroups limita la precarga de textos por libro (limit=20/12)
+      // pero group.refs conserva todas las refs para paginación y filtros correctos.
+      const groups = await buildBookGroups(filteredRefs, searchLang, null, options);
       groupsByCorpus[0].groups = groups;
       groupsByCorpus[0].loading = false;
 const payload = {
@@ -1238,13 +1236,8 @@ function updateDetectedLanguageLabel(lang) {
   // Re-filtrar los refs originales y reconstruir los grupos con el nuevo filtro
   const filteredRefs = filterRefsByEnabledTestaments(state.last.allRefs || state.last.refs || []);
   const searchLang = state.last.lang || 'es';
-  const MAX_REFS_ES = 250;
-  const MAX_REFS_GR_HE = 400;
-  const safeRefs = searchLang === 'es'
-    ? filteredRefs.slice(0, MAX_REFS_ES)
-    : filteredRefs.slice(0, MAX_REFS_GR_HE);
-
-  const groups = await buildBookGroups(safeRefs, searchLang, null, {});
+  // Sin cap: conservamos todos los refs para que la paginación y el filtro muestren todo
+  const groups = await buildBookGroups(filteredRefs, searchLang, null, {});
   const newGroupsByCorpus = [{ lang: searchLang, groups, expanded: false, loading: false }];
   state.last.groupsByCorpus = newGroupsByCorpus;
 
