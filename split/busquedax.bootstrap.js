@@ -117,7 +117,9 @@ const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
 
   last: null,
   queryCache: new Map(),
-  isLoading: false
+  isLoading: false,
+  filter: 'todo',
+  languageScope: 'auto'
 };
   const jsonCache = new Map();
   const failedJsonRequests = new Map();
