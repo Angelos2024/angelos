@@ -257,13 +257,13 @@ async function ensureHebrewUnifiedLoaded() {
 
         entries.forEach((entry) => {
           const key = normalizeHebrewRootKey(entry?.lexeme || '');
- const strongKey = normalizeStrongKey(entry?.strong || '');
+          const strongKey = normalizeStrongKey(entry?.strong || '');
           const rootToken = extractLeadingHebrewToken(entry?.root_first_segment || '');
 
           if (key && !index.has(key)) index.set(key, entry);
           if (strongKey && !strongIndex.has(strongKey)) strongIndex.set(strongKey, entry);
-           });
           if (rootToken && !rootKeyIndex.has(rootToken)) rootKeyIndex.set(rootToken, entry);
+         });
         
         hebrewRootsIndex = index;
         hebrewRootsStrongIndex = strongIndex;
