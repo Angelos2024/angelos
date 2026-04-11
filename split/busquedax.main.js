@@ -394,7 +394,7 @@ function groupForBook(book) {
 
  function resetFilterSectionsCollapsed() {
     // Iniciar expandidas para que los libros sean visibles inmediatamente
-    state.pagination.collapsedSections = { ot: false, nt: false };
+state.pagination.collapsedSections = { ot: true, nt: true };
   }
  function toggleFilterSection(sectionId) {
     if (sectionId !== 'ot' && sectionId !== 'nt') return;
