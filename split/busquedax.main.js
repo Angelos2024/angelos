@@ -249,17 +249,18 @@ function mapLxxRefsToHebrewRefs(refs) {
     return buildHebrewCandidateFromRefs(mappedRefs, options);
   }
 
-  function groupForBook(book) {
-     const slug = LXX_TO_HEBREW_SLUG[book] || book;
-     if (TORAH.includes(slug)) return { key: 'torah', label: 'Torah' };
-    if (HISTORICAL.includes(slug)) return { key: 'historicos', label: 'Históricos' };
-     if (WISDOM.includes(slug)) return { key: 'sabiduria', label: 'Sabiduría' };
-     if (PROPHETS.includes(slug)) return { key: 'profetas', label: 'Profetas' };
-     if (GOSPELS.includes(slug)) return { key: 'evangelios', label: 'Evangelios' };
-     if (LETTERS.includes(slug)) return { key: 'cartas', label: 'Cartas' };
-     if (APOCALYPSE.includes(slug)) return { key: 'apocalipsis', label: 'Apocalipsis' };
-     return { key: 'otros', label: 'Otros' };
-   }
+function groupForBook(book) {
+  const slug = book;
+  if (TORAH.includes(slug)) return { key: 'torah', label: 'Torah' };
+  if (HISTORICAL.includes(slug)) return { key: 'historicos', label: 'Históricos' };
+  if (WISDOM.includes(slug)) return { key: 'sabiduria', label: 'Sabiduría' };
+  if (PROPHETS.includes(slug)) return { key: 'profetas', label: 'Profetas' };
+  if (GOSPELS.includes(slug)) return { key: 'evangelios', label: 'Evangelios' };
+  if (ACTS.includes(slug)) return { key: 'hechos', label: 'Hechos' };
+  if (LETTERS.includes(slug)) return { key: 'cartas', label: 'Cartas' };
+  if (APOCALYPSE.includes(slug)) return { key: 'apocalipsis', label: 'Apocalipsis' };
+  return { key: 'otros', label: 'Otros' };
+}
 
   function prettyBookLabel(book) {
      return (book || '').replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());

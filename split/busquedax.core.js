@@ -450,14 +450,20 @@ const tokens = String(term || '').split(/\s+/).filter(Boolean);
 async function loadEsShard(term, options = {}) {
   if (!state.indexes) state.indexes = {};
 
+  const normalizedTerm = normalizeSpanish(String(term || ''));
   const tokens = String(term || '')
     .split(/\s+/)
     .map(t => normalizeSpanish(t.trim()))
     .filter(t => t.length >= 3);
 
   const letters = tokens.length > 0
-    ? [...new Set(tokens.map(t => t[0] || '_'))]
-    : [(normalizeSpanish(String(term || ''))[0] || '_').toLowerCase()];
+    ? [...new Set(tokens.map(t => t[0]).filter(Boolean))]
+    : (normalizedTerm ? [normalizedTerm[0]] : []);
+
+  // Si no hay letras válidas, no intentes cargar shard "_"
+  if (!letters.length) {
+    return loadIndex('es', options);
+  }
 
   let loadedCount = 0;
   let anyError = false;
@@ -1122,19 +1128,24 @@ function mapLxxRefsToHebrewRefs(refs) {
 
  
 
-  function sortRefsCanonically(refs = []) {
-    return [...refs].sort((a, b) => {
-      const [ba, ca, va] = String(a).split('|');
-      const [bb, cb, vb] = String(b).split('|');
-       const ia = CANON_INDEX.has(ba) ? CANON_INDEX.get(ba) : 9999;
-      const ib = CANON_INDEX.has(bb) ? CANON_INDEX.get(bb) : 9999;
-      if (ia !== ib) return ia - ib;
-      const c1 = Number(ca) || 0, c2 = Number(cb) || 0;
-      if (c1 !== c2) return c1 - c2;
-      const v1 = Number(va) || 0, v2 = Number(vb) || 0;
-      return v1 - v2;
-    });
-  }
+ function sortRefsCanonically(refs = []) {
+  return [...refs].sort((a, b) => {
+    const [ba, ca, va] = String(a).split('|');
+    const [bb, cb, vb] = String(b).split('|');
+
+    const ia = CANON_INDEX.has(ba) ? CANON_INDEX.get(ba) : 9999;
+    const ib = CANON_INDEX.has(bb) ? CANON_INDEX.get(bb) : 9999;
+    if (ia !== ib) return ia - ib;
+
+    const c1 = Number(ca) || 0;
+    const c2 = Number(cb) || 0;
+    if (c1 !== c2) return c1 - c2;
+
+    const v1 = Number(va) || 0;
+    const v2 = Number(vb) || 0;
+    return v1 - v2;
+  });
+}
 
   function getActiveLangForNewUI() {
     // Priorizamos un solo idioma: el scope seleccionado o el detectado
@@ -1149,40 +1160,46 @@ function mapLxxRefsToHebrewRefs(refs) {
     return (groupsByCorpus || []).find((c) => c.lang === lang) || null;
   }
 
-  function buildFilterAggFromGroups(groups = [], lang = 'es') {
-    // groups: salida de buildBookGroups (por libro)
-    const byBook = new Map();
-    groups.forEach((g) => {
-      const bookSlug = LXX_TO_HEBREW_SLUG[g.items?.[0]?.book] || LXX_TO_HEBREW_SLUG[g.refs?.[0]?.split?.('|')?.[0]] || (g.refs?.[0]?.split?.('|')?.[0]) || g.book || g.slug || null;
-      const slug = LXX_TO_HEBREW_SLUG[bookSlug] || bookSlug;
-      if (!slug) return;
-      byBook.set(slug, {
-        slug,
-        label: prettyBookLabel(slug),
-        count: g.count || (g.refs?.length || 0),
-        refs: g.refs || [],
-        group: g
-      });
+function buildFilterAggFromGroups(groups = [], lang = 'es') {
+  const byBook = new Map();
+
+  groups.forEach((g) => {
+    const slug =
+      g.items?.[0]?.book ||
+      g.refs?.[0]?.split?.('|')?.[0] ||
+      g.book ||
+      g.slug ||
+      null;
+
+    if (!slug) return;
+
+    byBook.set(slug, {
+      slug,
+      label: prettyBookLabel(slug),
+      count: g.count || (g.refs?.length || 0),
+      refs: g.refs || [],
+      group: g
     });
+  });
 
-    // orden canónico
-    const orderedBooks = CANONICAL_BOOK_ORDER
-      .filter((slug) => byBook.has(slug))
-      .map((slug) => byBook.get(slug));
+  const orderedBooks = CANONICAL_BOOK_ORDER
+    .filter((slug) => byBook.has(slug))
+    .map((slug) => byBook.get(slug));
 
-    // por si hay libros fuera de lista
-    const extras = [...byBook.values()].filter((b) => !CANON_INDEX.has(b.slug))
-      .sort((a, b) => a.label.localeCompare(b.label));
-    const books = [...orderedBooks, ...extras];
+  const extras = [...byBook.values()]
+    .filter((b) => !CANON_INDEX.has(b.slug))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
-    const ot = books.filter((b) => OT_SET.has(b.slug));
-    const nt = books.filter((b) => NT_SET.has(b.slug));
-    const otCount = ot.reduce((s, b) => s + (b.count || 0), 0);
-    const ntCount = nt.reduce((s, b) => s + (b.count || 0), 0);
-    const allCount = otCount + ntCount;
+  const books = [...orderedBooks, ...extras];
 
-    return { lang, books, ot, nt, otCount, ntCount, allCount };
-  }
+  const ot = books.filter((b) => OT_SET.has(b.slug));
+  const nt = books.filter((b) => NT_SET.has(b.slug));
+  const otCount = ot.reduce((s, b) => s + (b.count || 0), 0);
+  const ntCount = nt.reduce((s, b) => s + (b.count || 0), 0);
+  const allCount = otCount + ntCount;
+
+  return { lang, books, ot, nt, otCount, ntCount, allCount };
+}
 
   function renderFiltersPanel(agg) {
     if (!filtersPanel) return;
