@@ -194,7 +194,8 @@ body {
   padding: 0.82rem 0.92rem;
   cursor: pointer;
   transition: 0.17s ease;
-}
+    user-select: text;
+  }
 
 .dic-card:hover {
   transform: translateY(-1px);

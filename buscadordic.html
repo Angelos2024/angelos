@@ -192,11 +192,13 @@ const SOURCES = [
           <p class="dic-meta">${safe(entry.observacion) || 'Sin observación.'}</p>
                   `;
 
-        const activate = () => {
-          state.activeId = entry.id;
-          renderResults();
-          renderDetail();
-        };
+       const activate = () => {
+  if (state.activeId === entry.id) return;
+  state.activeId = entry.id;
+  document.querySelectorAll('.dic-card').forEach((el) => el.classList.remove('is-active'));
+  card.classList.add('is-active');
+  renderDetail();
+};
 
         card.addEventListener('click', activate);
         card.addEventListener('keydown', (event) => {
@@ -276,7 +278,7 @@ const SOURCES = [
 
           return rows
             .filter((entry) => entry && typeof entry === 'object')
-            ..map((entry, index) => ({
+            .map((entry, index) => ({
   id: `${source.libro}||${index}`,   // ← único por archivo + posición
   texto_hebreo: entry.texto_hebreo,
               transliteracion: entry.transliteracion,
