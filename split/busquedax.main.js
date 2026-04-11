@@ -1,12 +1,5 @@
 /* Auto-generated split from busquedax.js (main/UI) */
 
-  async function buildLxxMatches(normalizedGreek, maxRefs = 40) {
-    if (!normalizedGreek) return { refs: [], texts: new Map(), highlightTerms: [] };
-   if (state.lxxSearchCache.has(normalizedGreek)) return state.lxxSearchCache.get(normalizedGreek);
-    const payload = await getLxxMatchesFromIndex(normalizedGreek, { maxRefs });
-   state.lxxSearchCache.set(normalizedGreek, payload);
-    return payload;
-  }
 
    function pickBestCandidate(counts, samples) {
     if (!counts.size) return null;
@@ -22,36 +15,6 @@
     return String(token || '').replace(/[··.,;:!?“”"(){}\[\]<>«»]/g, '');
   }
 
-  async function buildGreekCandidateFromHebrewRefs(refs) {
-    if (!refs.length) return null;
-    const counts = new Map();
-    const samples = new Map();
-   const usedBooks = new Set();
-    for (const ref of refs.slice(0, 40)) {
-      const [slug, chapterRaw, verseRaw] = ref.split('|');
-      const chapter = Number(chapterRaw);
-      const verse = Number(verseRaw);
-      const lxxCodes = HEBREW_SLUG_TO_LXX[slug] || [];
-      for (const lxxCode of lxxCodes) {
-        const tokens = await loadLxxVerseTokens(lxxCode, chapter, verse);
-        if (!tokens) continue;
-       usedBooks.add(lxxCode);
-        const verseLemmas = new Set();
-        tokens.forEach((token) => {
-          const lemma = token?.lemma || token?.w || '';
-          const normalized = normalizeGreek(lemma);
-          if (!normalized) return;
-          if (greekStopwords.has(normalized)) return;
-         verseLemmas.add(normalized);
-          if (!samples.has(normalized) && token?.lemma) samples.set(normalized, token.lemma);
-        });
-        verseLemmas.forEach((lemma) => {
-          counts.set(lemma, (counts.get(lemma) || 0) + 1);
-        });
-      }
-    }
-   return rankGreekCandidatesByLxxStats(counts, samples, usedBooks);
-  }
 
   async function buildGreekCandidateFromGreekRefs(refs, options = {}) {
    if (!refs.length) return null;
@@ -81,32 +44,6 @@
     return pickBestCandidate(counts, samples);
   }
 
-  async function buildGreekCandidateFromLxxRefs(refs) {
-    if (!refs.length) return null;
-    const counts = new Map();
-    const samples = new Map();
-    const usedBooks = new Set();
-    for (const ref of refs.slice(0, 40)) {
-      const [book, chapterRaw, verseRaw] = ref.split('|');
-      const chapter = Number(chapterRaw);
-      const verse = Number(verseRaw);
-      const tokens = await loadLxxVerseTokens(book, chapter, verse);
-      if (!tokens) continue;
-      usedBooks.add(book);
-      const verseLemmas = new Set();
-      tokens.forEach((token) => {
-        const lemma = token?.lemma || token?.w || '';
-        const normalized = normalizeGreek(lemma);
-        if (!normalized || greekStopwords.has(normalized)) return;
-        verseLemmas.add(normalized);
-        if (!samples.has(normalized) && token?.lemma) samples.set(normalized, token.lemma);
-      });
-     verseLemmas.forEach((lemma) => {
-        counts.set(lemma, (counts.get(lemma) || 0) + 1);
-      });
-    }
-    return rankGreekCandidatesByLxxStats(counts, samples, usedBooks);
-  }
 
   function extractPos(entry) {
      if (!entry) return '—';
@@ -182,25 +119,6 @@ function filterRefsByEnabledTestaments(refs) {
     return enabled.ot ? ot : nt;
   }
 
-function mapOtRefsToLxxRefs(refs) {
-    return refs
-      .flatMap((ref) => {
-        const [book, chapter, verse] = ref.split('|');
-        const lxxCodes = HEBREW_SLUG_TO_LXX[book] || [];
-        return lxxCodes.map((code) => `${code}|${chapter}|${verse}`);
-      })
-      .filter(Boolean);
-  }
-function mapLxxRefsToHebrewRefs(refs) {
-    return refs
-      .map((ref) => {
-        const [book, chapter, verse] = ref.split('|');
-        const slug = LXX_TO_HEBREW_SLUG[book];
-        if (!slug) return null;
-        return `${slug}|${chapter}|${verse}`;
-      })
-      .filter(Boolean);
-  }
 
   async function buildHebrewCandidateFromRefs(refs, options = {}) {
     const counts = new Map();
@@ -241,9 +159,7 @@ function mapLxxRefsToHebrewRefs(refs) {
     const mappedRefs = refs
       .map((ref) => {
         const [book, chapter, verse] = ref.split('|');
-        const slug = LXX_TO_HEBREW_SLUG[book];
-        if (!slug) return null;
-        return `${slug}|${chapter}|${verse}`;
+        return ref;
       })
       .filter(Boolean);
     return buildHebrewCandidateFromRefs(mappedRefs, options);
@@ -401,8 +317,7 @@ function groupForBook(book) {
     // groups: salida de buildBookGroups (por libro)
     const byBook = new Map();
     groups.forEach((g) => {
-      const bookSlug = LXX_TO_HEBREW_SLUG[g.items?.[0]?.book] || LXX_TO_HEBREW_SLUG[g.refs?.[0]?.split?.('|')?.[0]] || (g.refs?.[0]?.split?.('|')?.[0]) || g.book || g.slug || null;
-      const slug = LXX_TO_HEBREW_SLUG[bookSlug] || bookSlug;
+      const slug = (g.items?.[0]?.book) || (g.refs?.[0]?.split?.('|')?.[0]) || g.book || g.slug || null;
       if (!slug) return;
       byBook.set(slug, {
         slug,
@@ -542,42 +457,13 @@ function groupForBook(book) {
       const [book, chapterRaw] = key.split('|');
       const chapter = Number(chapterRaw);
       try {
-        if (lang === 'lxx') {
-          // LXX se resuelve por tokens verso a verso
-          await Promise.all(versesNeeded.map(async (v) => {
-            const canonicalRef = `${book}|${chapter}|${v}`;
-            if (cache.has(canonicalRef)) return;
-            const tokens = await loadLxxVerseTokens(book, chapter, v);
-            const resolvedText = Array.isArray(tokens) ? tokens.map((t) => t?.w).filter(Boolean).join(' ') : '';
-            cache.set(canonicalRef, resolvedText);
-          }));
-        } else {
+        {
           const verses = await loadChapterText(lang, book, chapter, options);
           versesNeeded.forEach((v) => {
             const canonicalRef = `${book}|${chapter}|${v}`;
-            let text = getVerseTextFromChapter(verses, v);
-            if (!text && canRetryWithNormalizedBook) {
-              if (fallbackVerses === null) {
-                fallbackVerses = loadChapterText(lang, normalizedBook, chapter, options).catch(() => false);
-              }
-              cache.set(canonicalRef, fallbackVerses);
-              return;
-            }
-
+            const text = getVerseTextFromChapter(verses, v);
             cache.set(canonicalRef, text || '');
-                      });
-          if (canRetryWithNormalizedBook) {
-            for (const v of versesNeeded) {
-              const canonicalRef = `${book}|${chapter}|${v}`;
-              const maybePromise = cache.get(canonicalRef);
-              if (!maybePromise || typeof maybePromise?.then !== 'function') continue;
-              const loadedFallback = await maybePromise;
-              const resolvedText = loadedFallback && loadedFallback !== false
-                ? getVerseTextFromChapter(loadedFallback, v)
-                : '';
-              cache.set(canonicalRef, resolvedText || '');
-            }
-          }
+          });
         }
       } catch (e) {
      if (isAbortError(e)) throw e;
@@ -825,7 +711,7 @@ bookList.className = 'mt-2 d-grid gap-1';
               openBtn.type = 'button';
               openBtn.textContent = 'Abrir';
               openBtn.addEventListener('click', () => {
-               const targetBook = LXX_TO_HEBREW_SLUG[item.book] || item.book;
+               const targetBook = item.book;
                 const targetName = prettyBookLabel(targetBook);
                 const p = new URLSearchParams();
                 p.set('book', targetBook);
@@ -929,12 +815,7 @@ bookList.className = 'mt-2 d-grid gap-1';
          } catch (error) {
           try {
             let resolvedText = '';
-             if (lang === 'lxx') {
-               const tokens = await loadLxxVerseTokens(bookName, chapter, verse);
-               resolvedText = Array.isArray(tokens)
-                 ? tokens.map((token) => token?.w).filter(Boolean).join(' ')
-                 : '';
-             } else {
+             {
                const verses = await loadChapterText(lang, bookName, chapter, options);
                resolvedText = getVerseTextFromChapter(verses, verse) || '';
              }

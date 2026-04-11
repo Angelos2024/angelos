@@ -98,6 +98,7 @@
       }
       return output;
     }
+    // Sin frases múltiples en hebreo: caer al resaltado por token general
   }
 
 
@@ -361,7 +362,7 @@
   }
 
   function getEquivalenceSearchTerms(term, lang) {
-    const out = { es: [], he: [], gr: [], lxx: [] };
+    const out = { es: [], he: [], gr: [] };
     const t = String(term || '').trim();
     if (!t || !TRI.loaded) return out;
 
@@ -371,7 +372,6 @@
       if (entry) {
         out.he = Array.from(entry.he);
         out.gr = Array.from(entry.gr);
-        out.lxx = Array.from(entry.gr);
       }
       return out;
     }
@@ -396,7 +396,6 @@
       out.es = Array.from(esOut);
       out.he = Array.from(heOut);
       out.gr = Array.from(grOut);
-      out.lxx = Array.from(grOut);
       return out;
     }
 
@@ -420,7 +419,6 @@
       out.es = Array.from(esOut);
       out.he = Array.from(heOut);
       out.gr = Array.from(grOut);
-      out.lxx = Array.from(grOut);
       return out;
     }
 
