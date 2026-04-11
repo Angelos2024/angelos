@@ -6,7 +6,7 @@
   //  Resaltado (mark) multi-idioma
   // ---------------------------------
   function getNormalizedQuery(lang, query) {
-      if (lang === 'gr' || lang === 'lxx') return normalizeGreek(query);
+      if (lang === 'gr') return normalizeGreek(query);
       if (lang === 'he') return normalizeHebrew(query);
       return normalizeSpanish(query);
     }
@@ -29,7 +29,7 @@
       const letters = [];
       for (const ch of escaped) {
         if (ch === '\\') continue;
-         if ((lang === 'gr' || lang === 'lxx') && ch === 'σ') {
+         if (lang === 'gr' && ch === 'σ') {
           letters.push('[σς]');
         } else {
           letters.push(ch);
@@ -49,8 +49,8 @@
         const letters = [];
         for (const ch of escaped) {
           if (ch === '\\') continue;
-          if ((lang === 'gr' || lang === 'lxx') && ch === 'σ') {
-            letters.push('[σς]');
+          if (lang === 'gr' && ch === 'σ') {
+                      letters.push('[σς]');
           } else {
             letters.push(ch);
           }
@@ -68,8 +68,8 @@
       if (!raw || !normalizedQuery) return escapeHtml(raw);
 
       const safe = escapeHtml(raw);
-       const highlightSource = (lang === 'gr' || lang === 'lxx' || lang === 'he')
-        ? safe.normalize('NFD')
+       const highlightSource = (lang === 'gr' || lang === 'he')
+               ? safe.normalize('NFD')
         : safe;    
         // Hebrew: when searching a phrase (or multiple phrase variants separated by "||"),
   // highlight ONLY the full phrase, not each token separately.
@@ -102,8 +102,8 @@
 
 
       const normalizedQueryClean = normalizedQuery.replace(/\|\|/g, ' ');
-      const cleanedQuery = (lang === 'gr' || lang === 'lxx')
-        ? normalizedQueryClean.replace(/[⸀··.,;:!?“”"(){}\[\]<>«»]/g, ' ')
+      const cleanedQuery = (lang === 'gr')
+              ? normalizedQueryClean.replace(/[⸀··.,;:!?“”"(){}\[\]<>«»]/g, ' ')
         : normalizedQueryClean;
       const tokens = cleanedQuery
         .split(/\s+/)
@@ -400,8 +400,8 @@
       return out;
     }
 
-    if (lang === 'gr' || lang === 'lxx') {
-      const key = _normGr(t);
+    if (lang === 'gr') {
+          const key = _normGr(t);
       const esSet = TRI.byGr.get(key);
       if (!esSet) return out;
 

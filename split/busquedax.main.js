@@ -270,8 +270,7 @@ function mapLxxRefsToHebrewRefs(refs) {
      refs.forEach((ref) => {
        const [book] = String(ref || '').split('|');
        if (!book) return;
-       const slug = LXX_TO_HEBREW_SLUG[book] || book;
-       counts.set(slug, (counts.get(slug) || 0) + 1);
+       counts.set(book, (counts.get(book) || 0) + 1);
      });
      return [...counts.entries()]
        .map(([book, count]) => ({ book, label: prettyBookLabel(book), count }))
@@ -283,8 +282,8 @@ function mapLxxRefsToHebrewRefs(refs) {
    }
  
     function classForLang(lang) {
-    if (lang === 'gr' || lang === 'lxx') return 'greek';
-     if (lang === 'he') return 'hebrew';
+    if (lang === 'gr') return 'greek';
+         if (lang === 'he') return 'hebrew';
      return 'mono';
    }
  
@@ -337,18 +336,8 @@ function mapLxxRefsToHebrewRefs(refs) {
         verseText = preloadedTexts.get(ref) || preloadedTexts.get(canonicalRef) || '';
       } else {
         try {
-        if (lang === 'lxx') {
-            const tokens = await loadLxxVerseTokens(book, chapter, verse);
-            verseText = Array.isArray(tokens)
-              ? tokens.map((token) => token?.w).filter(Boolean).join(' ')
-              : '';
-          } else {
-let verses = await loadChapterText(lang, book, chapter, options);
-          let fallbackVerses = null;
-          const normalizedBook = String(book || '').trim().toLowerCase();
-          const canRetryWithNormalizedBook = normalizedBook && normalizedBook !== String(book || '').trim();
-                      verseText = getVerseTextFromChapter(verses, verse) || '';
-          }
+         const verses = await loadChapterText(lang, book, chapter, options);
+          verseText = getVerseTextFromChapter(verses, verse) || '';
         } catch (error) {
           if (isAbortError(error)) throw error;
           verseText = 'Texto no disponible.';
@@ -384,10 +373,8 @@ let verses = await loadChapterText(lang, book, chapter, options);
     return [...refs].sort((a, b) => {
       const [ba, ca, va] = String(a).split('|');
       const [bb, cb, vb] = String(b).split('|');
-      const sa = LXX_TO_HEBREW_SLUG[ba] || ba;
-      const sb = LXX_TO_HEBREW_SLUG[bb] || bb;
-      const ia = CANON_INDEX.has(sa) ? CANON_INDEX.get(sa) : 9999;
-      const ib = CANON_INDEX.has(sb) ? CANON_INDEX.get(sb) : 9999;
+      const ia = CANON_INDEX.has(ba) ? CANON_INDEX.get(ba) : 9999;
+      const ib = CANON_INDEX.has(bb) ? CANON_INDEX.get(bb) : 9999;
       if (ia !== ib) return ia - ib;
       const c1 = Number(ca) || 0, c2 = Number(cb) || 0;
       if (c1 !== c2) return c1 - c2;
@@ -443,6 +430,16 @@ let verses = await loadChapterText(lang, book, chapter, options);
 
     return { lang, books, ot, nt, otCount, ntCount, allCount };
   }
+  function getQueryCacheKey(term, lang) {
+  const enabled = state.pagination.enabledTestaments || { ot: true, nt: true };
+  return [
+    lang,
+    normalizeByLang(term, lang),
+    enabled.ot ? 'ot1' : 'ot0',
+    enabled.nt ? 'nt1' : 'nt0'
+  ].join('|');
+}
+
 
  function resetFilterSectionsCollapsed() {
     state.pagination.collapsedSections = { ot: true, nt: true };
@@ -641,7 +638,7 @@ let verses = await loadChapterText(lang, book, chapter, options);
         <div class="bx-result-item d-flex gap-2">
           <div class="flex-grow-1">
             <div class="bx-ref">${escapeHtml(it.ref)}</div>
-            <div class="bx-text">${highlightText(escapeHtml(safeText), highlightQuery, agg.lang)}</div>
+<div class="bx-text">${highlightText(safeText, highlightQuery, agg.lang)}</div>
           </div>
           <div class="bx-actions">
             <a class="btn btn-primary btn-sm" href="${openHref}">Abrir</a>
@@ -1139,8 +1136,22 @@ if (!term) {
       const searchLang = (selectedScope === 'es' || selectedScope === 'gr' || selectedScope === 'he')
         ? selectedScope
         : detectedLang;
+        const cacheKey = getQueryCacheKey(term, searchLang);
+      const cached = state.queryCache.get(cacheKey);
 
   updateDetectedLanguageLabel(searchLang);
+
+if (cached) {
+        state.last = cached;
+        await renderSearchUI(
+          cached.groupsByCorpus || [],
+          cached.highlightQueries || {},
+          cached.relatedTerms || {},
+          options
+        );
+        setLoading(false);
+        return;
+      }
 
       state.pagination.page = 1;
       state.pagination.selectedBook = null;
@@ -1213,12 +1224,24 @@ let indexPromise = searchLang === 'es'
       await renderSearchUI(groupsByCorpus, highlightQueries, relatedTerms, options);
      
       
- const shouldCapRefs = searchLang !== 'es';
-      const safeRefs = shouldCapRefs ? filteredRefs.slice(0, MAX_REFS_PER_CORPUS) : filteredRefs;
+const MAX_REFS_ES = 250;
+      const MAX_REFS_GR_HE = 400;
+      const safeRefs = searchLang === 'es'
+        ? filteredRefs.slice(0, MAX_REFS_ES)
+        : filteredRefs.slice(0, MAX_REFS_GR_HE);
                   const groups = await buildBookGroups(safeRefs, searchLang, null, options);
       groupsByCorpus[0].groups = groups;
       groupsByCorpus[0].loading = false;
-      state.last = { term, lang: searchLang, refs: filteredRefs, groupsByCorpus, highlightQueries, relatedTerms };
+const payload = {
+        term,
+        lang: searchLang,
+        refs: filteredRefs,
+        groupsByCorpus,
+        highlightQueries,
+        relatedTerms
+      };
+      state.last = payload;
+      state.queryCache.set(cacheKey, payload);
 
       if (!filteredRefs.length && lemmaSummary) {
               lemmaSummary.textContent = 'No se encontraron ocurrencias en el idioma seleccionado.';
@@ -1326,8 +1349,12 @@ function updateDetectedLanguageLabel(lang) {
   state.pagination.enabledTestaments = enabled;
   state.pagination.page = 1;
   if (state.last?.groupsByCorpus) {
-    void analyze();
-  }
+ void renderSearchUI(
+      state.last.groupsByCorpus || [],
+      state.last.highlightQueries || {},
+      state.last.relatedTerms || {}
+    );
+      }
 }
 
 if (filterOTCheckbox) filterOTCheckbox.checked = true;

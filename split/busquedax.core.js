@@ -82,8 +82,8 @@ function countHebrewConsonants(text) {
         .replace(/\s+/g, ' ')
         .trim();
     }
-    if (lang === 'gr' || lang === 'lxx') {
-      return String(text || '')
+    if (lang === 'gr') {
+          return String(text || '')
         .toLowerCase()
         .normalize('NFD')
         .replace(/\p{M}/gu, '')
@@ -1022,8 +1022,7 @@ function mapLxxRefsToHebrewRefs(refs) {
      refs.forEach((ref) => {
        const [book] = String(ref || '').split('|');
        if (!book) return;
-       const slug = LXX_TO_HEBREW_SLUG[book] || book;
-       counts.set(slug, (counts.get(slug) || 0) + 1);
+        counts.set(book, (counts.get(book) || 0) + 1);
      });
      return [...counts.entries()]
        .map(([book, count]) => ({ book, label: prettyBookLabel(book), count }))
@@ -1035,8 +1034,8 @@ function mapLxxRefsToHebrewRefs(refs) {
    }
  
     function classForLang(lang) {
-    if (lang === 'gr' || lang === 'lxx') return 'greek';
-     if (lang === 'he') return 'hebrew';
+ if (lang === 'gr') return 'greek';
+      if (lang === 'he') return 'hebrew';
      return 'mono';
    }
  
@@ -1089,15 +1088,8 @@ function mapLxxRefsToHebrewRefs(refs) {
         verseText = preloadedTexts.get(ref) || preloadedTexts.get(canonicalRef) || '';
       } else {
         try {
-        if (lang === 'lxx') {
-            const tokens = await loadLxxVerseTokens(book, chapter, verse);
-            verseText = Array.isArray(tokens)
-              ? tokens.map((token) => token?.w).filter(Boolean).join(' ')
-              : '';
-          } else {
-            const verses = await loadChapterText(lang, book, chapter, options);
-            verseText = getVerseTextFromChapter(verses, verse) || '';
-          }
+        const verses = await loadChapterText(lang, book, chapter, options);
+          verseText = getVerseTextFromChapter(verses, verse) || '';
         } catch (error) {
           if (isAbortError(error)) throw error;
           verseText = 'Texto no disponible.';
@@ -1133,10 +1125,8 @@ function mapLxxRefsToHebrewRefs(refs) {
     return [...refs].sort((a, b) => {
       const [ba, ca, va] = String(a).split('|');
       const [bb, cb, vb] = String(b).split('|');
-      const sa = LXX_TO_HEBREW_SLUG[ba] || ba;
-      const sb = LXX_TO_HEBREW_SLUG[bb] || bb;
-      const ia = CANON_INDEX.has(sa) ? CANON_INDEX.get(sa) : 9999;
-      const ib = CANON_INDEX.has(sb) ? CANON_INDEX.get(sb) : 9999;
+       const ia = CANON_INDEX.has(ba) ? CANON_INDEX.get(ba) : 9999;
+      const ib = CANON_INDEX.has(bb) ? CANON_INDEX.get(bb) : 9999;
       if (ia !== ib) return ia - ib;
       const c1 = Number(ca) || 0, c2 = Number(cb) || 0;
       if (c1 !== c2) return c1 - c2;
@@ -1352,8 +1342,7 @@ const [bookRaw, cRaw, vRaw] = String(ref).split('|');
         <div class="bx-result-item d-flex gap-2">
           <div class="flex-grow-1">
             <div class="bx-ref">${escapeHtml(it.ref)}</div>
-            <div class="bx-text">${highlightText(escapeHtml(safeText), highlightQuery, agg.lang)}</div>
-          </div>
+            <div class="bx-text">${highlightText(safeText, highlightQuery, agg.lang)}</div>          </div>
           <div class="bx-actions">
             <a class="btn btn-primary btn-sm" href="${openHref}">Abrir</a>
           </div>

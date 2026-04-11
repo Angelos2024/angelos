@@ -10,8 +10,8 @@
   }
 
   function normalizeByLang(text, lang) {
-    if (lang === 'gr' || lang === 'lxx') return normalizeGreek(text);
-    if (lang === 'he') return normalizeHebrew(text);
+    if (lang === 'gr') return normalizeGreek(text);
+        if (lang === 'he') return normalizeHebrew(text);
     return normalizeSpanish(text);
   }
 

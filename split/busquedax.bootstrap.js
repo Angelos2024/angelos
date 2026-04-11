@@ -9,118 +9,8 @@
      gr: './search/index-gr.json',
      he: './search/index-he.json'
    };
-  const LXX_SHARD_BASE_PATHS = ['./index', './search/index'];
   const TEXT_BASE = './search/texts';
-  const LXX_FILES = [
-    'lxx_rahlfs_1935_1Chr.json',
-    'lxx_rahlfs_1935_1Esdr.json',
-    'lxx_rahlfs_1935_1Kgs.json',
-    'lxx_rahlfs_1935_1Macc.json',
-    'lxx_rahlfs_1935_1Sam.json',
-    'lxx_rahlfs_1935_2Chr.json',
-    'lxx_rahlfs_1935_2Esdr.json',
-    'lxx_rahlfs_1935_2Kgs.json',
-    'lxx_rahlfs_1935_2Macc.json',
-    'lxx_rahlfs_1935_2Sam.json',
-    'lxx_rahlfs_1935_3Macc.json',
-    'lxx_rahlfs_1935_4Macc.json',
-    'lxx_rahlfs_1935_Amos.json',
-    'lxx_rahlfs_1935_Bar.json',
-    'lxx_rahlfs_1935_BelOG.json',
-    'lxx_rahlfs_1935_BelTh.json',
-    'lxx_rahlfs_1935_DanOG.json',
-    'lxx_rahlfs_1935_DanTh.json',
-    'lxx_rahlfs_1935_Deut.json',
-    'lxx_rahlfs_1935_Eccl.json',
-    'lxx_rahlfs_1935_EpJer.json',
-    'lxx_rahlfs_1935_Esth.json',
-    'lxx_rahlfs_1935_Exod.json',
-    'lxx_rahlfs_1935_Ezek.json',
-    'lxx_rahlfs_1935_Gen.json',
-    'lxx_rahlfs_1935_Hab.json',
-    'lxx_rahlfs_1935_Hag.json',
-    'lxx_rahlfs_1935_Hos.json',
-    'lxx_rahlfs_1935_Isa.json',
-    'lxx_rahlfs_1935_Jdt.json',
-    'lxx_rahlfs_1935_Jer.json',
-    'lxx_rahlfs_1935_Job.json',
-    'lxx_rahlfs_1935_Joel.json',
-    'lxx_rahlfs_1935_Jonah.json',
-    'lxx_rahlfs_1935_JoshA.json',
-    'lxx_rahlfs_1935_JoshB.json',
-    'lxx_rahlfs_1935_JudgA.json',
-    'lxx_rahlfs_1935_JudgB.json',
-    'lxx_rahlfs_1935_Lam.json',
-    'lxx_rahlfs_1935_Lev.json',
-    'lxx_rahlfs_1935_Mal.json',
-    'lxx_rahlfs_1935_Mic.json',
-    'lxx_rahlfs_1935_Nah.json',
-    'lxx_rahlfs_1935_Num.json',
-    'lxx_rahlfs_1935_Obad.json',
-    'lxx_rahlfs_1935_Odes.json',
-    'lxx_rahlfs_1935_Prov.json',
-    'lxx_rahlfs_1935_Ps.json',
-    'lxx_rahlfs_1935_PsSol.json',
-    'lxx_rahlfs_1935_Ruth.json',
-    'lxx_rahlfs_1935_Sir.json',
-    'lxx_rahlfs_1935_Song.json',
-    'lxx_rahlfs_1935_SusOG.json',
-    'lxx_rahlfs_1935_SusTh.json',
-    'lxx_rahlfs_1935_TobBA.json',
-    'lxx_rahlfs_1935_TobS.json',
-    'lxx_rahlfs_1935_Wis.json',
-    'lxx_rahlfs_1935_Zech.json',
-    'lxx_rahlfs_1935_Zeph.json',
-  ];
- const LXX_TO_HEBREW_SLUG = {
-    Gen: 'genesis',
-    Exod: 'exodo',
-    Lev: 'levitico',
-    Num: 'numeros',
-    Deut: 'deuteronomio',
-    JoshA: 'josue',
-    JoshB: 'josue',
-    JudgA: 'jueces',
-    JudgB: 'jueces',
-    Ruth: 'rut',
-    '1Sam': '1_samuel',
-    '2Sam': '2_samuel',
-    '1Kgs': '1_reyes',
-    '2Kgs': '2_reyes',
-    '1Chr': '1_cronicas',
-    '2Chr': '2_cronicas',
-    '1Esdr': 'esdras',
-    '2Esdr': 'nehemias',
-    Esth: 'ester',
-    Job: 'job',
-    Ps: 'salmos',
-    Prov: 'proverbios',
-    Eccl: 'eclesiastes',
-    Song: 'cantares',
-    Isa: 'isaias',
-    Jer: 'jeremias',
-    Lam: 'lamentaciones',
-    Ezek: 'ezequiel',
-    DanOG: 'daniel',
-    DanTh: 'daniel',
-    Hos: 'oseas',
-    Joel: 'joel',
-    Amos: 'amos',
-    Obad: 'abdias',
-    Jonah: 'jonas',
-    Mic: 'miqueas',
-    Nah: 'nahum',
-    Hab: 'habacuc',
-    Zeph: 'sofonias',
-    Hag: 'hageo',
-    Zech: 'zacarias',
-    Mal: 'malaquias'
-  };
-  const HEBREW_SLUG_TO_LXX = Object.entries(LXX_TO_HEBREW_SLUG).reduce((acc, [lxx, slug]) => {
-    if (!acc[slug]) acc[slug] = [];
-    acc[slug].push(lxx);
-    return acc;
-  }, {});
+  
    const stopwords = new Set([
     'de', 'la', 'el', 'los', 'las', 'y', 'o', 'a', 'en', 'por', 'para',
     'un', 'una', 'unos', 'unas', 'del', 'al', 'que', 'se', 'con', 'como',
@@ -172,25 +62,12 @@ const OT_SET = new Set([...TORAH, ...HISTORICAL, ...WISDOM, ...PROPHETS]);
 const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
 
   const NT_BOOKS = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
-  const LXX_BOOKS = [
-    '1Chr', '1Esdr', '1Kgs', '1Macc', '1Sam', '2Chr', '2Esdr', '2Kgs', '2Macc', '2Sam',
-    '3Macc', '4Macc', 'Amos', 'Bar', 'BelOG', 'BelTh', 'DanOG', 'DanTh', 'Deut', 'Eccl',
-    'EpJer', 'Esth', 'Exod', 'Ezek', 'Gen', 'Hab', 'Hag', 'Hos', 'Isa', 'Jdt', 'Jer', 'Job',
-    'Joel', 'Jonah', 'JoshA', 'JoshB', 'JudgA', 'JudgB', 'Lam', 'Lev', 'Mal', 'Mic', 'Nah',
-    'Num', 'Obad', 'Odes', 'Prov', 'Ps', 'PsSol', 'Ruth', 'Sir', 'Song', 'SusOG', 'SusTh',
-    'TobBA', 'TobS', 'Wis', 'Zech', 'Zeph'
-  ];
-  const LXX_FILE_BY_BOOK = LXX_FILES.reduce((acc, file) => {
-    const match = file.match(/^lxx_rahlfs_1935_(.+)\.json$/);
-    if (match?.[1]) acc[match[1]] = file;
-    return acc;
-  }, {});
+  
  
    const langLabels = {
      es: 'RVR1960',
      gr: 'RKANT',
-    he: 'Hebreo',
-    lxx: 'LXX'
+    he: 'Hebreo'
    };
  const SEARCH_EQUIVALENCE_GROUPS = [
     {
@@ -205,47 +82,26 @@ const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
     }
   ];
  const state = {
-    
-  // UI state para filtros + paginación
+
   pagination: {
     pageSize: 25,
     page: 1,
-    selectedTestament: null, // 'ot' | 'nt' | null
-    selectedBook: null,      // slug del libro o null
- activeLang: null,
-collapsedSections: { ot: true, nt: true },
+    selectedTestament: null,
+    selectedBook: null,
+    activeLang: null,
+    collapsedSections: { ot: true, nt: true },
     enabledTestaments: { ot: true, nt: true }
+
           },
-  // Cache de textos por verso para evitar recargas
   verseCache: {
     es: new Map(),
     gr: new Map(),
-    he: new Map(),
-    lxx: new Map()
-  },
-dict: null,
-    dictMap: new Map(),
-      dictSpanishMap: new Map(),
-    hebrewDict: null,
-    hebrewDictMap: new Map(),
-    trilingualEquiv: null,
-    trilingualByEs: new Map(),
-    trilingualByGr: new Map(),
-    trilingualByHe: new Map(),
-     indexes: {},
-     textCache: new Map(),
-    lxxFileCache: new Map(),
-    lxxBookCache: new Map(),
-    lxxShardCache: new Map(),
-    lxxShardBaseByBook: new Map(),
-    lxxVerseCache: new Map(),
-    lxxBookStatsCache: new Map(),
-    lxxSearchCache: new Map(),
-     filter: 'todo',
-      languageScope: 'auto',
+    he: new Map()
+      },
+
   last: null,
-     isLoading: false
-    };
+      isLoading: false
+};
   const jsonCache = new Map();
   const failedJsonRequests = new Map();
   const JSON_RETRY_COOLDOWN_MS = 15000;
