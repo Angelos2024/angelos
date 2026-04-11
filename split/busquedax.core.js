@@ -429,6 +429,7 @@ const tokens = String(term || '').split(/\s+/).filter(Boolean);
     return data;
   }
    async function loadIndex(lang, options = {}) {
+    if (!state.indexes) state.indexes = {};
     if (state.indexes[lang]) return state.indexes[lang];
    const candidates = Array.isArray(SEARCH_INDEX[lang]) ? SEARCH_INDEX[lang] : [SEARCH_INDEX[lang]];
     let lastError = null;
@@ -471,13 +472,14 @@ async function loadEsShard(term, options = {}) {
   const shards = await Promise.all(
     letters.map(async (letter) => {
       const cacheKey = 'es_shard_' + letter;
-      if (state.indexes[cacheKey]) {
+      if (state.indexes?.[cacheKey]) {
         loadedCount++;
         return state.indexes[cacheKey];
       }
       try {
         const url = './search/shards/index-es-' + letter + '.json';
         const data = await loadJson(url, options);
+        if (!state.indexes) state.indexes = {};
         state.indexes[cacheKey] = data;
         loadedCount++;
         return data;
@@ -1778,4 +1780,3 @@ bookList.className = 'mt-2 d-grid gap-1';
      renderExamples(cards);
 
    }
- 
