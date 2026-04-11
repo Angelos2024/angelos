@@ -276,9 +276,9 @@ const SOURCES = [
 
           return rows
             .filter((entry) => entry && typeof entry === 'object')
-            .map((entry) => ({
-              id: entry.id,
-              texto_hebreo: entry.texto_hebreo,
+            ..map((entry, index) => ({
+  id: `${source.libro}||${index}`,   // ← único por archivo + posición
+  texto_hebreo: entry.texto_hebreo,
               transliteracion: entry.transliteracion,
               equivalencia_espanol: entry.equivalencia_espanol,
               observacion: entry.observacion,
