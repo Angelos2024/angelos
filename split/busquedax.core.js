@@ -1006,29 +1006,27 @@ const [bookRaw, cRaw, vRaw] = String(ref).split('|');
       byChapter.get(p.key).push(p.verse);
     });
 
-    for (const [key, versesNeeded] of byChapter.entries()) {
+    // Lanzar todos los fetches de capítulo en paralelo
+    const chapterEntries = [...byChapter.entries()];
+    await Promise.all(chapterEntries.map(async ([key, versesNeeded]) => {
       const [book, chapterRaw] = key.split('|');
       const chapter = Number(chapterRaw);
       try {
-        {
-          const verses = await loadChapterText(lang, book, chapter, options);
-          versesNeeded.forEach((v) => {
-            const canonicalRef = `${book}|${chapter}|${v}`;
-            let text = '';
-            if (Array.isArray(verses)) {
-              text = verses[v - 1] || '';
-            } else if (verses && typeof verses === 'object') {
-              text = verses[v] || verses[String(v)] || verses[String(v - 1)] || '';
-            }
-
-            cache.set(canonicalRef, text);
-          });
-        }
+        const verses = await loadChapterText(lang, book, chapter, options);
+        versesNeeded.forEach((v) => {
+          const canonicalRef = `${book}|${chapter}|${v}`;
+          let text = '';
+          if (Array.isArray(verses)) {
+            text = verses[v - 1] || '';
+          } else if (verses && typeof verses === 'object') {
+            text = verses[v] || verses[String(v)] || verses[String(v - 1)] || '';
+          }
+          cache.set(canonicalRef, text);
+        });
       } catch (e) {
         if (isAbortError(e)) throw e;
-        // Evita cachear vacío ante fallos transitorios para permitir reintentos.
       }
-    }
+    }));
 
     parsed.forEach((p) => {
       const canonicalRef = `${p.book}|${p.chapter}|${p.verse}`;
@@ -1330,79 +1328,71 @@ bookList.className = 'mt-2 d-grid gap-1';
  
 
   async function buildBookGroups(refs, lang, preloadedTexts = null, options = {}) {
-     const grouped = new Map();
-     refs.forEach((ref) => {
-       const [book] = ref.split('|');
-       if (!grouped.has(book)) grouped.set(book, []);
-       grouped.get(book).push(ref);
-     });
-     
-        const limit = lang === 'es' ? 20 : 12;
-     const groups = [];
-     for (const [book, bookRefs] of grouped.entries()) {
-       const { key, label } = groupForBook(book);
-       const group = {
-         label: book.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()),
-         items: [],
-         count: bookRefs.length,
-         expanded: false,
-         category: key,
-         categoryLabel: label,
-         refs: bookRefs,
-         limit,
-         loadedCount: 0,
-         hasMore: false,
-         loadingMore: false
-       };
-       const refsToLoad = bookRefs.slice(0, limit);
-       for (const ref of refsToLoad) {
-         const [bookName, chapterRaw, verseRaw] = ref.split('|');
-         const chapter = Number(chapterRaw);
-         const verse = Number(verseRaw);
-         try {
+    const grouped = new Map();
+    refs.forEach((ref) => {
+      const [book] = ref.split('|');
+      if (!grouped.has(book)) grouped.set(book, []);
+      grouped.get(book).push(ref);
+    });
 
- const canonicalRef = `${bookName}|${chapter}|${verse}`;
-          const verseText = preloadedTexts?.get?.(ref) || preloadedTexts?.get?.(canonicalRef);
-          if (!verseText) throw new Error('no preloaded');
-           group.items.push({
-             book: bookName,
-              chapter,
-              verse,
-             ref: formatRef(bookName, chapter, verse),
-             text: verseText
-           });
-         } catch (error) {
+    const limit = lang === 'es' ? 20 : 12;
+
+    // Precarga paralela: agrupar refs por book+chapter y lanzar todos los fetches a la vez
+    const chapterFetchMap = new Map(); // 'book|chapter' -> Promise<verses>
+    for (const [, bookRefs] of grouped.entries()) {
+      for (const ref of bookRefs.slice(0, limit)) {
+        const [bookName, chapterRaw] = ref.split('|');
+        const chapter = Number(chapterRaw);
+        const key = `${bookName}|${chapter}`;
+        if (!chapterFetchMap.has(key)) {
+          chapterFetchMap.set(key, loadChapterText(lang, bookName, chapter, options).catch(() => null));
+        }
+      }
+    }
+    // Esperar todas las cargas en paralelo
+    await Promise.all(chapterFetchMap.values());
+
+    const groups = [];
+    for (const [book, bookRefs] of grouped.entries()) {
+      const { key, label } = groupForBook(book);
+      const group = {
+        label: book.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()),
+        items: [],
+        count: bookRefs.length,
+        expanded: false,
+        category: key,
+        categoryLabel: label,
+        refs: bookRefs,
+        limit,
+        loadedCount: 0,
+        hasMore: false,
+        loadingMore: false
+      };
+      const refsToLoad = bookRefs.slice(0, limit);
+      for (const ref of refsToLoad) {
+        const [bookName, chapterRaw, verseRaw] = ref.split('|');
+        const chapter = Number(chapterRaw);
+        const verse = Number(verseRaw);
+        const canonicalRef = `${bookName}|${chapter}|${verse}`;
+        let resolvedText = preloadedTexts?.get?.(ref) || preloadedTexts?.get?.(canonicalRef) || '';
+        if (!resolvedText) {
           try {
-            let resolvedText = '';
-             {
-               const verses = await loadChapterText(lang, bookName, chapter, options);
-               resolvedText = getVerseTextFromChapter(verses, verse) || '';
-             }
-             group.items.push({
-               book: bookName,
-               chapter,
-               verse,
-               ref: formatRef(bookName, chapter, verse),
-               text: resolvedText
-             });
-           } catch (innerError) {
-             if (isAbortError(innerError)) throw innerError;
-             group.items.push({
-                  book: bookName,
-               chapter,
-               verse,
-               ref: formatRef(bookName, chapter, verse),
-               text: 'Texto no disponible.'
-             });
-           }
-         }
-       }
+            const chapterKey = `${bookName}|${chapter}`;
+            const verses = await chapterFetchMap.get(chapterKey);
+            resolvedText = (verses ? getVerseTextFromChapter(verses, verse) : '') || '';
+          } catch (e) {
+            if (isAbortError(e)) throw e;
+            resolvedText = 'Texto no disponible.';
+          }
+        }
+        group.items.push({ book: bookName, chapter, verse, ref: formatRef(bookName, chapter, verse), text: resolvedText });
+      }
       group.loadedCount = group.items.length;
-       group.hasMore = lang === 'es' && group.loadedCount < group.count;
-       groups.push(group);
-       }
+      group.hasMore = lang === 'es' && group.loadedCount < group.count;
+      groups.push(group);
+    }
     return groups.sort((a, b) => b.count - a.count);
-   }
+  }
  async function loadMoreRvr1960(group, options = {}) {
     const refsToLoad = group.refs.slice(group.loadedCount);
     for (const ref of refsToLoad) {

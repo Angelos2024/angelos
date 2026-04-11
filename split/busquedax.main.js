@@ -1119,6 +1119,7 @@ const payload = {
         term,
         lang: searchLang,
         refs: filteredRefs,
+        allRefs: refs,          // refs sin filtrar por testamento, para re-filtrado dinámico
         groupsByCorpus,
         highlightQueries,
         relatedTerms
@@ -1225,19 +1226,33 @@ function updateDetectedLanguageLabel(lang) {
     state.languageScope = 'auto';
   }
  
- function handleTestamentFilterChange() {
+ async function handleTestamentFilterChange() {
   const enabled = state.pagination.enabledTestaments || { ot: true, nt: true };
   enabled.ot = filterOTCheckbox ? Boolean(filterOTCheckbox.checked) : true;
   enabled.nt = filterNTCheckbox ? Boolean(filterNTCheckbox.checked) : true;
   state.pagination.enabledTestaments = enabled;
   state.pagination.page = 1;
-  if (state.last?.groupsByCorpus) {
- void renderSearchUI(
-      state.last.groupsByCorpus || [],
-      state.last.highlightQueries || {},
-      state.last.relatedTerms || {}
-    );
-      }
+
+  if (!state.last) return;
+
+  // Re-filtrar los refs originales y reconstruir los grupos con el nuevo filtro
+  const filteredRefs = filterRefsByEnabledTestaments(state.last.allRefs || state.last.refs || []);
+  const searchLang = state.last.lang || 'es';
+  const MAX_REFS_ES = 250;
+  const MAX_REFS_GR_HE = 400;
+  const safeRefs = searchLang === 'es'
+    ? filteredRefs.slice(0, MAX_REFS_ES)
+    : filteredRefs.slice(0, MAX_REFS_GR_HE);
+
+  const groups = await buildBookGroups(safeRefs, searchLang, null, {});
+  const newGroupsByCorpus = [{ lang: searchLang, groups, expanded: false, loading: false }];
+  state.last.groupsByCorpus = newGroupsByCorpus;
+
+  void renderSearchUI(
+    newGroupsByCorpus,
+    state.last.highlightQueries || {},
+    state.last.relatedTerms || {}
+  );
 }
 
 if (filterOTCheckbox) filterOTCheckbox.checked = true;
