@@ -346,6 +346,41 @@ function groupForBook(book) {
 
     return { lang, books, ot, nt, otCount, ntCount, allCount };
   }
+  /**
+   * Versión ligera de buildBookGroups para la UI paginada.
+   * Solo agrupa refs por libro — NO hace ningún fetch de textos.
+   * Los textos se cargan bajo demanda en renderResultsPage → resolveVerseTextsForRefs.
+   */
+  function buildBookGroupsMeta(refs, lang) {
+    const grouped = new Map();
+    refs.forEach((ref) => {
+      const [book] = String(ref || '').split('|');
+      if (!book) return;
+      if (!grouped.has(book)) grouped.set(book, []);
+      grouped.get(book).push(ref);
+    });
+
+    const limit = lang === 'es' ? 20 : 12;
+    const groups = [];
+    for (const [book, bookRefs] of grouped.entries()) {
+      const { key, label } = groupForBook(book);
+      groups.push({
+        label: book.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()),
+        items: [],
+        count: bookRefs.length,
+        expanded: false,
+        category: key,
+        categoryLabel: label,
+        refs: bookRefs,
+        limit,
+        loadedCount: 0,
+        hasMore: lang === 'es' && bookRefs.length > 0,
+        loadingMore: false
+      });
+    }
+    return groups.sort((a, b) => b.count - a.count);
+  }
+
   function getQueryCacheKey(term, lang) {
   const enabled = state.pagination.enabledTestaments || { ot: true, nt: true };
   return [
@@ -1108,9 +1143,9 @@ let indexPromise = searchLang === 'es'
       await renderSearchUI(groupsByCorpus, highlightQueries, relatedTerms, options);
      
       
-// Sin cap artificial: buildBookGroups limita la precarga de textos por libro (limit=20/12)
-      // pero group.refs conserva todas las refs para paginación y filtros correctos.
-      const groups = await buildBookGroups(filteredRefs, searchLang, null, options);
+// buildBookGroupsMeta: agrupación instantánea sin fetch de textos.
+      // Los textos se cargan solo para la página actual en renderResultsPage.
+      const groups = buildBookGroupsMeta(filteredRefs, searchLang);
       groupsByCorpus[0].groups = groups;
       groupsByCorpus[0].loading = false;
 const payload = {
@@ -1236,8 +1271,8 @@ function updateDetectedLanguageLabel(lang) {
   // Re-filtrar los refs originales y reconstruir los grupos con el nuevo filtro
   const filteredRefs = filterRefsByEnabledTestaments(state.last.allRefs || state.last.refs || []);
   const searchLang = state.last.lang || 'es';
-  // Sin cap: conservamos todos los refs para que la paginación y el filtro muestren todo
-  const groups = await buildBookGroups(filteredRefs, searchLang, null, {});
+  // buildBookGroupsMeta: agrupación sin fetch de textos, carga lazy por página
+  const groups = buildBookGroupsMeta(filteredRefs, searchLang);
   const newGroupsByCorpus = [{ lang: searchLang, groups, expanded: false, loading: false }];
   state.last.groupsByCorpus = newGroupsByCorpus;
 
