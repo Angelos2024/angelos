@@ -82,7 +82,6 @@ const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
     }
   ];
  const state = {
-
   pagination: {
     pageSize: 25,
     page: 1,
@@ -91,17 +90,34 @@ const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
     activeLang: null,
     collapsedSections: { ot: true, nt: true },
     enabledTestaments: { ot: true, nt: true }
+  },
 
-          },
   verseCache: {
     es: new Map(),
     gr: new Map(),
     he: new Map()
-      },
+  },
+
+  indexes: {},
+  textCache: new Map(),
+
+  dict: null,
+  dictMap: new Map(),
+  dictSpanishMap: new Map(),
+  dictTranslitMap: new Map(),
+  dictDefinitionEntries: [],
+
+  hebrewDict: null,
+  hebrewDictMap: new Map(),
+
+  trilingualEquiv: null,
+  trilingualByEs: new Map(),
+  trilingualByGr: new Map(),
+  trilingualByHe: new Map(),
 
   last: null,
-    queryCache: new Map(),
-      isLoading: false
+  queryCache: new Map(),
+  isLoading: false
 };
   const jsonCache = new Map();
   const failedJsonRequests = new Map();

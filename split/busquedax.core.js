@@ -448,6 +448,8 @@ const tokens = String(term || '').split(/\s+/).filter(Boolean);
    }
 
 async function loadEsShard(term, options = {}) {
+  if (!state.indexes) state.indexes = {};
+
   const tokens = String(term || '')
     .split(/\s+/)
     .map(t => normalizeSpanish(t.trim()))
@@ -480,7 +482,6 @@ async function loadEsShard(term, options = {}) {
     })
   );
 
-  // Fallback al índice completo si no cargó ningún shard o hubo errores
   if (loadedCount === 0 || anyError) {
     return loadIndex('es', options);
   }
