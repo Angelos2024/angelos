@@ -100,6 +100,7 @@ const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
       },
 
   last: null,
+    queryCache: new Map(),
       isLoading: false
 };
   const jsonCache = new Map();

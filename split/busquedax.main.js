@@ -1071,6 +1071,7 @@ async function warmSearchAssets(term = '') {
   await Promise.all(preloadTasks);
 }
   async function analyze() {
+        if (!(state.queryCache instanceof Map)) state.queryCache = new Map();
     const term = queryInput.value.trim();
 if (!term) {
       setValidationMessage('');
@@ -1104,9 +1105,9 @@ if (!term) {
         try {
           const rawState = sessionStorage.getItem('lectorState');
           if (rawState) {
-            const state = JSON.parse(rawState);
-            const book = String(state?.currentBookSlug || '').trim();
-            const name = String(state?.currentBookName || '').trim();
+            const lectorState = JSON.parse(rawState);
+            const book = String(lectorState?.currentBookSlug || '').trim();
+            const name = String(lectorState?.currentBookName || '').trim();
             if (book) params.set('book', book);
             if (name) params.set('name', name);
           }

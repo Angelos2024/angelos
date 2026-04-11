@@ -252,6 +252,7 @@ dict: null,
      filter: 'todo',
       languageScope: 'auto',
   last: null,
+      queryCache: new Map(),
      isLoading: false
     };
   const jsonCache = new Map();
@@ -2516,6 +2517,7 @@ bookList.className = 'mt-2 d-grid gap-1';
    }
  
   async function analyze() {
+        if (!(state.queryCache instanceof Map)) state.queryCache = new Map();
     const term = queryInput.value.trim();
      if (!term) {
       setValidationMessage('');
