@@ -898,15 +898,133 @@ font-size:.96rem;
       }
     })();
   </script>
-  <script src="buscador.js"></script>
-  <script src="buscador2.js"></script>
-  <script src="buscador3.js"></script>
-  <script src="diccionario_b_hebreo.js"></script>
-  <script src="diccionario_a_griego.js"></script>
-    <script src="../dic/diccionario_b_eric.js"></script>
-  <script src="trilingue_comparativo.js"></script>
-  <script src="candidatos_click.js"></script>
-  <script src="buscador-resumen.js"></script>
+  <script>
+    (function(){
+      const orderedScripts = [
+        'buscador.js',
+        'buscador2.js',
+        'buscador3.js',
+        'diccionario_b_hebreo.js',
+        'diccionario_a_griego.js',
+        '../dic/diccionario_b_eric.js',
+        'trilingue_comparativo.js',
+        'candidatos_click.js',
+        'buscador-resumen.js'
+      ];
+      const searchBtn = document.getElementById('searchBtn');
+      const queryEl = document.getElementById('query');
+      const diagEl = document.getElementById('diag');
+      const initialSearchText = searchBtn ? searchBtn.textContent : '';
+      let loadPromise = null;
+      let modulesReady = false;
+
+      function setLoadingState(isLoading) {
+        if (searchBtn) {
+          searchBtn.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+          searchBtn.textContent = isLoading && !modulesReady ? 'Preparando...' : initialSearchText;
+        }
+        if (diagEl && isLoading && !modulesReady) {
+          diagEl.textContent = 'Preparando modulos de busqueda...';
+        }
+      }
+
+      function loadOrderedScripts(sources) {
+        return new Promise((resolve, reject) => {
+          let loaded = 0;
+          let failed = false;
+
+          sources.forEach((src) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.async = false;
+            script.onload = () => {
+              loaded += 1;
+              if (!failed && loaded === sources.length) resolve();
+            };
+            script.onerror = () => {
+              if (failed) return;
+              failed = true;
+              reject(new Error(`No se pudo cargar ${src}`));
+            };
+            document.body.appendChild(script);
+          });
+        });
+      }
+
+      async function ensureComparativeModulesLoaded() {
+        if (modulesReady) return;
+        if (!loadPromise) {
+          setLoadingState(true);
+          loadPromise = loadOrderedScripts(orderedScripts)
+            .then(() => {
+              modulesReady = true;
+              window.AnalisisComparativoModulesReady = true;
+              if (diagEl && diagEl.textContent === 'Preparando modulos de busqueda...') {
+                diagEl.textContent = 'La base remota se cargara cuando hagas la primera consulta.';
+              }
+            })
+            .catch((error) => {
+              modulesReady = false;
+              loadPromise = null;
+              console.error(error);
+              if (diagEl) diagEl.textContent = 'No se pudieron cargar los modulos de busqueda.';
+              throw error;
+            })
+            .finally(() => setLoadingState(false));
+        }
+        return loadPromise;
+      }
+
+      function scheduleWarmLoad() {
+        const warm = () => { ensureComparativeModulesLoaded().catch(() => {}); };
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(warm, { timeout: 1500 });
+        } else {
+          window.setTimeout(warm, 250);
+        }
+      }
+
+      if (searchBtn) {
+        searchBtn.addEventListener('pointerenter', () => {
+          ensureComparativeModulesLoaded().catch(() => {});
+        }, { once: true });
+
+        searchBtn.addEventListener('click', (event) => {
+          if (modulesReady) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          ensureComparativeModulesLoaded()
+            .then(() => {
+              if (typeof window.doSearch === 'function') window.doSearch();
+            })
+            .catch(() => {});
+        }, true);
+      }
+
+      if (queryEl) {
+        queryEl.addEventListener('focus', () => {
+          ensureComparativeModulesLoaded().catch(() => {});
+        }, { once: true });
+
+        queryEl.addEventListener('keydown', (event) => {
+          if (modulesReady || event.key !== 'Enter') return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          ensureComparativeModulesLoaded()
+            .then(() => {
+              if (typeof window.doSearch === 'function') window.doSearch();
+            })
+            .catch(() => {});
+        }, true);
+      }
+
+      if (document.readyState === 'complete') {
+        scheduleWarmLoad();
+      } else {
+        window.addEventListener('load', scheduleWarmLoad, { once: true });
+      }
+    })();
+  </script>
 
   <script>
     (function(){
