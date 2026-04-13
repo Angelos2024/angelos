@@ -137,26 +137,97 @@ return Array.from(new Set(words));
     return stripped || value;
   }
 
-  function buildHebrewRootLookupKeys(raw) {
+  function normalizeHebrewFinalLetter(token) {
+    return String(token || '').replace(/[כמנפצ]$/u, (letter) => ({
+      כ: 'ך',
+      מ: 'ם',
+      נ: 'ן',
+      פ: 'ף',
+      צ: 'ץ'
+    }[letter] || letter));
+  }
+
+  function addHebrewRootLookupCandidate(out, seen, token, priority) {
+    const key = normalizeHebrewRootKey(token);
+    if (!key) return;
+    const variants = new Set([key, normalizeHebrewFinalLetter(key)]);
+    variants.forEach((variant) => {
+      if (!variant || seen.has(variant)) return;
+      seen.add(variant);
+      out.push({ key: variant, priority });
+    });
+  }
+
+  function buildHebrewGrammaticalRootCandidates(token) {
+    const value = String(token || '').trim();
+    if (!value) return [];
+    const out = new Set();
+    const add = (candidate) => {
+      const normalized = normalizeHebrewFinalLetter(candidate);
+      if (normalized) out.add(normalized);
+    };
+
+    if (value.endsWith('ת') && value.length > 3) {
+      const stem = value.slice(0, -1);
+      add(`${stem}ה`); // estado constructo femenino: תורת -> תורה
+      add(stem);
+    }
+
+    if (value.endsWith('ים') && value.length > 3) {
+      const stem = value.slice(0, -2);
+      add(stem); // plural masculino: בנים -> בן
+    }
+
+    if (value.endsWith('ות') && value.length > 4) {
+      const stem = value.slice(0, -2);
+      add(`${stem}ה`); // plural femenino: תורות -> תורה
+      add(stem);
+    }
+
+    if (value.endsWith('י') && value.length > 3) {
+      add(value.slice(0, -1)); // constructo plural: בני -> בן
+    }
+
+    [
+      'יהם', 'יהן', 'יכם', 'יכן', 'ינו', 'יה', 'יו', 'יך', 'כם', 'כן',
+      'נו', 'ם', 'ן', 'ך', 'ה', 'ו', 'י'
+    ].forEach((suffix) => {
+      if (value.length - suffix.length < 2) return;
+      if (value.endsWith(suffix)) add(value.slice(0, -suffix.length));
+    });
+
+    return Array.from(out);
+  }
+
+  function buildHebrewRootLookupCandidates(raw) {
     const normalized = normalizeHebrewRootKey(raw);
     if (!normalized) return [];
 
-    const keys = new Set([normalized]);
+    const candidates = [];
+    const seen = new Set();
+    addHebrewRootLookupCandidate(candidates, seen, normalized, 70);
+
     const articleStripped = normalizeHebrewRootKey(removeLeadingHebrewArticle(normalized));
-    if (articleStripped) keys.add(articleStripped);
+    if (articleStripped) addHebrewRootLookupCandidate(candidates, seen, articleStripped, 75);
 
     const prefixedArticleMatch = normalized.match(/^([ובכלמש])ה[\u0591-\u05C7]*(.+)$/u);
     if (prefixedArticleMatch?.[2]) {
       const withoutArticleAfterPrefix = normalizeHebrewRootKey(`${prefixedArticleMatch[1]}${prefixedArticleMatch[2]}`);
-      if (withoutArticleAfterPrefix) keys.add(withoutArticleAfterPrefix);
+      if (withoutArticleAfterPrefix) addHebrewRootLookupCandidate(candidates, seen, withoutArticleAfterPrefix, 75);
     }
  const baseConsonants = normalized.replace(/\s+/g, '');
+    buildHebrewGrammaticalRootCandidates(baseConsonants).forEach((stem) => {
+      addHebrewRootLookupCandidate(candidates, seen, stem, 85);
+    });
     const stems = buildHebrewRootCandidateStems(baseConsonants);
     stems.forEach((stem) => {
-      const stemKey = normalizeHebrewRootKey(stem);
-      if (stemKey) keys.add(stemKey);
+      addHebrewRootLookupCandidate(candidates, seen, stem, 45);
     });
-    return Array.from(keys);
+    return candidates;
+  }
+
+  function buildHebrewRootLookupKeys(raw) {
+    return buildHebrewRootLookupCandidates(raw).map((candidate) => candidate.key);
   }
   function buildHebrewRootCandidateStems(token) {
     const value = String(token || '').trim();
@@ -193,6 +264,100 @@ return Array.from(new Set(words));
     if (!normalized) return '';
     const match = normalized.match(/^[\u05D0-\u05EA]+/u);
     return match ? match[0] : '';
+  }
+  function getHebrewShinSinHint(text) {
+    let value = String(text || '');
+    try {
+      value = value.normalize('NFKC');
+    } catch (_) {}
+    if (value.includes('\u05C1')) return 'shin';
+    if (value.includes('\u05C2')) return 'sin';
+    return '';
+  }
+
+  function entryHasShinSinHint(entry, hint) {
+    if (!hint) return false;
+    return [
+      entry?.lexeme,
+      entry?.root_lexeme,
+      entry?.root_first_segment,
+      entry?.definition_first_segment
+    ].some((value) => getHebrewShinSinHint(value) === hint);
+  }
+
+  function addHebrewRootCandidate(index, key, entry) {
+    if (!key || !entry) return;
+    const list = index.get(key);
+    if (list) {
+      list.push(entry);
+    } else {
+      index.set(key, [entry]);
+    }
+  }
+
+  function pickHebrewRootCandidate(candidates, rawValue) {
+    const list = Array.isArray(candidates) ? candidates : (candidates ? [candidates] : []);
+    if (!list.length) return null;
+
+    const hint = getHebrewShinSinHint(rawValue);
+    if (hint) {
+      const hinted = list.find((entry) => entryHasShinSinHint(entry, hint));
+      if (hinted) return hinted;
+    }
+
+    return list[0] || null;
+  }
+
+  function normalizeHebrewRootPointedKey(text) {
+    return normalizeHebrew(text).replace(/\s+/g, '');
+  }
+
+  function hasHebrewNikkud(text) {
+    return /[\u0591-\u05C7]/u.test(String(text || ''));
+  }
+
+  function hasExactPointedHebrewRootMatch(entry, rawValue) {
+    const rawPointed = normalizeHebrewRootPointedKey(rawValue);
+    if (!rawPointed || !hasHebrewNikkud(rawValue)) return false;
+    return [
+      entry?.lexeme,
+      entry?.root_lexeme
+    ].some((value) => normalizeHebrewRootPointedKey(value) === rawPointed);
+  }
+
+  function scoreHebrewRootEntry(entry, rawValue, priority, order, fromRootIndex) {
+    if (!entry) return Number.NEGATIVE_INFINITY;
+    let score = Number(priority) || 0;
+    if (hasExactPointedHebrewRootMatch(entry, rawValue)) score += 100;
+
+    const hint = getHebrewShinSinHint(rawValue);
+    if (hint && entryHasShinSinHint(entry, hint)) score += 12;
+    if (fromRootIndex) score -= 5;
+    return score - (order * 0.01);
+  }
+
+  function pickBestHebrewRootEntry(lookupCandidates, rawValue, index, rootIndex) {
+    let best = null;
+    let bestScore = Number.NEGATIVE_INFINITY;
+
+    (lookupCandidates || []).forEach((candidate, order) => {
+      const priority = candidate?.priority ?? 0;
+      [
+        { list: index.get(candidate?.key), fromRootIndex: false },
+        { list: rootIndex.get(candidate?.key), fromRootIndex: true }
+      ].forEach(({ list, fromRootIndex }) => {
+        const candidates = Array.isArray(list) ? list : (list ? [list] : []);
+        candidates.forEach((entry) => {
+          const score = scoreHebrewRootEntry(entry, rawValue, priority, order, fromRootIndex);
+          if (score > bestScore) {
+            best = entry;
+            bestScore = score;
+          }
+        });
+      });
+    });
+
+    return best;
   }
   function normalizeStrongKey(value) {
   const match = String(value || '').toUpperCase().match(/H?\s*0*(\d{1,4})/);
@@ -260,9 +425,9 @@ async function ensureHebrewUnifiedLoaded() {
           const strongKey = normalizeStrongKey(entry?.strong || '');
           const rootToken = extractLeadingHebrewToken(entry?.root_first_segment || '');
 
-          if (key && !index.has(key)) index.set(key, entry);
+          addHebrewRootCandidate(index, key, entry);
           if (strongKey && !strongIndex.has(strongKey)) strongIndex.set(strongKey, entry);
-          if (rootToken && !rootKeyIndex.has(rootToken)) rootKeyIndex.set(rootToken, entry);
+          addHebrewRootCandidate(rootKeyIndex, rootToken, entry);
          });
         
         hebrewRootsIndex = index;
@@ -383,9 +548,9 @@ function getStrongReferenceLabel(strong) {
     if (!derivedEl || !definitionEl) return;
 
      const rawValue = String(wordOrStrong || '').trim();
-    const lookupKeys = buildHebrewRootLookupKeys(rawValue);
+    const lookupCandidates = buildHebrewRootLookupCandidates(rawValue);
         const normalizedStrong = normalizeStrongKey(rawValue);
-    if ((!lookupKeys.length || lookupKeys[0] === '—') && !normalizedStrong) {
+    if ((!lookupCandidates.length || lookupCandidates[0]?.key === '—') && !normalizedStrong) {
           renderHebrewRootsPanel(null);
       return;
     }
@@ -399,11 +564,7 @@ function getStrongReferenceLabel(strong) {
             const rootIndex = hebrewRootsByRootKeyIndex || new Map();
 let rootEntry = (normalizedStrong && getHebrewRootEntryByStrong(normalizedStrong)) || null;
       if (!rootEntry) {
-        for (const key of lookupKeys) {
-          rootEntry = index.get(key) || null;
-          if (!rootEntry) rootEntry = rootIndex.get(key) || null;
-          if (rootEntry) break;
-        }
+        rootEntry = pickBestHebrewRootEntry(lookupCandidates, rawValue, index, rootIndex);
       }
             if (rootEntry) {
         renderHebrewRootsPanel(rootEntry);
