@@ -491,16 +491,19 @@ function getStrongReferenceLabel(strong) {
     const raw = String(text || '').trim();
     if (!raw) return '—';
 
-    const strongPattern = /H\d+/gi;
+    const strongPattern = /(^|[^A-Za-z0-9])((?:H\d{1,4})|(?:\d{3,4}))(?=$|[^A-Za-z0-9])/gi;
     let lastIndex = 0;
     let html = '';
     let match;
 
     while ((match = strongPattern.exec(raw))) {
-      const strong = normalizeStrongKey(match[0]);
+      const prefix = match[1] || '';
+      const strongRef = match[2] || '';
+      const strong = normalizeStrongKey(strongRef);
       const label = getStrongReferenceLabel(strong);
-      const replacement = label ? createRootReferenceButton(label, strong) : escapeHtml(match[0]);
+      const replacement = label ? createRootReferenceButton(label, strong) : escapeHtml(strongRef);
       html += escapeHtml(raw.slice(lastIndex, match.index));
+      html += escapeHtml(prefix);
       html += replacement;
       lastIndex = match.index + match[0].length;
     }

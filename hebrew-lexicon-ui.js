@@ -440,9 +440,9 @@ if (/^[HG]\d+$/.test(normalized)) return normalized;
   }
 
   function replaceStrongReferencesWithLexemes(text) {
-    return String(text || '').replace(/\bH(\d+)\b/gi, (match, digits) => {
-      const lexeme = resolveStrongReferenceLexeme(`H${digits}`);
-      return lexeme || '';
+    return String(text || '').replace(/(^|[^A-Za-z0-9])((?:H\d{1,4})|(?:\d{3,4}))(?=$|[^A-Za-z0-9])/gi, (match, prefix, strongRef) => {
+      const lexeme = resolveStrongReferenceLexeme(strongRef);
+      return `${prefix || ''}${lexeme || ''}`;
     }).replace(/\s{2,}/g, ' ').replace(/\s+([;:,.])/g, '$1').trim();
   }
 
