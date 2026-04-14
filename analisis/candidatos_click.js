@@ -481,7 +481,10 @@ function getStrongReferenceLabel(strong) {
     if (!key) return '';
 
     const entry = getUnifiedStrongEntryByStrong(key);
-    if (!entry) return key;
+    if (!entry) {
+      const rootEntry = getHebrewRootEntryByStrong(key);
+      return rootEntry?.lexeme || rootEntry?.root_lexeme || '';
+    }
 
     const lemma = entry?.strong_detail?.lemma || entry?.lemma || entry?.hebreo || entry?.forma || key;
     const translit = entry?.strong_detail?.transliteracion || entry?.transliteracion || '';
@@ -501,7 +504,7 @@ function getStrongReferenceLabel(strong) {
       const strongRef = match[2] || '';
       const strong = normalizeStrongKey(strongRef);
       const label = getStrongReferenceLabel(strong);
-      const replacement = label ? createRootReferenceButton(label, strong) : escapeHtml(strongRef);
+      const replacement = label ? createRootReferenceButton(label, strong) : '';
       html += escapeHtml(raw.slice(lastIndex, match.index));
       html += escapeHtml(prefix);
       html += replacement;
