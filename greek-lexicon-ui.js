@@ -5,8 +5,37 @@
 (() => {
   'use strict';
 
-  // Ajusta la ruta donde pongas el JSON
- const MORPH_PATH = './diccionario/mt-morphgnt.translit.json';
+  // Indice morfológico griego (NT completo por libros)
+  const MORPH_FILES = [
+    'mt-morphgnt.translit.json',
+    'mk-morphgnt.translit.json',
+    'lk-morphgnt.translit.json',
+    'jn-morphgnt.translit.json',
+    'ac-morphgnt.translit.json',
+    'ro-morphgnt.translit.json',
+    '1co-morphgnt.translit.json',
+    '2co-morphgnt.translit.json',
+    'ga-morphgnt.translit.json',
+    'eph-morphgnt.translit.json',
+    'php-morphgnt.translit.json',
+    'col-morphgnt.translit.json',
+    '1th-morphgnt.translit.json',
+    '2th-morphgnt.translit.json',
+    '1ti-morphgnt.translit.json',
+    '2ti-morphgnt.translit.json',
+    'tit-morphgnt.translit.json',
+    'phm-morphgnt.translit.json',
+    'heb-morphgnt.translit.json',
+    'jas-morphgnt.translit.json',
+    '1pe-morphgnt.translit.json',
+    '2pe-morphgnt.translit.json',
+    '1jn-morphgnt.translit.json',
+    '2jn-morphgnt.translit.json',
+    '3jn-morphgnt.translit.json',
+    'jud-morphgnt.translit.json',
+    're-morphgnt.translit.json'
+  ];
+  const MORPH_BASE = './diccionario/';
 const TRILINGUE_NT_BASE = './dic/trilingueNT/';
   const TRILINGUE_NT_FILES = [
     '01JuanEF.json','02MateoEf.json','03MarcosEF.json','04LucasEF.json','05HechosEF.json','06JacoboEF.json',
@@ -23,6 +52,7 @@ const TRILINGUE_NT_BASE = './dic/trilingueNT/';
   const state = {
     ready: false,
     bySurface: new Map(), // normalizedSurface -> { lemma, tr, surface }
+    byLemma: new Map(), // normalizedLemma -> { lemma, tr, surface }
       lxxCache: new Map(), // normalizedLemma -> [{ ref, word, lemma, morph }]
     tipEl: null,
     tipDrag: null,
@@ -37,12 +67,8 @@ function normalizeSimpleText(value) {
     return String(value || '').replace(/\s+/g, ' ').trim();
   }
 
-  function normalizeGreekLookup(value) {
-    return normalizeGreekToken(value)
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/\s+/g, '')
-      .toLowerCase();
+function normalizeGreekLookup(value) {
+    return canonicalGreekKey(value);
   }
 
   function pickTrilingueGloss(row) {
@@ -312,11 +338,18 @@ function normalizeSimpleText(value) {
       .replace(/[\u2019\u02BC']/g, '’') // unifica apóstrofos si los hubiera
       .trim();
   }
- function normalizeGreekLemmaKey(s) {
+  function canonicalGreekKey(s) {
     return normalizeGreekToken(s)
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase();
+      .replace(/[\u200b-\u200d\u2060\ufeff]/g, '')
+      .replace(/\s+/g, '')
+      .toLowerCase()
+      .replace(/ς/g, 'σ')
+      .replace(/ϲ/g, 'σ');
+  }
+ function normalizeGreekLemmaKey(s) {
+    return canonicalGreekKey(s);
   }
 
   const LXX_FILES = [
@@ -440,27 +473,48 @@ function normalizeSimpleText(value) {
   }
   async function loadMorphIndexOnce() {
     if (state.ready) return;
-    const r = await fetch(MORPH_PATH, { cache: 'no-store' });
-    if (!r.ok) throw new Error(`No se pudo cargar ${MORPH_PATH} (HTTP ${r.status})`);
-    const data = await r.json();
+    const settled = await Promise.allSettled(
+      MORPH_FILES.map(async (name) => {
+        const path = `${MORPH_BASE}${name}`;
+        const r = await fetch(path, { cache: 'no-store' });
+        if (!r.ok) throw new Error(`No se pudo cargar ${path} (HTTP ${r.status})`);
+        return r.json();
+      })
+    );
+    const loaded = settled
+      .filter((item) => item.status === 'fulfilled')
+      .map((item) => item.value);
+    if (loaded.length === 0) {
+      throw new Error('No se pudo cargar ningun archivo morfologico del NT');
+    }
 
-    // Estructura típica: [chapters] -> [verses] -> [tokens]
-    // Cada token: { g, tr, lemma }:contentReference[oaicite:4]{index=4}
-    for (const ch of (data || [])) {
-      if (!Array.isArray(ch)) continue;
-      for (const v of ch) {
-        if (!Array.isArray(v)) continue;
-        for (const t of v) {
-          if (!t || typeof t !== 'object') continue;
-          const surface = String(t.g || '');
-          const norm = normalizeGreekToken(surface);
-          if (!norm) continue;
-          if (!state.bySurface.has(norm)) {
-            state.bySurface.set(norm, {
-              surface,
-              lemma: String(t.lemma || ''),
-              tr: String(t.tr || ''),
-            });
+    for (const data of loaded) {
+      const chapters = Array.isArray(data) ? data : (Array.isArray(data?.chapters) ? data.chapters : []);
+      for (const ch of chapters) {
+        if (!Array.isArray(ch)) continue;
+        for (const v of ch) {
+          if (!Array.isArray(v)) continue;
+          for (const t of v) {
+            if (!t || typeof t !== 'object') continue;
+            const surface = String(t.g || '');
+            const norm = canonicalGreekKey(surface);
+            const lemma = String(t.lemma || '');
+            const lemmaKey = canonicalGreekKey(lemma);
+            if (!norm) continue;
+            if (!state.bySurface.has(norm)) {
+              state.bySurface.set(norm, {
+                surface,
+                lemma,
+                tr: String(t.tr || ''),
+              });
+            }
+            if (lemmaKey && !state.byLemma.has(lemmaKey)) {
+              state.byLemma.set(lemmaKey, {
+                surface,
+                lemma,
+                tr: String(t.tr || ''),
+              });
+            }
           }
         }
       }
@@ -558,17 +612,17 @@ function normalizeSimpleText(value) {
     if (!text) return;
 
     const { word } = expandWord(text, Math.max(0, Math.min(offset, text.length - 1)));
-    const norm = normalizeGreekToken(word);
+    const norm = canonicalGreekKey(word);
     if (!norm) return;
 
-    const hit = state.bySurface.get(norm);
+    const hit = state.bySurface.get(norm) || state.byLemma.get(norm);
  const requestId = ++state.tipRequestId;
     await loadTrilingueFallback().catch(() => null);
 
         if (!hit) {
                 const triOnly = resolveTrilingueFallback(norm);
       showTip(
-              norm,
+              word,
         renderTipBody({ lemma: '—', tr: '—' }, `<div class="t3 muted">Sin entrada (aún) en tu data</div>`, [], false, triOnly),
         ev.clientX,
         ev.clientY
@@ -587,7 +641,7 @@ function normalizeSimpleText(value) {
         ? `<div class="t3"><b>Definición:</b> ${escapeHtml(fallbackGloss)} <span class="muted">(trilingüe NT)</span></div>`
                 : `<div class="t3 muted">Definición: pendiente (no hay diccionario cargado)</div>`;
     showTip(
-       norm,
+       word,
       renderTipBody(hit, glossHtml, [], true, trilingueFallback),
       ev.clientX,
       ev.clientY
