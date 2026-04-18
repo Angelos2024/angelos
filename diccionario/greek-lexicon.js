@@ -12,6 +12,7 @@
     var EQUIV_DICT_URL = DICT_DIR + 'diccionario.equivalencias.json';
    var LXX_DIR = './LXX/';
   var masterDictIndex = null;   // Map<lemma, item>
+  var masterDictNormIndex = null; // Map<lemma_normalizado, item>
   var masterDictLoaded = false;
    var equivDictIndex = null; // objeto { lemma_normalizado: [equivalencias...] }
   var equivDictLoaded = false;
@@ -147,11 +148,19 @@ var LXX_FILES = [
       .trim();
   }
 
-  function normalizeGreekLemmaKey(s) {
+  function canonicalGreekKey(s) {
     return normalizeGreekToken(s)
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase();
+      .replace(/[\u200b-\u200d\u2060\ufeff]/g, '')
+      .replace(/\s+/g, '')
+      .toLowerCase()
+      .replace(/\u03c2/g, '\u03c3')
+      .replace(/\u03f2/g, '\u03c3');
+  }
+
+  function normalizeGreekLemmaKey(s) {
+    return canonicalGreekKey(s);
   }
 function normalizeBookKey(slug) {
   slug = (slug || '').toLowerCase().trim();
@@ -352,10 +361,15 @@ function slugToAbbr(slug) {
   function buildMasterIndex(masterObj) {
     if (!masterObj || !Array.isArray(masterObj.items)) return null;
     var m = new Map();
+    masterDictNormIndex = new Map();
     for (var i = 0; i < masterObj.items.length; i++) {
       var it = masterObj.items[i];
       if (!it || !it.lemma) continue;
       m.set(it.lemma, it);
+      var norm = normalizeGreekLemmaKey(it.lemma);
+      if (norm && !masterDictNormIndex.has(norm)) {
+        masterDictNormIndex.set(norm, it);
+      }
     }
     return m;
   }
@@ -378,13 +392,18 @@ function slugToAbbr(slug) {
       .catch(function (e) {
         console.warn('[masterdiccionario] fallo:', e);
         masterDictIndex = null;
+        masterDictNormIndex = null;
         return null;
       });
   }
 
   function getMasterEntryByLemma(lemma) {
     if (!lemma || !masterDictIndex) return null;
-    return masterDictIndex.get(lemma) || null;
+    var exact = masterDictIndex.get(lemma);
+    if (exact) return exact;
+    var norm = normalizeGreekLemmaKey(lemma);
+    if (!norm || !masterDictNormIndex) return null;
+    return masterDictNormIndex.get(norm) || null;
   }
      function loadEquivDictionaryOnce() {
     if (equivDictLoaded) return Promise.resolve(equivDictIndex);
@@ -549,7 +568,7 @@ box.querySelector('#gk-lex-toggle').addEventListener('click', function () {
     }
   }
 
-  function showPopupNear(anchorEl, g, lemma) {
+  function showPopupNear(anchorEl, g, lemma, tr) {
     ensurePopup();
     var box = document.getElementById('gk-lex-popup');
     if (!box) return;
@@ -577,7 +596,7 @@ if (triEl) triEl.textContent = 'Buscando…';
     if (!masterDictIndex) {
       loadMasterDictionaryOnce().then(function () {
         var p = document.getElementById('gk-lex-popup');
-if (p && p.style.display === 'block') showPopupNear(anchorEl, g, lemma);
+if (p && p.style.display === 'block') showPopupNear(anchorEl, g, lemma, tr);
       });
 
       if (formaLexEl) formaLexEl.textContent = '…';
@@ -587,7 +606,7 @@ if (p && p.style.display === 'block') showPopupNear(anchorEl, g, lemma);
       var ent = getMasterEntryByLemma(lemma);
 
       if (!ent) {
-        if (formaLexEl) formaLexEl.textContent = '—';
+        if (formaLexEl) formaLexEl.textContent = tr || '—';
         if (entradaEl) entradaEl.textContent = '—';
         if (defEl) defEl.textContent = 'No hay entrada para este lemma en masterdiccionario.';
       } else {
@@ -596,7 +615,7 @@ if (p && p.style.display === 'block') showPopupNear(anchorEl, g, lemma);
         var entrada = ent['entrada_impresa'] || ent['entrada impresa'] || ent['entrada'] || '—';
         var definicion = ent['definicion'] || ent['definición'] || ent['def'] || '—';
 
-        if (formaLexEl) formaLexEl.textContent = formaLex;
+        if (formaLexEl) formaLexEl.textContent = !isMissingValue(formaLex) ? formaLex : (tr || '—');
         if (entradaEl) entradaEl.textContent = entrada;
         if (defEl) defEl.textContent = definicion;
          // Solo cargar equivalencias si faltan campos clave.
@@ -846,7 +865,7 @@ var interlinearWord = null;
         var resolved = resolveLemmaFromMorph(ref.ch, ref.v, interlinearSurface);
 
         ev.stopPropagation();
-        showPopupNear(interlinearWord, interlinearSurface, resolved.lemma);
+        showPopupNear(interlinearWord, interlinearSurface, resolved.lemma, resolved.tr);
         return;
       }
       if (!t.classList || !t.classList.contains('gk-w')) return;
@@ -859,7 +878,7 @@ var interlinearWord = null;
       var g = t.textContent || '';
 
       ev.stopPropagation();
-showPopupNear(t, g, lemma);
+showPopupNear(t, g, lemma, tr);
     }, false);
   }
 function resolveLemmaFromMorph(ch, v, surface) {
@@ -871,14 +890,14 @@ function resolveLemmaFromMorph(ch, v, surface) {
     var tokens = getTokens(ch, v);
     if (!tokens || !tokens.length) return fallback;
 
-    var normalizedSurface = normalizeGreekToken(surface || '');
+    var normalizedSurface = canonicalGreekKey(surface || '');
     if (!normalizedSurface) return fallback;
 
     for (var i = 0; i < tokens.length; i++) {
       var token = tokens[i];
       if (!token || token.g == null) continue;
 
-      if (normalizeGreekToken(String(token.g)) !== normalizedSurface) continue;
+      if (canonicalGreekKey(String(token.g)) !== normalizedSurface) continue;
 
       return {
         lemma: String(token.lemma || '').trim() || fallback.lemma,
