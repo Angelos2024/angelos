@@ -315,10 +315,8 @@
 
     // REGLA_DOS_SHEVAS: consonante siguiente con Sheva → prefijo toma Hireq
     if (nextN.startsWith(N.SHEVA) && myNiqqud.includes(N.HIREQ)) {
-      // Evita falsos splits en formas verbales que inician con ?/? lexical.
-      const myHasDagesh = myNiqqud.includes(N.DAGESH);
-      if ((letter === '\u05D1' || letter === '\u05DB') && !myHasDagesh) return null;
-      return { ruleId: 'REGLA_DOS_SHEVAS', letter, info, description: 'Dos Shevas seguidos prohibidos → prefijo toma Hireq (ִ). Segunda Sheva se vuelve muda.', es: info.es, hasHiddenArticle: false };
+      // FIX: si el prefijo viene con Hireq funcional (ej. וְכִ...), se mantiene como BKL.
+      return { ruleId: 'REGLA_DOS_SHEVAS', letter, info, description: 'Prefijo toma Hireq por colisión de Shevas.', es: info.es, hasHiddenArticle: false };
     }
 
     // Evita falsos splits BKL en ra?ces l?xicas iniciales (ej. ??????).
@@ -537,23 +535,28 @@
 
   // Verbal object suffixes (me, te, lo, nos, etc.)
   const PRON_SUFFIXES_VERBAL = [
-    { suffix: '\u05E0\u05B4\u05D9', pgn: '1cs', es: 'me',  type: 'OBJ' },
-    { suffix: '\u05E0\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ' }, // -נוּ (vocal de enlace + lo)
-    { suffix: '\u05DA\u05B8',         pgn: '2ms', es: 'te',  type: 'OBJ' },
-    { suffix: '\u05D4\u05D5\u05BC', pgn: '3ms', es: 'lo',  type: 'OBJ' },
-    { suffix: '\u05E0\u05BC\u05B8\u05D4', pgn: '3fs', es: 'la/lo', type: 'OBJ' }, // -נָּה
-    { suffix: '\u05D4\u05B6\u05DD', pgn: '3mp', es: 'los', type: 'OBJ' }, // -הֶם
-    { suffix: '\u05B5\u05DD', pgn: '3mp', es: 'los', type: 'OBJ' }, // -ֵם
-    { suffix: '\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ' }, // -וּ
-    { suffix: '\u05DB\u05B6\u05DD', pgn: '2mp', es: 'os/les', type: 'OBJ' }, // -כֶם
-    { suffix: '\u05D4\u05B8',         pgn: '3fs', es: 'la',  type: 'OBJ' },
-    { suffix: '\u05E0\u05D5\u05BC', pgn: '1cp', es: 'nos', type: 'OBJ' }
+    { suffix: '\u05E0\u05BC\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ' }, // -נּוּ
+    { suffix: '\u05B6\u05E0\u05B0\u05D4\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ' }, // -ֶנְהוּ
+    { suffix: '\u05EA\u05B4\u05BC\u05D9\u05DD', pgn: '3mp', es: 'los', type: 'OBJ' }, // -תִּים
+    { suffix: '\u05D5\u05BC\u05DD', pgn: '3mp', es: 'los', type: 'OBJ' }, // -וּם
+    { suffix: '\u05B4\u05D9\u05DD', pgn: '3mp', es: 'los', type: 'OBJ' }, // -ִים
+    { suffix: '\u05E0\u05B4\u05D9', pgn: '1cs', es: 'me', type: 'OBJ' }, // -נִי
+    { suffix: '\u05DA\u05B8', pgn: '2ms', es: 'te', type: 'OBJ' }, // -ךָ
+    { suffix: '\u05D4\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ' } // -הוּ
   ];
 
   function analyzePronominalSuffix(word) {
+    const suffixMatches = (value, suffix) => {
+      if (!value || !suffix) return false;
+      return value.endsWith(suffix);
+    };
+    const hasRoom = (value, suffix) => {
+      return value.length > suffix.length;
+    };
+
     // 1) Primero sufijos plurales (mas especificos: -?????, etc.)
     for (const r of PRON_SUFFIXES_PL) {
-      if (word.endsWith(r.suffix) && word.length > r.suffix.length) {
+      if (suffixMatches(word, r.suffix) && hasRoom(word, r.suffix)) {
         return { ...r, objectPlural: true,
           stem: word.slice(0, -r.suffix.length),
           ruleId: 'SUFIJO_PRONOMINAL_PL',
@@ -566,7 +569,7 @@
     // 2) Luego sufijos singulares nominales (candidato)
     let nominalCandidate = null;
     for (const r of PRON_SUFFIXES_SG) {
-      if (word.endsWith(r.suffix) && word.length > r.suffix.length) {
+      if (suffixMatches(word, r.suffix) && hasRoom(word, r.suffix)) {
         nominalCandidate = { ...r, objectPlural: false,
           stem: word.slice(0, -r.suffix.length),
           ruleId: 'SUFIJO_PRONOMINAL_SG',
@@ -580,7 +583,7 @@
     // 3) Al final sufijos verbales de objeto directo (candidato)
     let verbalCandidate = null;
     for (const r of PRON_SUFFIXES_VERBAL) {
-      if (word.endsWith(r.suffix) && word.length > r.suffix.length) {
+      if (suffixMatches(word, r.suffix) && hasRoom(word, r.suffix)) {
         verbalCandidate = {
           ...r,
           objectPlural: false,
@@ -595,13 +598,23 @@
 
     // 4) Desambiguación NOM vs OBJ:
     // si parece verbal (Yiqtol/Qatal), preferir objeto directo.
-    if (verbalCandidate && nominalCandidate) {
-      const verbalStem = verbalCandidate.stem || '';
+    const looksLikeVerbal = (candidate) => {
+      if (!candidate) return false;
+      const verbalStem = candidate.stem || '';
       const stemPlain = stripNiqqud(verbalStem);
-      const looksVerbal = !!analyzeVerbalForm(verbalStem, false) || /^[\u05D0\u05D9\u05EA\u05E0]/.test(stemPlain);
-      return looksVerbal ? verbalCandidate : nominalCandidate;
+      return !!analyzeVerbalForm(verbalStem, false) || /^[\u05D0\u05D9\u05EA\u05E0]/.test(stemPlain);
+    };
+    const isAmbiguousVerbalSuffix = (candidate) => {
+      const plain = stripNiqqud(candidate?.suffix || '');
+      return plain === '\u05D9\u05DD'; // -ים puede ser plural nominal o sufijo verbal
+    };
+    if (verbalCandidate && nominalCandidate) {
+      return looksLikeVerbal(verbalCandidate) ? verbalCandidate : nominalCandidate;
     }
-    if (verbalCandidate) return verbalCandidate;
+    if (verbalCandidate) {
+      if (!isAmbiguousVerbalSuffix(verbalCandidate)) return verbalCandidate;
+      return looksLikeVerbal(verbalCandidate) ? verbalCandidate : null;
+    }
     if (nominalCandidate) return nominalCandidate;
     return null;
   }
@@ -667,7 +680,11 @@
   const LEXICAL_PARTICLES = {
     '\u05DC\u05B8\u05DE\u05BC\u05B8\u05D4': '\u00BFpor qu\u00E9?',
     '\u05DB\u05BC\u05B8\u05DE\u05BC\u05B8\u05D4': '\u00BFcu\u00E1nto?',
-    '\u05DE\u05B4\u05DE\u05BC\u05B6\u05E0\u05BC\u05D5\u05BC': 'de nosotros/de \u00E9l'
+    '\u05DE\u05B4\u05DE\u05BC\u05B6\u05E0\u05BC\u05D5\u05BC': 'de nosotros/de \u00E9l',
+    '\u05E2\u05D5\u05B9\u05D3\u05B6\u05E0\u05BC\u05B4\u05D9': 'estando a\u00FAn yo', // עוֹדֶנִּי
+    '\u05E2\u05D5\u05D3\u05B6\u05E0\u05BC\u05B4\u05D9': 'estando a\u00FAn yo',      // עודֶנִּי
+    '\u05D4\u05B7\u05DC\u05B0\u05D5\u05B4\u05D9\u05B4\u05BC\u05DD': 'los levitas', // הַלְוִיִּם
+    '\u05D4\u05B7\u05DC\u05B0\u05D5\u05B4\u05D9\u05D9\u05B4\u05DD': 'los levitas'  // variante ortográfica
   };
 
   function analyzeHebrewToken(token) {
@@ -804,25 +821,25 @@
     const keys = new Set();
     const add = (k) => { if (k && k.length > 0) keys.add(k); };
 
-    const orig = analysis.original || '';
     const root = analysis.root || '';
     const stem = analysis.pronominalSuffix?.stem || '';
 
-    // 1) Stem sin sufijo (clave principal para formas sufijadas)
-    if (stem) {
-      add(normalizeToken(stem, true));
-      add(normalizeToken(stripNiqqud(stem), true));
+    // 1) Si el stem termina en Tav, intentar restaurar He final (F.Sg en estado constructo/sufijado)
+    if (stem.endsWith('\u05EA')) {
+      add(normalizeToken(stem.slice(0, -1) + '\u05D4', true));
+      add(normalizeToken(stripNiqqud(stem.slice(0, -1) + '\u05D4'), true));
     }
 
-    // 2) Ruta verbal: stem/root pelado y sin prefijo verbal inicial
+    // 2) Ruta verbal: base pelada + eliminación prefijo verbal inicial + intento Lamed-He
     if (analysis.verbal) {
-      const verbalBase = stripNiqqud(stem || root);
+      const verbalBase = stripNiqqud(stem || root).replace(/^[\u05D0\u05D9\u05EA\u05E0]/, '');
       add(normalizeToken(verbalBase, true));
-      add(normalizeToken(verbalBase.replace(/^[\u05D0\u05D9\u05EA\u05E0]/, ''), true));
+      add(normalizeToken(verbalBase + '\u05D4', true));
     }
 
-    // 3) Palabra original y raiz (normal + pelada)
-    add(normalizeToken(orig, true));
+    // 3) Claves base (stem preferido; si no, root)
+    add(normalizeToken(stem || root, true));
+    add(normalizeToken(stripNiqqud(stem || root), true));
     add(normalizeToken(root, true));
     add(normalizeToken(stripNiqqud(root), true));
 
