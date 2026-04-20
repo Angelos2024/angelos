@@ -576,6 +576,19 @@
     return null;
   }
 
+  // Negative existential forms (אין + sufijos)
+  const NEG_EXIST_MAP = {
+    '×Öµ×™× Ö¸×':  'ellos no estÃ¡n',   '×Öµ×™× Ö¶× Ö¼×•Ö¼': 'Ã©l no estÃ¡',
+    '×Öµ×™× Öµ× ×•Ö¼':'nosotros no estamos','×Öµ×™× Ö¸×”Ö¼':  'ella no estÃ¡',
+    '×Öµ×™× Ö¶× Ö´Ö¼×™':'yo no estoy',     '×Öµ×™× Ö°×šÖ¸':  'tÃº no estÃ¡s',
+    '×Öµ×™× Öµ×šÖ°': 'tÃº no estÃ¡s',
+    // fallback sin niqqud
+    '××™× ×':   'ellos no estÃ¡n',   '××™× ×Ÿ':    'ellas no estÃ¡n',
+    '××™× × ×•':  'Ã©l no estÃ¡ / no estamos', '××™× ×”': 'ella no estÃ¡',
+    '××™× × ×™':  'yo no estoy',      '××™× ×š':    'tÃº no estÃ¡s',
+    '××™× ×›×':  'ustedes no estÃ¡n (m)', '××™× ×›×Ÿ': 'ustedes no estÃ¡n (f)'
+  };
+
 
   function resolveNegativeExistential(token) {
     const pointed = normalizeToken(token, true, false, true);
