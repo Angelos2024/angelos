@@ -330,6 +330,8 @@ function getHebrewTokenLookupForms(orig){
 
   function mapHebrewTokenToSpanish(token, map){
       if(!token) return '-';  
+      const wayyiqtolSpecialCase = mapHebrewWayyiqtolSpecialCase(token);
+      if(wayyiqtolSpecialCase) return wayyiqtolSpecialCase;
       const negativeExistential = mapHebrewNegativeExistentialToken(token);
       if(negativeExistential) return negativeExistential;
       const pointedKey = normalizeToken(token, true, false, true);
@@ -350,6 +352,16 @@ function getHebrewTokenLookupForms(orig){
       if(rebuiltCompoundDirect) return rebuiltCompoundDirect;
       return '-';
     }
+
+  function mapHebrewWayyiqtolSpecialCase(token){
+    const plain = normalizeToken(token, true);
+    if(!plain) return '';
+
+    // Vav consecutiva + אמר (וַיֹּאמֶר) en narrativa: "y dijo".
+    if(plain === '\u05D5\u05D9\u05D0\u05DE\u05E8') return 'y dijo';
+
+    return '';
+  }
 function mapHebrewNegativeExistentialToken(token){
     const pointed = normalizeToken(token, true, false, true);
     const plain = normalizeToken(token, true);
