@@ -276,6 +276,16 @@
       };
     }
 
+    // SINCOPE_ARTICULO (excepción): gutural/resh no aceptan Dagesh Forte.
+    // Si B/K/L toma Pathach/Qamets ante gutural o ר, también puede indicar artículo oculto.
+    if ((myNiqqud.includes(N.PATACH) || myNiqqud.includes(N.QAMETS)) && (GUTURALES.has(nextL) || nextL === 'ר')) {
+      return {
+        ruleId: 'SINCOPE_ARTICULO', letter, info,
+        description: `La preposición "${letter}" absorbió al artículo definido ante ${nextL} (sin Dagesh por restricción fonológica).`,
+        es: info.es, hasHiddenArticle: true
+      };
+    }
+
     // REGLA_CHATEF: gutural con vocal reducida
     if (GUTURALES.has(nextL)) {
       if (nextN.startsWith(N.CHATEF_PATACH))
