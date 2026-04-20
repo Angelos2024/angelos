@@ -509,6 +509,9 @@
     { suffix: 'ֵיכֶן', pgn: '2fp', es: 'vuestras'    },
     { suffix: 'ֵיהֶם', pgn: '3mp', es: 'sus (pl m)'  },
     { suffix: 'ֵיהֶן', pgn: '3fp', es: 'sus (pl f)'  },
+    { suffix: '\u05B5\u05D9\u05DB\u05B6\u05DD', pgn: '2mp', es: 'vuestros', objectPlural: true }, // -ֵיכֶם
+    { suffix: '\u05B5\u05D9\u05D4\u05B6\u05DD', pgn: '3mp', es: 'de ellos', objectPlural: true }, // -ֵיהֶם
+    { suffix: '\u05B8\u05D9\u05D5', pgn: '3ms', es: 'sus', objectPlural: true }, // -ָיו
     { suffix: '\u05B5\u05D9\u05DE\u05D5\u05B9', pgn: '3mp', es: 'sus', description: 'Sufijo poetico arcaico (ellos)' },
     { suffix: '\u05B5\u05DE\u05D5\u05B9',  pgn: '3mp', es: 'a ellos', description: 'Sufijo poetico de objeto' }
   ];
@@ -535,8 +538,14 @@
   // Verbal object suffixes (me, te, lo, nos, etc.)
   const PRON_SUFFIXES_VERBAL = [
     { suffix: '\u05E0\u05B4\u05D9', pgn: '1cs', es: 'me',  type: 'OBJ' },
+    { suffix: '\u05E0\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ' }, // -נוּ (vocal de enlace + lo)
     { suffix: '\u05DA\u05B8',         pgn: '2ms', es: 'te',  type: 'OBJ' },
     { suffix: '\u05D4\u05D5\u05BC', pgn: '3ms', es: 'lo',  type: 'OBJ' },
+    { suffix: '\u05E0\u05BC\u05B8\u05D4', pgn: '3fs', es: 'la/lo', type: 'OBJ' }, // -נָּה
+    { suffix: '\u05D4\u05B6\u05DD', pgn: '3mp', es: 'los', type: 'OBJ' }, // -הֶם
+    { suffix: '\u05B5\u05DD', pgn: '3mp', es: 'los', type: 'OBJ' }, // -ֵם
+    { suffix: '\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ' }, // -וּ
+    { suffix: '\u05DB\u05B6\u05DD', pgn: '2mp', es: 'os/les', type: 'OBJ' }, // -כֶם
     { suffix: '\u05D4\u05B8',         pgn: '3fs', es: 'la',  type: 'OBJ' },
     { suffix: '\u05E0\u05D5\u05BC', pgn: '1cp', es: 'nos', type: 'OBJ' }
   ];
@@ -544,7 +553,7 @@
   function analyzePronominalSuffix(word) {
     // 1) Primero sufijos plurales (mas especificos: -?????, etc.)
     for (const r of PRON_SUFFIXES_PL) {
-      if (word.endsWith(r.suffix) && word.length > r.suffix.length + 1) {
+      if (word.endsWith(r.suffix) && word.length > r.suffix.length) {
         return { ...r, objectPlural: true,
           stem: word.slice(0, -r.suffix.length),
           ruleId: 'SUFIJO_PRONOMINAL_PL',
@@ -554,22 +563,25 @@
       }
     }
 
-    // 2) Luego sufijos singulares nominales
+    // 2) Luego sufijos singulares nominales (candidato)
+    let nominalCandidate = null;
     for (const r of PRON_SUFFIXES_SG) {
-      if (word.endsWith(r.suffix) && word.length > r.suffix.length + 1) {
-        return { ...r, objectPlural: false,
+      if (word.endsWith(r.suffix) && word.length > r.suffix.length) {
+        nominalCandidate = { ...r, objectPlural: false,
           stem: word.slice(0, -r.suffix.length),
           ruleId: 'SUFIJO_PRONOMINAL_SG',
           type: 'NOM',
           description: `Sufijo pronominal singular: ${r.suffix} (${r.pgn} = ${r.es}).`
         };
+        break;
       }
     }
 
-    // 3) Al final sufijos verbales de objeto directo
+    // 3) Al final sufijos verbales de objeto directo (candidato)
+    let verbalCandidate = null;
     for (const r of PRON_SUFFIXES_VERBAL) {
-      if (word.endsWith(r.suffix) && word.length > r.suffix.length + 1) {
-        return {
+      if (word.endsWith(r.suffix) && word.length > r.suffix.length) {
+        verbalCandidate = {
           ...r,
           objectPlural: false,
           stem: word.slice(0, -r.suffix.length),
@@ -577,9 +589,20 @@
           type: 'OBJ',
           description: `Sufijo pronominal verbal: ${r.suffix} (${r.pgn} = ${r.es}). Funciona como objeto directo.`
         };
+        break;
       }
     }
 
+    // 4) Desambiguación NOM vs OBJ:
+    // si parece verbal (Yiqtol/Qatal), preferir objeto directo.
+    if (verbalCandidate && nominalCandidate) {
+      const verbalStem = verbalCandidate.stem || '';
+      const stemPlain = stripNiqqud(verbalStem);
+      const looksVerbal = !!analyzeVerbalForm(verbalStem, false) || /^[\u05D0\u05D9\u05EA\u05E0]/.test(stemPlain);
+      return looksVerbal ? verbalCandidate : nominalCandidate;
+    }
+    if (verbalCandidate) return verbalCandidate;
+    if (nominalCandidate) return nominalCandidate;
     return null;
   }
 
@@ -781,27 +804,27 @@
     const keys = new Set();
     const add = (k) => { if (k && k.length > 0) keys.add(k); };
 
-    const orig = normalizeToken(analysis.original, true);
-    const root = normalizeToken(analysis.root, true);
+    const orig = analysis.original || '';
+    const root = analysis.root || '';
+    const stem = analysis.pronominalSuffix?.stem || '';
 
-    // 1. Palabra completa SIN sufijo (clave para formas con sufijos verbales)
-    if (analysis.pronominalSuffix?.stem) {
-      const stem = analysis.pronominalSuffix.stem;
+    // 1) Stem sin sufijo (clave principal para formas sufijadas)
+    if (stem) {
       add(normalizeToken(stem, true));
-      add(normalizeToken(stem.replace(/^[אינת][ְ-ִ]*/, ''), true));
+      add(normalizeToken(stripNiqqud(stem), true));
     }
 
-    // 2. Si hay prefijos, intenta raiz limpia
-    if (Array.isArray(analysis.prefixes) && analysis.prefixes.length > 0) {
-      const cleanRoot = stripNiqqud(analysis.root || '');
-      add(normalizeToken(cleanRoot, true));
+    // 2) Ruta verbal: stem/root pelado y sin prefijo verbal inicial
+    if (analysis.verbal) {
+      const verbalBase = stripNiqqud(stem || root);
+      add(normalizeToken(verbalBase, true));
+      add(normalizeToken(verbalBase.replace(/^[\u05D0\u05D9\u05EA\u05E0]/, ''), true));
     }
 
-    // 3. Palabra completa (evita falsos positivos BKL)
-    add(orig);
-
-    // 4. Raiz pelada
-    add(root);
+    // 3) Palabra original y raiz (normal + pelada)
+    add(normalizeToken(orig, true));
+    add(normalizeToken(root, true));
+    add(normalizeToken(stripNiqqud(root), true));
 
     return Array.from(keys);
   }
