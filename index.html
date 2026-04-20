@@ -1131,9 +1131,8 @@ function buildInterlinearAnalysisTooltip(analysis){
     const spanishWord = esc(spanishTokens[idx] || '-');
     const analysis = analysisData[idx] || null;
     const tooltip = buildInterlinearAnalysisTooltip(analysis);
-    const titleAttr = tooltip ? ` title="${esc(tooltip)}"` : '';
-    const analysisClass = tooltip ? ' interlinear-word-analysis' : '';
-    return `<span class="interlinear-word ${directionClass}${analysisClass}"${titleAttr}><span class="${originalWordClass}">${originalWord}</span><span class="interlinear-spanish">${spanishWord}</span></span>`;
+    const hasAnalysis = tooltip ? '1' : '0';
+    return `<span class="interlinear-word ${directionClass}" data-analysis="${hasAnalysis}"><span class="${originalWordClass}">${originalWord}</span><span class="interlinear-spanish">${spanishWord}</span></span>`;
   });
 
   return `<span class="interlinear-grid ${directionClass}">${words.join('')}</span>`;
