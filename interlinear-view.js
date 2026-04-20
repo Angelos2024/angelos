@@ -578,16 +578,24 @@
 
   // Negative existential forms (אין + sufijos)
   const NEG_EXIST_MAP = {
-    '×Öµ×™× Ö¸×':  'ellos no estÃ¡n',   '×Öµ×™× Ö¶× Ö¼×•Ö¼': 'Ã©l no estÃ¡',
-    '×Öµ×™× Öµ× ×•Ö¼':'nosotros no estamos','×Öµ×™× Ö¸×”Ö¼':  'ella no estÃ¡',
-    '×Öµ×™× Ö¶× Ö´Ö¼×™':'yo no estoy',     '×Öµ×™× Ö°×šÖ¸':  'tÃº no estÃ¡s',
-    '×Öµ×™× Öµ×šÖ°': 'tÃº no estÃ¡s',
+    '\u05D0\u05B5\u05D9\u05E0\u05B8\u05DD':  'ellos no estan',
+    '\u05D0\u05B5\u05D9\u05E0\u05B6\u05E0\u05BC\u05D5\u05BC': 'el no esta',
+    '\u05D0\u05B5\u05D9\u05E0\u05B5\u05E0\u05D5\u05BC': 'nosotros no estamos',
+    '\u05D0\u05B5\u05D9\u05E0\u05B8\u05D4\u05BC': 'ella no esta',
+    '\u05D0\u05B5\u05D9\u05E0\u05B6\u05E0\u05B4\u05BC\u05D9': 'yo no estoy',
+    '\u05D0\u05B5\u05D9\u05E0\u05B0\u05DA\u05B8': 'tu no estas',
+    '\u05D0\u05B5\u05D9\u05E0\u05B5\u05DA\u05B0': 'tu no estas',
+
     // fallback sin niqqud
-    '××™× ×':   'ellos no estÃ¡n',   '××™× ×Ÿ':    'ellas no estÃ¡n',
-    '××™× × ×•':  'Ã©l no estÃ¡ / no estamos', '××™× ×”': 'ella no estÃ¡',
-    '××™× × ×™':  'yo no estoy',      '××™× ×š':    'tÃº no estÃ¡s',
-    '××™× ×›×':  'ustedes no estÃ¡n (m)', '××™× ×›×Ÿ': 'ustedes no estÃ¡n (f)'
-  };
+    '\u05D0\u05D9\u05E0\u05DD': 'ellos no estan',
+    '\u05D0\u05D9\u05E0\u05DF': 'ellas no estan',
+    '\u05D0\u05D9\u05E0\u05E0\u05D5': 'el no esta / no estamos',
+    '\u05D0\u05D9\u05E0\u05D4': 'ella no esta',
+    '\u05D0\u05D9\u05E0\u05E0\u05D9': 'yo no estoy',
+    '\u05D0\u05D9\u05E0\u05DA': 'tu no estas',
+    '\u05D0\u05D9\u05E0\u05DB\u05DD': 'ustedes no estan (m)',
+    '\u05D0\u05D9\u05E0\u05DB\u05DF': 'ustedes no estan (f)'
+  }
 
 
   function resolveNegativeExistential(token) {
