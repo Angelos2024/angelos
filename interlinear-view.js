@@ -229,18 +229,23 @@
   function analyzeArticle(word) {
     if (firstLetter(word) !== 'ה') return null;
     const niqqud = niqqudAfterFirst(word);
-    // הַ (Patach) o הָ (Qamets)
-    if (niqqud.includes(N.PATACH) || niqqud.includes(N.QAMETS)) {
+    const rest = advancePastFirst(word);
+    const nextLetter = firstLetter(rest);
+    const nextNiqqud = niqqudAfterFirst(rest);
+    const nextHasDagesh = nextNiqqud.includes(N.DAGESH);
+    const articleVowel = niqqud.includes(N.PATACH) || niqqud.includes(N.QAMETS);
+
+    // Evita falsos positivos (ej. ???????): art?culo real suele marcar Dagesh
+    // en la siguiente consonante o excepci?n gutural/resh.
+    if (articleVowel && (nextHasDagesh || GUTURALES.has(nextLetter) || nextLetter === 'ר')) {
       return {
         ruleId: 'ARTICULO_DEFINIDO',
-        description: 'Artículo definido הַ/הָ — la palabra es DEFINIDA.',
+        description: 'Articulo definido ??/?? ? la palabra es DEFINIDA.',
         es: 'el/la', isDefinite: true
       };
     }
     return null;
   }
-
-  // ── BKL PREPOSITIONS ───────────────────────────────────────────────────
 
   const BKL_MAP = {
     'ב': { es: 'en',     label: 'Beth'  },
@@ -276,12 +281,14 @@
       };
     }
 
-    // SINCOPE_ARTICULO (excepción): gutural/resh no aceptan Dagesh Forte.
-    // Si B/K/L toma Pathach/Qamets ante gutural o ר, también puede indicar artículo oculto.
+
+
+    // SINCOPE_ARTICULO (excepci?n): gutural/resh no aceptan Dagesh Forte.
+    // Si B/K/L toma Pathach/Qamets ante gutural o ?, tambi?n puede indicar art?culo oculto.
     if ((myNiqqud.includes(N.PATACH) || myNiqqud.includes(N.QAMETS)) && (GUTURALES.has(nextL) || nextL === 'ר')) {
       return {
         ruleId: 'SINCOPE_ARTICULO', letter, info,
-        description: `La preposición "${letter}" absorbió al artículo definido ante ${nextL} (sin Dagesh por restricción fonológica).`,
+        description: `La preposici?n "${letter}" absorbi? al art?culo definido ante ${nextL} (sin Dagesh por restricci?n fonol?gica).`,
         es: info.es, hasHiddenArticle: true
       };
     }
@@ -308,16 +315,18 @@
 
     // REGLA_DOS_SHEVAS: consonante siguiente con Sheva → prefijo toma Hireq
     if (nextN.startsWith(N.SHEVA) && myNiqqud.includes(N.HIREQ)) {
+      // Evita falsos splits en formas verbales que inician con ?/? lexical.
+      const myHasDagesh = myNiqqud.includes(N.DAGESH);
+      if ((letter === '\u05D1' || letter === '\u05DB') && !myHasDagesh) return null;
       return { ruleId: 'REGLA_DOS_SHEVAS', letter, info, description: 'Dos Shevas seguidos prohibidos → prefijo toma Hireq (ִ). Segunda Sheva se vuelve muda.', es: info.es, hasHiddenArticle: false };
     }
-    // Evita falsos splits BKL en raices lexicales iniciales (ej. bara).
-    // El default BKL solo aplica con vocal funcional de prefijo (Sheva/Hireq).
-    if (!myNiqqud.includes(N.SHEVA) && !myNiqqud.includes(N.HIREQ)) {
-      return null;
-    }
 
-    // REG_01_DEFAULT: Sheva vocal estÃ¡ndar
-    return { ruleId: 'REG_01_DEFAULT', letter, info, description: 'PreposiciÃ³n BKL estÃ¡ndar con Sheva vocal.', es: info.es, hasHiddenArticle: false };
+    // Evita falsos splits BKL en ra?ces l?xicas iniciales (ej. ??????).
+    // El caso default BKL requiere vocal funcional del prefijo (Sheva/Hireq).
+    if (!myNiqqud.includes(N.SHEVA) && !myNiqqud.includes(N.HIREQ)) return null;
+
+    // REG_01_DEFAULT: Sheva vocal estándar
+    return { ruleId: 'REG_01_DEFAULT', letter, info, description: 'Preposición BKL estándar con Sheva vocal.', es: info.es, hasHiddenArticle: false };
   }
 
   // ── MIN PREFIX ─────────────────────────────────────────────────────────
@@ -504,6 +513,11 @@
 
   // Singular-possession (object is singular)
   const PRON_SUFFIXES_SG = [
+    { suffix: '\u05DA\u05B8',   pgn: '2ms', es: 'tu'          },
+    { suffix: '\u05D4\u05D5\u05BC', pgn: '3ms', es: 'su'          },
+    { suffix: '\u05D4\u05B6\u05DD', pgn: '3mp', es: 'su (pl m)'   },
+    { suffix: '\u05D4\u05B6\u05DF', pgn: '3fp', es: 'su (pl f)'   },
+    { suffix: '\u05D4\u05B8',   pgn: '3fs', es: 'su (f)'      },
     { suffix: 'ִי',   pgn: '1cs', es: 'mi'          },
     { suffix: 'ְךָ',  pgn: '2ms', es: 'tu'          },
     { suffix: 'ֵךְ',  pgn: '2fs', es: 'tu (f)'      },
@@ -673,13 +687,15 @@
       analysis.debugLog.push(`👤 SUFIJO [${pron.ruleId}]: ${pron.description}`);
     }
 
-    // ── Step 9: Verbal analysis ────────────────────────────────────────
-    const isConsecutive = vav?.isConsecutive || false;
-    const verbal = analyzeVerbalForm(remainder, isConsecutive);
-    if (verbal) {
-      analysis.verbal = verbal;
-      analysis.rules.push(`VERBO_${verbal.tense}`);
-      analysis.debugLog.push(`⚡ VERBO [${verbal.tense}] ${verbal.binyan.name}: ${verbal.pgn} = "${verbal.es}".`);
+    // Step 9: Verbal analysis
+    if (!analysis.pronominalSuffix) {
+      const isConsecutive = vav?.isConsecutive || false;
+      const verbal = analyzeVerbalForm(remainder, isConsecutive);
+      if (verbal) {
+        analysis.verbal = verbal;
+        analysis.rules.push(`VERBO_${verbal.tense}`);
+        analysis.debugLog.push(`??? VERBO [${verbal.tense}] ${verbal.binyan.name}: ${verbal.pgn} = "${verbal.es}".`);
+      }
     }
 
     // ── Step 10: Build lookup keys ─────────────────────────────────────
@@ -1183,5 +1199,3 @@
   };
 
 })();
-
-
