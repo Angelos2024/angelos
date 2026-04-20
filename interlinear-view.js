@@ -300,9 +300,14 @@
     if (nextN.startsWith(N.SHEVA) && myNiqqud.includes(N.HIREQ)) {
       return { ruleId: 'REGLA_DOS_SHEVAS', letter, info, description: 'Dos Shevas seguidos prohibidos → prefijo toma Hireq (ִ). Segunda Sheva se vuelve muda.', es: info.es, hasHiddenArticle: false };
     }
+    // Evita falsos splits BKL en raices lexicales iniciales (ej. bara).
+    // El default BKL solo aplica con vocal funcional de prefijo (Sheva/Hireq).
+    if (!myNiqqud.includes(N.SHEVA) && !myNiqqud.includes(N.HIREQ)) {
+      return null;
+    }
 
-    // REG_01_DEFAULT: Sheva vocal estándar
-    return { ruleId: 'REG_01_DEFAULT', letter, info, description: 'Preposición BKL estándar con Sheva vocal.', es: info.es, hasHiddenArticle: false };
+    // REG_01_DEFAULT: Sheva vocal estÃ¡ndar
+    return { ruleId: 'REG_01_DEFAULT', letter, info, description: 'PreposiciÃ³n BKL estÃ¡ndar con Sheva vocal.', es: info.es, hasHiddenArticle: false };
   }
 
   // ── MIN PREFIX ─────────────────────────────────────────────────────────
@@ -1168,3 +1173,5 @@
   };
 
 })();
+
+
