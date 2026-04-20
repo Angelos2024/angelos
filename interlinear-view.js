@@ -408,8 +408,8 @@
 
   const BINYAN_RULES = [
     {
-      name: 'HITPAEL', es: 'reflexivo intensivo', marker: 'prefijo הִתְ',
-      test: (w) => /^הִתְ/.test(w) || /^וְהִתְ/.test(w)
+      name: 'HITPAEL', es: 'reflexivo intensivo', marker: 'prefijo הִתְ/מִתְ',
+      test: (w) => /^(?:\u05D4\u05B4\u05EA\u05B0|\u05DE\u05B4\u05EA\u05B0|\u05D5\u05BC\u05DE\u05B4\u05EA\u05B0|\u05D5\u05B0\u05D4\u05B4\u05EA\u05B0)/.test(w)
     },
     {
       name: 'HIFIL', es: 'causativo', marker: 'prefijo הִ/הַ + Yod interna',
@@ -509,6 +509,8 @@
     { suffix: 'ֵיכֶן', pgn: '2fp', es: 'vuestras'    },
     { suffix: 'ֵיהֶם', pgn: '3mp', es: 'sus (pl m)'  },
     { suffix: 'ֵיהֶן', pgn: '3fp', es: 'sus (pl f)'  },
+    { suffix: '\u05B5\u05D9\u05DE\u05D5\u05B9', pgn: '3mp', es: 'de ellos (po?tico)' },
+    { suffix: '\u05B5\u05DE\u05D5\u05B9',  pgn: '3mp', es: 'a ellos (po?tico)' },
   ];
 
   // Singular-possession (object is singular)
@@ -530,14 +532,35 @@
     { suffix: 'ָן',   pgn: '3fp', es: 'su (pl f)'   },
   ];
 
+  // Verbal object suffixes (me, te, lo, nos, etc.)
+  const PRON_SUFFIXES_VERBAL = [
+    { suffix: '\u05E0\u05B4\u05D9', pgn: '1cs', es: 'me',  type: 'OBJ' },
+    { suffix: '\u05DA\u05B8',         pgn: '2ms', es: 'te',  type: 'OBJ' },
+    { suffix: '\u05D4\u05D5\u05BC', pgn: '3ms', es: 'lo',  type: 'OBJ' },
+    { suffix: '\u05D4\u05B8',         pgn: '3fs', es: 'la',  type: 'OBJ' },
+    { suffix: '\u05E0\u05D5\u05BC', pgn: '1cp', es: 'nos', type: 'OBJ' }
+  ];
+
   function analyzePronominalSuffix(word) {
-    // Check plural suffixes first (they include Yod → higher specificity)
+    // 1) Verb-object suffixes first (forms often overlap with nominal endings).
+    for (const r of PRON_SUFFIXES_VERBAL) {
+      if (word.endsWith(r.suffix) && word.length > r.suffix.length + 1) {
+        return {
+          ...r,
+          objectPlural: false,
+          stem: word.slice(0, -r.suffix.length),
+          ruleId: 'SUFIJO_PRONOMINAL_VERBAL',
+          description: `Sufijo pronominal verbal: ${r.suffix} (${r.pgn} = ${r.es}). Funciona como objeto directo.`
+        };
+      }
+    }
+
     for (const r of PRON_SUFFIXES_PL) {
       if (word.endsWith(r.suffix) && word.length > r.suffix.length + 1) {
         return { ...r, objectPlural: true,
           stem: word.slice(0, -r.suffix.length),
           ruleId: 'SUFIJO_PRONOMINAL_PL',
-          description: `Sufijo pronominal plural: ${r.suffix} (${r.pgn} = ${r.es}). El poseído es PLURAL (marcado por Yod).`
+          description: `Sufijo pronominal plural: ${r.suffix} (${r.pgn} = ${r.es}). El pose?do es PLURAL (marcado por Yod).`
         };
       }
     }
@@ -546,26 +569,13 @@
         return { ...r, objectPlural: false,
           stem: word.slice(0, -r.suffix.length),
           ruleId: 'SUFIJO_PRONOMINAL_SG',
-          description: `Sufijo pronominal singular: ${r.suffix} (${r.pgn} = ${r.es}). El poseído es SINGULAR.`
+          description: `Sufijo pronominal singular: ${r.suffix} (${r.pgn} = ${r.es}). El pose?do es SINGULAR.`
         };
       }
     }
     return null;
   }
 
-  // ── NEGATIVE EXISTENTIAL (אֵין forms) ─────────────────────────────────
-
-  const NEG_EXIST_MAP = {
-    'אֵינָם':  'ellos no están',   'אֵינֶנּוּ': 'él no está',
-    'אֵינֵנוּ':'nosotros no estamos','אֵינָהּ':  'ella no está',
-    'אֵינֶנִּי':'yo no estoy',     'אֵינְךָ':  'tú no estás',
-    'אֵינֵךְ': 'tú no estás',
-    // unpointed fallbacks
-    'אינם':   'ellos no están',   'אינן':    'ellas no están',
-    'איננו':  'él no está / no estamos', 'אינה': 'ella no está',
-    'אינני':  'yo no estoy',      'אינך':    'tú no estás',
-    'אינכם':  'ustedes no están (m)', 'אינכן': 'ustedes no están (f)'
-  };
 
   function resolveNegativeExistential(token) {
     const pointed = normalizeToken(token, true, false, true);
@@ -688,18 +698,20 @@
     }
 
     // Step 9: Verbal analysis
-    if (!analysis.pronominalSuffix) {
+    if (!analysis.pronominalSuffix || analysis.pronominalSuffix.type === 'OBJ') {
       const isConsecutive = vav?.isConsecutive || false;
-      const verbal = analyzeVerbalForm(remainder, isConsecutive);
+      const verbalRoot = (analysis.pronominalSuffix?.type === 'OBJ' && analysis.pronominalSuffix?.stem)
+        ? analysis.pronominalSuffix.stem
+        : remainder;
+      const verbal = analyzeVerbalForm(verbalRoot, isConsecutive);
       if (verbal) {
         analysis.verbal = verbal;
         analysis.rules.push(`VERBO_${verbal.tense}`);
-        analysis.debugLog.push(`??? VERBO [${verbal.tense}] ${verbal.binyan.name}: ${verbal.pgn} = "${verbal.es}".`);
+        analysis.debugLog.push(`VERBO [${verbal.tense}] ${verbal.binyan.name}: ${verbal.pgn} = "${verbal.es}".`);
       }
     }
 
-    // ── Step 10: Build lookup keys ─────────────────────────────────────
-    // Priority order: most specific → most general
+    // Step 10: Build lookup keys
     analysis.lookupKeys = _buildLookupKeys(analysis);
 
     return analysis;
@@ -798,11 +810,15 @@
       gloss = _spanishDefArticle(gloss);
     }
 
-    // Apply pronominal suffix: "su X", "mis Y", etc.
+    // Apply pronominal suffix
     if (analysis.pronominalSuffix) {
       const base = stripSpanishArticle(gloss);
-      const poss = analysis.pronominalSuffix.es;
-      gloss = `${poss} ${base}`;
+      const pron = analysis.pronominalSuffix.es;
+      if (analysis.pronominalSuffix.type === 'OBJ') {
+        gloss = `${base} ${pron}`.trim();
+      } else {
+        gloss = `${pron} ${base}`.trim();
+      }
     }
 
     // Apply construct state: strip article, add implied "de"
@@ -849,6 +865,9 @@
 
   function mapHebrewTokenToSpanish(token, maps) {
     if (!token) return '-';
+
+    const plain = normalizeToken(token, true);
+    if (plain === '\u05D4\u05D9\u05D4') return 'existir/ser';
 
     // ── Negative existential (אֵין forms) ──
     const neg = resolveNegativeExistential(token);
