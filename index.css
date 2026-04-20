@@ -273,6 +273,13 @@
       line-height:1.25;
       font-size:1.4rem;
     }
+    .interlinear-word-analysis{
+      cursor:help;
+    }
+    .interlinear-word-analysis .interlinear-hebrew{
+      text-decoration:underline dotted;
+      text-underline-offset:.12em;
+    }
     .interlinear-hebrew{
       font-family: 'SBL Hebrew','Ezra SIL','Times New Roman',serif;
       direction:rtl;

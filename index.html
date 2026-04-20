@@ -21,7 +21,7 @@
 <script defer src="./annotations-ui.js?v=4"></script>
 <script defer src="./listanotas.js?v=1"></script>
   <script defer src="./backup-panel.js?v=1"></script>
-  <script defer src="./interlinear-view.js?v=2"></script>
+  <script defer src="./interlinear-view.js?v=3"></script>
   <script src="./greek-lexicon-ui.js"></script>
    <script src="./hebrew-lexicon-ui.js"></script>
 <script src="./diccionario/greek-lexicon.js?v=12"></script>
@@ -1080,9 +1080,46 @@ function fmtOrigVerse(raw, isGreek, context = {}){
   if(!isGreek) return esc(normalized).replace(/\n/g, '<br>');
   return renderGreekAddedSegments(normalized, context).replace(/\n/g, '<br>');
 }
+
+function buildInterlinearAnalysisTooltip(analysis){
+  if(!analysis || typeof analysis !== 'object') return '';
+  const lines = [];
+
+  if(Array.isArray(analysis.prefixes) && analysis.prefixes.length){
+    const prefixSummary = analysis.prefixes
+      .map((prefix) => {
+        const type = String(prefix?.type || '').trim();
+        const rule = String(prefix?.ruleId || '').trim();
+        return rule ? `${type} (${rule})` : type;
+      })
+      .filter(Boolean)
+      .join(', ');
+    if(prefixSummary) lines.push(`Prefijos: ${prefixSummary}`);
+  }
+
+  if(analysis.isDefinite === true) lines.push('Definido: si');
+  if(analysis.isEt === true) lines.push('Particula: ET (marcador de objeto directo)');
+  if(analysis.constructState?.isConstruct){
+    lines.push(`Constructo: ${String(analysis.constructState.description || 'si').trim()}`);
+  }
+  if(analysis.verbal && typeof analysis.verbal === 'object'){
+    const tense = String(analysis.verbal.tense || '').trim();
+    const binyan = String(analysis.verbal?.binyan?.name || '').trim();
+    const verbalSummary = [tense, binyan].filter(Boolean).join(' / ');
+    if(verbalSummary) lines.push(`Verbal: ${verbalSummary}`);
+  }
+
+  if(Array.isArray(analysis.debugLog) && analysis.debugLog.length){
+    lines.push(...analysis.debugLog.slice(0, 4).map((line) => String(line || '').trim()).filter(Boolean));
+  }
+
+  return lines.join('\n').trim();
+}
+
     function buildInterlinearWordMarkup(rows, fallbackText, isGreek){
       const tokens = Array.isArray(rows?.tokens) ? rows.tokens : [];
   const spanishTokens = Array.isArray(rows?.spanishTokens) ? rows.spanishTokens : [];
+  const analysisData = Array.isArray(rows?.analysisData) ? rows.analysisData : [];
       const originalWordClass = isGreek ? 'interlinear-greek' : 'interlinear-hebrew';
   const directionClass = isGreek ? 'interlinear-dir-ltr' : 'interlinear-dir-rtl';
   if(!tokens.length){
@@ -1092,7 +1129,11 @@ function fmtOrigVerse(raw, isGreek, context = {}){
   const words = tokens.map((token, idx) => {
     const originalWord = esc(token || '-');
     const spanishWord = esc(spanishTokens[idx] || '-');
-    return `<span class="interlinear-word ${directionClass}"><span class="${originalWordClass}">${originalWord}</span><span class="interlinear-spanish">${spanishWord}</span></span>`;
+    const analysis = analysisData[idx] || null;
+    const tooltip = buildInterlinearAnalysisTooltip(analysis);
+    const titleAttr = tooltip ? ` title="${esc(tooltip)}"` : '';
+    const analysisClass = tooltip ? ' interlinear-word-analysis' : '';
+    return `<span class="interlinear-word ${directionClass}${analysisClass}"${titleAttr}><span class="${originalWordClass}">${originalWord}</span><span class="interlinear-spanish">${spanishWord}</span></span>`;
   });
 
   return `<span class="interlinear-grid ${directionClass}">${words.join('')}</span>`;
@@ -1581,7 +1622,7 @@ lastRef = { chapter: ch, verseStart: v1, verseEnd: v2 };
            if(!isGreekBook && !String(interlinearSource || '').trim() && window.InterlinearView?.getHebrewRawVerse){
              interlinearSource = await window.InterlinearView.getHebrewRawVerse(currentBookSlug, ch, v);
            }
-           const rows = await window.InterlinearView.buildInterlinearRows(interlinearSource, { isGreek: isGreekBook });
+           const rows = await window.InterlinearView.buildInterlinearRows(interlinearSource, { isGreek: isGreekBook, withAnalysis: !isGreekBook });
      htmlOrig += `<p class="mb-2 verse-line interlinear-verse" data-side="orig" data-book="${esc(currentBookSlug)}" data-ch="${ch}" data-v="${v}">
             <span class="verse-num">${v}</span>
  <span class="interlinear-original ${isGreekBook ? 'interlinear-dir-ltr' : 'interlinear-dir-rtl'}">${buildInterlinearWordMarkup(rows, interlinearSource, isGreekBook)}</span>
@@ -1902,3 +1943,4 @@ try{
 
 </body>
 </html>
+
