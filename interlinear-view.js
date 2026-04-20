@@ -295,17 +295,17 @@
 
     // REGLA_CHATEF: gutural con vocal reducida
     if (GUTURALES.has(nextL)) {
-      if (nextN.startsWith(N.CHATEF_PATACH))
-        return { ruleId: 'REGLA_CHATEF', letter, info, description: `Gutural (${nextL}) con Chatef Pathach → prefijo toma Pathach (ַ).`, es: info.es, hasHiddenArticle: false };
-      if (nextN.startsWith(N.CHATEF_SEGOL))
-        return { ruleId: 'REGLA_CHATEF', letter, info, description: `Gutural (${nextL}) con Chatef Segol → prefijo toma Segol (ֶ).`, es: info.es, hasHiddenArticle: false };
-      if (nextN.startsWith(N.CHATEF_QAMETS))
-        return { ruleId: 'REGLA_CHATEF', letter, info, description: `Gutural (${nextL}) con Chatef Qamets → prefijo toma Qamets-Chatuf (ָ).`, es: info.es, hasHiddenArticle: false };
-
-      // Excepción especial: Aleph en אֱלֹהִים → prefijo toma Tsere
+      // Excepcion especial Elohim (debe evaluarse antes del caso general CHATEF_SEGOL)
       if (nextL === 'א' && nextN.startsWith(N.CHATEF_SEGOL) && word.includes('לה')) {
-        return { ruleId: 'REGLA_CHATEF_ELOHIM', letter, info, description: 'Excepción Elohim: prefijo toma Tsere (ֵ), Aleph quiescente.', es: info.es, hasHiddenArticle: false };
+        return { ruleId: 'REGLA_CHATEF_ELOHIM', letter, info, description: 'Excepcion Elohim: prefijo toma Tsere (ֵ), Aleph quiescente.', es: info.es, hasHiddenArticle: false };
       }
+
+      if (nextN.startsWith(N.CHATEF_PATACH))
+        return { ruleId: 'REGLA_CHATEF', letter, info, description: `Gutural (${nextL}) con Chatef Pathach -> prefijo toma Pathach (ַ).`, es: info.es, hasHiddenArticle: false };
+      if (nextN.startsWith(N.CHATEF_SEGOL))
+        return { ruleId: 'REGLA_CHATEF', letter, info, description: `Gutural (${nextL}) con Chatef Segol -> prefijo toma Segol (ֶ).`, es: info.es, hasHiddenArticle: false };
+      if (nextN.startsWith(N.CHATEF_QAMETS))
+        return { ruleId: 'REGLA_CHATEF', letter, info, description: `Gutural (${nextL}) con Chatef Qamets -> prefijo toma Qamets-Chatuf (ָ).`, es: info.es, hasHiddenArticle: false };
     }
 
     // REGLA_YOD_QUIESCENTE: Yod + Sheva inicial → Hireq + Yod quiescente
@@ -509,8 +509,8 @@
     { suffix: 'ֵיכֶן', pgn: '2fp', es: 'vuestras'    },
     { suffix: 'ֵיהֶם', pgn: '3mp', es: 'sus (pl m)'  },
     { suffix: 'ֵיהֶן', pgn: '3fp', es: 'sus (pl f)'  },
-    { suffix: '\u05B5\u05D9\u05DE\u05D5\u05B9', pgn: '3mp', es: 'de ellos (po?tico)' },
-    { suffix: '\u05B5\u05DE\u05D5\u05B9',  pgn: '3mp', es: 'a ellos (po?tico)' },
+    { suffix: '\u05B5\u05D9\u05DE\u05D5\u05B9', pgn: '3mp', es: 'sus', description: 'Sufijo poetico arcaico (ellos)' },
+    { suffix: '\u05B5\u05DE\u05D5\u05B9',  pgn: '3mp', es: 'a ellos', description: 'Sufijo poetico de objeto' }
   ];
 
   // Singular-possession (object is singular)
@@ -542,7 +542,31 @@
   ];
 
   function analyzePronominalSuffix(word) {
-    // 1) Verb-object suffixes first (forms often overlap with nominal endings).
+    // 1) Primero sufijos plurales (mas especificos: -?????, etc.)
+    for (const r of PRON_SUFFIXES_PL) {
+      if (word.endsWith(r.suffix) && word.length > r.suffix.length + 1) {
+        return { ...r, objectPlural: true,
+          stem: word.slice(0, -r.suffix.length),
+          ruleId: 'SUFIJO_PRONOMINAL_PL',
+          type: 'NOM',
+          description: r.description || `Sufijo pronominal plural: ${r.suffix} (${r.pgn} = ${r.es}).`
+        };
+      }
+    }
+
+    // 2) Luego sufijos singulares nominales
+    for (const r of PRON_SUFFIXES_SG) {
+      if (word.endsWith(r.suffix) && word.length > r.suffix.length + 1) {
+        return { ...r, objectPlural: false,
+          stem: word.slice(0, -r.suffix.length),
+          ruleId: 'SUFIJO_PRONOMINAL_SG',
+          type: 'NOM',
+          description: `Sufijo pronominal singular: ${r.suffix} (${r.pgn} = ${r.es}).`
+        };
+      }
+    }
+
+    // 3) Al final sufijos verbales de objeto directo
     for (const r of PRON_SUFFIXES_VERBAL) {
       if (word.endsWith(r.suffix) && word.length > r.suffix.length + 1) {
         return {
@@ -550,31 +574,15 @@
           objectPlural: false,
           stem: word.slice(0, -r.suffix.length),
           ruleId: 'SUFIJO_PRONOMINAL_VERBAL',
+          type: 'OBJ',
           description: `Sufijo pronominal verbal: ${r.suffix} (${r.pgn} = ${r.es}). Funciona como objeto directo.`
         };
       }
     }
 
-    for (const r of PRON_SUFFIXES_PL) {
-      if (word.endsWith(r.suffix) && word.length > r.suffix.length + 1) {
-        return { ...r, objectPlural: true,
-          stem: word.slice(0, -r.suffix.length),
-          ruleId: 'SUFIJO_PRONOMINAL_PL',
-          description: `Sufijo pronominal plural: ${r.suffix} (${r.pgn} = ${r.es}). El pose?do es PLURAL (marcado por Yod).`
-        };
-      }
-    }
-    for (const r of PRON_SUFFIXES_SG) {
-      if (word.endsWith(r.suffix) && word.length > r.suffix.length + 1) {
-        return { ...r, objectPlural: false,
-          stem: word.slice(0, -r.suffix.length),
-          ruleId: 'SUFIJO_PRONOMINAL_SG',
-          description: `Sufijo pronominal singular: ${r.suffix} (${r.pgn} = ${r.es}). El pose?do es SINGULAR.`
-        };
-      }
-    }
     return null;
   }
+
 
   // Negative existential forms (אין + sufijos)
   const NEG_EXIST_MAP = {
@@ -633,6 +641,12 @@
    *   lookupKeys[],    // all candidate keys to try against the gloss map
    * }
    */
+  const LEXICAL_PARTICLES = {
+    '\u05DC\u05B8\u05DE\u05BC\u05B8\u05D4': '\u00BFpor qu\u00E9?',
+    '\u05DB\u05BC\u05B8\u05DE\u05BC\u05B8\u05D4': '\u00BFcu\u00E1nto?',
+    '\u05DE\u05B4\u05DE\u05BC\u05B6\u05E0\u05BC\u05D5\u05BC': 'de nosotros/de \u00E9l'
+  };
+
   function analyzeHebrewToken(token) {
     const analysis = {
       original: token, prefixes: [], root: '', rootConsonants: '',
@@ -641,6 +655,27 @@
       rules: [], debugLog: [], lookupKeys: []
     };
     if (!token) return analysis;
+
+    const pointed = normalizeToken(token, true, false, true);
+    if (LEXICAL_PARTICLES[pointed]) {
+      return {
+        original: token,
+        isLexical: true,
+        gloss: LEXICAL_PARTICLES[pointed],
+        prefixes: [],
+        root: token,
+        rootConsonants: stripNiqqud(token),
+        genderNumber: null,
+        constructState: null,
+        pronominalSuffix: null,
+        verbal: null,
+        isDefinite: false,
+        isEt: false,
+        rules: ['LEXICAL_PARTICLE'],
+        debugLog: ['Excepcion lexico-gramatical detectada'],
+        lookupKeys: []
+      };
+    }
 
     // ── Step 0: Et marker ──────────────────────────────────────────────
     if (detectEtMarker(token)) {
@@ -744,43 +779,32 @@
    */
   function _buildLookupKeys(analysis) {
     const keys = new Set();
-    const add  = (k) => { if (k && k.length > 0) keys.add(k); };
+    const add = (k) => { if (k && k.length > 0) keys.add(k); };
 
-    const orig    = String(analysis.original || '');
-    const root    = String(analysis.root || '');
-    const rootCon = String(analysis.rootConsonants || '');
+    const orig = normalizeToken(analysis.original, true);
+    const root = normalizeToken(analysis.root, true);
 
-    // 1. Pointed root
-    add(normalizeToken(root, true, false, true));
-    // 2. Unpointed root
-    add(normalizeToken(root, true));
-    // 3. Unpointed root consonants
-    add(normalizeToken(rootCon, true));
-
-    // 4. If has pronominal suffix, try stem
+    // 1. Palabra completa SIN sufijo (clave para formas con sufijos verbales)
     if (analysis.pronominalSuffix?.stem) {
       const stem = analysis.pronominalSuffix.stem;
-      add(normalizeToken(stem, true, false, true));
       add(normalizeToken(stem, true));
+      add(normalizeToken(stem.replace(/^[אינת][ְ-ִ]*/, ''), true));
     }
 
-    // 5. Fallback: strip common endings to get closer to lexical root
-    const plainRoot = normalizeToken(root, true);
-    // Strip plural endings
-    if (/ים$/.test(plainRoot))  add(plainRoot.replace(/ים$/, ''));
-    if (/ות$/.test(plainRoot))  add(plainRoot.replace(/ות$/, 'ה'));
-    if (/ות$/.test(plainRoot))  add(plainRoot.replace(/ות$/, ''));
+    // 2. Si hay prefijos, intenta raiz limpia
+    if (Array.isArray(analysis.prefixes) && analysis.prefixes.length > 0) {
+      const cleanRoot = stripNiqqud(analysis.root || '');
+      add(normalizeToken(cleanRoot, true));
+    }
 
-    // 6. Full original word (pointed and unpointed) — as last resort
-    add(normalizeToken(orig, true, false, true));
-    add(normalizeToken(orig, true));
+    // 3. Palabra completa (evita falsos positivos BKL)
+    add(orig);
 
-    return Array.from(keys).filter(Boolean);
+    // 4. Raiz pelada
+    add(root);
+
+    return Array.from(keys);
   }
-
-  // ─────────────────────────────────────────────
-  //  GLOSS ASSEMBLY
-  // ─────────────────────────────────────────────
 
   function _spanishDefArticle(gloss) {
     const clean = String(gloss || '').trim();
