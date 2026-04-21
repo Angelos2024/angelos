@@ -595,6 +595,11 @@
     { suffix: '\u05B6\u05DA\u05BC\u05B8', pgn: '2ms', es: 'te', type: 'OBJ_REFORZADO', desc: 'Sufijo reforzado pausal (ej: יַכְּכָה)' }, // -ֶךָּ
     { suffix: '\u05D5\u05BC\u05DB\u05B8', pgn: '2ms', es: 'te', type: 'OBJ_CONECT', desc: 'Objeto 2ms con Vav de unión (ej: רְדָפוּךָ)' } // -וּכָ
   ];
+  // v2.5.4: variantes guturales de sufijos nominales 2mp/2fp con Chatef-Patach.
+  const PRON_SUFFIXES_GUTURAL_V25 = [
+    { suffix: '\u05B2\u05DB\u05B6\u05DD', pgn: '2mp', es: 'vuestro/a', desc: 'Sufijo 2mp con Chatef-Patach por gutural' }, // -ֲכֶם
+    { suffix: '\u05B2\u05DB\u05B6\u05DF', pgn: '2fp', es: 'vuestra', desc: 'Sufijo 2fp con Chatef-Patach por gutural' } // -ֲכֶן
+  ];
   function uniqueBySuffix(rules) {
     const seen = new Set();
     const out = [];
@@ -624,6 +629,20 @@
     const hasRoom = (value, suffix) => {
       return value.length > suffix.length;
     };
+
+    // 0) Capa v2.5.4: variantes guturales nominales (se evalúa antes para evitar falsos OBJ).
+    for (const r of PRON_SUFFIXES_GUTURAL_V25) {
+      if (suffixMatches(word, r.suffix) && hasRoom(word, r.suffix)) {
+        return {
+          ...r,
+          objectPlural: false,
+          stem: word.slice(0, -r.suffix.length),
+          ruleId: 'SUFIJO_GUTURAL_V25',
+          type: 'NOM',
+          description: r.desc
+        };
+      }
+    }
 
     // 0) Capa extendida (v2.5): sufijos energéticos/poéticos/combinados
     let extendedCandidate = null;
@@ -792,6 +811,14 @@
     Object.entries(CRITICAL_VERBAL_EXCEPTIONS).map(([k, v]) => [normalizeToken(k, true), v])
   );
   const APOCOPATED_HAYAH_FORMS = new Set(['\u05D5\u05D9\u05D4\u05D9', '\u05D9\u05D4\u05D9']); // ויהי, יהי
+  const PRECISE_GLOSSES = {
+    '\u05D8\u05B8\u05E8\u05B0\u05D7\u05B2\u05DB\u05B6\u05DD': 'vuestra fatiga / vuestro pesado cargo', // טָרְחֲכֶם
+    '\u05DE\u05B7\u05E9\u05BC\u05C2\u05B8\u05D0\u05B2\u05DB\u05B6\u05DD': 'vuestra carga / vuestro peso', // מַשָּׂאֲכֶם
+    '\u05E8\u05B4\u05D9\u05D1\u05B0\u05DB\u05B6\u05DD': 'vuestra contienda / vuestro pleito' // רִיבְכֶם
+  };
+  const PRECISE_GLOSSES_PLAIN = Object.fromEntries(
+    Object.entries(PRECISE_GLOSSES).map(([k, v]) => [normalizeToken(k, true), v])
+  );
   const ALL_LEXICAL_PARTICLES = { ...LEXICAL_PARTICLES, ...LEXICAL_EXPANSION };
   const ALL_LEXICAL_PARTICLES_PLAIN = Object.fromEntries(
     Object.entries(ALL_LEXICAL_PARTICLES).map(([k, v]) => [normalizeToken(k, true), v])
@@ -1058,6 +1085,10 @@
     if (APOCOPATED_HAYAH_FORMS.has(plainRoot)) {
       add(normalizeToken('\u05D4\u05D9\u05D4', true)); // היה
     }
+    // v2.5.4: ajuste puntual de Qamets-Chatuf/Chatef en טָרְחֲ...
+    if (root.startsWith('\u05D8\u05B8\u05E8\u05D7\u05B2')) {
+      add(normalizeToken('\u05D8\u05B9\u05E8\u05D7', true)); // טֹרַח
+    }
 
     // 1) Si el stem termina en Tav, intentar restaurar He final (F.Sg en estado constructo/sufijado)
     if (stem.endsWith('\u05EA')) {
@@ -1187,7 +1218,10 @@
     if (!token) return '-';
 
     const plain = normalizeToken(token, true);
+    const pointed = normalizeToken(token, true, false, true);
     if (plain === '\u05D4\u05D9\u05D4') return 'existir/ser';
+    const precise = PRECISE_GLOSSES[pointed] || PRECISE_GLOSSES_PLAIN[plain];
+    if (precise) return precise;
 
     // ── Negative existential (אֵין forms) ──
     const neg = resolveNegativeExistential(token);
