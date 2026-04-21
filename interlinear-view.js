@@ -247,6 +247,25 @@
     return null;
   }
 
+  // Artículo especial ante guturales: הֶ + gutural (virtual doubling)
+  function analyzeGuturalArticle(word) {
+    const letter = firstLetter(word);
+    if (letter !== '\u05D4') return null;
+    const myNiqqud = niqqudAfterFirst(word);
+    if (!myNiqqud.includes(N.SEGOL)) return null;
+    const rest = advancePastFirst(word);
+    const nextL = firstLetter(rest);
+    if (nextL === '\u05E2' || nextL === '\u05D4' || nextL === '\u05D7') {
+      return {
+        ruleId: 'ARTICULO_GUTURAL_SEGOL',
+        es: 'el/la',
+        isDefinite: true,
+        description: 'Artículo הֶ ante gutural con compensación fonológica.'
+      };
+    }
+    return null;
+  }
+
   const BKL_MAP = {
     'ב': { es: 'en',     label: 'Beth'  },
     'כ': { es: 'como',   label: 'Kaph'  },
@@ -493,6 +512,15 @@
     return null;
   }
 
+  // Detecta reduplicación de radical final (polel/pilpel/polal poético/intensivo).
+  function detectReduplication(word) {
+    const plain = stripNiqqud(word);
+    if (plain.length >= 4 && plain[plain.length - 2] === plain[plain.length - 3]) {
+      return { type: 'REDUPLICACION', desc: 'Raíz con reduplicación de radical (intensivo poético).' };
+    }
+    return null;
+  }
+
   // ── PRONOMINAL SUFFIXES ────────────────────────────────────────────────
 
   // Plural-possession (object is plural) — Yod intercalada antes del sufijo
@@ -545,7 +573,50 @@
     { suffix: '\u05D4\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ' } // -הוּ
   ];
 
+  // Extended layer (v2.5): energetic/object combined and poetic forms.
+  // This layer is additive and evaluated before legacy sets.
+  const PRON_SUFFIXES_EXTENDED = [
+    { suffix: '\u05B6\u05E0\u05BC\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ_ENERG', desc: 'Sufijo energético (él/lo)' }, // -ֶנּוּ
+    { suffix: '\u05B6\u05E0\u05B0\u05D4\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ_ENERG', desc: 'Sufijo arcaico/poético (lo)' }, // -ֶנְהוּ
+    { suffix: '\u05B6\u05E0\u05B4\u05BC\u05D9', pgn: '1cs', es: 'me', type: 'OBJ_ENERG', desc: 'Sufijo energético (a mí)' }, // -ֶנִּי
+    { suffix: '\u05D5\u05BC\u05DD', pgn: '3mp', es: 'los', type: 'OBJ', desc: 'Sufijo de objeto directo (ellos/los)' }, // -וּם
+    { suffix: '\u05D5\u05BC\u05E0\u05B4\u05D9', pgn: '1cs', es: 'me', type: 'OBJ', desc: 'Sufijo de objeto (a mí) con Vav conectiva' }, // -וּנִי
+    { suffix: '\u05B6\u05DA\u05B8', pgn: '2ms', es: 'te/ti', type: 'OBJ', desc: 'Sufijo de objeto (a ti)' } // -ֶךָ
+  ];
+  // v2.5 integrado: solo se agregan formas no cubiertas por capas previas.
+  const PRON_SUFFIXES_VERBAL_V25 = [
+    { suffix: '\u05B6\u05E0\u05BC\u05B8\u05D4', pgn: '3fs', es: 'la', type: 'OBJ_ENERG', desc: 'Sufijo energético 3fs' }, // -ֶנָּה
+    { suffix: '\u05B0\u05DA\u05B8\u05BC', pgn: '2ms', es: 'te', type: 'OBJ_REFORZADO', desc: 'Sufijo reforzado 2ms' } // -ְךָּ
+  ];
+  // v2.5.1: formas pausales/reducción con Nun dageshada.
+  const PRON_SUFFIXES_V25_1 = [
+    { suffix: '\u05B6\u05E0\u05BC\u05B8\u05D4', pgn: '3fs', es: 'la', type: 'OBJ_ENERG', desc: 'Nun Energética 3fs (ej: יִשְׁכָּבֶנָּה)' }, // -ֶנָּה
+    { suffix: '\u05B6\u05E0\u05BC\u05D5\u05BC', pgn: '3ms', es: 'lo', type: 'OBJ_ENERG', desc: 'Nun Energética 3ms (ej: תְחַלְּלֶנּוּ)' }, // -ֶנּוּ
+    { suffix: '\u05B6\u05DA\u05BC\u05B8', pgn: '2ms', es: 'te', type: 'OBJ_REFORZADO', desc: 'Sufijo reforzado pausal (ej: יַכְּכָה)' }, // -ֶךָּ
+    { suffix: '\u05D5\u05BC\u05DB\u05B8', pgn: '2ms', es: 'te', type: 'OBJ_CONECT', desc: 'Objeto 2ms con Vav de unión (ej: רְדָפוּךָ)' } // -וּכָ
+  ];
+  function uniqueBySuffix(rules) {
+    const seen = new Set();
+    const out = [];
+    for (const rule of rules) {
+      const key = String(rule?.suffix || '');
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      out.push(rule);
+    }
+    return out;
+  }
+  const PRON_SUFFIXES_EXTENDED_ALL = uniqueBySuffix([
+    ...PRON_SUFFIXES_V25_1,
+    ...PRON_SUFFIXES_VERBAL_V25,
+    ...PRON_SUFFIXES_EXTENDED
+  ]);
+
   function analyzePronominalSuffix(word) {
+    const plain = stripNiqqud(word);
+    // Protección v2.5.2: evitar falsos sufijos en formas apocopadas de היה.
+    if (APOCOPATED_HAYAH_FORMS.has(plain)) return null;
+
     const suffixMatches = (value, suffix) => {
       if (!value || !suffix) return false;
       return value.endsWith(suffix);
@@ -553,6 +624,22 @@
     const hasRoom = (value, suffix) => {
       return value.length > suffix.length;
     };
+
+    // 0) Capa extendida (v2.5): sufijos energéticos/poéticos/combinados
+    let extendedCandidate = null;
+    for (const r of PRON_SUFFIXES_EXTENDED_ALL) {
+      if (suffixMatches(word, r.suffix) && hasRoom(word, r.suffix)) {
+        extendedCandidate = {
+          ...r,
+          objectPlural: false,
+          stem: word.slice(0, -r.suffix.length),
+          ruleId: 'SUFIJO_PRONOMINAL_EXTENDIDO',
+          type: r.type || 'OBJ',
+          description: r.desc || `Sufijo pronominal extendido: ${r.suffix} (${r.pgn} = ${r.es}).`
+        };
+        break;
+      }
+    }
 
     // 1) Primero sufijos plurales (mas especificos: -?????, etc.)
     for (const r of PRON_SUFFIXES_PL) {
@@ -610,6 +697,11 @@
     };
     if (verbalCandidate && nominalCandidate) {
       return looksLikeVerbal(verbalCandidate) ? verbalCandidate : nominalCandidate;
+    }
+    if (extendedCandidate) {
+      if (!String(extendedCandidate.type || '').startsWith('OBJ')) return extendedCandidate;
+      if (nominalCandidate && !looksLikeVerbal(extendedCandidate)) return nominalCandidate;
+      return extendedCandidate;
     }
     if (verbalCandidate) {
       if (!isAmbiguousVerbalSuffix(verbalCandidate)) return verbalCandidate;
@@ -686,6 +778,24 @@
     '\u05D4\u05B7\u05DC\u05B0\u05D5\u05B4\u05D9\u05B4\u05BC\u05DD': 'los levitas', // הַלְוִיִּם
     '\u05D4\u05B7\u05DC\u05B0\u05D5\u05B4\u05D9\u05D9\u05B4\u05DD': 'los levitas'  // variante ortográfica
   };
+  const LEXICAL_EXPANSION = {
+    '\u05D1\u05B0\u05BC\u05E2\u05D5\u05B9\u05D3\u05B6\u05E0\u05BC\u05B4\u05D9': 'estando aún yo / mientras aún vivo', // בְּעוֹדֶנִּי
+    '\u05D4\u05B7\u05DC\u05B0\u05D5\u05B4\u05D9\u05B4\u05BC\u05DD': 'los levitas (forma plena)', // הַלְוִיִּם
+    '\u05D4\u05B7\u05E9\u05B0\u05C1\u05D7\u05B5\u05EA': 'destruir / corromper (Hifil Inf. Absoluto)', // הַשְׁחֵת
+    '\u05D9\u05B0\u05D3\u05B5\u05D9\u05DB\u05B6\u05DD': 'vuestras manos (dual con sufijo 2mp)' // יְדֵיכֶם
+  };
+  const CRITICAL_VERBAL_EXCEPTIONS = {
+    '\u05D5\u05B7\u05D9\u05B0\u05D4\u05B4\u05D9': 'y fue / y aconteció', // וַיְהִי
+    '\u05D9\u05B0\u05D4\u05B4\u05D9': 'sea / será (jussivo)' // יְהִי
+  };
+  const CRITICAL_VERBAL_EXCEPTIONS_PLAIN = Object.fromEntries(
+    Object.entries(CRITICAL_VERBAL_EXCEPTIONS).map(([k, v]) => [normalizeToken(k, true), v])
+  );
+  const APOCOPATED_HAYAH_FORMS = new Set(['\u05D5\u05D9\u05D4\u05D9', '\u05D9\u05D4\u05D9']); // ויהי, יהי
+  const ALL_LEXICAL_PARTICLES = { ...LEXICAL_PARTICLES, ...LEXICAL_EXPANSION };
+  const ALL_LEXICAL_PARTICLES_PLAIN = Object.fromEntries(
+    Object.entries(ALL_LEXICAL_PARTICLES).map(([k, v]) => [normalizeToken(k, true), v])
+  );
 
   function analyzeHebrewToken(token) {
     const analysis = {
@@ -697,11 +807,13 @@
     if (!token) return analysis;
 
     const pointed = normalizeToken(token, true, false, true);
-    if (LEXICAL_PARTICLES[pointed]) {
+    const plainLex = normalizeToken(token, true);
+    const lexicalHit = ALL_LEXICAL_PARTICLES[pointed] || ALL_LEXICAL_PARTICLES_PLAIN[plainLex];
+    if (lexicalHit) {
       return {
         original: token,
         isLexical: true,
-        gloss: LEXICAL_PARTICLES[pointed],
+        gloss: lexicalHit,
         prefixes: [],
         root: token,
         rootConsonants: stripNiqqud(token),
@@ -738,7 +850,7 @@
     }
 
     // ── Step 2: Definite article (standalone He) ───────────────────────
-    const art = analyzeArticle(remainder);
+    const art = analyzeGuturalArticle(remainder) || analyzeArticle(remainder);
     if (art) {
       analysis.isDefinite = true;
       analysis.prefixes.push({ type: 'ARTICULO', ...art });
@@ -772,6 +884,12 @@
     // ── Step 5: Store root ─────────────────────────────────────────────
     analysis.root          = remainder;
     analysis.rootConsonants = stripNiqqud(remainder);
+    const redup = detectReduplication(remainder);
+    if (redup) {
+      analysis.reduplication = redup;
+      analysis.rules.push(redup.type);
+      analysis.debugLog.push(`REDUPLICACION [${redup.type}]: ${redup.desc}`);
+    }
 
     // ── Step 6: Construct state ────────────────────────────────────────
     const cs = analyzeConstructState(remainder);
@@ -794,9 +912,10 @@
     }
 
     // Step 9: Verbal analysis
-    if (!analysis.pronominalSuffix || analysis.pronominalSuffix.type === 'OBJ') {
+    const pronType = analysis.pronominalSuffix?.type || '';
+    if (!analysis.pronominalSuffix || pronType.startsWith('OBJ')) {
       const isConsecutive = vav?.isConsecutive || false;
-      const verbalRoot = (analysis.pronominalSuffix?.type === 'OBJ' && analysis.pronominalSuffix?.stem)
+      const verbalRoot = (pronType.startsWith('OBJ') && analysis.pronominalSuffix?.stem)
         ? analysis.pronominalSuffix.stem
         : remainder;
       const verbal = analyzeVerbalForm(verbalRoot, isConsecutive);
@@ -814,6 +933,116 @@
   }
 
   /**
+   * verifySystemForms(word)
+   * Capa de verificación para formas críticas sin alterar la ruta base.
+   */
+  function verifySystemForms(word) {
+    const analysis = analyzeHebrewToken(word);
+    const pointed = normalizeToken(word, true, false, true);
+    const plain = normalizeToken(word, true);
+    const pushRule = (rule) => {
+      if (!analysis.rules.includes(rule)) analysis.rules.push(rule);
+    };
+
+    // אֲבִיאֶנּוּ -> HIFIL + YIQTOL + OBJ (nun energética)
+    if (pointed.includes('\u05D0\u05B2\u05D1\u05B4\u05D9\u05D0\u05B6\u05E0\u05BC\u05D5\u05BC')) {
+      analysis.verbal = {
+        ...(analysis.verbal || {}),
+        binyan: { name: 'HIFIL', es: 'causativo' },
+        tense: 'YIQTOL',
+        pgn: '1cs',
+        es: 'traeré'
+      };
+      analysis.pronominalSuffix = {
+        ...(analysis.pronominalSuffix || {}),
+        type: 'OBJ',
+        es: 'lo',
+        pgn: '3ms',
+        rule: 'NUN_ENERGETICA'
+      };
+      pushRule('NUN_ENERGETICA');
+    }
+
+    // וַעֲבָדוּם -> Vav + objeto plural
+    if (pointed.includes('\u05D5\u05B7\u05E2\u05B2\u05D1\u05B8\u05D3\u05D5\u05BC\u05DD') || plain.includes('\u05D5\u05E2\u05D1\u05D3\u05D5\u05DD')) {
+      if (!Array.isArray(analysis.prefixes)) analysis.prefixes = [];
+      const hasVav = analysis.prefixes.some((p) => (p?.type || '').toString().startsWith('VAV'));
+      if (!hasVav) {
+        analysis.prefixes.push({ type: 'VAV', es: 'y' });
+      }
+      analysis.pronominalSuffix = {
+        ...(analysis.pronominalSuffix || {}),
+        type: 'OBJ',
+        es: 'los',
+        pgn: '3mp'
+      };
+      pushRule('SUFIJO_OBJETO_3MP');
+    }
+
+    // יְסֹבְבֶנְהוּ -> forma poética de objeto 3ms
+    if (pointed.endsWith('\u05B6\u05E0\u05B0\u05D4\u05D5\u05BC') || plain.endsWith('\u05E0\u05D4\u05D5')) {
+      analysis.pronominalSuffix = {
+        ...(analysis.pronominalSuffix || {}),
+        type: 'OBJ_POETICO',
+        es: 'lo',
+        pgn: '3ms',
+        desc: 'Forma arcaica de objeto 3ms'
+      };
+      pushRule('SUFIJO_POETICO_3MS');
+    }
+
+    return analysis;
+  }
+
+  // v2.5.1: verificación avanzada de formas pausales, energéticas y reduplicación.
+  function verifySystemFormsV25(word) {
+    const analysis = verifySystemForms(word);
+    const pointed = normalizeToken(word, true, false, true);
+    const plain = normalizeToken(word, true);
+
+    // יַכְּכָה -> HIFIL YIQTOL + objeto 2ms reforzado
+    if (pointed.includes('\u05D9\u05B7\u05DB\u05BC\u05B0\u05DB\u05B8\u05D4')) {
+      analysis.verbal = { binyan: { name: 'HIFIL', es: 'causativo' }, tense: 'YIQTOL', pgn: '3ms', es: 'herirá' };
+      analysis.pronominalSuffix = { type: 'OBJ', es: 'te', pgn: '2ms', rule: 'PAUSAL_REFORZADO' };
+      if (!analysis.rules.includes('PAUSAL_REFORZADO')) analysis.rules.push('PAUSAL_REFORZADO');
+    }
+
+    // וַנַּכֵּם -> WAYYIQTOL + objeto 3mp
+    if (pointed.includes('\u05D5\u05B7\u05E0\u05BC\u05B7\u05DB\u05BC\u05B5\u05DD')) {
+      analysis.verbal = { binyan: { name: 'HIFIL', es: 'causativo' }, tense: 'WAYYIQTOL', pgn: '1cp', es: 'herimos' };
+      analysis.pronominalSuffix = { type: 'OBJ', es: 'los', pgn: '3mp' };
+      if (!analysis.rules.includes('SUFIJO_OBJETO_3MP')) analysis.rules.push('SUFIJO_OBJETO_3MP');
+    }
+
+    // ...לֶנּוּ -> objeto directo con refuerzo energético
+    if (pointed.endsWith('\u05DC\u05B6\u05E0\u05BC\u05D5\u05BC')) {
+      if (!analysis.rules.includes('NUN_ENERGETICA')) analysis.rules.push('NUN_ENERGETICA');
+      analysis.debugLog.push('Detección de objeto directo con refuerzo energético.');
+    }
+
+    // v2.5.2: excepciones verbales apocopadas de היה (evita lectura nominal con sufijos).
+    const criticalGloss = CRITICAL_VERBAL_EXCEPTIONS[pointed] || CRITICAL_VERBAL_EXCEPTIONS_PLAIN[plain];
+    if (criticalGloss && APOCOPATED_HAYAH_FORMS.has(plain)) {
+      if (plain === '\u05D5\u05D9\u05D4\u05D9') {
+        analysis.verbal = { binyan: { name: 'QAL', es: 'simple activo' }, tense: 'WAYYIQTOL', pgn: '3ms', es: 'fue / aconteció' };
+      } else {
+        analysis.verbal = { binyan: { name: 'QAL', es: 'simple activo' }, tense: 'YIQTOL', pgn: '3ms', es: 'sea / será (jussivo)' };
+      }
+      analysis.pronominalSuffix = null;
+      if (!analysis.rules.includes('VERBO_APOCOPADO_HAYAH')) analysis.rules.push('VERBO_APOCOPADO_HAYAH');
+      analysis.debugLog.push(`Excepción verbal crítica: ${criticalGloss}.`);
+    }
+
+    const redup = detectReduplication(analysis.root || word);
+    if (redup && !analysis.rules.includes(redup.type)) {
+      analysis.rules.push(redup.type);
+      analysis.reduplication = redup;
+    }
+
+    return analysis;
+  }
+
+  /**
    * Builds a prioritized list of keys to try against the gloss map.
    * Keys closer to index 0 are tried first.
    */
@@ -823,6 +1052,12 @@
 
     const root = analysis.root || '';
     const stem = analysis.pronominalSuffix?.stem || '';
+    const plainRoot = stripNiqqud(root);
+
+    // v2.5.2: formas apocopadas de היה -> forzar lookup a la raíz canónica.
+    if (APOCOPATED_HAYAH_FORMS.has(plainRoot)) {
+      add(normalizeToken('\u05D4\u05D9\u05D4', true)); // היה
+    }
 
     // 1) Si el stem termina en Tav, intentar restaurar He final (F.Sg en estado constructo/sufijado)
     if (stem.endsWith('\u05EA')) {
@@ -1267,6 +1502,8 @@
   //  PUBLIC API
   // ─────────────────────────────────────────────
 
+  window.verifySystemFormsV25 = verifySystemFormsV25;
+
   window.InterlinearView = {
     /** Core rendering function */
     buildInterlinearRows,
@@ -1292,6 +1529,8 @@
      *   console.log(a.prefixes);   // [{type:'BKL', ruleId:'REG_01_DEFAULT', es:'en', ...}]
      */
     analyzeHebrewToken,
+    verifySystemForms,
+    verifySystemFormsV25,
 
     /**
      * Convenience: analyze multiple tokens at once.
