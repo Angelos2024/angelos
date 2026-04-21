@@ -1,4 +1,4 @@
-/**
+﻿/**
  * InterlinearView — Motor de Análisis Hebreo-Español v2.0
  * =========================================================
  * MEJORAS sobre v1.0:
@@ -49,6 +49,7 @@
     zacarias: '38_Zacarías.json', malaquias: '39_Malaquías.json'
   };
   const GREEK_DICT_PATH = './diccionario/diccionarioG_unificado.min.json';
+  const HEBREW_FALLBACK_DICT_PATH = './diccionario/diccionario_unificado.min.json';
 
   // ─────────────────────────────────────────────
   // UNICODE CONSTANTS (Niqqud / Dagesh)
@@ -130,6 +131,18 @@
       clean = clean.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
     return clean.toLowerCase();
+  }
+
+  // Limpia solo bordes (puntuacion/corchetes) sin alterar letras hebreas internas.
+  function sanitizeTokenForAnalysis(token) {
+    let clean = String(token || '').trim();
+    clean = clean.replace(/[\u200c-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, '');
+    clean = clean.replace(
+      /^[\s.,;:!?¡¿()\[\]{}"'""''«»·;]+|[\s.,;:!?¡¿()\[\]{}"'""''«»·;]+$/g,
+      ''
+    );
+    clean = clean.replace(/^[\u05C3]+|[\u05C3]+$/g, '');
+    return clean.trim();
   }
 
   function normalizeGloss(gloss) {
@@ -237,7 +250,7 @@
 
     // Evita falsos positivos (ej. ???????): art?culo real suele marcar Dagesh
     // en la siguiente consonante o excepci?n gutural/resh.
-    if (articleVowel && (nextHasDagesh || GUTURALES.has(nextLetter) || nextLetter === 'ר')) {
+    if (articleVowel && (nextHasDagesh || GUTURALES.has(nextLetter) || nextLetter === '\u05E8' || (nextLetter === '\u05D9' && nextNiqqud.startsWith(N.SHEVA)))) {
       return {
         ruleId: 'ARTICULO_DEFINIDO',
         description: 'Articulo definido ??/?? ? la palabra es DEFINIDA.',
@@ -304,11 +317,20 @@
 
     // SINCOPE_ARTICULO (excepci?n): gutural/resh no aceptan Dagesh Forte.
     // Si B/K/L toma Pathach/Qamets ante gutural o ?, tambi?n puede indicar art?culo oculto.
-    if ((myNiqqud.includes(N.PATACH) || myNiqqud.includes(N.QAMETS)) && (GUTURALES.has(nextL) || nextL === 'ר')) {
+    if ((myNiqqud.includes(N.PATACH) || myNiqqud.includes(N.QAMETS)) && (GUTURALES.has(nextL) || nextL === '\u05E8')) {
       return {
         ruleId: 'SINCOPE_ARTICULO', letter, info,
         description: `La preposici?n "${letter}" absorbi? al art?culo definido ante ${nextL} (sin Dagesh por restricci?n fonol?gica).`,
         es: info.es, hasHiddenArticle: true
+      };
+    }
+
+    // Variante general: prefijo B/K/L con Segol ante gutural (contraccion fonologica).
+    if (myNiqqud.includes(N.SEGOL) && GUTURALES.has(nextL)) {
+      return {
+        ruleId: 'REGLA_CHATEF', letter, info,
+        description: 'Prefijo con Segol ante gutural: forma contracta valida de BKL.',
+        es: info.es, hasHiddenArticle: false
       };
     }
 
@@ -792,6 +814,7 @@
     '\u05DC\u05B8\u05DE\u05BC\u05B8\u05D4': '\u00BFpor qu\u00E9?',
     '\u05DB\u05BC\u05B8\u05DE\u05BC\u05B8\u05D4': '\u00BFcu\u00E1nto?',
     '\u05DE\u05B4\u05DE\u05BC\u05B6\u05E0\u05BC\u05D5\u05BC': 'de nosotros/de \u00E9l',
+    '\u05D1\u05BC\u05B0\u05E9\u05C1\u05B7\u05D2\u05BC\u05B7\u05DD': 'por cuanto / porque tambi\u00E9n',
     '\u05E2\u05D5\u05B9\u05D3\u05B6\u05E0\u05BC\u05B4\u05D9': 'estando a\u00FAn yo', // עוֹדֶנִּי
     '\u05E2\u05D5\u05D3\u05B6\u05E0\u05BC\u05B4\u05D9': 'estando a\u00FAn yo',      // עודֶנִּי
     '\u05D4\u05B7\u05DC\u05B0\u05D5\u05B4\u05D9\u05B4\u05BC\u05DD': 'los levitas', // הַלְוִיִּם
@@ -819,31 +842,53 @@
   const PRECISE_GLOSSES_PLAIN = Object.fromEntries(
     Object.entries(PRECISE_GLOSSES).map(([k, v]) => [normalizeToken(k, true), v])
   );
+  function resolvePreciseGloss(token, analysis = null) {
+    const candidates = new Set();
+    const add = (value) => {
+      if (!value) return;
+      const pointed = normalizeToken(value, true, false, true);
+      const plain = normalizeToken(value, true);
+      if (pointed) candidates.add(pointed);
+      if (plain) candidates.add(plain);
+    };
+    add(token);
+    if (analysis) {
+      add(analysis.root);
+      add(analysis.pronominalSuffix?.stem);
+      for (const k of (analysis.lookupKeys || [])) add(k);
+    }
+    for (const key of candidates) {
+      if (PRECISE_GLOSSES[key]) return PRECISE_GLOSSES[key];
+      if (PRECISE_GLOSSES_PLAIN[key]) return PRECISE_GLOSSES_PLAIN[key];
+    }
+    return null;
+  }
   const ALL_LEXICAL_PARTICLES = { ...LEXICAL_PARTICLES, ...LEXICAL_EXPANSION };
   const ALL_LEXICAL_PARTICLES_PLAIN = Object.fromEntries(
     Object.entries(ALL_LEXICAL_PARTICLES).map(([k, v]) => [normalizeToken(k, true), v])
   );
 
   function analyzeHebrewToken(token) {
+    const surface = sanitizeTokenForAnalysis(token);
     const analysis = {
-      original: token, prefixes: [], root: '', rootConsonants: '',
+      original: surface || token, prefixes: [], root: '', rootConsonants: '',
       genderNumber: null, constructState: null, pronominalSuffix: null,
       verbal: null, isDefinite: false, isEt: false,
       rules: [], debugLog: [], lookupKeys: []
     };
-    if (!token) return analysis;
+    if (!surface) return analysis;
 
-    const pointed = normalizeToken(token, true, false, true);
-    const plainLex = normalizeToken(token, true);
+    const pointed = normalizeToken(surface, true, false, true);
+    const plainLex = normalizeToken(surface, true);
     const lexicalHit = ALL_LEXICAL_PARTICLES[pointed] || ALL_LEXICAL_PARTICLES_PLAIN[plainLex];
     if (lexicalHit) {
       return {
-        original: token,
+        original: surface,
         isLexical: true,
         gloss: lexicalHit,
         prefixes: [],
-        root: token,
-        rootConsonants: stripNiqqud(token),
+        root: surface,
+        rootConsonants: stripNiqqud(surface),
         genderNumber: null,
         constructState: null,
         pronominalSuffix: null,
@@ -857,7 +902,7 @@
     }
 
     // ── Step 0: Et marker ──────────────────────────────────────────────
-    if (detectEtMarker(token)) {
+    if (detectEtMarker(surface)) {
       analysis.isEt = true;
       analysis.rules.push('ET_MARKER');
       analysis.debugLog.push('⚡ אֵת: Marcador de objeto directo definido. Sin traducción al español. Señala el destinatario de la acción verbal.');
@@ -865,7 +910,7 @@
       return analysis;
     }
 
-    let remainder = token;
+    let remainder = surface;
 
     // ── Step 1: Vav prefix ─────────────────────────────────────────────
     const vav = analyzeVavPrefix(remainder);
@@ -896,7 +941,7 @@
     }
 
     // ── Step 4: BKL prefix ─────────────────────────────────────────────
-    const bkl = analyzeBKLPrefix(remainder);
+    const bkl = art ? null : analyzeBKLPrefix(remainder);
     if (bkl) {
       if (bkl.hasHiddenArticle) {
         analysis.isDefinite = true;
@@ -1075,39 +1120,48 @@
    */
   function _buildLookupKeys(analysis) {
     const keys = new Set();
-    const add = (k) => { if (k && k.length > 0) keys.add(k); };
+    const add = (value) => {
+      if (!value) return;
+      const pointed = normalizeToken(value, true, false, true);
+      const plain = normalizeToken(value, true);
+      if (pointed) keys.add(pointed);
+      if (plain) keys.add(plain);
+    };
 
     const root = analysis.root || '';
     const stem = analysis.pronominalSuffix?.stem || '';
     const plainRoot = stripNiqqud(root);
 
+    // 0) Siempre probar primero la forma superficial completa.
+    add(analysis.original || '');
+
     // v2.5.2: formas apocopadas de היה -> forzar lookup a la raíz canónica.
     if (APOCOPATED_HAYAH_FORMS.has(plainRoot)) {
-      add(normalizeToken('\u05D4\u05D9\u05D4', true)); // היה
+      add('\u05D4\u05D9\u05D4'); // היה
     }
     // v2.5.4: ajuste puntual de Qamets-Chatuf/Chatef en טָרְחֲ...
     if (root.startsWith('\u05D8\u05B8\u05E8\u05D7\u05B2')) {
-      add(normalizeToken('\u05D8\u05B9\u05E8\u05D7', true)); // טֹרַח
+      add('\u05D8\u05B9\u05E8\u05D7'); // טֹרַח
     }
 
     // 1) Si el stem termina en Tav, intentar restaurar He final (F.Sg en estado constructo/sufijado)
     if (stem.endsWith('\u05EA')) {
-      add(normalizeToken(stem.slice(0, -1) + '\u05D4', true));
-      add(normalizeToken(stripNiqqud(stem.slice(0, -1) + '\u05D4'), true));
+      add(stem.slice(0, -1) + '\u05D4');
+      add(stripNiqqud(stem.slice(0, -1) + '\u05D4'));
     }
 
     // 2) Ruta verbal: base pelada + eliminación prefijo verbal inicial + intento Lamed-He
     if (analysis.verbal) {
       const verbalBase = stripNiqqud(stem || root).replace(/^[\u05D0\u05D9\u05EA\u05E0]/, '');
-      add(normalizeToken(verbalBase, true));
-      add(normalizeToken(verbalBase + '\u05D4', true));
+      add(verbalBase);
+      add(verbalBase + '\u05D4');
     }
 
     // 3) Claves base (stem preferido; si no, root)
-    add(normalizeToken(stem || root, true));
-    add(normalizeToken(stripNiqqud(stem || root), true));
-    add(normalizeToken(root, true));
-    add(normalizeToken(stripNiqqud(root), true));
+    add(stem || root);
+    add(stripNiqqud(stem || root));
+    add(root);
+    add(stripNiqqud(root));
 
     return Array.from(keys);
   }
@@ -1215,20 +1269,24 @@
   // ─────────────────────────────────────────────
 
   function mapHebrewTokenToSpanish(token, maps) {
-    if (!token) return '-';
+    const surface = sanitizeTokenForAnalysis(token);
+    if (!surface) return '-';
 
-    const plain = normalizeToken(token, true);
-    const pointed = normalizeToken(token, true, false, true);
+    const plain = normalizeToken(surface, true);
+    const pointed = normalizeToken(surface, true, false, true);
     if (plain === '\u05D4\u05D9\u05D4') return 'existir/ser';
     const precise = PRECISE_GLOSSES[pointed] || PRECISE_GLOSSES_PLAIN[plain];
     if (precise) return precise;
 
     // ── Negative existential (אֵין forms) ──
-    const neg = resolveNegativeExistential(token);
+    const neg = resolveNegativeExistential(surface);
     if (neg) return neg;
 
     // ── Run full grammar analysis ──
-    const analysis = analyzeHebrewToken(token);
+    const analysis = analyzeHebrewToken(surface);
+    if (analysis.isLexical && analysis.gloss) return analysis.gloss;
+    const preciseResolved = resolvePreciseGloss(surface, analysis);
+    if (preciseResolved) return preciseResolved;
 
     // ── Et marker ──
     if (analysis.isEt) return '[obj]';
@@ -1312,6 +1370,60 @@
     return { pointedMap: resolve(pointedRanked), unpointedMap: resolve(unpointedRanked) };
   }
 
+  function setHebrewFallbackCandidate(map, key, gloss, score, usage) {
+    if (!key) return;
+    const normalized = normalizeGloss(gloss);
+    if (!normalized || normalized === '-') return;
+    const prev = map.get(key);
+    if (!prev || score > prev.score || (score === prev.score && usage > prev.usage)) {
+      map.set(key, { gloss: normalized, score, usage });
+    }
+  }
+
+  function buildHebrewFallbackMap(rows) {
+    const pointedRanked = new Map();
+    const unpointedRanked = new Map();
+    const add = (value, gloss, score, usage) => {
+      const pk = normalizeToken(value, true, false, true);
+      const uk = normalizeToken(value, true);
+      setHebrewFallbackCandidate(pointedRanked, pk, gloss, score, usage);
+      setHebrewFallbackCandidate(unpointedRanked, uk, gloss, score, usage);
+    };
+
+    for (const row of rows || []) {
+      if (!row || typeof row !== 'object') continue;
+      const usage = Number(row?.stats?.tokens) || 0;
+      const gloss = takeFirstGloss(row?.glosa || row?.glosas || row?.strong_detail?.def_rv || row?.strong_detail?.definicion);
+      if (!gloss || gloss === '-') continue;
+
+      if (row.forma) add(row.forma, gloss, 4, usage);
+      if (Array.isArray(row.formas)) {
+        for (const form of row.formas) add(form, gloss, 4, usage);
+      }
+      if (row.hebreo) add(row.hebreo, gloss, 3, usage);
+      if (Array.isArray(row.hebreos)) {
+        for (const form of row.hebreos) add(form, gloss, 3, usage);
+      }
+      if (row?.strong_detail?.lemma) add(row.strong_detail.lemma, gloss, 2, usage);
+    }
+
+    const resolve = (ranked) => {
+      const out = new Map();
+      for (const [key, meta] of ranked.entries()) out.set(key, meta.gloss);
+      return out;
+    };
+
+    return { pointedMap: resolve(pointedRanked), unpointedMap: resolve(unpointedRanked) };
+  }
+
+  function mergeHebrewMaps(primary, fallback) {
+    const pointedMap = new Map((fallback?.pointedMap || new Map()).entries());
+    const unpointedMap = new Map((fallback?.unpointedMap || new Map()).entries());
+    for (const [k, v] of (primary?.pointedMap || new Map()).entries()) pointedMap.set(k, v);
+    for (const [k, v] of (primary?.unpointedMap || new Map()).entries()) unpointedMap.set(k, v);
+    return { pointedMap, unpointedMap };
+  }
+
   // ─────────────────────────────────────────────
   //  GREEK MAP BUILDER  (unchanged from v1.0)
   // ─────────────────────────────────────────────
@@ -1378,9 +1490,11 @@
   function splitTokens(text) {
     return String(text || '')
       .replace(/[\u05BE]/g, ' ')
+      .replace(/[\u05C3,;]+/g, ' ')
       .replace(/\s+/g, ' ')
       .trim()
       .split(' ')
+      .map(sanitizeTokenForAnalysis)
       .filter(Boolean);
   }
 
@@ -1389,22 +1503,9 @@
    * Now uses the grammar analysis to decide if a prefix can be peeled off.
    */
   function expandTokenForLookup(token, unpointedMap) {
-    const directKey = normalizeToken(token, true);
-    if (unpointedMap.has(directKey)) return [token];
-
-    // Use grammar engine to identify peelable prefixes
-    const analysis = analyzeHebrewToken(token);
-    const root = analysis.root;
-    if (root && root !== token) {
-      const rootKey = normalizeToken(root, true);
-      if (unpointedMap.has(rootKey)) {
-        // Return: prefix tokens (as individual chars for now) + root
-        const prefixTokens = analysis.prefixes.map(p => p.es || '').filter(Boolean);
-        return prefixTokens.length ? [token] : [token]; // Keep original for display, root used in lookup
-      }
-    }
-
-    return [token];
+    const surface = sanitizeTokenForAnalysis(token);
+    if (!surface) return [];
+    return [surface];
   }
 
   // ─────────────────────────────────────────────
@@ -1445,9 +1546,10 @@
     if (dictionariesPromise) return dictionariesPromise;
     dictionariesPromise = Promise.all([
       getHebrewInterlinearMaps(),
-      loadJson(GREEK_DICT_PATH)
-    ]).then(([hebrewMaps, greekRows]) => ({
-      hebrewMaps,
+      loadJson(GREEK_DICT_PATH),
+      loadJson(HEBREW_FALLBACK_DICT_PATH).catch(() => [])
+    ]).then(([hebrewMapsInterlinear, greekRows, hebrewRows]) => ({
+      hebrewMaps: mergeHebrewMaps(hebrewMapsInterlinear, buildHebrewFallbackMap(hebrewRows)),
       greekMap: buildGreekMap(greekRows)
     }));
     return dictionariesPromise;
@@ -1576,3 +1678,4 @@
   };
 
 })();
+
