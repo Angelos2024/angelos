@@ -75,6 +75,47 @@ const SOURCES = [
      const normalizeSearchText = (text) => safe(text).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
     const hasHebrewChars = (text) => /[\u0590-\u05FF]/.test(text);
     const hasSpanishMarkers = (text) => /[áéíóúñü¿¡]/i.test(text);
+    const DIVINE_PREFIX_RE = /^[ובכלמשה][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/;
+    const stripHebrewMarks = (text) => safe(text).replace(/[\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '');
+    const normalizeHebrewPointedToken = (text) => safe(text)
+      .normalize('NFKC')
+      .replace(/[\u0591-\u05AF]/g, '')
+      .replace(/[^\u05D0-\u05EA\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '')
+      .trim();
+    const stripSingleHebrewPrefix = (pointed) => safe(pointed).replace(DIVINE_PREFIX_RE, '');
+    const resolveDivineNameLabel = (rawHebrew) => {
+      const pointed = normalizeHebrewPointedToken(rawHebrew);
+      if (!pointed) return '';
+
+      const pointedCore = stripSingleHebrewPrefix(pointed) || pointed;
+      const plainCore = stripHebrewMarks(pointedCore);
+
+      if (plainCore === 'יהוה') {
+        if (pointedCore.includes('וִֹ')) return 'Elohim';
+        if (pointedCore.includes('וָֹ')) return 'Adonai';
+        return 'Hashem';
+      }
+
+      if (plainCore.startsWith('אדנ')) return 'Adonai';
+      if (plainCore.startsWith('אלוה')) return 'Elohim';
+      if (plainCore.startsWith('אלה') && plainCore !== 'אלה') return 'Elohim';
+      if (/^אֵל/.test(pointedCore)) return 'El';
+
+      return '';
+    };
+    const applyDivineNamePolicy = (rawHebrew, transliteracion, equivalencia) => {
+      const divineLabel = resolveDivineNameLabel(rawHebrew);
+      if (!divineLabel) {
+        return {
+          transliteracion: safe(transliteracion),
+          equivalencia_espanol: safe(equivalencia),
+        };
+      }
+      return {
+        transliteracion: divineLabel,
+        equivalencia_espanol: divineLabel,
+      };
+    };
       const capitalizeSentence = (text) => text.replace(/^([a-záéíóúñü])/i, (char) => char.toUpperCase());
     const formatObservationHtml = (value) => {
       const text = safe(value).trim();
@@ -278,14 +319,21 @@ const SOURCES = [
 
           return rows
             .filter((entry) => entry && typeof entry === 'object')
-            .map((entry, index) => ({
-  id: `${source.libro}||${index}`,   // ← único por archivo + posición
-  texto_hebreo: entry.texto_hebreo,
-              transliteracion: entry.transliteracion,
-              equivalencia_espanol: entry.equivalencia_espanol,
-              observacion: entry.observacion,
-              libro: source.libro,
-            }));
+            .map((entry, index) => {
+              const normalizedDivine = applyDivineNamePolicy(
+                entry.texto_hebreo,
+                entry.transliteracion,
+                entry.equivalencia_espanol
+              );
+              return {
+                id: `${source.libro}||${index}`,   // ← único por archivo + posición
+                texto_hebreo: entry.texto_hebreo,
+                transliteracion: normalizedDivine.transliteracion,
+                equivalencia_espanol: normalizedDivine.equivalencia_espanol,
+                observacion: entry.observacion,
+                libro: source.libro,
+              };
+            });
         })
       );
 

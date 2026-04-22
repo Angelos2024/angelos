@@ -31,7 +31,7 @@
       .trim();
   }
 
- function normalizeSourceDisplay(value, lang) {
+  function normalizeSourceDisplay(value, lang) {
     const text = String(value || '').trim();
     if (!text) return '';
 
@@ -52,6 +52,58 @@
     }
 
     return text;
+  }
+
+  const DIVINE_PREFIX_RE = /^[ובכלמשה][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/;
+
+  function normalizeHebrewPointedToken(value) {
+    return String(value || '')
+      .normalize('NFKC')
+      .replace(/[\u0591-\u05AF]/g, '')
+      .replace(/[^\u05D0-\u05EA\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '')
+      .trim();
+  }
+
+  function stripHebrewMarks(value) {
+    return String(value || '').replace(/[\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '');
+  }
+
+  function stripSingleHebrewPrefix(pointed) {
+    return String(pointed || '').replace(DIVINE_PREFIX_RE, '');
+  }
+
+  function resolveDivineNameLabel(rawHebrew) {
+    const pointed = normalizeHebrewPointedToken(rawHebrew);
+    if (!pointed) return '';
+
+    const pointedCore = stripSingleHebrewPrefix(pointed) || pointed;
+    const plainCore = stripHebrewMarks(pointedCore);
+
+    if (plainCore === 'יהוה') {
+      if (pointedCore.includes('וִֹ')) return 'Elohim';
+      if (pointedCore.includes('וָֹ')) return 'Adonai';
+      return 'Hashem';
+    }
+
+    if (plainCore.startsWith('אדנ')) return 'Adonai';
+    if (plainCore.startsWith('אלוה')) return 'Elohim';
+    if (plainCore.startsWith('אלה') && plainCore !== 'אלה') return 'Elohim';
+    if (/^אֵל/.test(pointedCore)) return 'El';
+
+    return '';
+  }
+
+  function getDivineNameLabelForEntry(entry) {
+    const sourceText = String(
+      entry?.texto_hebreo ??
+      entry?.he ??
+      entry?.hebrew ??
+      entry?.hebreo ??
+      entry?.palabra ??
+      entry?.lemma ??
+      ''
+    ).trim();
+    return resolveDivineNameLabel(sourceText);
   }
 
   function flattenPayload(payload) {
@@ -234,6 +286,8 @@ function extractJsonObjects(text) {
   function getSpanishTexts(entry) {
     const fields = ['es', 'spanish', 'espanol', 'español', 'equivalencia_espanol', 'equivalencia_español', 'traduccion'];
     const values = [];
+    const divineLabel = getDivineNameLabelForEntry(entry);
+    if (divineLabel) values.push(divineLabel);
     fields.forEach((field) => {
       const value = entry?.[field];
       if (Array.isArray(value)) {
@@ -517,9 +571,10 @@ function findMatchesByModeAndLanguage(terms, preferredLang, mode) {
      const renderedEntries = prioritized.map((entry, index) => {
       const entryLang = entry?.__lang || detectEntryLang(entry);
       const sourceTextValue = getSourceText(entry) || sourceText || '—';
+      const divineLabel = entryLang === 'he' ? getDivineNameLabelForEntry(entry) : '';
       const normalizedSource = normalizeSourceDisplay(sourceTextValue, entryLang) || '—';
-      const spanish = getSpanishTexts(entry)[0] || '—';
-      const transliteracion = String(entry?.transliteracion || '').trim() || '—';
+      const spanish = divineLabel || getSpanishTexts(entry)[0] || '—';
+      const transliteracion = divineLabel || String(entry?.transliteracion || '').trim() || '—';
       const definicion = String(entry?.observacion || '').trim() || '—';
       const book = String(entry?.book || 'Sin contexto').trim() || 'Sin contexto';
               const langLabel = entryLang === 'gr' ? 'Griego' : entryLang === 'he' ? 'Hebreo' : 'Sin clasificar';

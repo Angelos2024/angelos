@@ -1,8 +1,8 @@
-// ⚠️ IMPORTANTE: los archivos split/* tienen optimizaciones manuales.
-// Si regeneras los splits desde este archivo perderás:
+﻿// âš ï¸ IMPORTANTE: los archivos split/* tienen optimizaciones manuales.
+// Si regeneras los splits desde este archivo perderÃ¡s:
 // - loadEsShard() en busquedax.core.js
 // - warmSearchAssets() modificada en busquedax.main.js
-// Ver: search/shards/ para el índice partido por letra.
+// Ver: search/shards/ para el Ã­ndice partido por letra.
 
  (() => {
    const DICT_URL = './diccionario/masterdiccionario.json';
@@ -137,12 +137,12 @@
     'su', 'sus', 'es', 'son', 'lo', 'una', 'uno', 'tambien'
   ]);
   const greekStopwords = new Set([
-    'και', 'δε', 'ο', 'η', 'το', 'του', 'της', 'των', 'τω', 'τον', 'την',
-    'εις', 'εν', 'αυτος', 'αυτη', 'αυτο', 'ου', 'μη', 'γαρ', 'δε',
-    'ως', 'επι', 'προς', 'δια', 'μετα', 'κατα', 'εκ', 'υπο'
+    'ÎºÎ±Î¹', 'Î´Îµ', 'Î¿', 'Î·', 'Ï„Î¿', 'Ï„Î¿Ï…', 'Ï„Î·Ï‚', 'Ï„Ï‰Î½', 'Ï„Ï‰', 'Ï„Î¿Î½', 'Ï„Î·Î½',
+    'ÎµÎ¹Ï‚', 'ÎµÎ½', 'Î±Ï…Ï„Î¿Ï‚', 'Î±Ï…Ï„Î·', 'Î±Ï…Ï„Î¿', 'Î¿Ï…', 'Î¼Î·', 'Î³Î±Ï', 'Î´Îµ',
+    'Ï‰Ï‚', 'ÎµÏ€Î¹', 'Ï€ÏÎ¿Ï‚', 'Î´Î¹Î±', 'Î¼ÎµÏ„Î±', 'ÎºÎ±Ï„Î±', 'ÎµÎº', 'Ï…Ï€Î¿'
   ]);
   const hebrewStopwords = new Set([
-    'ו', 'ה', 'את', 'יהוה', 'אלהים', 'אשר', 'כל', 'על', 'אל', 'ב', 'ל', 'מ', 'עם', 'כי'
+    '×•', '×”', '××ª', '×™×”×•×”', '××œ×”×™×', '××©×¨', '×›×œ', '×¢×œ', '××œ', '×‘', '×œ', '×ž', '×¢×', '×›×™'
   ]);
  
    const TORAH = ['genesis', 'exodo', 'levitico', 'numeros', 'deuteronomio'];
@@ -167,7 +167,7 @@
    ];
    const APOCALYPSE = ['apocalipsis'];
 
-// Orden canónico (Génesis → Apocalipsis) por slugs internos
+// Orden canÃ³nico (GÃ©nesis â†’ Apocalipsis) por slugs internos
 const CANONICAL_BOOK_ORDER = [
   ...TORAH,
   ...HISTORICAL,
@@ -205,18 +205,18 @@ const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
  const SEARCH_EQUIVALENCE_GROUPS = [
     {
       id: 'jesus-josue',
-      es: ['jesus', 'jesús', 'josue', 'josué'],
-      gr: ['Ἰησοῦς'],
-      he: ['יֵשׁוּעַ', 'ישוע', 'יְהוֹשֻׁעַ', 'יהושע'],
+      es: ['jesus', 'jesÃºs', 'josue', 'josuÃ©'],
+      gr: ['á¼¸Î·ÏƒÎ¿á¿¦Ï‚'],
+      he: ['×™Öµ×©××•Ö¼×¢Ö·', '×™×©×•×¢', '×™Ö°×”×•Ö¹×©Ö»××¢Ö·', '×™×”×•×©×¢'],
       relatedLabels: {
-        es: ['Josué'],
-        he: ['יְהוֹשֻׁעַ']
+        es: ['JosuÃ©'],
+        he: ['×™Ö°×”×•Ö¹×©Ö»××¢Ö·']
       }
     }
   ];
  const state = {
     
-  // UI state para filtros + paginación
+  // UI state para filtros + paginaciÃ³n
   pagination: {
     pageSize: 25,
     page: 1,
@@ -302,7 +302,7 @@ dict: null,
   }
 
  function countHebrewConsonants(text) {
-    return (String(text || '').match(/[א-ת]/g) || []).length;
+    return (String(text || '').match(/[×-×ª]/g) || []).length;
   }
 
   function getSearchValidation(term) {
@@ -319,7 +319,7 @@ dict: null,
         lang,
         message: lang === 'he'
           ? 'En hebreo debes escribir al menos 2 consonantes para buscar.'
-          : 'Debes escribir al menos 2 letras para buscar en español o griego.'
+          : 'Debes escribir al menos 2 letras para buscar en espaÃ±ol o griego.'
       };
     }
 
@@ -358,11 +358,11 @@ dict: null,
  
 function normalizeGreek(text) {
     return String(text || '')
-      .replace(/[··.,;:!?“”"(){}\[\]<>«»]/g, '')
+      .replace(/[Â·Î‡.,;:!?â€œâ€"(){}\[\]<>Â«Â»]/g, '')
       .replace(/\s/g, '')
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-           .replace(/ς/g, 'σ')
+           .replace(/Ï‚/g, 'Ïƒ')
       .toLowerCase();
   }
   function normalizeGreekKey(text) {
@@ -370,17 +370,17 @@ function normalizeGreek(text) {
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(/ς/g, 'σ')
-      .replace(/[··.,;:!?\'"“”‘’()\[\]{}]/g, ' ')
+      .replace(/Ï‚/g, 'Ïƒ')
+      .replace(/[Â·Î‡.,;:!?\'"â€œâ€â€˜â€™()\[\]{}]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
   }
   
   function transliterateGreek(text) {
     const map = {
-      α: 'a', β: 'b', γ: 'g', δ: 'd', ε: 'e', ζ: 'z', η: 'e', θ: 'th',
-      ι: 'i', κ: 'k', λ: 'l', μ: 'm', ν: 'n', ξ: 'x', ο: 'o', π: 'p',
-      ρ: 'r', σ: 's', ς: 's', τ: 't', υ: 'u', φ: 'f', χ: 'ch', ψ: 'ps', ω: 'o'
+      Î±: 'a', Î²: 'b', Î³: 'g', Î´: 'd', Îµ: 'e', Î¶: 'z', Î·: 'e', Î¸: 'th',
+      Î¹: 'i', Îº: 'k', Î»: 'l', Î¼: 'm', Î½: 'n', Î¾: 'x', Î¿: 'o', Ï€: 'p',
+      Ï: 'r', Ïƒ: 's', Ï‚: 's', Ï„: 't', Ï…: 'u', Ï†: 'f', Ï‡: 'ch', Ïˆ: 'ps', Ï‰: 'o'
     };
     const normalized = String(text || '')
       .normalize('NFD')
@@ -393,8 +393,8 @@ function normalizeGreek(text) {
     const variants = new Set();
     const chars = normalized.split('');
     const swapMap = {
-      β: 'υ',
-      υ: 'β'
+      Î²: 'Ï…',
+      Ï…: 'Î²'
     };
     const walk = (index, current) => {
       if (index >= chars.length) {
@@ -424,7 +424,7 @@ function normalizeGreek(text) {
         .replace(/[\u200C-\u200F\u202A-\u202E]/g, '')
        .replace(/[\u0591-\u05BD\u05BF\u05C1-\u05C2\u05C4-\u05C7]/g, '')
 .replace(/[\s\u05BE\-\u2010-\u2015\u2212]/g, '')
-       .replace(/[׃.,;:!?()"“”'׳״]/g, '');
+       .replace(/[×ƒ.,;:!?()"â€œâ€'×³×´]/g, '');
    }
  
 function normalizeSpanish(text) {
@@ -433,14 +433,14 @@ function normalizeSpanish(text) {
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9ñ]/g, '');
+      .replace(/[^a-z0-9Ã±]/g, '');
   }
    function normalizeSpanishPhrase(text) {
     return String(text || '')
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9ñ\s]/g, ' ')
+      .replace(/[^a-z0-9Ã±\s]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
   }
@@ -448,7 +448,7 @@ function normalizeSpanish(text) {
     return entry?.definitions?.short || entry?.strong_detail?.definicion || entry?.descripcion || '';
   }
   function normalizeTransliteration(text) {
-    return normalizeSpanish(text).replace(/ñ/g, 'n');
+    return normalizeSpanish(text).replace(/Ã±/g, 'n');
   }
 
   function buildTranslitVariants(text) {
@@ -477,12 +477,12 @@ function normalizeSpanish(text) {
     const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     if (lang === 'es') {
       const accentMap = {
-        a: '[aáàâäãå]',
-        e: '[eéèêë]',
-        i: '[iíìîï]',
-        o: '[oóòôöõ]',
-        u: '[uúùûü]',
-        n: '[nñ]'
+        a: '[aÃ¡Ã Ã¢Ã¤Ã£Ã¥]',
+        e: '[eÃ©Ã¨ÃªÃ«]',
+        i: '[iÃ­Ã¬Ã®Ã¯]',
+        o: '[oÃ³Ã²Ã´Ã¶Ãµ]',
+        u: '[uÃºÃ¹Ã»Ã¼]',
+        n: '[nÃ±]'
       };
       const pattern = escaped.split('').map((ch) => accentMap[ch] || ch).join('');
       return new RegExp(pattern, 'giu');
@@ -491,8 +491,8 @@ function normalizeSpanish(text) {
     const letters = [];
     for (const ch of escaped) {
       if (ch === '\\') continue;
-       if ((lang === 'gr' || lang === 'lxx') && ch === 'σ') {
-        letters.push('[σς]');
+       if ((lang === 'gr' || lang === 'lxx') && ch === 'Ïƒ') {
+        letters.push('[ÏƒÏ‚]');
       } else {
         letters.push(ch);
       }
@@ -511,8 +511,8 @@ function normalizeSpanish(text) {
       const letters = [];
       for (const ch of escaped) {
         if (ch === '\\') continue;
-        if ((lang === 'gr' || lang === 'lxx') && ch === 'σ') {
-          letters.push('[σς]');
+        if ((lang === 'gr' || lang === 'lxx') && ch === 'Ïƒ') {
+          letters.push('[ÏƒÏ‚]');
         } else {
           letters.push(ch);
         }
@@ -565,7 +565,7 @@ if (lang === 'he') {
 
 
    const cleanedQuery = (lang === 'gr' || lang === 'lxx')
-      ? normalizedQuery.replace(/[⸀··.,;:!?“”"(){}\[\]<>«»]/g, ' ')
+      ? normalizedQuery.replace(/[â¸€Â·Î‡.,;:!?â€œâ€"(){}\[\]<>Â«Â»]/g, ' ')
       : normalizedQuery;
     const tokens = cleanedQuery
       .split(/\s+/)
@@ -676,7 +676,7 @@ function getPhraseTokensForLang(term, lang) {
     return String(term || '')
       .replace(/[\u200C-\u200F\u202A-\u202E]/g, '')
       .replace(/[\u0591-\u05BD\u05BF\u05C1-\u05C2\u05C4-\u05C7]/g, '')
-      .replace(/[׃.,;:!?()"“”'׳״]/g, ' ')
+      .replace(/[×ƒ.,;:!?()"â€œâ€'×³×´]/g, ' ')
       .split(/\s+/)
       .map((token) => normalizeHebrew(token))
       .filter(Boolean);
@@ -783,8 +783,8 @@ function getEquivalenceSearchTerms(term, langHint = detectLang(term)) {
 }
   function pickPreferredHebrewAlias(candidates = []) {
     if (!Array.isArray(candidates) || !candidates.length) return null;
-    return candidates.find((item) => item === 'יהושע')
-      || candidates.find((item) => item === 'ישוע')
+    return candidates.find((item) => item === '×™×”×•×©×¢')
+      || candidates.find((item) => item === '×™×©×•×¢')
       || candidates[0];
   }
   function getCorporaForScope(scope) {
@@ -803,7 +803,7 @@ function getEquivalenceSearchTerms(term, langHint = detectLang(term)) {
       return String(text || '')
         .replace(/[\u200C-\u200F\u202A-\u202E]/g, '')
         .replace(/[\u0591-\u05BD\u05BF\u05C1-\u05C2\u05C4-\u05C7]/g, '')
-        .replace(/[׃.,;:!?()"“”'׳״]/g, ' ')
+        .replace(/[×ƒ.,;:!?()"â€œâ€'×³×´]/g, ' ')
         .replace(/[\u05BE\-\u2010-\u2015\u2212]/g, ' ')
         .replace(/\s+/g, ' ')
         .trim();
@@ -813,8 +813,8 @@ function getEquivalenceSearchTerms(term, langHint = detectLang(term)) {
         .toLowerCase()
         .normalize('NFD')
         .replace(/\p{M}/gu, '')
-        .replace(/[··.,;:!?(){}\[\]<>«»]/g, ' ')
-        .replace(/ς/g, 'σ')
+        .replace(/[Â·Î‡.,;:!?(){}\[\]<>Â«Â»]/g, ' ')
+        .replace(/Ï‚/g, 'Ïƒ')
         .replace(/\s+/g, ' ')
         .trim();
     }
@@ -822,7 +822,7 @@ function getEquivalenceSearchTerms(term, langHint = detectLang(term)) {
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9ñ\s]/g, ' ')
+      .replace(/[^a-z0-9Ã±\s]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
   }
@@ -863,7 +863,7 @@ return getSpanishRefs(token, index);
     const prefixKey = normalized.slice(0, 2);
     const candidates = buckets.get(prefixKey) || [];
 
-    // Coincidencia parcial: token que contiene el término (mar => marcos, marítimo, etc.)
+    // Coincidencia parcial: token que contiene el tÃ©rmino (mar => marcos, marÃ­timo, etc.)
     for (let i = 0; i < candidates.length; i += 1) {
       const token = candidates[i];
       if (!token || token === normalized) continue;
@@ -1025,8 +1025,8 @@ const offline = typeof navigator !== 'undefined' && navigator.onLine === false;
       const isNetworkError = offline || error instanceof TypeError;
       const normalizedError = isNetworkError
         ? new Error(
-          `Error de red cargando ${url}. Revisa si el navegador está en modo Offline (DevTools), ` +
-          'si el servidor local está activo y si no hay un bloqueador/proxy interrumpiendo peticiones locales.'
+          `Error de red cargando ${url}. Revisa si el navegador estÃ¡ en modo Offline (DevTools), ` +
+          'si el servidor local estÃ¡ activo y si no hay un bloqueador/proxy interrumpiendo peticiones locales.'
         )
         : error;
 
@@ -1170,7 +1170,7 @@ const tokens = String(term || '').split(/\s+/).filter(Boolean);
       }
     }
 
-    throw lastError || new Error(`No se pudo cargar el índice para ${lang}`);
+    throw lastError || new Error(`No se pudo cargar el Ã­ndice para ${lang}`);
    }
  
    async function loadChapterText(lang, book, chapter, options = {}) {
@@ -1363,35 +1363,35 @@ async function loadLxxBookData(bookCode) {
     };
   }
   function transliterateHebrew(word) {
-    if (!word) return '—';
+    if (!word) return 'â€”';
     const consonants = {
-      'א': '',
-      'ב': 'b',
-      'ג': 'g',
-      'ד': 'd',
-      'ה': 'h',
-      'ו': 'v',
-      'ז': 'z',
-      'ח': 'j',
-      'ט': 't',
-      'י': 'y',
-      'כ': 'k',
-      'ך': 'k',
-      'ל': 'l',
-      'מ': 'm',
-      'ם': 'm',
-      'נ': 'n',
-      'ן': 'n',
-      'ס': 's',
-      'ע': '\'',
-      'פ': 'p',
-      'ף': 'p',
-      'צ': 'ts',
-      'ץ': 'ts',
-      'ק': 'q',
-      'ר': 'r',
-      'ש': 'sh',
-      'ת': 't'
+      '×': '',
+      '×‘': 'b',
+      '×’': 'g',
+      '×“': 'd',
+      '×”': 'h',
+      '×•': 'v',
+      '×–': 'z',
+      '×—': 'j',
+      '×˜': 't',
+      '×™': 'y',
+      '×›': 'k',
+      '×š': 'k',
+      '×œ': 'l',
+      '×ž': 'm',
+      '×': 'm',
+      '× ': 'n',
+      '×Ÿ': 'n',
+      '×¡': 's',
+      '×¢': '\'',
+      '×¤': 'p',
+      '×£': 'p',
+      '×¦': 'ts',
+      '×¥': 'ts',
+      '×§': 'q',
+      '×¨': 'r',
+      '×©': 'sh',
+      '×ª': 't'
     };
     const vowelMap = {
       '\u05B0': 'e',
@@ -1427,15 +1427,15 @@ async function loadLxxBookData(bookCode) {
         vowel = vowelMap[decomposed[j]] || '';
         j += 1;
       }
-      if (char === 'ש') {
+      if (char === '×©') {
         consonant = hasSinDot ? 's' : 'sh';
       }
-      if (char === 'ו' && vowel) {
+      if (char === '×•' && vowel) {
         consonant = '';
       }
       output += `${consonant}${vowel}`;
     }
-    return output.replace(/''/g, '\'').trim() || '—';
+    return output.replace(/''/g, '\'').trim() || 'â€”';
   }
 
   async function buildLxxMatches(normalizedGreek, maxRefs = 40) {
@@ -1457,7 +1457,38 @@ async function loadLxxBookData(bookCode) {
   }
 
   function cleanGreekToken(token) {
-    return String(token || '').replace(/[··.,;:!?“”"(){}\[\]<>«»]/g, '');
+    return String(token || '').replace(/[Â·Î‡.,;:!?â€œâ€"(){}\[\]<>Â«Â»]/g, '');
+  }
+  const DIVINE_PREFIX_RE = /^[×•×‘×›×œ×ž×©×”][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/;
+  function normalizeHebrewPointedTokenForDivine(text) {
+    return String(text || '')
+      .normalize('NFKC')
+      .replace(/[\u0591-\u05AF]/g, '')
+      .replace(/[^\u05D0-\u05EA\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '')
+      .trim();
+  }
+  function stripHebrewMarks(text) {
+    return String(text || '').replace(/[\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '');
+  }
+  function resolveDivineNameLabel(rawHebrew) {
+    const pointed = normalizeHebrewPointedTokenForDivine(rawHebrew);
+    if (!pointed) return '';
+
+    const pointedCore = pointed.replace(DIVINE_PREFIX_RE, '') || pointed;
+    const plainCore = stripHebrewMarks(pointedCore);
+
+    if (plainCore === '×™×”×•×”') {
+      if (pointedCore.includes('×•Ö´Ö¹')) return 'Elohim';
+      if (pointedCore.includes('×•Ö¸Ö¹')) return 'Adonai';
+      return 'Hashem';
+    }
+
+    if (plainCore.startsWith('××“× ')) return 'Adonai';
+    if (plainCore.startsWith('××œ×•×”')) return 'Elohim';
+    if (plainCore.startsWith('××œ×”') && plainCore !== '××œ×”') return 'Elohim';
+    if (/^×Öµ×œ/.test(pointedCore)) return 'El';
+
+    return '';
   }
 
   async function buildGreekCandidateFromHebrewRefs(refs) {
@@ -1547,12 +1578,12 @@ async function loadLxxBookData(bookCode) {
   }
 
   function extractPos(entry) {
-     if (!entry) return '—';
+     if (!entry) return 'â€”';
      const raw = entry.entrada_impresa || '';
-     if (!raw) return '—';
+     if (!raw) return 'â€”';
      const parts = raw.split('.');
      if (parts.length < 2) return raw.trim();
-     return parts[1].trim() || '—';
+     return parts[1].trim() || 'â€”';
    }
  
    function shortDefinition(text) {
@@ -1566,7 +1597,7 @@ async function loadLxxBookData(bookCode) {
      if (!text) return [];
      const cleaned = text
        .replace(/[()]/g, ' ')
-       .replace(/[^a-zA-ZáéíóúñüÁÉÍÓÚÑÜ\s]/g, ' ')
+       .replace(/[^a-zA-ZÃ¡Ã©Ã­Ã³ÃºÃ±Ã¼ÃÃ‰ÃÃ“ÃšÃ‘Ãœ\s]/g, ' ')
        .toLowerCase();
      const words = cleaned.split(/\s/).filter(Boolean);
      const keywords = [];
@@ -1584,7 +1615,7 @@ async function loadLxxBookData(bookCode) {
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-zñ\s]/g, ' ');
+      .replace(/[^a-zÃ±\s]/g, ' ');
     const words = cleaned.split(/\s+/).filter((word) => word.length >= 3);
     const extraStopwords = new Set([
       'lit', 'nt', 'lxx', 'pl', 'sg', 'adj', 'adv', 'pron', 'conj', 'prep',
@@ -1646,7 +1677,7 @@ function mapLxxRefsToHebrewRefs(refs) {
         const verseText = getVerseTextFromChapter(verses, verse);
         const tokens = verseText.split(/\s/).filter(Boolean);
         tokens.forEach((token) => {
-          const cleaned = token.replace(/[׃,:;.!?()"“”]/g, '');
+          const cleaned = token.replace(/[×ƒ,:;.!?()"â€œâ€]/g, '');
           const normalized = normalizeHebrew(cleaned);
           if (!normalized || hebrewStopwords.has(normalized)) return;
           counts.set(normalized, (counts.get(normalized) || 0) + 1);
@@ -1683,8 +1714,8 @@ function mapLxxRefsToHebrewRefs(refs) {
   function groupForBook(book) {
      const slug = LXX_TO_HEBREW_SLUG[book] || book;
      if (TORAH.includes(slug)) return { key: 'torah', label: 'Torah' };
-    if (HISTORICAL.includes(slug)) return { key: 'historicos', label: 'Históricos' };
-     if (WISDOM.includes(slug)) return { key: 'sabiduria', label: 'Sabiduría' };
+    if (HISTORICAL.includes(slug)) return { key: 'historicos', label: 'HistÃ³ricos' };
+     if (WISDOM.includes(slug)) return { key: 'sabiduria', label: 'SabidurÃ­a' };
      if (PROPHETS.includes(slug)) return { key: 'profetas', label: 'Profetas' };
      if (GOSPELS.includes(slug)) return { key: 'evangelios', label: 'Evangelios' };
      if (LETTERS.includes(slug)) return { key: 'cartas', label: 'Cartas' };
@@ -1792,23 +1823,23 @@ function mapLxxRefsToHebrewRefs(refs) {
 
   function splitEquivalenceTokens(value) {
     return [...new Set(String(value || '')
-      .split(/\s*[•·,;\/|]\s*/g)
+      .split(/\s*[â€¢Â·,;\/|]\s*/g)
       .map((item) => String(item || '').trim())
       .filter(Boolean))];
   }
 
   function buildEquivalenceButtons(word, highlightQuery, lang) {
     const tokens = splitEquivalenceTokens(word);
-    if (!tokens.length) return '<div class="muted">—</div>';
+    if (!tokens.length) return '<div class="muted">â€”</div>';
     return `<div class="d-flex flex-wrap gap-2">${tokens.map((token) => `<button type="button" class="btn btn-outline-primary btn-sm bx-equivalence-chip" data-bx-equivalence="${escapeHtml(token)}" data-bx-lang="${escapeHtml(lang)}">${highlightText(token, highlightQuery, lang)}</button>`).join('')}</div>`;
   }
   function buildCorrespondenceCard({ title, word, transliteration, samples, lang, highlightQuery }) {
     const wordLine = word
       ? `<div class="${classForLang(lang)} fw-semibold">${buildEquivalenceButtons(word, highlightQuery, lang)}</div>`
-     : '<div class="muted">—</div>';
+     : '<div class="muted">â€”</div>';
     const translitLine = transliteration ? `<div class="small muted">Translit.: ${transliteration}</div>` : '';
     const sampleLines = samples.length
-      ? samples.map((sample) => `<div class="small">${escapeHtml(sample.ref)} · ${highlightText(sample.text, highlightQuery, lang)}</div>`).join('')
+      ? samples.map((sample) => `<div class="small">${escapeHtml(sample.ref)} Â· ${highlightText(sample.text, highlightQuery, lang)}</div>`).join('')
       : '<div class="small muted">Sin ejemplos.</div>';
     return `
       <div class="fw-semibold">${title}</div>
@@ -1910,7 +1941,7 @@ function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
       });
     });
 
-    // orden canónico
+    // orden canÃ³nico
     const orderedBooks = CANONICAL_BOOK_ORDER
       .filter((slug) => byBook.has(slug))
       .map((slug) => byBook.get(slug));
@@ -1953,7 +1984,7 @@ function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
     filtersPanel.innerHTML = `
       <div class="d-grid gap-2">
         ${mkBtn('all', 'Todos', allCount, isAll)}
-        ${mkBtn('ot', 'Toráh', otCount, isOT)}
+        ${mkBtn('ot', 'TorÃ¡h', otCount, isOT)}
         <div class="ps-1 d-grid gap-2">${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
         ${mkBtn('nt', 'Evangelios', ntCount, isNT)}
         <div class="ps-1 d-grid gap-2">${ntItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
@@ -1981,7 +2012,7 @@ function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
   }
 
   async function resolveVerseTextsForRefs(refs, lang, options = {}) {
-    // Agrupa por libro+capítulo para minimizar lecturas.
+    // Agrupa por libro+capÃ­tulo para minimizar lecturas.
     const cache = state.verseCache?.[lang] || new Map();
     const result = [];
     const byChapter = new Map(); // key: book|chapter -> [verseNumbers]
@@ -2028,7 +2059,7 @@ function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
           });
         }
       } catch (e) {
-        // Deja vacío si falla.
+        // Deja vacÃ­o si falla.
         versesNeeded.forEach((v) => {
           const canonicalRef = `${book}|${chapter}|${v}`;
           if (!cache.has(canonicalRef)) cache.set(canonicalRef, '');
@@ -2085,7 +2116,7 @@ function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
       if (state?.version) qs.set('version', String(state.version));
       qs.set('orig', '1');
       const openHref = `./index.html?${qs.toString()}`;
-      const safeText = it.text || '—';
+      const safeText = it.text || 'â€”';
       return `
         <div class="bx-result-item d-flex gap-2">
           <div class="flex-grow-1">
@@ -2099,7 +2130,7 @@ function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
       `;
     }).join('') || '<div class="muted small">Sin resultados.</div>';
 
-    // Paginación
+    // PaginaciÃ³n
     const mkPageBtn = (label, page, disabled = false, active = false) => {
       return `
         <li class="page-item ${disabled ? 'disabled' : ''} ${active ? 'active' : ''}">
@@ -2112,7 +2143,7 @@ function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
       const prev = state.pagination.page - 1;
       const next = state.pagination.page + 1;
       let html = '';
-      html += mkPageBtn('«', prev, prev < 1);
+      html += mkPageBtn('Â«', prev, prev < 1);
       // ventana simple
       const windowSize = 5;
       const half = Math.floor(windowSize / 2);
@@ -2121,14 +2152,14 @@ function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
       from = Math.max(1, to - windowSize + 1);
 
       if (from > 1) html += mkPageBtn('1', 1, false, state.pagination.page === 1);
-      if (from > 2) html += `<li class="page-item disabled"><span class="page-link">…</span></li>`;
+      if (from > 2) html += `<li class="page-item disabled"><span class="page-link">â€¦</span></li>`;
       for (let p = from; p <= to; p++) {
         html += mkPageBtn(String(p), p, false, p === state.pagination.page);
       }
-      if (to < totalPages - 1) html += `<li class="page-item disabled"><span class="page-link">…</span></li>`;
+      if (to < totalPages - 1) html += `<li class="page-item disabled"><span class="page-link">â€¦</span></li>`;
       if (to < totalPages) html += mkPageBtn(String(totalPages), totalPages, false, state.pagination.page === totalPages);
 
-      html += mkPageBtn('»', next, next > totalPages);
+      html += mkPageBtn('Â»', next, next > totalPages);
       paginationEl.innerHTML = html;
     } else {
       paginationEl.innerHTML = '';
@@ -2144,7 +2175,7 @@ function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
     if (!activeLang || scope === 'all') {
       // legacy
       if (resultsByCorpus) resultsByCorpus.hidden = false;
-      if (filtersPanel) filtersPanel.innerHTML = '<div class="small muted">Selecciona un idioma específico para usar filtros por libro.</div>';
+      if (filtersPanel) filtersPanel.innerHTML = '<div class="small muted">Selecciona un idioma especÃ­fico para usar filtros por libro.</div>';
       if (resultsList) resultsList.innerHTML = '';
       if (paginationEl) paginationEl.innerHTML = '';
       renderResults(groupsByCorpus, highlightQueries, relatedTerms);
@@ -2163,7 +2194,7 @@ function limitRefsForUi(refs = [], lang = 'es', max = MAX_REFS_PER_CORPUS) {
 
     const agg = buildFilterAggFromGroups(filteredGroups, activeLang);
 
-    // Si el filtro por categoría dejó vacío, reset
+    // Si el filtro por categorÃ­a dejÃ³ vacÃ­o, reset
     if (!agg.allCount) {
       if (filtersPanel) filtersPanel.innerHTML = '<div class="small muted">Sin resultados para el filtro seleccionado.</div>';
       if (resultsList) resultsList.innerHTML = '<div class="muted small">Sin resultados.</div>';
@@ -2275,7 +2306,7 @@ bookList.className = 'mt-2 d-grid gap-1';
               const relatedBadge = (lang === 'es' && relatedLabels.length && relatedLabels.some((label) => normalizeSpanish(item.text).includes(normalizeSpanish(label))))
                 ? `<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle ms-1">Coincidencia relacionada: ${escapeHtml(relatedLabels.join(', '))}</span>`
                 : '';
-              textWrap.innerHTML = `<span class="verse-ref">${escapeHtml(item.ref)}</span>${relatedBadge} · ${highlightText(item.text, highlightQuery, lang)}`;
+              textWrap.innerHTML = `<span class="verse-ref">${escapeHtml(item.ref)}</span>${relatedBadge} Â· ${highlightText(item.text, highlightQuery, lang)}`;
               const actions = document.createElement('div');
               actions.className = 'd-flex justify-content-end';
               const openBtn = document.createElement('button');
@@ -2310,7 +2341,7 @@ bookList.className = 'mt-2 d-grid gap-1';
             loadMoreButton.disabled = group.loadingMore;
             loadMoreButton.textContent = group.loadingMore
               ? 'Cargando...'
-              : 'Cargar más en RVR1960';
+              : 'Cargar mÃ¡s en RVR1960';
             loadMoreButton.addEventListener('click', async () => {
               if (group.loadingMore) return;
               group.loadingMore = true;
@@ -2453,7 +2484,7 @@ bookList.className = 'mt-2 d-grid gap-1';
   }
   async function buildSummary(term, lang, entry, hebrewEntry, refs, highlightQueries = {}, options = {}) {
      const lemma = entry?.lemma || term;
-     const transliteration = entry?.['Forma lexica'] || '—';
+     const transliteration = entry?.['Forma lexica'] || 'â€”';
      const pos = extractPos(entry);
      const hebrewDefinition = getHebrewDefinition(hebrewEntry);
      const definition = lang === 'he' ? hebrewDefinition : (entry?.definicion || '');
@@ -2484,7 +2515,7 @@ bookList.className = 'mt-2 d-grid gap-1';
         sampleEs = '';
       }
     }
-    if (!summaryParts.length) summaryParts.push('No se encontró definición directa, se usa la concordancia del corpus para contexto.');
+    if (!summaryParts.length) summaryParts.push('No se encontrÃ³ definiciÃ³n directa, se usa la concordancia del corpus para contexto.');
     const summaryQuery = highlightQueries.es || (lang === 'es' ? term : '');
  if (lemmaSummary) {
       lemmaSummary.innerHTML = highlightText(summaryParts.join(' '), summaryQuery, 'es');
@@ -2500,7 +2531,7 @@ bookList.className = 'mt-2 d-grid gap-1';
     }
     if (sampleEs) {
       cards.push(`
-        <div class="fw-semibold">Traducción RVR1960</div>
+        <div class="fw-semibold">TraducciÃ³n RVR1960</div>
         <div class="small muted">Ejemplo contextual</div>
         <div>${highlightText(sampleEs, spanishQuery, 'es')}</div>
       `);
@@ -2508,7 +2539,7 @@ bookList.className = 'mt-2 d-grid gap-1';
      
      if (keywords.length) {
        cards.push(`
-         <div class="fw-semibold">Campos semánticos</div>
+         <div class="fw-semibold">Campos semÃ¡nticos</div>
          <div class="small muted">${keywords.join(', ')}</div>
        `);
      }
@@ -2555,12 +2586,12 @@ bookList.className = 'mt-2 d-grid gap-1';
       const isCompoundQuery = /\s/.test(String(term || '').trim());
       let selectedScope = getLanguageScope(term);
 
-      // Para aligerar carga: no permitimos búsquedas multi-idioma para frases (palabras compuestas).
-      // Si es una frase y el usuario eligió "all", forzamos al idioma detectado.
+      // Para aligerar carga: no permitimos bÃºsquedas multi-idioma para frases (palabras compuestas).
+      // Si es una frase y el usuario eligiÃ³ "all", forzamos al idioma detectado.
       if (isCompoundQuery && selectedScope === 'all') {
         selectedScope = lang;
       }
-     // reset UI filters/paginación para nueva búsqueda
+     // reset UI filters/paginaciÃ³n para nueva bÃºsqueda
      state.pagination.page = 1;
      state.pagination.selectedBook = null;
      state.pagination.selectedTestament = null;
@@ -2575,7 +2606,7 @@ bookList.className = 'mt-2 d-grid gap-1';
         ? validation.normalized
         : normalizeByLang(term, lang);
               const canCrossDisplay = (!isCompoundQuery) && (lang === 'es') && (selectedScope === 'gr' || selectedScope === 'he');
-      // Para búsquedas de una sola palabra: si el usuario cambió a gr/he, seguimos buscando en ES para no perder el NT,
+      // Para bÃºsquedas de una sola palabra: si el usuario cambiÃ³ a gr/he, seguimos buscando en ES para no perder el NT,
       // y usamos equivalencias solo para resaltar / abrir en el idioma elegido.
       const searchLang = canCrossDisplay ? 'es' : (isCompoundQuery ? selectedScope : lang);
 
@@ -2606,11 +2637,11 @@ bookList.className = 'mt-2 d-grid gap-1';
       if (!refs.length && !(lang === 'gr' && hasInitialGreekMatches)) {
         renderTags([
           `Lema: <span class="fw-semibold">${term}</span>`,
-          'Transliteración: —',
-          'POS: —'
+          'TransliteraciÃ³n: â€”',
+          'POS: â€”'
         ]);
         if (lemmaSummary) {
-          lemmaSummary.textContent = 'No se encontraron ocurrencias en los índices disponibles.';
+          lemmaSummary.textContent = 'No se encontraron ocurrencias en los Ã­ndices disponibles.';
         }
         renderCorrespondence([]);
         if (lemmaExamples) {
@@ -2724,20 +2755,20 @@ for (const token of esSearchTokens) {
         }
       }
 
-      const greekLemma = greekEntry?.lemma || greekCandidate?.lemma || (lang === 'gr' ? term : '—');
+      const greekLemma = greekEntry?.lemma || greekCandidate?.lemma || (lang === 'gr' ? term : 'â€”');
       const greekSearchTerms = new Set();
       if (greekTerm) greekSearchTerms.add(greekTerm);
       aliasCandidates.gr.forEach((item) => greekSearchTerms.add(item));
       (equivalenceTerms.gr || []).forEach((item) => greekSearchTerms.add(item));
-      const greekTranslit = greekEntry?.['Forma lexica'] || (greekTerm ? transliterateGreek(greekLemma || term) : '—');
+      const greekTranslit = greekEntry?.['Forma lexica'] || (greekTerm ? transliterateGreek(greekLemma || term) : 'â€”');
       const hebrewSearchTerms = new Set();
       let hebrewPhraseQueries = [];
       if (lang === 'es') {
         const esPhrase = normalizeSpanishPhrase(term);
         if (esPhrase === 'hijo de dios' || esPhrase === 'hijo del dios' || esPhrase === 'hijos de dios' || esPhrase === 'hijos del dios') {
-          hebrewPhraseQueries = ['בן האלהים', 'בן האלוהים', 'בני האלהים', 'בני האלוהים', 'בן אל'];
+          hebrewPhraseQueries = ['×‘×Ÿ ×”××œ×”×™×', '×‘×Ÿ ×”××œ×•×”×™×', '×‘× ×™ ×”××œ×”×™×', '×‘× ×™ ×”××œ×•×”×™×', '×‘×Ÿ ××œ'];
         } else if (esPhrase === 'hijo del hombre' || esPhrase === 'hijo de hombre') {
-          hebrewPhraseQueries = ['בן אדם'];
+          hebrewPhraseQueries = ['×‘×Ÿ ××“×'];
         }
       }
 
@@ -2856,25 +2887,28 @@ if (enforceSpanishReferenceCorrespondence && enabledCorpora.has('he')) {
         }
       }
 
-      const posTag = lang === 'gr' ? extractPos(entry) : '—';
+      const posTag = lang === 'gr' ? extractPos(entry) : 'â€”';
       const lemmaLabel = lang === 'gr' ? (entry?.lemma || term) : term;
+      const divineLabel = lang === 'he'
+        ? resolveDivineNameLabel(hebrewEntry?.hebrew || hebrewEntry?.lemma || term)
+        : '';
       const translitLabel = lang === 'he'
-        ? transliterateHebrew(term)
-        : (entry?.['Forma lexica'] || (lang === 'gr' ? transliterateGreek(term) : '—'));
+        ? (divineLabel || transliterateHebrew(term))
+        : (entry?.['Forma lexica'] || (lang === 'gr' ? transliterateGreek(term) : 'â€”'));
 
       renderTags([
         `Lema: <span class="fw-semibold">${lemmaLabel}</span>`,
-        `Transliteración: ${translitLabel}`,
+        `TransliteraciÃ³n: ${translitLabel}`,
         `POS: ${posTag}`,
-        `RKANT: ${enabledCorpora.has('gr') ? grRefs.length : '—'}`,
-        `LXX: ${enabledCorpora.has('lxx') ? lxxMatches.refs.length : '—'}`,
-        `Hebreo: ${enabledCorpora.has('he') ? heRefs.length : '—'}`,
-        `RVR1960: ${enabledCorpora.has('es') ? esRefs.length : '—'}`
+        `RKANT: ${enabledCorpora.has('gr') ? grRefs.length : 'â€”'}`,
+        `LXX: ${enabledCorpora.has('lxx') ? lxxMatches.refs.length : 'â€”'}`,
+        `Hebreo: ${enabledCorpora.has('he') ? heRefs.length : 'â€”'}`,
+        `RVR1960: ${enabledCorpora.has('es') ? esRefs.length : 'â€”'}`
       ]);
 
       const lxxHighlightQuery = lxxMatches.highlightTerms?.length
         ? lxxMatches.highlightTerms.join(' ')
-        : (greekLemma !== '—' ? greekLemma : (lang === 'gr' ? term : ''));
+        : (greekLemma !== 'â€”' ? greekLemma : (lang === 'gr' ? term : ''));
 
       const relatedTerms = {
         es: aliasCandidates.relatedLabels?.es || [],
@@ -2882,7 +2916,7 @@ if (enforceSpanishReferenceCorrespondence && enabledCorpora.has('he')) {
       };
 
       const highlightQueries = {
-        gr: greekLemma !== '—' ? greekLemma : (lang === 'gr' ? term : ''),
+        gr: greekLemma !== 'â€”' ? greekLemma : (lang === 'gr' ? term : ''),
         lxx: lxxHighlightQuery,
         he: (hebrewPhraseQueries.length ? hebrewPhraseQueries.join(' || ') : '') || (equivalenceTerms.he && equivalenceTerms.he[0] ? equivalenceTerms.he[0] : '') || hebrewCandidate?.word || (lang === 'he' ? term : ''),
         es: [esDisplayWord, ...relatedTerms.es].join(' ').trim()
@@ -2994,7 +3028,7 @@ if (enforceSpanishReferenceCorrespondence && enabledCorpora.has('he')) {
       }));
     } catch (error) {
       if (!isAbortError(error)) {
-        console.error('Error en el análisis:', error);
+        console.error('Error en el anÃ¡lisis:', error);
       }
     } finally {
       if (runId === activeSearchRunId) {
@@ -3038,7 +3072,7 @@ if (enforceSpanishReferenceCorrespondence && enabledCorpora.has('he')) {
        return;
      }
 
-     // Paginación
+     // PaginaciÃ³n
      const pageBtn = event.target.closest('button[data-bx-page]');
      if (pageBtn) {
        const nextPage = Number(pageBtn.dataset.bxPage);
@@ -3064,7 +3098,7 @@ if (enforceSpanishReferenceCorrespondence && enabledCorpora.has('he')) {
        }
      });
 
-     // Al cambiar de categoría, volvemos a "All" (pero mantenemos el panel a la derecha)
+     // Al cambiar de categorÃ­a, volvemos a "All" (pero mantenemos el panel a la derecha)
      state.pagination.page = 1;
      state.pagination.selectedTestament = null;
      state.pagination.selectedBook = null;
@@ -3126,3 +3160,4 @@ const rawScope = String(params.get('scope') || params.get('mode') || '').trim();
 
   applyQueryFromUrl();
 })();
+

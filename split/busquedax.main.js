@@ -1,4 +1,4 @@
-/* Auto-generated split from busquedax.js (main/UI) */
+﻿/* Auto-generated split from busquedax.js (main/UI) */
 
 
    function pickBestCandidate(counts, samples) {
@@ -12,9 +12,39 @@
   }
 
   function cleanGreekToken(token) {
-    return String(token || '').replace(/[··.,;:!?“”"(){}\[\]<>«»]/g, '');
+    return String(token || '').replace(/[Â·Î‡.,;:!?â€œâ€"(){}\[\]<>Â«Â»]/g, '');
   }
+  const DIVINE_PREFIX_RE = /^[×•×‘×›×œ×ž×©×”][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/;
+  function normalizeHebrewPointedTokenForDivine(text) {
+    return String(text || '')
+      .normalize('NFKC')
+      .replace(/[\u0591-\u05AF]/g, '')
+      .replace(/[^\u05D0-\u05EA\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '')
+      .trim();
+  }
+  function stripHebrewMarks(text) {
+    return String(text || '').replace(/[\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '');
+  }
+  function resolveDivineNameLabel(rawHebrew) {
+    const pointed = normalizeHebrewPointedTokenForDivine(rawHebrew);
+    if (!pointed) return '';
 
+    const pointedCore = pointed.replace(DIVINE_PREFIX_RE, '') || pointed;
+    const plainCore = stripHebrewMarks(pointedCore);
+
+    if (plainCore === '×™×”×•×”') {
+      if (pointedCore.includes('×•Ö´Ö¹')) return 'Elohim';
+      if (pointedCore.includes('×•Ö¸Ö¹')) return 'Adonai';
+      return 'Hashem';
+    }
+
+    if (plainCore.startsWith('××“× ')) return 'Adonai';
+    if (plainCore.startsWith('××œ×•×”')) return 'Elohim';
+    if (plainCore.startsWith('××œ×”') && plainCore !== '××œ×”') return 'Elohim';
+    if (/^×Öµ×œ/.test(pointedCore)) return 'El';
+
+    return '';
+  }
 
   async function buildGreekCandidateFromGreekRefs(refs, options = {}) {
    if (!refs.length) return null;
@@ -46,12 +76,12 @@
 
 
   function extractPos(entry) {
-     if (!entry) return '—';
+     if (!entry) return 'â€”';
      const raw = entry.entrada_impresa || '';
-     if (!raw) return '—';
+     if (!raw) return 'â€”';
      const parts = raw.split('.');
      if (parts.length < 2) return raw.trim();
-     return parts[1].trim() || '—';
+     return parts[1].trim() || 'â€”';
    }
  
    function shortDefinition(text) {
@@ -65,7 +95,7 @@
      if (!text) return [];
      const cleaned = text
        .replace(/[()]/g, ' ')
-       .replace(/[^a-zA-ZáéíóúñüÁÉÍÓÚÑÜ\s]/g, ' ')
+       .replace(/[^a-zA-ZÃ¡Ã©Ã­Ã³ÃºÃ±Ã¼ÃÃ‰ÃÃ“ÃšÃ‘Ãœ\s]/g, ' ')
        .toLowerCase();
      const words = cleaned.split(/\s/).filter(Boolean);
      const keywords = [];
@@ -83,7 +113,7 @@
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-zñ\s]/g, ' ');
+      .replace(/[^a-zÃ±\s]/g, ' ');
     const words = cleaned.split(/\s+/).filter((word) => word.length >= 3);
     const extraStopwords = new Set([
       'lit', 'nt', 'lxx', 'pl', 'sg', 'adj', 'adv', 'pron', 'conj', 'prep',
@@ -133,7 +163,7 @@ function filterRefsByEnabledTestaments(refs) {
         const verseText = getVerseTextFromChapter(verses, verse);
         const tokens = verseText.split(/\s/).filter(Boolean);
         tokens.forEach((token) => {
-          const cleaned = token.replace(/[׃,:;.!?()"“”]/g, '');
+          const cleaned = token.replace(/[×ƒ,:;.!?()"â€œâ€]/g, '');
           const normalized = normalizeHebrew(cleaned);
           if (!normalized || hebrewStopwords.has(normalized)) return;
           counts.set(normalized, (counts.get(normalized) || 0) + 1);
@@ -168,8 +198,8 @@ function filterRefsByEnabledTestaments(refs) {
 function groupForBook(book) {
   const slug = book;
   if (TORAH.includes(slug)) return { key: 'torah', label: 'Torah' };
-  if (HISTORICAL.includes(slug)) return { key: 'historicos', label: 'Históricos' };
-  if (WISDOM.includes(slug)) return { key: 'sabiduria', label: 'Sabiduría' };
+  if (HISTORICAL.includes(slug)) return { key: 'historicos', label: 'HistÃ³ricos' };
+  if (WISDOM.includes(slug)) return { key: 'sabiduria', label: 'SabidurÃ­a' };
   if (PROPHETS.includes(slug)) return { key: 'profetas', label: 'Profetas' };
   if (GOSPELS.includes(slug)) return { key: 'evangelios', label: 'Evangelios' };
   if (ACTS.includes(slug)) return { key: 'hechos', label: 'Hechos' };
@@ -271,10 +301,10 @@ function groupForBook(book) {
   function buildCorrespondenceCard({ title, word, transliteration, samples, lang, highlightQuery }) {
     const wordLine = word
       ? `<div class="${classForLang(lang)} fw-semibold">${highlightText(word, highlightQuery, lang)}</div>`
-      : '<div class="muted">—</div>';
+      : '<div class="muted">â€”</div>';
     const translitLine = transliteration ? `<div class="small muted">Translit.: ${transliteration}</div>` : '';
     const sampleLines = samples.length
-      ? samples.map((sample) => `<div class="small">${escapeHtml(sample.ref)} · ${highlightText(sample.text, highlightQuery, lang)}</div>`).join('')
+      ? samples.map((sample) => `<div class="small">${escapeHtml(sample.ref)} Â· ${highlightText(sample.text, highlightQuery, lang)}</div>`).join('')
       : '<div class="small muted">Sin ejemplos.</div>';
     return `
       <div class="fw-semibold">${title}</div>
@@ -328,7 +358,7 @@ function groupForBook(book) {
       });
     });
 
-    // orden canónico
+    // orden canÃ³nico
     const orderedBooks = CANONICAL_BOOK_ORDER
       .filter((slug) => byBook.has(slug))
       .map((slug) => byBook.get(slug));
@@ -347,9 +377,9 @@ function groupForBook(book) {
     return { lang, books, ot, nt, otCount, ntCount, allCount };
   }
   /**
-   * Versión ligera de buildBookGroups para la UI paginada.
-   * Solo agrupa refs por libro — NO hace ningún fetch de textos.
-   * Los textos se cargan bajo demanda en renderResultsPage → resolveVerseTextsForRefs.
+   * VersiÃ³n ligera de buildBookGroups para la UI paginada.
+   * Solo agrupa refs por libro â€” NO hace ningÃºn fetch de textos.
+   * Los textos se cargan bajo demanda en renderResultsPage â†’ resolveVerseTextsForRefs.
    */
   function buildBookGroupsMeta(refs, lang) {
     const grouped = new Map();
@@ -414,7 +444,7 @@ state.pagination.collapsedSections = { ot: true, nt: true };
       const variantClass = variant ? ` bx-filter-item--${variant}` : '';
       const isSectionToggle = id === 'ot' || id === 'nt';
       const sectionCollapsed = isSectionToggle ? Boolean(collapsed[id]) : false;
-      const toggleLabel = isSectionToggle ? `<span class="bx-collapse-indicator">${sectionCollapsed ? '▸' : '▾'}</span>` : '';
+      const toggleLabel = isSectionToggle ? `<span class="bx-collapse-indicator">${sectionCollapsed ? 'â–¸' : 'â–¾'}</span>` : '';
             return `
         <button class="bx-filter-item${variantClass} ${active ? 'is-active' : ''}" type="button"
  data-bx-filter="${id}" ${isSectionToggle ? `aria-expanded="${sectionCollapsed ? 'false' : 'true'}"` : ''}>
@@ -441,7 +471,7 @@ state.pagination.collapsedSections = { ot: true, nt: true };
     filtersPanel.innerHTML = `
       <div class="d-grid gap-2">
          ${mkBtn('all', 'Todos', allCount, isAll, 'all')}
-        ${mkBtn('ot', 'Toráh', otCount, isOT, 'ot')}
+        ${mkBtn('ot', 'TorÃ¡h', otCount, isOT, 'ot')}
   ${otSectionHtml}
         ${mkBtn('nt', 'Evangelios', ntCount, isNT, 'nt')}
         ${ntSectionHtml}
@@ -469,7 +499,7 @@ state.pagination.collapsedSections = { ot: true, nt: true };
   }
 
   async function resolveVerseTextsForRefs(refs, lang, options = {}) {
-    // Agrupa por libro+capítulo para minimizar lecturas.
+    // Agrupa por libro+capÃ­tulo para minimizar lecturas.
     const cache = state.verseCache?.[lang] || new Map();
     const result = [];
     const byChapter = new Map(); // key: book|chapter -> [verseNumbers]
@@ -503,7 +533,7 @@ state.pagination.collapsedSections = { ot: true, nt: true };
         }
       } catch (e) {
      if (isAbortError(e)) throw e;
-        // Evita cachear vacío ante fallos transitorios para permitir reintentos.
+        // Evita cachear vacÃ­o ante fallos transitorios para permitir reintentos.
       }
     }
 
@@ -556,7 +586,7 @@ state.pagination.collapsedSections = { ot: true, nt: true };
       if (state?.version) qs.set('version', String(state.version));
       qs.set('orig', '1');
       const openHref = `./index.html?${qs.toString()}`;
-      const safeText = it.text || '—';
+      const safeText = it.text || 'â€”';
       return `
         <div class="bx-result-item d-flex gap-2">
           <div class="flex-grow-1">
@@ -570,7 +600,7 @@ state.pagination.collapsedSections = { ot: true, nt: true };
       `;
     }).join('') || '<div class="muted small">Sin resultados.</div>';
 
-    // Paginación
+    // PaginaciÃ³n
     const mkPageBtn = (label, page, disabled = false, active = false) => {
       return `
         <li class="page-item ${disabled ? 'disabled' : ''} ${active ? 'active' : ''}">
@@ -583,7 +613,7 @@ state.pagination.collapsedSections = { ot: true, nt: true };
       const prev = state.pagination.page - 1;
       const next = state.pagination.page + 1;
       let html = '';
-      html += mkPageBtn('«', prev, prev < 1);
+      html += mkPageBtn('Â«', prev, prev < 1);
       // ventana simple
       const windowSize = 5;
       const half = Math.floor(windowSize / 2);
@@ -592,14 +622,14 @@ state.pagination.collapsedSections = { ot: true, nt: true };
       from = Math.max(1, to - windowSize + 1);
 
       if (from > 1) html += mkPageBtn('1', 1, false, state.pagination.page === 1);
-      if (from > 2) html += `<li class="page-item disabled"><span class="page-link">…</span></li>`;
+      if (from > 2) html += `<li class="page-item disabled"><span class="page-link">â€¦</span></li>`;
       for (let p = from; p <= to; p++) {
         html += mkPageBtn(String(p), p, false, p === state.pagination.page);
       }
-      if (to < totalPages - 1) html += `<li class="page-item disabled"><span class="page-link">…</span></li>`;
+      if (to < totalPages - 1) html += `<li class="page-item disabled"><span class="page-link">â€¦</span></li>`;
       if (to < totalPages) html += mkPageBtn(String(totalPages), totalPages, false, state.pagination.page === totalPages);
 
-      html += mkPageBtn('»', next, next > totalPages);
+      html += mkPageBtn('Â»', next, next > totalPages);
       paginationEl.innerHTML = html;
     } else {
       paginationEl.innerHTML = '';
@@ -615,7 +645,7 @@ state.pagination.collapsedSections = { ot: true, nt: true };
     if (!activeLang || scope === 'all') {
       // legacy
       if (resultsByCorpus) resultsByCorpus.hidden = false;
-      if (filtersPanel) filtersPanel.innerHTML = '<div class="small muted">Selecciona un idioma específico para usar filtros por libro.</div>';
+      if (filtersPanel) filtersPanel.innerHTML = '<div class="small muted">Selecciona un idioma especÃ­fico para usar filtros por libro.</div>';
       if (resultsList) resultsList.innerHTML = '';
       if (paginationEl) paginationEl.innerHTML = '';
       renderResults(groupsByCorpus, highlightQueries, relatedTerms);
@@ -634,7 +664,7 @@ state.pagination.collapsedSections = { ot: true, nt: true };
 
     const agg = buildFilterAggFromGroups(filteredGroups, activeLang);
 
-    // Si el filtro por categoría dejó vacío, reset
+    // Si el filtro por categorÃ­a dejÃ³ vacÃ­o, reset
     if (!agg.allCount) {
       if (filtersPanel) filtersPanel.innerHTML = '<div class="small muted">Sin resultados para el filtro seleccionado.</div>';
       if (resultsList) resultsList.innerHTML = '<div class="muted small">Sin resultados.</div>';
@@ -739,7 +769,7 @@ bookList.className = 'mt-2 d-grid gap-1';
               const relatedBadge = (lang === 'es' && relatedLabels.length && relatedLabels.some((label) => normalizeSpanish(item.text).includes(normalizeSpanish(label))))
                 ? `<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle ms-1">Coincidencia relacionada: ${escapeHtml(relatedLabels.join(', '))}</span>`
                 : '';
-              textWrap.innerHTML = `<span class="verse-ref">${escapeHtml(item.ref)}</span>${relatedBadge} · ${highlightText(item.text, highlightQuery, lang)}`;
+              textWrap.innerHTML = `<span class="verse-ref">${escapeHtml(item.ref)}</span>${relatedBadge} Â· ${highlightText(item.text, highlightQuery, lang)}`;
               const actions = document.createElement('div');
               actions.className = 'd-flex justify-content-end';
               const openBtn = document.createElement('button');
@@ -774,7 +804,7 @@ bookList.className = 'mt-2 d-grid gap-1';
             loadMoreButton.disabled = group.loadingMore;
             loadMoreButton.textContent = group.loadingMore
               ? 'Cargando...'
-              : 'Cargar más en RVR1960';
+              : 'Cargar mÃ¡s en RVR1960';
             loadMoreButton.addEventListener('click', async () => {
               if (group.loadingMore) return;
               group.loadingMore = true;
@@ -912,7 +942,7 @@ bookList.className = 'mt-2 d-grid gap-1';
   }
   async function buildSummary(term, lang, entry, hebrewEntry, refs, highlightQueries = {}, options = {}) {
      const lemma = entry?.lemma || term;
-     const transliteration = entry?.['Forma lexica'] || '—';
+     const transliteration = entry?.['Forma lexica'] || 'â€”';
      const pos = extractPos(entry);
      const hebrewDefinition = getHebrewDefinition(hebrewEntry);
      const definition = lang === 'he' ? hebrewDefinition : (entry?.definicion || '');
@@ -943,7 +973,7 @@ bookList.className = 'mt-2 d-grid gap-1';
         sampleEs = '';
       }
     }
-    if (!summaryParts.length) summaryParts.push('No se encontró definición directa, se usa la concordancia del corpus para contexto.');
+    if (!summaryParts.length) summaryParts.push('No se encontrÃ³ definiciÃ³n directa, se usa la concordancia del corpus para contexto.');
     const summaryQuery = highlightQueries.es || (lang === 'es' ? term : '');
  if (lemmaSummary) {
       lemmaSummary.innerHTML = highlightText(summaryParts.join(' '), summaryQuery, 'es');
@@ -959,7 +989,7 @@ bookList.className = 'mt-2 d-grid gap-1';
     }
     if (sampleEs) {
       cards.push(`
-        <div class="fw-semibold">Traducción RVR1960</div>
+        <div class="fw-semibold">TraducciÃ³n RVR1960</div>
         <div class="small muted">Ejemplo contextual</div>
         <div>${highlightText(sampleEs, spanishQuery, 'es')}</div>
       `);
@@ -967,7 +997,7 @@ bookList.className = 'mt-2 d-grid gap-1';
      
      if (keywords.length) {
        cards.push(`
-         <div class="fw-semibold">Campos semánticos</div>
+         <div class="fw-semibold">Campos semÃ¡nticos</div>
          <div class="small muted">${keywords.join(', ')}</div>
        `);
      }
@@ -1011,14 +1041,14 @@ if (!term) {
 
 
  const maybeReference = /\d/.test(term)
-      && /[:\-–]|\b\d+\s*:\s*\d+|\b[a-záéíóúñü]+\s+\d+/i.test(term);
+      && /[:\-â€“]|\b\d+\s*:\s*\d+|\b[a-zÃ¡Ã©Ã­Ã³ÃºÃ±Ã¼]+\s+\d+/i.test(term);
     if (maybeReference) {
       const params = new URLSearchParams();
       params.set('search', term);
       params.set('version', 'RVR1960');
       params.set('orig', '1');
 
-      const shortReferenceOnly = /^\d+(?::\d+(?:\s*[-–]\s*\d+)?)?$/.test(term);
+      const shortReferenceOnly = /^\d+(?::\d+(?:\s*[-â€“]\s*\d+)?)?$/.test(term);
       if (shortReferenceOnly) {
         try {
           const rawState = sessionStorage.getItem('lectorState');
@@ -1082,7 +1112,7 @@ if (cached) {
         : normalizeByLang(term, searchLang);
               let tags = [
         `Idioma: <span class="fw-semibold">${langLabels[searchLang] || searchLang}</span>`,
-        `Búsqueda: <span class="fw-semibold">${escapeHtml(term)}</span>`
+        `BÃºsqueda: <span class="fw-semibold">${escapeHtml(term)}</span>`
       ];
 
 let indexPromise = searchLang === 'es'
@@ -1106,16 +1136,17 @@ let indexPromise = searchLang === 'es'
         const entry = state.dictMap.get(normalized) || null;
         tags = [
           `Lema: <span class="fw-semibold">${entry?.lemma || term}</span>`,
-          `Transliteración: ${entry?.['Forma lexica'] || entry?.['Forma flexionada transliterada'] || '—'}`,
+          `TransliteraciÃ³n: ${entry?.['Forma lexica'] || entry?.['Forma flexionada transliterada'] || 'â€”'}`,
           `POS: ${extractPos(entry)}`
         ];
       } else if (searchLang === 'he') {
         
        const entry = state.hebrewDictMap.get(normalized) || null;
+        const divineLabel = resolveDivineNameLabel(entry?.hebrew || entry?.lemma || term);
         tags = [
           `Palabra: <span class="fw-semibold">${entry?.hebrew || term}</span>`,
-          `Transliteración: ${entry?.transliteracion || '—'}`,
-          `POS: ${entry?.categoria || '—'}`
+          `Transliteración: ${divineLabel || entry?.transliteracion || '—'}`,
+          `POS: ${entry?.categoria || 'â€”'}`
         ];
       }
 
@@ -1143,8 +1174,8 @@ let indexPromise = searchLang === 'es'
       await renderSearchUI(groupsByCorpus, highlightQueries, relatedTerms, options);
      
       
-// buildBookGroupsMeta: agrupación instantánea sin fetch de textos.
-      // Los textos se cargan solo para la página actual en renderResultsPage.
+// buildBookGroupsMeta: agrupaciÃ³n instantÃ¡nea sin fetch de textos.
+      // Los textos se cargan solo para la pÃ¡gina actual en renderResultsPage.
       const groups = buildBookGroupsMeta(filteredRefs, searchLang);
       groupsByCorpus[0].groups = groups;
       groupsByCorpus[0].loading = false;
@@ -1152,7 +1183,7 @@ const payload = {
         term,
         lang: searchLang,
         refs: filteredRefs,
-        allRefs: refs,          // refs sin filtrar por testamento, para re-filtrado dinámico
+        allRefs: refs,          // refs sin filtrar por testamento, para re-filtrado dinÃ¡mico
         groupsByCorpus,
         highlightQueries,
         relatedTerms
@@ -1167,7 +1198,7 @@ const payload = {
       await renderSearchUI(groupsByCorpus, highlightQueries, relatedTerms, options);
     } catch (error) {
       if (!isAbortError(error)) {
-        console.error('Error en el análisis:', error);
+        console.error('Error en el anÃ¡lisis:', error);
       }
     } finally {
       if (runId === activeSearchRunId) {
@@ -1211,7 +1242,7 @@ const payload = {
        return;
      }
 
-     // Paginación
+     // PaginaciÃ³n
      const pageBtn = event.target.closest('button[data-bx-page]');
      if (pageBtn) {
        const nextPage = Number(pageBtn.dataset.bxPage);
@@ -1237,7 +1268,7 @@ const payload = {
        }
      });
 
-     // Al cambiar de categoría, volvemos a "All" (pero mantenemos el panel a la derecha)
+     // Al cambiar de categorÃ­a, volvemos a "All" (pero mantenemos el panel a la derecha)
      state.pagination.page = 1;
      state.pagination.selectedTestament = null;
      state.pagination.selectedBook = null;
@@ -1249,13 +1280,13 @@ const payload = {
 
 function updateDetectedLanguageLabel(lang) {
     if (!languageScopeSelect) return;
-    const label = langLabels?.[lang] || lang || '—';
+    const label = langLabels?.[lang] || lang || 'â€”';
     languageScopeSelect.innerHTML = `<option value="auto">Idioma detectado: ${escapeHtml(label)}</option>`;
     languageScopeSelect.value = 'auto';
   }
 
   function handleLanguageScopeChange() {
-    // El selector queda fijo en detección automática.
+    // El selector queda fijo en detecciÃ³n automÃ¡tica.
     state.languageScope = 'auto';
   }
  
@@ -1271,7 +1302,7 @@ function updateDetectedLanguageLabel(lang) {
   // Re-filtrar los refs originales y reconstruir los grupos con el nuevo filtro
   const filteredRefs = filterRefsByEnabledTestaments(state.last.allRefs || state.last.refs || []);
   const searchLang = state.last.lang || 'es';
-  // buildBookGroupsMeta: agrupación sin fetch de textos, carga lazy por página
+  // buildBookGroupsMeta: agrupaciÃ³n sin fetch de textos, carga lazy por pÃ¡gina
   const groups = buildBookGroupsMeta(filteredRefs, searchLang);
   const newGroupsByCorpus = [{ lang: searchLang, groups, expanded: false, loading: false }];
   state.last.groupsByCorpus = newGroupsByCorpus;
@@ -1319,7 +1350,7 @@ queryInput?.addEventListener('input', () => {
     languageScopeSelect?.addEventListener('change', handleLanguageScopeChange);
   function applyQueryFromUrl() {
      state.languageScope = 'auto';
-    updateDetectedLanguageLabel('—');
+    updateDetectedLanguageLabel('â€”');
     const params = new URLSearchParams(window.location.search);
     const q = String(params.get('q') || '').trim();
     if (!q || !queryInput) return;
@@ -1329,3 +1360,4 @@ queryInput?.addEventListener('input', () => {
 
 void warmSearchAssets();
   applyQueryFromUrl();
+

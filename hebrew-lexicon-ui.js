@@ -177,6 +177,55 @@ function normalizeHebrewPointed(text) {
      .replace(/[\s\u05BE]/g, '')
       .replace(/[׃,:;.!?()"“”]/g, '');
    }
+  const DIVINE_PREFIX_RE = /^[ובכלמשה][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/;
+  function stripHebrewMarks(text) {
+    return String(text || '').replace(/[\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '');
+  }
+  function normalizeHebrewPointedTokenForDivine(text) {
+    return String(text || '')
+      .normalize('NFKC')
+      .replace(/[\u0591-\u05AF]/g, '')
+      .replace(/[^\u05D0-\u05EA\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '')
+      .trim();
+  }
+  function stripSingleHebrewPrefix(pointed) {
+    return String(pointed || '').replace(DIVINE_PREFIX_RE, '');
+  }
+  function resolveDivineNameLabel(rawHebrew) {
+    const pointed = normalizeHebrewPointedTokenForDivine(rawHebrew);
+    if (!pointed) return '';
+
+    const pointedCore = stripSingleHebrewPrefix(pointed) || pointed;
+    const plainCore = stripHebrewMarks(pointedCore);
+
+    if (plainCore === 'יהוה') {
+      if (pointedCore.includes('וִֹ')) return 'Elohim';
+      if (pointedCore.includes('וָֹ')) return 'Adonai';
+      return 'Hashem';
+    }
+
+    if (plainCore.startsWith('אדנ')) return 'Adonai';
+    if (plainCore.startsWith('אלוה')) return 'Elohim';
+    if (plainCore.startsWith('אלה') && plainCore !== 'אלה') return 'Elohim';
+    if (/^אֵל/.test(pointedCore)) return 'El';
+
+    return '';
+  }
+  function getDivineNameLabelFromEntry(entry) {
+    const candidates = uniqueList([
+      entry?.palabra,
+      entry?.lemma,
+      entry?.hebreo,
+      entry?.forma,
+      entry?.strong_detail?.lemma,
+      extractHebrewFromStrongHeader(entry?.strong_detail?.header)
+    ]);
+    for (const candidate of candidates) {
+      const label = resolveDivineNameLabel(candidate);
+      if (label) return label;
+    }
+    return '';
+  }
     function normalizeHebrewSkeleton(text) {
     return normalizeHebrew(text).replace(/[וי]/g, '');
   }
@@ -227,6 +276,8 @@ function toArray(value) {
     return String(value || '').replace(/\s+/g, ' ').trim();
   }
   function pickTrilingueGloss(row) {
+    const divineLabel = resolveDivineNameLabel(row?.texto_hebreo);
+    if (divineLabel) return divineLabel;
     const direct = normalizeSimpleText(row?.equivalencia_español);
     if (direct) return direct.split('/')[0].trim();
     const candidates = Array.isArray(row?.candidatos) ? row.candidatos : [];
@@ -326,6 +377,8 @@ function toArray(value) {
   }
 
   function getHebrewTranslit(entry) {
+    const divineLabel = getDivineNameLabelFromEntry(entry);
+    if (divineLabel) return divineLabel;
     return entry?.translit || entry?.transliteracion || entry?.strong_detail?.transliteracion || '—';
   }
 function cleanPrintedEntry(value) {
