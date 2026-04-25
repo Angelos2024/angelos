@@ -1161,6 +1161,14 @@ function normalizeSpaces(s){
     .trim()
     .replace(/\s+/g,' ');
   }
+function sanitizeReferenceSearch(raw){
+  const q = normalizeSpaces(raw);
+  if(!q) return '';
+  return q
+    .replace(/(\d)\s*[:;,.\u00B7]+\s*$/u, '$1')
+    .replace(/([:-]\d+)\s*[:;,.\u00B7]+\s*$/u, '$1')
+    .trim();
+}
     function buildLastReferenceSearch(){
   if(!lastRef?.chapter) return '';
   const chapter = Number(lastRef.chapter);
@@ -1430,7 +1438,7 @@ async function ensureBookLoaded(slug, displayName){
  * Parse búsqueda
  ***********************/
 function parseSearch(raw){
-  const q = normalizeSpaces(raw);
+  const q = sanitizeReferenceSearch(raw);
   if(!q) return null;
  // ✅ Permite "cap" o "cap:verso" usando el libro actual (ej: enlaces desde búsquedas)
   const chapterOnlyMatch = q.match(/^(\d+)(?::(\d+)(?:\s*-\s*(\d+))?)?\s*$/);
@@ -1683,6 +1691,7 @@ scheduleSyncVerseHeights();
 
 async function runSearch(){
   const raw = normalizeSpaces(searchInput.value);
+  const sanitizedReference = sanitizeReferenceSearch(raw);
  if(!raw){
     passageTextRV.innerHTML = `<div class="text-muted">Escribe una referencia.</div>`;
     passageTextOrig.innerHTML = `<div class="text-muted">Escribe una referencia.</div>`;
@@ -1724,6 +1733,10 @@ async function runSearch(){
     passageTextOrig.innerHTML = msg;
     toggleFullChapterCta(false);
     return;
+  }
+
+  if(sanitizedReference && sanitizedReference !== raw){
+    searchInput.value = sanitizedReference;
   }
 
 
