@@ -359,6 +359,128 @@ return Array.from(new Set(words));
 
     return best;
   }
+  function removeLeadingHebrewArticle(token) {
+    const value = String(token || '').trim();
+    if (!value) return '';
+    const match = value.match(/^\u05D4[\u0591-\u05C7]*/u);
+    if (!match) return value;
+    const stripped = value.slice(match[0].length).trim();
+    return stripped || value;
+  }
+
+  function normalizeHebrewFinalLetter(token) {
+    return String(token || '').replace(/[\u05DB\u05DE\u05E0\u05E4\u05E6]$/u, (letter) => ({
+      '\u05DB': '\u05DA',
+      '\u05DE': '\u05DD',
+      '\u05E0': '\u05DF',
+      '\u05E4': '\u05E3',
+      '\u05E6': '\u05E5'
+    }[letter] || letter));
+  }
+
+  function buildHebrewGrammaticalRootCandidates(token) {
+    const value = String(token || '').trim();
+    if (!value) return [];
+    const out = new Set();
+    const add = (candidate) => {
+      const normalized = normalizeHebrewFinalLetter(candidate);
+      if (normalized) out.add(normalized);
+    };
+
+    if (value.endsWith('\u05EA') && value.length > 3) {
+      const stem = value.slice(0, -1);
+      add(`${stem}\u05D4`);
+      add(stem);
+    }
+    if (value.endsWith('\u05D9\u05DD') && value.length > 3) add(value.slice(0, -2));
+    if (value.endsWith('\u05D5\u05EA') && value.length > 4) {
+      const stem = value.slice(0, -2);
+      add(`${stem}\u05D4`);
+      add(stem);
+    }
+    if (value.endsWith('\u05D9') && value.length > 3) add(value.slice(0, -1));
+
+    [
+      '\u05D9\u05D4\u05DD', '\u05D9\u05D4\u05DF', '\u05D9\u05DB\u05DD', '\u05D9\u05DB\u05DF',
+      '\u05D9\u05E0\u05D5', '\u05D9\u05D4', '\u05D9\u05D5', '\u05D9\u05DA', '\u05DB\u05DD', '\u05DB\u05DF',
+      '\u05E0\u05D5', '\u05DD', '\u05DF', '\u05DA', '\u05D4', '\u05D5', '\u05D9'
+    ].forEach((suffix) => {
+      if (value.length - suffix.length < 2) return;
+      if (value.endsWith(suffix)) add(value.slice(0, -suffix.length));
+    });
+
+    return Array.from(out);
+  }
+
+  function buildHebrewRootLookupCandidates(raw) {
+    const normalized = normalizeHebrewRootKey(raw);
+    if (!normalized) return [];
+
+    const candidates = [];
+    const seen = new Set();
+    addHebrewRootLookupCandidate(candidates, seen, normalized, 70);
+
+    const articleStripped = normalizeHebrewRootKey(removeLeadingHebrewArticle(normalized));
+    if (articleStripped) addHebrewRootLookupCandidate(candidates, seen, articleStripped, 75);
+
+    const prefixedArticleMatch = normalized.match(/^([\u05D5\u05D1\u05DB\u05DC\u05DE\u05E9])\u05D4[\u0591-\u05C7]*(.+)$/u);
+    if (prefixedArticleMatch?.[2]) {
+      const withoutArticleAfterPrefix = normalizeHebrewRootKey(`${prefixedArticleMatch[1]}${prefixedArticleMatch[2]}`);
+      if (withoutArticleAfterPrefix) addHebrewRootLookupCandidate(candidates, seen, withoutArticleAfterPrefix, 75);
+    }
+
+    const baseConsonants = normalized.replace(/\s+/g, '');
+    buildHebrewGrammaticalRootCandidates(baseConsonants).forEach((stem) => {
+      addHebrewRootLookupCandidate(candidates, seen, stem, 85);
+    });
+    buildHebrewRootCandidateStems(baseConsonants).forEach((stem) => {
+      addHebrewRootLookupCandidate(candidates, seen, stem, 45);
+    });
+    return candidates;
+  }
+
+  function buildHebrewRootLookupKeys(raw) {
+    return buildHebrewRootLookupCandidates(raw).map((candidate) => candidate.key);
+  }
+
+  function buildHebrewRootCandidateStems(token) {
+    const value = String(token || '').trim();
+    if (!value) return [];
+
+    const out = new Set();
+    const queue = [value];
+    const seen = new Set();
+    const removablePrefixes = ['\u05D5', '\u05D1', '\u05DB', '\u05DC', '\u05DE', '\u05E9', '\u05D4', '\u05EA', '\u05D9', '\u05E0', '\u05D0'];
+    const removableSuffixes = [
+      '\u05E0\u05D5', '\u05E0\u05D9', '\u05EA\u05DD', '\u05EA\u05DF', '\u05EA', '\u05EA\u05D9',
+      '\u05DA', '\u05DB\u05DD', '\u05DB\u05DF', '\u05DD', '\u05DF', '\u05D4', '\u05D5', '\u05D9'
+    ];
+
+    while (queue.length) {
+      const current = queue.shift();
+      if (!current || seen.has(current)) continue;
+      seen.add(current);
+      if (current.length >= 3) out.add(current);
+
+      if (current.length > 3 && removablePrefixes.includes(current[0])) {
+        queue.push(current.slice(1));
+      }
+      if (current.length >= 4) {
+        for (let i = 1; i < current.length - 1; i++) {
+          const letter = current[i];
+          if (letter === '\u05D9' || letter === '\u05D5') {
+            queue.push(current.slice(0, i) + current.slice(i + 1));
+          }
+        }
+      }
+      for (const suffix of removableSuffixes) {
+        if (current.length - suffix.length < 3) continue;
+        if (current.endsWith(suffix)) queue.push(current.slice(0, -suffix.length));
+      }
+    }
+
+    return Array.from(out);
+  }
   function normalizeStrongKey(value) {
   const match = String(value || '').toUpperCase().match(/H?\s*0*(\d{1,4})/);
     return match ? `H${match[1]}` : '';
@@ -421,13 +543,19 @@ async function ensureHebrewUnifiedLoaded() {
         const rootKeyIndex = new Map();
 
         entries.forEach((entry) => {
-          const key = normalizeHebrewRootKey(entry?.lexeme || '');
           const strongKey = normalizeStrongKey(entry?.strong || '');
-          const rootToken = extractLeadingHebrewToken(entry?.root_first_segment || '');
+          const directKeys = [
+            normalizeHebrewRootKey(entry?.lexeme || ''),
+            normalizeHebrewRootKey(entry?.root_lexeme || '')
+          ].filter(Boolean);
+          const rootTokens = [
+            extractLeadingHebrewToken(entry?.root_first_segment || ''),
+            normalizeHebrewRootKey(entry?.root_lexeme || '')
+          ].filter(Boolean);
 
-          addHebrewRootCandidate(index, key, entry);
+          directKeys.forEach((key) => addHebrewRootCandidate(index, key, entry));
           if (strongKey && !strongIndex.has(strongKey)) strongIndex.set(strongKey, entry);
-          addHebrewRootCandidate(rootKeyIndex, rootToken, entry);
+          rootTokens.forEach((rootToken) => addHebrewRootCandidate(rootKeyIndex, rootToken, entry));
          });
         
         hebrewRootsIndex = index;

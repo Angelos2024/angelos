@@ -536,6 +536,63 @@ if (/^[HG]\d+$/.test(normalized)) return normalized;
 
     return matches.filter((item) => item?.root_lexeme || item?.root_first_segment);
   }
+  function buildHebrewMorphCandidates(rawWord) {
+    const normalized = normalizeHebrew(rawWord);
+    if (!normalized) return [];
+
+    const candidates = [];
+    const seen = new Set();
+    const add = (value) => {
+      const key = normalizeHebrew(value);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      candidates.push(key);
+    };
+
+    const queue = [normalized];
+    const visited = new Set();
+    const prefixes = ['\u05D5', '\u05D1', '\u05DB', '\u05DC', '\u05DE', '\u05E9', '\u05D4', '\u05EA', '\u05D9', '\u05E0', '\u05D0'];
+    const suffixes = [
+      '\u05E0\u05D5', '\u05E0\u05D9', '\u05EA\u05DD', '\u05EA\u05DF', '\u05EA', '\u05EA\u05D9',
+      '\u05DA', '\u05DB\u05DD', '\u05DB\u05DF', '\u05DD', '\u05DF', '\u05D4', '\u05D5', '\u05D9'
+    ];
+
+    while (queue.length) {
+      const current = queue.shift();
+      if (!current || visited.has(current)) continue;
+      visited.add(current);
+      add(current);
+
+      if (current.length > 3 && prefixes.includes(current[0])) queue.push(current.slice(1));
+      if (current.length >= 4) {
+        for (let i = 1; i < current.length - 1; i++) {
+          const letter = current[i];
+          if (letter === '\u05D9' || letter === '\u05D5') {
+            queue.push(current.slice(0, i) + current.slice(i + 1));
+          }
+        }
+      }
+      suffixes.forEach((suffix) => {
+        if (current.endsWith(suffix) && current.length - suffix.length >= 3) {
+          queue.push(current.slice(0, -suffix.length));
+        }
+      });
+    }
+
+    if (normalized.endsWith('\u05EA') && normalized.length > 3) {
+      const stem = normalized.slice(0, -1);
+      add(`${stem}\u05D4`);
+      add(stem);
+    }
+    if (normalized.endsWith('\u05D9\u05DD') && normalized.length > 4) add(normalized.slice(0, -2));
+    if (normalized.endsWith('\u05D5\u05EA') && normalized.length > 4) {
+      const stem = normalized.slice(0, -2);
+      add(`${stem}\u05D4`);
+      add(stem);
+    }
+
+    return candidates;
+  }
    function resolveClickedFormContext(entry, clickedWord = '') {
     if (!entry) return null;
     const clickedPointed = normalizeHebrewPointed(clickedWord);
@@ -642,6 +699,21 @@ function isLikelyVerbEntry(entry) {
  const hit = pickBestHebrewEntry(state.dictMap.get(trimmed), trimmed, pointedWord);
        if (hit) {
         return { entry: hit, lookup: trimmed, mode: 'prefixed' };
+      }
+    }
+
+    return null;
+  }
+  function findHebrewEntryWithMorph(normalizedWord, pointedWord = '') {
+    const direct = findHebrewEntry(normalizedWord, pointedWord);
+    if (direct) return direct;
+
+    const morphCandidates = buildHebrewMorphCandidates(normalizedWord);
+    for (const candidate of morphCandidates) {
+      if (!candidate || candidate === normalizedWord) continue;
+      const morphHit = findHebrewEntry(candidate, pointedWord);
+      if (morphHit) {
+        return { ...morphHit, lookup: candidate, mode: morphHit.mode === 'direct' ? 'morph' : morphHit.mode };
       }
     }
 
@@ -1269,7 +1341,7 @@ function setPopupExpanded(expanded) {
       ]);
       let found = null;
       for (const candidate of lookupCandidates) {
-        found = findHebrewEntry(candidate, pointed);
+        found = findHebrewEntryWithMorph(candidate, pointed);
         if (found) break;
       }
       const lookupWord = found?.lookup || lookupCandidates[0] || normalized;
