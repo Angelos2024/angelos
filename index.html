@@ -263,6 +263,7 @@ let currentBookName = initialNameParam || prettyBookName(currentBookSlug);
 
 const DEFAULT_REFERENCE_SEARCH = 'Mateo 1';
 const LAST_REFERENCE_STORAGE_KEY = 'lectorLastReferenceSearch';
+const READER_RENDER_CACHE_KEY = 'lectorRenderCache';
 
 function saveLastReferenceProgress(searchText){
   const normalized = normalizeSpaces(searchText || '');
@@ -278,6 +279,59 @@ function getLastReferenceProgress(){
     if(saved && parseSearch(saved)) return saved;
   }catch(_err){}
     return '';
+}
+function saveReaderRenderCache(){
+  try{
+    if(!currentBookSlug || !lastRef) return;
+    const payload = {
+      currentBookSlug: currentBookSlug || null,
+      currentBookName: currentBookName || null,
+      lastReferenceSearch: buildLastReferenceSearch(),
+      viewMode,
+      origHidden: document.body.classList.contains('orig-hidden') ? 1 : 0,
+      pageTitle: pageTitle?.textContent || '',
+      metaVersion: metaVersion?.textContent || '',
+      statusLine: statusLine?.textContent || '',
+      leftLabel: leftLabel?.textContent || '',
+      rightLabel: rightLabel?.textContent || '',
+      htmlRV: passageTextRV?.innerHTML || '',
+      htmlOrig: passageTextOrig?.innerHTML || '',
+      lastRef
+    };
+    sessionStorage.setItem(READER_RENDER_CACHE_KEY, JSON.stringify(payload));
+  }catch(_err){}
+}
+function readReaderRenderCache(){
+  try{
+    const raw = sessionStorage.getItem(READER_RENDER_CACHE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(_err){
+    return null;
+  }
+}
+function restoreReaderRenderCache(snapshot){
+  if(!snapshot || !snapshot.currentBookSlug || !snapshot.lastRef) return false;
+  currentBookSlug = snapshot.currentBookSlug || currentBookSlug;
+  currentBookName = snapshot.currentBookName || currentBookName || prettyBookName(currentBookSlug);
+  lastRef = snapshot.lastRef || lastRef;
+  if(typeof snapshot.origHidden === 'number'){
+    setOriginalVisible(snapshot.origHidden ? false : true);
+  }
+  if(snapshot.viewMode){
+    viewMode = snapshot.viewMode === 'interlinear' ? 'interlinear' : 'parallel';
+    document.body.classList.toggle('interlinear-mode', viewMode === 'interlinear');
+    updateViewModeButton();
+  }
+  if(snapshot.pageTitle && pageTitle) pageTitle.textContent = snapshot.pageTitle;
+  if(snapshot.metaVersion && metaVersion) metaVersion.textContent = snapshot.metaVersion;
+  if(statusLine) statusLine.textContent = snapshot.statusLine || '';
+  if(snapshot.leftLabel && leftLabel) leftLabel.textContent = snapshot.leftLabel;
+  if(snapshot.rightLabel && rightLabel) rightLabel.textContent = snapshot.rightLabel;
+  if(snapshot.htmlRV && passageTextRV) passageTextRV.innerHTML = snapshot.htmlRV;
+  if(snapshot.htmlOrig && passageTextOrig) passageTextOrig.innerHTML = snapshot.htmlOrig;
+  toggleFullChapterCta(Boolean(lastRef));
+  scheduleSyncVerseHeights();
+  return true;
 }
 /***********************
  * Canon + aliases (Genesis -> Apocalipsis)
@@ -1213,10 +1267,11 @@ async function copy(text){
       origHidden: document.body.classList.contains('orig-hidden') ? 1 : 0,
       currentBookSlug: currentBookSlug || null,
       currentBookName: currentBookName || null,
-     lastSearch: (document.getElementById('searchInput')?.value || '').trim(),
+      lastSearch: (document.getElementById('searchInput')?.value || '').trim(),
       lastReferenceSearch: buildLastReferenceSearch()
     };
     sessionStorage.setItem('lectorState', JSON.stringify(state));
+    saveReaderRenderCache();
     }catch(_err){}
 }
 function applyTheme(theme){
@@ -1686,6 +1741,7 @@ scheduleSyncVerseHeights();
   if (bookDataOrig && passageTextOrig.classList.contains('greek') && document.fonts?.ready) {
   document.fonts.ready.then(scheduleSyncVerseHeights).catch(() => {});
 }
+  saveReaderRenderCache();
 }
 
 
@@ -1829,6 +1885,10 @@ btnAboutExtractor?.addEventListener('click', () => {
   window.location.href = './acerca.html';
 });
 
+window.addEventListener('pagehide', () => {
+  saveReaderState();
+});
+
     window.addEventListener('resize', scheduleSyncVerseHeights);
 btnPrevPage?.addEventListener('click', () => {
   const slug = btnPrevPage.dataset.book;
@@ -1872,6 +1932,8 @@ btnReadFullChapter?.addEventListener('click', async () => {
 (async function boot(){
   setFromUrl();
     const hasExplicitNavigation = hasReaderNavigationParams();
+  const cachedRenderSnapshot = readReaderRenderCache();
+  let restoredFromSnapshot = false;
   setOriginalVisible(ORIGINAL_ENABLED_DEFAULT);
    setViewMode(viewMode);
   applyTheme(localStorage.getItem('lectorTheme') || 'cream');
@@ -1915,11 +1977,33 @@ btnReadFullChapter?.addEventListener('click', async () => {
         searchInput.value = getLastReferenceProgress() || DEFAULT_REFERENCE_SEARCH;
       }
     }
-    passageTextRV.innerHTML = `<div class="text-muted">Cargando ${leftLabel.textContent}…</div>`;
-    passageTextOrig.innerHTML = `<div class="text-muted">Cargando Original…</div>`;
-    await ensureBookLoaded(currentBookSlug, currentBookName);
-    await runSearch();
-    preloadInterlinearAssetsFromStart();
+    if(cachedRenderSnapshot && !hasExplicitNavigation){
+      const expectedSearch = normalizeSpaces(searchInput?.value || '');
+      const snapshotSearch = normalizeSpaces(cachedRenderSnapshot?.lastReferenceSearch || '');
+      if(!expectedSearch || !snapshotSearch || expectedSearch === snapshotSearch){
+        restoredFromSnapshot = restoreReaderRenderCache(cachedRenderSnapshot);
+      }
+    }
+    if(!restoredFromSnapshot){
+      passageTextRV.innerHTML = `<div class="text-muted">Cargando ${leftLabel.textContent}…</div>`;
+      passageTextOrig.innerHTML = `<div class="text-muted">Cargando Original…</div>`;
+      await ensureBookLoaded(currentBookSlug, currentBookName);
+      await runSearch();
+      preloadInterlinearAssetsFromStart();
+    }else{
+      const warmRestore = async () => {
+        try{
+          await ensureBookLoaded(currentBookSlug, currentBookName);
+          await runSearch();
+          preloadInterlinearAssetsFromStart();
+        }catch(_err){}
+      };
+      if('requestIdleCallback' in window){
+        window.requestIdleCallback(() => { void warmRestore(); }, { timeout: 1500 });
+      }else{
+        setTimeout(() => { void warmRestore(); }, 120);
+      }
+    }
 
     // ✅ Restaurar scroll/estado si venimos de busqueda.html
 // ✅ Restaurar scroll/estado si venimos de busqueda.html
