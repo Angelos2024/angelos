@@ -1036,14 +1036,17 @@ function findHebrewDictionaryEntry(rawHebrew) {
     const source = Array.isArray(state.entries) ? state.entries : [];
     const index = state.index && typeof state.index === 'object' ? state.index : {};
     const query = normalizeHebrewLemmaForLookup(rawHebrew);
+    const queryVariants = buildHebrewLookupVariants(rawHebrew);
     if (!query) return null;
 
     const byId = new Map(source.map(entry => [entry.id, entry]));
     const isExactHebrewDictionaryMatch = (entry) => {
         if (!entry || typeof entry !== 'object') return false;
-        const lemma = normalizeHebrewLemmaForLookup(entry?.lemma);
-        const headword = normalizeHebrewLemmaForLookup(entry?.headword_line);
-        return lemma === query || headword === query;
+        const entryVariants = new Set([
+            ...buildHebrewLookupVariants(entry?.lemma),
+            ...buildHebrewLookupVariants(entry?.headword_line)
+        ]);
+        return Array.from(queryVariants).some(variant => entryVariants.has(variant));
     };
 
     const indexedIds = index[query] || [];
@@ -1064,9 +1067,13 @@ function findHebrewDictionaryEntry(rawHebrew) {
 function findHebrewLexicoEntries(rawHebrew) {
     const source = Array.isArray(HEBREW_DICT_STATE.lexico) ? HEBREW_DICT_STATE.lexico : [];
     const query = normalizeHebrewLemmaForLookup(rawHebrew);
+    const queryVariants = buildHebrewLookupVariants(rawHebrew);
     if (!query || !source.length) return [];
 
-    return source.filter(entry => normalizeHebrewLemmaForLookup(entry?.palabra) === query);
+    return source.filter(entry => {
+        const entryVariants = buildHebrewLookupVariants(entry?.palabra);
+        return Array.from(queryVariants).some(variant => entryVariants.has(variant));
+    });
 }
 
 function normalizeHebrewComparableKey(text) {
@@ -1094,6 +1101,20 @@ function buildHebrewLookupVariants(value) {
 
     if (comparable.startsWith('ה') && comparable.length > 2) {
         variants.add(comparable.slice(1));
+    }
+
+    if (comparable.endsWith('ת') && comparable.length > 2) {
+        const stem = comparable.slice(0, -1);
+        variants.add(stem);
+        variants.add(`${stem}ה`);
+    }
+
+    if (comparable.endsWith('י') && comparable.length > 2) {
+        const stem = comparable.slice(0, -1);
+        variants.add(stem);
+        variants.add(`${stem}ים`);
+        variants.add(`${stem}ות`);
+        variants.add(`${stem}ה`);
     }
 
     return variants;

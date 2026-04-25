@@ -29,6 +29,7 @@
       let hebrewRootsByRootKeyIndex = null;
      let hebrewUnifiedPromise = null;
   let hebrewUnifiedStrongIndex = null;
+  let hebrewUnifiedLexemeIndex = null;
   let lxxFrequencyIndexPromise = null;
   let esFrequencyIndexPromise = null;
   let heFrequencyIndexPromise = null;
@@ -157,6 +158,18 @@ return Array.from(new Set(words));
       out.push({ key: variant, priority });
     });
   }
+  function addHebrewPreferredRootCandidate(out, seen, token, priority, preferredStrong = '', preferredLexeme = '') {
+    const key = normalizeHebrewRootKey(token);
+    if (!key) return;
+    const variants = new Set([key, normalizeHebrewFinalLetter(key)]);
+    variants.forEach((variant) => {
+      if (!variant) return;
+      const dedupeKey = `${variant}|${preferredStrong}|${preferredLexeme}`;
+      if (seen.has(dedupeKey)) return;
+      seen.add(dedupeKey);
+      out.push({ key: variant, priority, preferredStrong, preferredLexeme });
+    });
+  }
 
   function buildHebrewGrammaticalRootCandidates(token) {
     const value = String(token || '').trim();
@@ -206,6 +219,26 @@ return Array.from(new Set(words));
     const candidates = [];
     const seen = new Set();
     addHebrewRootLookupCandidate(candidates, seen, normalized, 70);
+
+    // Irregulares nominales: אֵשֶׁת es el constructo de אִשָּׁה (H802), no de אֶשָּׁה.
+    if (normalized === '\u05D0\u05E9\u05EA') {
+      addHebrewPreferredRootCandidate(
+        candidates,
+        seen,
+        '\u05D0\u05B4\u05E9\u05B8\u05BC\u05C1\u05D4',
+        160,
+        'H802',
+        '\u05D0\u05B4\u05E9\u05B8\u05BC\u05C1\u05D4'
+      );
+      addHebrewPreferredRootCandidate(
+        candidates,
+        seen,
+        '\u05D0\u05E9\u05D4',
+        150,
+        'H802',
+        '\u05D0\u05B4\u05E9\u05B8\u05BC\u05C1\u05D4'
+      );
+    }
 
     const articleStripped = normalizeHebrewRootKey(removeLeadingHebrewArticle(normalized));
     if (articleStripped) addHebrewRootLookupCandidate(candidates, seen, articleStripped, 75);
@@ -348,7 +381,14 @@ return Array.from(new Set(words));
       ].forEach(({ list, fromRootIndex }) => {
         const candidates = Array.isArray(list) ? list : (list ? [list] : []);
         candidates.forEach((entry) => {
-          const score = scoreHebrewRootEntry(entry, rawValue, priority, order, fromRootIndex);
+          let score = scoreHebrewRootEntry(entry, rawValue, priority, order, fromRootIndex);
+          const preferredStrong = normalizeStrongKey(candidate?.preferredStrong || '');
+          if (preferredStrong && normalizeStrongKey(entry?.strong || '') === preferredStrong) score += 220;
+          if (candidate?.preferredLexeme) {
+            const preferredLexeme = normalizeHebrewRootPointedKey(candidate.preferredLexeme);
+            const entryLexeme = normalizeHebrewRootPointedKey(entry?.lexeme || '');
+            if (preferredLexeme && entryLexeme === preferredLexeme) score += 120;
+          }
           if (score > bestScore) {
             best = entry;
             bestScore = score;
@@ -491,6 +531,39 @@ return Array.from(new Set(words));
     if (!key) return null;
     return hebrewUnifiedStrongIndex?.get(key) || null;
   }
+  function buildUnifiedHebrewLookupVariants(value) {
+    const variants = new Set();
+    const base = normalizeHebrewRootKey(value);
+    if (!base) return variants;
+
+    variants.add(base);
+
+    if (base.startsWith('\u05D4') && base.length > 2) variants.add(base.slice(1));
+
+    if (base.endsWith('\u05EA') && base.length > 2) {
+      const stem = base.slice(0, -1);
+      variants.add(stem);
+      variants.add(`${stem}\u05D4`);
+    }
+
+    if (base.endsWith('\u05D9') && base.length > 2) {
+      const stem = base.slice(0, -1);
+      variants.add(stem);
+      variants.add(`${stem}\u05D9\u05DD`);
+      variants.add(`${stem}\u05D5\u05EA`);
+      variants.add(`${stem}\u05D4`);
+    }
+
+    return variants;
+  }
+  function getUnifiedHebrewEntry(raw) {
+    const variants = buildUnifiedHebrewLookupVariants(raw);
+    for (const variant of variants) {
+      const entry = hebrewUnifiedLexemeIndex?.get(variant) || null;
+      if (entry) return entry;
+    }
+    return null;
+  }
 
   function getHebrewRootEntryByStrong(strong) {
     const key = normalizeStrongKey(strong);
@@ -503,33 +576,6 @@ return Array.from(new Set(words));
     if (!normalized) return [];
     return normalized.match(/[^ \t\r\n]+/g) || [];
   }
-
-async function ensureHebrewUnifiedLoaded() {
-    if (hebrewUnifiedStrongIndex) return hebrewUnifiedStrongIndex;
-    if (!hebrewUnifiedPromise) {
-      hebrewUnifiedPromise = fetchJsonWithFallback([
-        '../diccionario/diccionario_unificado.min.json'
-      ]).then((payload) => {
-        const entries = Array.isArray(payload) ? payload : [];
-        const strongIndex = new Map();
-
-
-        entries.forEach((entry) => {
-          const strongKey = normalizeStrongKey(entry?.strong || entry?.strong_detail?.strong || '');
-          if (strongKey && !strongIndex.has(strongKey)) strongIndex.set(strongKey, entry);
-        });
-
-        hebrewUnifiedStrongIndex = strongIndex;
-        return strongIndex;
-      }).catch((error) => {
-        console.warn('No se pudo cargar diccionario/diccionario_unificado.min.json.', error);
-        hebrewUnifiedStrongIndex = new Map();
-        return hebrewUnifiedStrongIndex;
-      });
-    }
-    return hebrewUnifiedPromise;
-  }
-
 
  async function ensureHebrewRootsLoaded() {
     if (hebrewRootsIndex) return hebrewRootsIndex;
@@ -581,17 +627,32 @@ async function ensureHebrewUnifiedLoaded() {
       ]).then((payload) => {
         const entries = Array.isArray(payload) ? payload : [];
         const strongIndex = new Map();
+        const lexemeIndex = new Map();
 
         entries.forEach((entry) => {
           const strongKey = normalizeStrongKey(entry?.strong || entry?.strong_detail?.strong || '');
           if (strongKey && !strongIndex.has(strongKey)) strongIndex.set(strongKey, entry);
+          [
+            entry?.strong_detail?.lemma,
+            entry?.lemma,
+            entry?.hebreo,
+            entry?.forma,
+            ...(Array.isArray(entry?.hebreos) ? entry.hebreos : []),
+            ...(Array.isArray(entry?.formas) ? entry.formas : [])
+          ].forEach((value) => {
+            buildUnifiedHebrewLookupVariants(value).forEach((variant) => {
+              if (variant && !lexemeIndex.has(variant)) lexemeIndex.set(variant, entry);
+            });
+          });
         });
 
         hebrewUnifiedStrongIndex = strongIndex;
+        hebrewUnifiedLexemeIndex = lexemeIndex;
         return strongIndex;
       }).catch((error) => {
         console.warn('No se pudo cargar diccionario/diccionario_unificado.min.json.', error);
         hebrewUnifiedStrongIndex = new Map();
+        hebrewUnifiedLexemeIndex = new Map();
         return hebrewUnifiedStrongIndex;
       });
     }
@@ -705,7 +766,7 @@ let rootEntry = (normalizedStrong && getHebrewRootEntryByStrong(normalizedStrong
         return;
       }
 
-    const unifiedEntry = normalizedStrong ? getUnifiedStrongEntryByStrong(normalizedStrong) : null;
+    const unifiedEntry = normalizedStrong ? getUnifiedStrongEntryByStrong(normalizedStrong) : getUnifiedHebrewEntry(rawValue);
       renderUnifiedHebrewRootsPanel(unifiedEntry, normalizedStrong);
     } catch (error) {
       console.warn('No se pudo actualizar el panel de raíces hebreas.', error);
