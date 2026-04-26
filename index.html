@@ -33,6 +33,66 @@
   });
 </script>
 
+<style>
+  .apk-prompt-overlay{
+    position:fixed;
+    inset:0;
+    z-index:120000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:1rem;
+    background:rgba(15,23,42,.58);
+    backdrop-filter:blur(4px);
+  }
+  .apk-prompt-overlay.is-visible{ display:flex; }
+  .apk-prompt-card{
+    width:min(420px, 94vw);
+    border-radius:18px;
+    border:1px solid rgba(75,39,67,.24);
+    background:#fffaf5;
+    box-shadow:0 18px 48px rgba(15,23,42,.24);
+    color:#2c1d1f;
+    overflow:hidden;
+  }
+  .apk-prompt-head{ padding:1rem 1rem .55rem; }
+  .apk-prompt-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:.35rem;
+    padding:.2rem .55rem;
+    border-radius:999px;
+    background:#f3e2d5;
+    border:1px solid rgba(75,39,67,.16);
+    font-size:.78rem;
+    font-weight:700;
+    letter-spacing:.01em;
+  }
+  .apk-prompt-title{
+    margin:.7rem 0 .35rem;
+    font-size:1.15rem;
+    font-weight:700;
+    line-height:1.2;
+  }
+  .apk-prompt-body{ padding:0 1rem 1rem; }
+  .apk-prompt-body p{
+    margin:0;
+    color:#4b5563;
+    line-height:1.45;
+  }
+  .apk-prompt-actions{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:.65rem;
+    padding:0 1rem 1rem;
+  }
+  .apk-prompt-secondary{
+    border:1px solid #d5c1b1;
+    background:#ffffff;
+    color:#2c1d1f;
+  }
+</style>
+
 
 
 
@@ -240,6 +300,22 @@
     </div>
   </main>
 
+  <div id="apkPrompt" class="apk-prompt-overlay" aria-hidden="true">
+    <div class="apk-prompt-card" role="dialog" aria-modal="true" aria-labelledby="apkPromptTitle">
+      <div class="apk-prompt-head">
+        <div class="apk-prompt-kicker">Version Android</div>
+        <div id="apkPromptTitle" class="apk-prompt-title">Deseas abrir la app en APK?</div>
+      </div>
+      <div class="apk-prompt-body">
+        <p>En pantallas moviles y tablet puedes usar la app desde Google Play o permanecer en la version web.</p>
+      </div>
+      <div class="apk-prompt-actions">
+        <button id="apkPromptOpen" type="button" class="btn btn-primary">Ir a Google Play</button>
+        <button id="apkPromptStay" type="button" class="btn apk-prompt-secondary">Permanecer en la version web</button>
+      </div>
+    </div>
+  </div>
+
   <script>
 /***********************
  * Config
@@ -264,6 +340,9 @@ let currentBookName = initialNameParam || prettyBookName(currentBookSlug);
 const DEFAULT_REFERENCE_SEARCH = 'Mateo 1';
 const LAST_REFERENCE_STORAGE_KEY = 'lectorLastReferenceSearch';
 const READER_RENDER_CACHE_KEY = 'lectorRenderCache';
+const APK_PROMPT_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.torah_con_yehoshua_hamashiaj.www.twa&pcampaignid=web_share';
+const APK_PROMPT_STORAGE_KEY = 'apkPromptPreferenceV1';
+const APK_PROMPT_WEB_TTL_MS = 1000 * 60 * 60 * 24 * 14;
 
 function saveLastReferenceProgress(searchText){
   const normalized = normalizeSpaces(searchText || '');
@@ -279,6 +358,52 @@ function getLastReferenceProgress(){
     if(saved && parseSearch(saved)) return saved;
   }catch(_err){}
     return '';
+}
+function readApkPromptPreference(){
+  try{
+    const raw = localStorage.getItem(APK_PROMPT_STORAGE_KEY);
+    if(!raw) return null;
+    const parsed = JSON.parse(raw);
+    if(!parsed || typeof parsed !== 'object') return null;
+    return {
+      choice: String(parsed.choice || '').trim(),
+      ts: Number(parsed.ts || 0)
+    };
+  }catch(_err){}
+  return null;
+}
+function saveApkPromptPreference(choice){
+  try{
+    localStorage.setItem(APK_PROMPT_STORAGE_KEY, JSON.stringify({
+      choice: String(choice || '').trim(),
+      ts: Date.now()
+    }));
+  }catch(_err){}
+}
+function isStandaloneDisplayMode(){
+  try{
+    if(window.matchMedia?.('(display-mode: standalone)').matches) return true;
+  }catch(_err){}
+  try{
+    if(window.navigator?.standalone) return true;
+  }catch(_err){}
+  return false;
+}
+function isSmallMobileOrTabletViewport(){
+  const width = Math.min(window.innerWidth || 0, screen?.width || window.innerWidth || 0);
+  const compactViewport = width > 0 && width <= 1024;
+  const coarsePointer = !!window.matchMedia?.('(pointer: coarse)').matches;
+  const mobileAgent = /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(navigator.userAgent || '');
+  return compactViewport && (coarsePointer || mobileAgent);
+}
+function shouldShowApkPrompt(){
+  if(!isSmallMobileOrTabletViewport()) return false;
+  if(isStandaloneDisplayMode()) return false;
+  const pref = readApkPromptPreference();
+  if(!pref?.choice) return true;
+  if(pref.choice === 'apk') return false;
+  if(pref.choice === 'web') return (Date.now() - pref.ts) > APK_PROMPT_WEB_TTL_MS;
+  return true;
 }
 function saveReaderRenderCache(){
   try{
@@ -1018,6 +1143,9 @@ const btnReadFullChapter = document.getElementById('btnReadFullChapter');
 const themeMenuBtn = document.getElementById('themeMenuBtn');
 const themeMenu = themeMenuBtn?.nextElementSibling;
 const themeItems = document.querySelectorAll('.dropdown-item[data-theme]');
+const apkPrompt = document.getElementById('apkPrompt');
+const apkPromptOpen = document.getElementById('apkPromptOpen');
+const apkPromptStay = document.getElementById('apkPromptStay');
 /***********************
  * Data / caches
  ***********************/
@@ -1035,9 +1163,42 @@ let bookDataRV = null;
 let bookDataOrig = null;
 let pendingRestoreState = null;
 let viewMode = 'parallel';
+let apkPromptBound = false;
 /***********************
  * Helpers
  ***********************/
+function hideApkPrompt(){
+  if(!apkPrompt) return;
+  apkPrompt.classList.remove('is-visible');
+  apkPrompt.setAttribute('aria-hidden', 'true');
+}
+function showApkPrompt(){
+  if(!apkPrompt) return;
+  if(!apkPromptBound){
+    apkPromptOpen?.addEventListener('click', () => {
+      saveApkPromptPreference('apk');
+      hideApkPrompt();
+      window.location.href = APK_PROMPT_PLAY_URL;
+    });
+    apkPromptStay?.addEventListener('click', () => {
+      saveApkPromptPreference('web');
+      hideApkPrompt();
+    });
+    apkPrompt.addEventListener('click', (event) => {
+      if(event.target === apkPrompt){
+        saveApkPromptPreference('web');
+        hideApkPrompt();
+      }
+    });
+    apkPromptBound = true;
+  }
+  apkPrompt.classList.add('is-visible');
+  apkPrompt.setAttribute('aria-hidden', 'false');
+}
+function scheduleApkPrompt(){
+  if(!shouldShowApkPrompt()) return;
+  setTimeout(showApkPrompt, 420);
+}
 function esc(s){
   return (s ?? '')
     .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
@@ -2026,6 +2187,7 @@ try{
     passageTextOrig.innerHTML = `<div class="text-muted">—</div>`;
     statusLine.textContent = '';
   }
+  scheduleApkPrompt();
 })();
   </script>
 
