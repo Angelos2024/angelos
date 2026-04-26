@@ -361,6 +361,8 @@ let loadedFiles = 0;
 const indexExact = new Map();       // he tal cual (NFC)
 const indexNorm = new Map();        // normalizeText(he)
 const indexNoVowels = new Map();    // normalizeText(stripHebrewMarksAnywhere(he))
+const indexedGreekTokens = new Map();
+const indexedSpanishTokens = new Map();
 
 function nfc(s) {
   try { return String(s ?? "").normalize("NFC"); } catch(_) { return String(s ?? ""); }
@@ -371,6 +373,76 @@ function addToIndex(map, key, idx) {
   let arr = map.get(key);
   if (!arr) { arr = []; map.set(key, arr); }
   arr.push(idx);
+}
+
+function clearIndexedTokenLookups() {
+  indexedGreekTokens.clear();
+  indexedSpanishTokens.clear();
+}
+
+function loadIndexedTokenMap(target, payload) {
+  target.clear();
+  if (!payload || typeof payload !== 'object') return;
+  for (const [key, raw] of Object.entries(payload)) {
+    if (!key || !Array.isArray(raw) || !raw.length) continue;
+    const ids = raw
+      .map(v => Number(v))
+      .filter(v => Number.isInteger(v) && v >= 0);
+    if (ids.length) target.set(key, ids);
+  }
+}
+
+function setIndexedSearchPayload(payload) {
+  const indexes = payload && typeof payload === 'object' ? payload.indexes : null;
+  clearIndexedTokenLookups();
+  if (!indexes || typeof indexes !== 'object') return false;
+  loadIndexedTokenMap(indexedGreekTokens, indexes.greekTokens);
+  loadIndexedTokenMap(indexedSpanishTokens, indexes.spanishTokens);
+  return indexedGreekTokens.size > 0 || indexedSpanishTokens.size > 0;
+}
+
+function getIndexedCandidates(lang, keys) {
+  const map = lang === 'gr' ? indexedGreekTokens : indexedSpanishTokens;
+  if (!map.size) return null;
+  const ids = [];
+  const seen = new Set();
+  for (const key of (keys || [])) {
+    const arr = map.get(String(key || '').trim());
+    if (!arr || !arr.length) continue;
+    for (const idx of arr) {
+      if (seen.has(idx)) continue;
+      seen.add(idx);
+      ids.push(idx);
+    }
+  }
+  if (!ids.length) return [];
+  return ids.map(idx => entries[idx]).filter(Boolean);
+}
+
+function hydrateIndexedAlefatoEntries(rows, sourceName = 'indice') {
+  const collected = [];
+  for (const row of (rows || [])) {
+    const rawHe = Array.isArray(row) ? row[0] : row?.he;
+    const rawEs = Array.isArray(row) ? row[1] : row?.es;
+    const rawGr = Array.isArray(row) ? row[2] : row?.gr;
+    const rawCandidates = Array.isArray(row) ? row[3] : row?.candidatos;
+
+    const he = nfc(String(rawHe || '').trim());
+    if (!he) continue;
+
+    const candidatos = Array.isArray(rawCandidates)
+      ? rawCandidates.map(v => String(v ?? '').trim()).filter(Boolean)
+      : [];
+
+    collected.push({
+      he,
+      es: String(rawEs || '').trim(),
+      gr: String(rawGr || '').trim(),
+      candidatos,
+      source: sourceName
+    });
+  }
+  return dedupeEntries(collected);
 }
 
 function isPrefixToken(tok){
@@ -598,4 +670,13 @@ const ES_SPECIAL_FORM_ENHANCERS = new Map([
     return t;
   }]
 ]);
+
+if (typeof window !== 'undefined') {
+  window.AlefatoIndexedSearchAPI = Object.assign({}, window.AlefatoIndexedSearchAPI || {}, {
+    clearLookups: clearIndexedTokenLookups,
+    getCandidates: getIndexedCandidates,
+    hydrateEntries: hydrateIndexedAlefatoEntries,
+    setPayload: setIndexedSearchPayload
+  });
+}
 

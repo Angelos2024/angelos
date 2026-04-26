@@ -46,6 +46,17 @@ const REMOTE_ALEFATO_SOURCES = REMOTE_ALEFATO_FILE_NAMES.map(name => ({
   url: `../dic/trilingue/${encodeURIComponent(name)}`
 }));
 
+const REMOTE_ALEFATO_INDEX_SOURCES = [
+  {
+    name: 'trilingue_at_search_index.min.json',
+    url: '../dic/trilingue_at_search_index.min.json'
+  },
+  {
+    name: 'trilingue_at_search_index.json',
+    url: '../dic/trilingue_at_search_index.json'
+  }
+];
+
 const HE_INFLECTION_MAP = [
   { suffix: 'ַיִם', type: 'dual', label: '(Dual)' },
   { suffix: 'ַיִן', type: 'plural_arameo', label: '(Plur. Arameo)' },
@@ -479,15 +490,47 @@ async function handleFiles(fileList) {
 
 let remoteAlefatoLoadPromise = null;
 
+async function loadRemoteAlefatoIndex() {
+  for (const source of REMOTE_ALEFATO_INDEX_SOURCES) {
+    try {
+      const resp = await fetch(source.url, { cache: 'force-cache' });
+      if (!resp.ok) continue;
+      const payload = JSON.parse(await resp.text());
+      const rows = Array.isArray(payload?.rows) ? payload.rows : [];
+      if (!rows.length) continue;
+
+      const hydrated = window.AlefatoIndexedSearchAPI?.hydrateEntries
+        ? window.AlefatoIndexedSearchAPI.hydrateEntries(rows, source.name)
+        : [];
+      if (!hydrated.length) continue;
+
+      entries = hydrated;
+      loadedFiles = 1;
+      clearIndexes();
+      rebuildIndexes();
+      if (window.AlefatoIndexedSearchAPI?.setPayload) {
+        window.AlefatoIndexedSearchAPI.setPayload(payload);
+      }
+      renderLoadInfo();
+      if (diagEl) diagEl.textContent = `Base indexada cargada: ${entries.length.toLocaleString()} entradas desde ${source.name}.`;
+      return true;
+    } catch (_) {
+      continue;
+    }
+  }
+  return false;
+}
+
 async function loadRemoteAlefatoFiles() {
+  if (await loadRemoteAlefatoIndex()) return;
+
   const collected = [];
   const errs = [];
-  let okFiles = 0;
 
   if (diagEl) diagEl.textContent = 'Cargando diccionario…';
   if (searchBtn) searchBtn.disabled = true;
 
-  for (const source of REMOTE_ALEFATO_SOURCES) {
+  const results = await Promise.all(REMOTE_ALEFATO_SOURCES.map(async (source) => {
     try {
       const resp = await fetch(source.url, { cache: 'force-cache' });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -496,11 +539,20 @@ async function loadRemoteAlefatoFiles() {
       const tmp = [];
       collectAlefatoEntries(data, source.name, tmp);
       if (!tmp.length) throw new Error('No se detectaron objetos con texto hebreo');
-      collected.push(...tmp);
-      okFiles++;
-    } catch (e) {
-      errs.push(`${source.name}: ${e?.message || e}`);
+      return { ok: true, source, rows: tmp };
+    } catch (error) {
+      return { ok: false, source, error };
     }
+  }));
+
+  let okFiles = 0;
+  for (const result of results) {
+    if (result.ok) {
+      collected.push(...result.rows);
+      okFiles++;
+      continue;
+    }
+    errs.push(`${result.source.name}: ${result.error?.message || result.error}`);
   }
 
   entries = collected.length ? dedupeEntries(collected) : [];
@@ -560,6 +612,9 @@ function clearAll() {
   loadedFiles = 0;
   remoteAlefatoLoadPromise = null;
   clearIndexes();
+  if (window.AlefatoIndexedSearchAPI?.clearLookups) {
+    window.AlefatoIndexedSearchAPI.clearLookups();
+  }
   renderLoadInfo();
   renderResults([]);
   setTierBadge('Sin búsqueda', false);
