@@ -206,6 +206,15 @@ body {
   margin: 0.35rem 0;
 }
 
+#panel-politicas .policy-block ul {
+  margin: 0.45rem 0 0;
+  padding-left: 1.15rem;
+}
+
+#panel-politicas .policy-block li + li {
+  margin-top: 0.25rem;
+}
+
 #panel-politicas .policy-contact a {
   display: inline-block;
   margin-top: 0.35rem;
