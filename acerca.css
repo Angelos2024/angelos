@@ -194,7 +194,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   gap: 0.8rem;
-  min-height: 220px;
+  min-height: 190px;
   padding: 1rem 0.95rem;
   border-radius: 18px;
   border: 1px solid color-mix(in srgb, var(--border) 76%, #fff);
@@ -212,20 +212,20 @@ body {
 }
 
 #panel-descargas .download-icon-wrap {
-  width: 92px;
-  height: 92px;
+  width: 46px;
+  height: 46px;
   display: grid;
   place-items: center;
-  border-radius: 24px;
+  border-radius: 14px;
   background: radial-gradient(circle at 30% 25%, #fff 0%, #f2e6dc 58%, #e6d1c2 100%);
   border: 1px solid color-mix(in srgb, var(--accent) 18%, #fff);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
 }
 
 #panel-descargas .download-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   object-fit: cover;
   image-rendering: auto;
 }
