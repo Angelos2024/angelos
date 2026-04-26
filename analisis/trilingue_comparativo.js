@@ -610,14 +610,13 @@ const firstPartTokenCount = normalizeFuzzy(firstPart).split(/\s+/).filter(Boolea
     }
 
     const pluralVariants = getRegularPluralVariants(normQ);
-    const candidatePool = getIndexedComparativeCandidates('es', [normQ, ...pluralVariants]) || entries;
 
     const exactMainMatches = [];
     const exactCandidateMatches = [];
     const pluralMainMatches = [];
     const pluralCandidateMatches = [];
 
-    candidatePool.forEach(e => {
+    entries.forEach(e => {
         const mainTexts = getMainSpanishTexts(e);
         const candidateTexts = getCandidateSpanishTexts(e);
         if (!mainTexts.length && !candidateTexts.length) return;
@@ -674,7 +673,7 @@ const firstPartTokenCount = normalizeFuzzy(firstPart).split(/\s+/).filter(Boolea
         trace: [
             `Búsqueda exacta para: ${firstWord}`,
             `Variantes plurales aceptadas: ${Array.from(pluralVariants).join(', ') || 'ninguna'}`,
-            candidatePool === entries ? 'Prefiltro indexado: no disponible; se escaneó la base cargada.' : `Prefiltro indexado: ${candidatePool.length} candidato(s).`,
+            'Prefiltro indexado: desactivado para español para mantener coincidencia exacta completa.',
             'Orden: exacto visible > exacto en candidatos > plural visible > plural en candidatos.',
             'Dentro de cada grupo se prioriza primero una equivalencia griega exacta de una sola palabra; si la primera entrada griega es una frase, se toma su primera palabra útil; después, el hebreo más conciso y por último el orden canónico del libro.'
         ],
