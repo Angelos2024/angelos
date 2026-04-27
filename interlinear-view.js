@@ -111,13 +111,13 @@
   // TOKEN NORMALIZATION  (unchanged from v1.0)
   // ─────────────────────────────────────────────
 
+  const EDGE_PUNCTUATION_REGEX =
+    /^[\s.,;:!?¡¿()\[\]{}"'""''«»··;·᾽᾿ʼʹʽ\-‐‑‒–—―]+|[\s.,;:!?¡¿()\[\]{}"'""''«»··;·᾽᾿ʼʹʽ\-‐‑‒–—―]+$/g;
+
   function normalizeToken(token, isHebrew, isGreek = false, preserveHebrewPoints = false) {
     let clean = String(token || '').trim();
     clean = clean.replace(/[\u200c-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, '');
-    clean = clean.replace(
-      /^[\s.,;:!?¡¿()\[\]{}"'""''«»··;᾽᾿ʼʹʽ\-‐‑‒–—―]+|[\s.,;:!?¡¿()\[\]{}"'""''«»··;᾽᾿ʼʹʽ\-‐‑‒–—―]+$/g,
-      ''
-    );
+    clean = clean.replace(EDGE_PUNCTUATION_REGEX, '');
     clean = clean.replace(/[\u200c-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, '');
 
     if (isHebrew) {
@@ -129,8 +129,34 @@
     }
     if (isGreek) {
       clean = clean.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      clean = clean.replace(/[^\p{Script=Greek}]+/gu, '');
     }
     return clean.toLowerCase();
+  }
+
+  function getGreekLookupCandidates(token) {
+    const direct = normalizeToken(token, false, true);
+    const candidates = new Set();
+    if (direct) candidates.add(direct);
+
+    const compact = direct.replace(/[··;,.!?…]/g, '');
+    if (compact) candidates.add(compact);
+
+    if (compact && compact.endsWith('σι')) {
+      candidates.add(`${compact}ν`);
+    }
+    if (compact && compact.endsWith('ν')) {
+      candidates.add(compact.slice(0, -1));
+    }
+    return [...candidates].filter(Boolean);
+  }
+
+  function lookupGreekGloss(targetMap, token) {
+    for (const key of getGreekLookupCandidates(token)) {
+      const gloss = targetMap.get(key);
+      if (gloss) return gloss;
+    }
+    return '-';
   }
 
   // Limpia solo bordes (puntuacion/corchetes) sin alterar letras hebreas internas.
@@ -1608,8 +1634,7 @@
 
     if (isGreek) {
       spanishTokens = tokens.map((token) => {
-        const key = normalizeToken(token, false, true);
-        return key ? (targetMap.get(key) || '-') : '-';
+        return lookupGreekGloss(targetMap, token);
       });
     } else {
       spanishTokens = [];
