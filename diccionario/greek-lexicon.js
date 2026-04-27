@@ -9,11 +9,15 @@
 (function () {
   var DICT_DIR = './diccionario/';
   var MASTER_DICT_URL = DICT_DIR + 'masterdiccionario.json';
-   var LXX_DIR = './LXX/';
+  var TRILINGUE_NT_DIR = './dic/trilingueNT/';
+  var LXX_DIR = './LXX/';
   var masterDictIndex = null;   // Map<lemma, item>
   var masterDictNormIndex = null; // Map<lemma_normalizado, item>
   var masterDictLoaded = false;
-   var lxxCache = new Map(); // Map<lemma_normalizado, samples[]>
+  var masterDictItems = [];
+  var trilingueNtLoaded = false;
+  var trilingueNtEntries = [];
+  var lxxCache = new Map(); // Map<lemma_normalizado, samples[]>
      var popupDrag = null;
        var popupExpanded = false;
 
@@ -27,6 +31,13 @@
     '1pe': 5, '2pe': 3, '1jn': 5, '2jn': 1,
     '3jn': 1, jud: 1, re: 22
   };
+  var TRILINGUE_NT_FILES = [
+    '01JuanEF.json','02MateoEf.json','03MarcosEF.json','04LucasEF.json','05HechosEF.json','06JacoboEF.json',
+    '07Pedro1EF.json','08Pedro2EF.json','09JudasEF.json','10Juan1EF.json','11Juan2EF.json','12Juan3EF.json',
+    '13GálatasEF.json','14Tesalonicenses1EF.json','15Tesalonicenses2EF.json','16Corintios1EF.json','17Corintios2EF.json',
+    '18RomanosEF.json','19EfesiosEF.json','20Filipenses.json','21ColosensesEF.json','22HebreosEF.json','23FilemónEF.json',
+    '24Timoteo1EF.json','25TitoEF.json','26Timoteo2EF.json','27ApocalipsisEF.json'
+  ];
 
   // Mapeo slug (?book=) -> abbr MorphGNT
   var BOOK_SLUG_TO_ABBR = {
@@ -357,6 +368,7 @@ function slugToAbbr(slug) {
 
   function buildMasterIndex(masterObj) {
     if (!masterObj || !Array.isArray(masterObj.items)) return null;
+    masterDictItems = masterObj.items.slice();
     var m = new Map();
     masterDictNormIndex = new Map();
     for (var i = 0; i < masterObj.items.length; i++) {
@@ -402,6 +414,230 @@ function slugToAbbr(slug) {
     if (!norm || !masterDictNormIndex) return null;
     return masterDictNormIndex.get(norm) || null;
   }
+  function parseJsonArrayChunks(raw) {
+    var text = String(raw || '').trim();
+    if (!text) return [];
+    try {
+      var parsed = JSON.parse(text);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_) {}
+
+    var rows = [];
+    var depth = 0;
+    var chunkStart = -1;
+    for (var i = 0; i < text.length; i++) {
+      var ch = text.charAt(i);
+      if (ch === '[') {
+        if (depth === 0) chunkStart = i;
+        depth++;
+      } else if (ch === ']') {
+        depth--;
+        if (depth === 0 && chunkStart >= 0) {
+          try {
+            var block = JSON.parse(text.slice(chunkStart, i + 1));
+            if (Array.isArray(block)) rows = rows.concat(block);
+          } catch (_) {}
+          chunkStart = -1;
+        }
+      }
+    }
+    return rows;
+  }
+
+  function loadTrilingueNtOnce() {
+    if (trilingueNtLoaded) return Promise.resolve(trilingueNtEntries);
+    trilingueNtLoaded = true;
+    return Promise.all(TRILINGUE_NT_FILES.map(function (file) {
+      return fetch(TRILINGUE_NT_DIR + file, { cache: 'no-store' })
+        .then(function (r) {
+          if (!r.ok) return [];
+          return r.text().then(parseJsonArrayChunks);
+        })
+        .catch(function () { return []; });
+    })).then(function (payloads) {
+      trilingueNtEntries = [].concat.apply([], payloads).filter(function (entry) {
+        return entry && typeof entry === 'object';
+      });
+      return trilingueNtEntries;
+    }).catch(function () {
+      trilingueNtEntries = [];
+      return trilingueNtEntries;
+    });
+  }
+
+  function tokenizeGreekComparable(text) {
+    return String(text || '')
+      .split(/[^Ͱ-Ͽἀ-῿]+/i)
+      .map(function (token) { return normalizeGreekLemmaKey(token); })
+      .filter(Boolean);
+  }
+
+  function normalizeHebrewComparable(text) {
+    return String(text || '')
+      .normalize('NFC')
+      .replace(/[\u0591-\u05C7]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function uniqueStrings(values) {
+    var seen = new Set();
+    var out = [];
+    (values || []).forEach(function (value) {
+      var text = String(value || '').trim();
+      if (!text || seen.has(text)) return;
+      seen.add(text);
+      out.push(text);
+    });
+    return out;
+  }
+
+  function collectFormsForLemma(lemma, max) {
+    var normalized = normalizeGreekLemmaKey(lemma);
+    if (!normalized || !morphMap || !Array.isArray(morphMap.segs)) return [];
+    var seen = new Set();
+    var forms = [];
+    for (var segIndex = 0; segIndex < morphMap.segs.length; segIndex++) {
+      var segment = morphMap.segs[segIndex];
+      if (!Array.isArray(segment)) continue;
+      for (var i = 0; i < segment.length; i++) {
+        var verseTokens = segment[i];
+        if (!Array.isArray(verseTokens)) continue;
+        for (var j = 0; j < verseTokens.length; j++) {
+          var token = verseTokens[j];
+          if (!token) continue;
+          if (normalizeGreekLemmaKey(token.lemma || '') !== normalized) continue;
+          var surface = String(token.w || '').trim();
+          if (!surface || seen.has(surface)) continue;
+          seen.add(surface);
+          forms.push(surface);
+          if (max && forms.length >= max) return forms;
+        }
+      }
+    }
+    return forms;
+  }
+
+  function getGreekStemCandidates(lemma) {
+    var normalized = normalizeGreekLemmaKey(lemma);
+    if (!normalized) return [];
+    var endings = ['ομαι', 'εις', 'ειν', 'ειος', 'ικος', 'ικη', 'ικον', 'σιμος', 'σιμον', 'της', 'σις', 'μα', 'μος', 'τηρ', 'τον', 'τος', 'ον', 'ος', 'η', 'α', 'ω'];
+    var stems = [];
+    function pushStem(value) {
+      if (!value || value.length < 3) return;
+      if (stems.indexOf(value) >= 0) return;
+      stems.push(value);
+    }
+    pushStem(normalized);
+    for (var i = 0; i < endings.length; i++) {
+      var ending = endings[i];
+      if (normalized.length <= ending.length + 1) continue;
+      if (!normalized.endsWith(ending)) continue;
+      pushStem(normalized.slice(0, -ending.length));
+    }
+    return stems.sort(function (a, b) { return b.length - a.length; });
+  }
+
+  function extractGreekLemmaFromDefinition(definition) {
+    var text = String(definition || '');
+    if (!text) return '';
+    var patterns = [
+      /adj\.\s+verbal\s+de\s+([Ͱ-Ͽἀ-῿]+)/i,
+      /del cual\s+([Ͱ-Ͽἀ-῿]+)\s+es el verbo/i,
+      /\bde\s+([Ͱ-Ͽἀ-῿]+)\b/i
+    ];
+    for (var i = 0; i < patterns.length; i++) {
+      var match = text.match(patterns[i]);
+      if (match && match[1]) return match[1];
+    }
+    return '';
+  }
+
+  function resolveGreekRootInfo(entry, lemma) {
+    var targetLemma = String((entry && entry.lemma) || lemma || '').trim();
+    var targetNorm = normalizeGreekLemmaKey(targetLemma);
+    var directRootLemma = extractGreekLemmaFromDefinition(entry && entry.definicion);
+    var directRootEntry = directRootLemma ? getMasterEntryByLemma(directRootLemma) : null;
+    if (directRootEntry) {
+      return {
+        lemma: directRootEntry.lemma || directRootLemma,
+        definition: directRootEntry.definicion || (entry && entry.definicion) || '—'
+      };
+    }
+
+    if (targetNorm && (targetNorm.endsWith('ω') || targetNorm.endsWith('ομαι'))) {
+      return {
+        lemma: targetLemma || '—',
+        definition: (entry && entry.definicion) || '—'
+      };
+    }
+
+    var stems = getGreekStemCandidates(targetLemma);
+    var candidates = [];
+    for (var i = 0; i < masterDictItems.length; i++) {
+      var item = masterDictItems[i];
+      if (!item || !item.lemma) continue;
+      var itemNorm = normalizeGreekLemmaKey(item.lemma);
+      if (!itemNorm || itemNorm === targetNorm) continue;
+      for (var j = 0; j < stems.length; j++) {
+        if (itemNorm.indexOf(stems[j]) === 0) {
+          candidates.push(item);
+          break;
+        }
+      }
+    }
+    candidates.sort(function (a, b) {
+      var aNorm = normalizeGreekLemmaKey(a.lemma);
+      var bNorm = normalizeGreekLemmaKey(b.lemma);
+      var aVerb = /ω$|ομαι$/.test(aNorm) ? 1 : 0;
+      var bVerb = /ω$|ομαι$/.test(bNorm) ? 1 : 0;
+      if (aVerb !== bVerb) return bVerb - aVerb;
+      return aNorm.length - bNorm.length;
+    });
+    var rootEntry = candidates[0] || entry || null;
+    return {
+      lemma: (rootEntry && rootEntry.lemma) || targetLemma || '—',
+      definition: (rootEntry && rootEntry.definicion) || (entry && entry.definicion) || '—'
+    };
+  }
+
+  function findHebrewCorrespondences(greekValues, max) {
+    var normalizedSet = new Set();
+    (greekValues || []).forEach(function (value) {
+      tokenizeGreekComparable(value).forEach(function (token) {
+        normalizedSet.add(token);
+      });
+    });
+    if (!normalizedSet.size) return [];
+
+    var results = [];
+    var seen = new Set();
+    for (var i = 0; i < trilingueNtEntries.length; i++) {
+      var entry = trilingueNtEntries[i];
+      var greekTokens = tokenizeGreekComparable(entry.equivalencia_griega || entry.gr || entry.greek || '');
+      var matched = greekTokens.some(function (token) { return normalizedSet.has(token); });
+      if (!matched) continue;
+      var hebrew = normalizeHebrewComparable(entry.texto_hebreo || entry.he || '');
+      if (!hebrew || seen.has(hebrew)) continue;
+      seen.add(hebrew);
+      results.push({
+        hebrew: hebrew,
+        gloss: String(entry.equivalencia_espanol || entry.equivalencia_español || entry.es || '').trim()
+      });
+      if (max && results.length >= max) break;
+    }
+    return results;
+  }
+
+  function renderHebrewCorrespondences(items) {
+    if (!items || !items.length) {
+      return '<div class="lxx-row muted">Sin correspondencia hebrea en el trilingüe.</div>';
+    }
+    return items.map(function (item) {
+      var gloss = item.gloss ? ' <span class="muted">|</span> ' + escHtml(item.gloss) : '';
+      return '<div class="lxx-row"><span dir="rtl">' + escHtml(item.hebrew) + '</span>' + gloss + '</div>';
+    }).join('');
+  }
   function isMissingValue(v) {
     var s = String(v == null ? '' : v).trim();
     return !s || s === '—' || s === '-';
@@ -432,6 +668,8 @@ function slugToAbbr(slug) {
       '.gk-lex-popup .def{ margin-top:6px; line-height:1.35; max-height:180px; overflow:auto; }' +
        '.gk-lex-popup .lxx{ margin-top:6px; max-height:160px; overflow:auto; }' +
      '.gk-lex-popup .lxx-row{ margin-top:4px; font-size:12px; line-height:1.3; }' +
+      '.gk-lex-popup .chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }' +
+      '.gk-lex-popup .chip{ display:inline-flex; align-items:center; border:1px solid rgba(134,182,255,.45); background:rgba(71,123,214,.16); color:#e9eefc; border-radius:999px; padding:2px 10px; font-size:12px; }' +
       '.gk-lex-popup .muted{ opacity:.7; }' +
  '.gk-lex-popup .close{ background:transparent; border:0; color:#cbd6ff; cursor:pointer; font-size:16px; line-height:1; padding:0 2px; }' +
       '.gk-lex-popup .toggle{ border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08); color:#dbe5ff; border-radius:8px; font-size:11px; line-height:1; cursor:pointer; padding:4px 8px; }' +
@@ -444,7 +682,7 @@ function slugToAbbr(slug) {
     box.id = 'gk-lex-popup';
     box.className = 'gk-lex-popup';
     box.innerHTML =
-'<div class="head"><button class="toggle" id="gk-lex-toggle" aria-expanded="false" type="button">Expandir</button><div class="t1" id="gk-lex-g"></div><button class="close" aria-label="Cerrar" type="button">×</button></div>' +
+'<div class="head"><button class="toggle" id="gk-lex-toggle" aria-expanded="false" type="button">Expandir</button><div class="t1" id="gk-lex-g"></div><button class="close" aria-label="Cerrar" type="button">&times;</button></div>' +
       '<div class="content collapsed" id="gk-lex-content">' +
       '<div class="summary">' +
       '<div class="t2"><span class="lab">Lemma:</span><span id="gk-lex-lemma"></span></div>' +
@@ -454,8 +692,14 @@ function slugToAbbr(slug) {
       '</div>' +
       '<div class="details">' +
       '<hr class="sep" />' +
+      '<div class="t2 row"><span class="lab">Formas:</span><div id="gk-lex-forms" class="chips"></div></div>' +
+      '<div class="t2 row"><span class="lab">Raíz de:</span><span id="gk-lex-root-lemma"></span></div>' +
+      '<div class="t2 row"><span class="lab" id="gk-lex-root-label">Definición de Raíz:</span><div id="gk-lex-root-def" class="def"></div></div>' +
       '<div class="t2"><span class="lab">LXX:</span></div>' +
 '<div id="gk-lex-lxx" class="lxx"></div>' +
+      '<hr class="sep" />' +
+      '<div class="t2"><span class="lab">Correspondencia Hebrea:</span></div>' +
+'<div id="gk-lex-hebrew" class="lxx"></div>' +
       '</div>' +
       '</div>';
 
@@ -533,7 +777,7 @@ box.querySelector('#gk-lex-toggle').addEventListener('click', function () {
     ensurePopup();
     var box = document.getElementById('gk-lex-popup');
     if (!box) return;
-     
+    var ent = null;
 
     document.getElementById('gk-lex-g').textContent = g || '';
     document.getElementById('gk-lex-lemma').textContent = lemma || '—';
@@ -541,45 +785,68 @@ box.querySelector('#gk-lex-toggle').addEventListener('click', function () {
     var formaLexEl = document.getElementById('gk-lex-forma-lex');
     var entradaEl = document.getElementById('gk-lex-entrada');
     var defEl = document.getElementById('gk-lex-def');
-      var lxxEl = document.getElementById('gk-lex-lxx');
+    var formsEl = document.getElementById('gk-lex-forms');
+    var rootLemmaEl = document.getElementById('gk-lex-root-lemma');
+    var rootLabelEl = document.getElementById('gk-lex-root-label');
+    var rootDefEl = document.getElementById('gk-lex-root-def');
+    var hebrewEl = document.getElementById('gk-lex-hebrew');
+    var lxxEl = document.getElementById('gk-lex-lxx');
 
-if (!masterDictIndex) {
+    if (formsEl) formsEl.innerHTML = '<span class="chip muted">Buscando…</span>';
+    if (rootLemmaEl) rootLemmaEl.textContent = '—';
+    if (rootLabelEl) rootLabelEl.textContent = 'Definición de Raíz:';
+    if (rootDefEl) rootDefEl.textContent = '—';
+    if (hebrewEl) hebrewEl.innerHTML = '<div class="lxx-row muted">Buscando correspondencia hebrea…</div>';
+
+    if (!masterDictIndex) {
       loadMasterDictionaryOnce().then(function () {
         var p = document.getElementById('gk-lex-popup');
-if (p && p.style.display === 'block') showPopupNear(anchorEl, g, lemma, tr);
+        if (p && p.style.display === 'block') showPopupNear(anchorEl, g, lemma, tr);
       });
 
-      if (formaLexEl) formaLexEl.textContent = '…';
-      if (entradaEl) entradaEl.textContent = '…';
+      if (formaLexEl) formaLexEl.textContent = '—';
+      if (entradaEl) entradaEl.textContent = '—';
       if (defEl) defEl.textContent = 'Cargando diccionario…';
     } else {
-      var ent = getMasterEntryByLemma(lemma);
+      ent = getMasterEntryByLemma(lemma);
 
       if (!ent) {
         if (formaLexEl) formaLexEl.textContent = tr || '—';
         if (entradaEl) entradaEl.textContent = '—';
         if (defEl) defEl.textContent = 'No hay entrada para este lemma en masterdiccionario.';
       } else {
-        // Solo lo pedido, pero tolerante a variaciones de clave
         var formaLex = ent['Forma lexica'] || ent['forma_lexica'] || ent['formaLexica'] || '—';
         var entrada = ent['entrada_impresa'] || ent['entrada impresa'] || ent['entrada'] || '—';
-        var definicion = ent['definicion'] || ent['definición'] || ent['def'] || '—';
+        var definicion = ent['definicion'] || ent['definici?n'] || ent['def'] || '—';
 
         if (formaLexEl) formaLexEl.textContent = !isMissingValue(formaLex) ? formaLex : (tr || '—');
         if (entradaEl) entradaEl.textContent = entrada;
         if (defEl) defEl.textContent = definicion;
       }
     }
-if (lxxEl) {
+
+    var forms = uniqueStrings(collectFormsForLemma(lemma || g, 12));
+    if (formsEl) {
+      formsEl.innerHTML = forms.length
+        ? forms.map(function (form) { return '<span class="chip">' + escHtml(form) + '</span>'; }).join('')
+        : '<span class="chip muted">Sin formas registradas en este libro.</span>';
+    }
+
+    var rootInfo = resolveGreekRootInfo(ent, lemma || g);
+    if (rootLemmaEl) rootLemmaEl.textContent = rootInfo.lemma || '—';
+    if (rootLabelEl) rootLabelEl.textContent = rootInfo.lemma ? ('Definición de ' + rootInfo.lemma + ':') : 'Definición de Raíz:';
+    if (rootDefEl) rootDefEl.textContent = rootInfo.definition || '—';
+
+    if (lxxEl) {
       lxxEl.innerHTML = '<div class="lxx-row muted">Buscando coincidencias en LXX…</div>';
     }
 
     box.style.display = 'block';
     setPopupExpanded(false);
-    
+
     var r = anchorEl.getBoundingClientRect();
     var pad = 10;
-box.style.maxHeight = 'calc(100vh - ' + (pad * 2) + 'px)';
+    box.style.maxHeight = 'calc(100vh - ' + (pad * 2) + 'px)';
     var bw = box.offsetWidth;
     var bh = box.offsetHeight;
 
@@ -596,7 +863,7 @@ box.style.maxHeight = 'calc(100vh - ' + (pad * 2) + 'px)';
 
     box.style.left = Math.round(left) + 'px';
     box.style.top = Math.round(top) + 'px';
-     var lxxKey = normalizeGreekLemmaKey(lemma || g);
+    var lxxKey = normalizeGreekLemmaKey(lemma || g);
     box.setAttribute('data-lxx-key', lxxKey);
 
     findLxxSamples(lemma || g, 4).then(function (samples) {
@@ -606,6 +873,15 @@ box.style.maxHeight = 'calc(100vh - ' + (pad * 2) + 'px)';
       var lxxTarget = document.getElementById('gk-lex-lxx');
       if (!lxxTarget) return;
       lxxTarget.innerHTML = renderLxxItems(samples);
+    });
+
+    loadTrilingueNtOnce().then(function () {
+      var p = document.getElementById('gk-lex-popup');
+      if (!p || p.style.display !== 'block') return;
+      if (p.getAttribute('data-lxx-key') !== lxxKey) return;
+      var hebrewTarget = document.getElementById('gk-lex-hebrew');
+      if (!hebrewTarget) return;
+      hebrewTarget.innerHTML = renderHebrewCorrespondences(findHebrewCorrespondences([lemma, g], 8));
     });
   }
 
