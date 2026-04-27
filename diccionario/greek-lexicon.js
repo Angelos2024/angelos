@@ -615,18 +615,34 @@ function slugToAbbr(slug) {
     for (var i = 0; i < trilingueNtEntries.length; i++) {
       var entry = trilingueNtEntries[i];
       var greekTokens = tokenizeGreekComparable(entry.equivalencia_griega || entry.gr || entry.greek || '');
-      var matched = greekTokens.some(function (token) { return normalizedSet.has(token); });
+      var score = 0;
+      for (var tokenIndex = 0; tokenIndex < greekTokens.length; tokenIndex++) {
+        if (normalizedSet.has(greekTokens[tokenIndex])) score++;
+      }
+      var matched = score > 0;
       if (!matched) continue;
       var hebrew = normalizeHebrewComparable(entry.texto_hebreo || entry.he || '');
-      if (!hebrew || seen.has(hebrew)) continue;
-      seen.add(hebrew);
+      var greekText = String(entry.equivalencia_griega || entry.gr || entry.greek || '').trim();
+      var gloss = String(entry.equivalencia_espanol || entry.equivalencia_español || entry.es || '').trim();
+      var dedupeKey = [
+        hebrew,
+        normalizeGreekLemmaKey(greekText),
+        gloss.toLowerCase()
+      ].join('|');
+      if (!hebrew || seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
       results.push({
         hebrew: hebrew,
-        gloss: String(entry.equivalencia_espanol || entry.equivalencia_español || entry.es || '').trim()
+        greek: greekText,
+        gloss: gloss,
+        score: score
       });
-      if (max && results.length >= max) break;
     }
-    return results;
+    results.sort(function (a, b) {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.hebrew.localeCompare(b.hebrew);
+    });
+    return max ? results.slice(0, max) : results;
   }
 
   function renderHebrewCorrespondences(items) {
@@ -634,8 +650,9 @@ function slugToAbbr(slug) {
       return '<div class="lxx-row muted">Sin correspondencia hebrea en el trilingüe.</div>';
     }
     return items.map(function (item) {
+      var greek = item.greek ? ' <span class="muted">|</span> ' + escHtml(item.greek) : '';
       var gloss = item.gloss ? ' <span class="muted">|</span> ' + escHtml(item.gloss) : '';
-      return '<div class="lxx-row"><span dir="rtl">' + escHtml(item.hebrew) + '</span>' + gloss + '</div>';
+      return '<div class="lxx-row">• <b dir="rtl">' + escHtml(item.hebrew) + '</b>' + greek + gloss + '</div>';
     }).join('');
   }
   function isMissingValue(v) {
@@ -881,7 +898,7 @@ box.querySelector('#gk-lex-toggle').addEventListener('click', function () {
       if (p.getAttribute('data-lxx-key') !== lxxKey) return;
       var hebrewTarget = document.getElementById('gk-lex-hebrew');
       if (!hebrewTarget) return;
-      hebrewTarget.innerHTML = renderHebrewCorrespondences(findHebrewCorrespondences([lemma, g], 8));
+      hebrewTarget.innerHTML = renderHebrewCorrespondences(findHebrewCorrespondences([lemma, g], 4));
     });
   }
 
