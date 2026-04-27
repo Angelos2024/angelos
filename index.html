@@ -1503,15 +1503,17 @@ async function navigateToPage(slug, chapter){
 
 function preloadInterlinearAssetsFromStart(){
   const warm = async () => {
+    if(viewMode !== 'interlinear') return;
+
     try{
-      if(!trData){
+      if(isNT(currentBookSlug) && !trData){
         trData = await loadJson(GRIEGO_PATH);
       }
     }catch(_err){}
 
     try{
       if(window.InterlinearView?.preload){
-        await window.InterlinearView.preload({ slug: currentBookSlug });
+        await window.InterlinearView.preload({ slug: currentBookSlug, isGreek: isNT(currentBookSlug) });
       }
     }catch(_err){}
   };
@@ -1845,7 +1847,7 @@ lastRef = { chapter: ch, verseStart: v1, verseEnd: v2 };
            if(!isGreekBook && !String(interlinearSource || '').trim() && window.InterlinearView?.getHebrewRawVerse){
              interlinearSource = await window.InterlinearView.getHebrewRawVerse(currentBookSlug, ch, v);
            }
-           const rows = await window.InterlinearView.buildInterlinearRows(interlinearSource, { isGreek: isGreekBook, withAnalysis: !isGreekBook });
+           const rows = await window.InterlinearView.buildInterlinearRows(interlinearSource, { isGreek: isGreekBook, withAnalysis: !isGreekBook, slug: currentBookSlug });
      htmlOrig += `<p class="mb-2 verse-line interlinear-verse" data-side="orig" data-book="${esc(currentBookSlug)}" data-ch="${ch}" data-v="${v}">
             <span class="verse-num">${v}</span>
  <span class="interlinear-original ${isGreekBook ? 'interlinear-dir-ltr' : 'interlinear-dir-rtl'}">${buildInterlinearWordMarkup(rows, interlinearSource, isGreekBook)}</span>
@@ -2155,8 +2157,8 @@ btnReadFullChapter?.addEventListener('click', async () => {
       const warmRestore = async () => {
         try{
           await ensureBookLoaded(currentBookSlug, currentBookName);
-          await runSearch();
           preloadInterlinearAssetsFromStart();
+          scheduleSyncVerseHeights();
         }catch(_err){}
       };
       if('requestIdleCallback' in window){

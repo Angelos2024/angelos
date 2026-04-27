@@ -1538,8 +1538,10 @@
   //  LOADING / CACHING
   // ─────────────────────────────────────────────
 
-  let dictionariesPromise = null;
+  let greekDictionaryPromise = null;
+  let hebrewFallbackPromise = null;
   const hebrewInterlinearBookCache = new Map();
+  const hebrewInterlinearMapCache = new Map();
 
   async function loadJson(path) {
     const response = await fetch(path, { cache: 'force-cache' });
@@ -1559,33 +1561,57 @@
     return hebrewInterlinearBookCache.get(file);
   }
 
-  async function getHebrewInterlinearMaps() {
-    const books = await Promise.all(
-      HEBREW_INTERLINEAR_BOOK_FILES.map((f) =>
-        loadJson(`${HEBREW_INTERLINEAR_BASE}/${f}`).catch(() => null)
-      )
-    );
-    return buildHebrewMapFromInterlinear(books.filter(Boolean));
+  async function getGreekMap() {
+    if (!greekDictionaryPromise) {
+      greekDictionaryPromise = loadJson(GREEK_DICT_PATH).then((rows) => buildGreekMap(rows));
+    }
+    return greekDictionaryPromise;
   }
 
-  async function getDictionaries() {
-    if (dictionariesPromise) return dictionariesPromise;
-    dictionariesPromise = Promise.all([
-      getHebrewInterlinearMaps(),
-      loadJson(GREEK_DICT_PATH),
-      loadJson(HEBREW_FALLBACK_DICT_PATH).catch(() => [])
-    ]).then(([hebrewMapsInterlinear, greekRows, hebrewRows]) => ({
-      hebrewMaps: mergeHebrewMaps(hebrewMapsInterlinear, buildHebrewFallbackMap(hebrewRows)),
-      greekMap: buildGreekMap(greekRows)
-    }));
-    return dictionariesPromise;
+  async function getHebrewFallbackMaps() {
+    if (!hebrewFallbackPromise) {
+      hebrewFallbackPromise = loadJson(HEBREW_FALLBACK_DICT_PATH)
+        .catch(() => [])
+        .then((rows) => buildHebrewFallbackMap(rows));
+    }
+    return hebrewFallbackPromise;
+  }
+
+  async function getHebrewInterlinearMaps(slug) {
+    const file = HEBREW_INTERLINEAR_FILE_BY_SLUG[String(slug || '').trim()];
+    if (!file) return { pointedMap: new Map(), unpointedMap: new Map() };
+    if (!hebrewInterlinearMapCache.has(file)) {
+      const mapPromise = loadHebrewInterlinearBookBySlug(slug)
+        .then((book) => buildHebrewMapFromInterlinear(book ? [book] : []))
+        .catch(() => ({ pointedMap: new Map(), unpointedMap: new Map() }));
+      hebrewInterlinearMapCache.set(file, mapPromise);
+    }
+    return hebrewInterlinearMapCache.get(file);
+  }
+
+  async function getHebrewMaps(slug) {
+    const [primary, fallback] = await Promise.all([
+      getHebrewInterlinearMaps(slug),
+      getHebrewFallbackMaps()
+    ]);
+    return mergeHebrewMaps(primary, fallback);
   }
 
   async function preload(options = {}) {
     const slug = String(options?.slug || '').trim();
-    await getDictionaries();
+    const isGreek = Boolean(options?.isGreek);
+
+    if (isGreek) {
+      await getGreekMap();
+      return true;
+    }
+
+    await getHebrewFallbackMaps();
     if (slug && HEBREW_INTERLINEAR_FILE_BY_SLUG[slug]) {
-      await loadHebrewInterlinearBookBySlug(slug);
+      await Promise.all([
+        loadHebrewInterlinearBookBySlug(slug),
+        getHebrewInterlinearMaps(slug)
+      ]);
     }
     return true;
   }
@@ -1622,9 +1648,10 @@
    * }
    */
   async function buildInterlinearRows(originalText, options = {}) {
-    const { isGreek = false, withAnalysis = false } = options;
-    const { hebrewMaps, greekMap } = await getDictionaries();
-    const targetMap = isGreek ? greekMap : hebrewMaps;
+    const { isGreek = false, withAnalysis = false, slug = '' } = options;
+    const targetMap = isGreek
+      ? await getGreekMap()
+      : await getHebrewMaps(slug);
 
     const tokens = splitTokens(originalText)
       .flatMap((token) => (isGreek ? [token] : expandTokenForLookup(token, hebrewMaps.unpointedMap)));
