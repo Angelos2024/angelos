@@ -11,6 +11,8 @@
   var MASTER_DICT_URL = DICT_DIR + 'masterdiccionario.json';
   var TRILINGUE_NT_DIR = './dic/trilingueNT/';
   var LXX_DIR = './LXX/';
+  var GREEK_INDEX_PATH = './search/index-gr.json';
+  var TEXT_BASE = './search/texts';
   var masterDictIndex = null;   // Map<lemma, item>
   var masterDictNormIndex = null; // Map<lemma_normalizado, item>
   var masterDictLoaded = false;
@@ -18,6 +20,8 @@
   var trilingueNtLoaded = false;
   var trilingueNtEntries = [];
   var lxxCache = new Map(); // Map<lemma_normalizado, samples[]>
+  var ntGreekIndexPromise = null;
+  var ntGreekChapterCache = new Map();
      var popupDrag = null;
        var popupExpanded = false;
 
@@ -312,6 +316,70 @@ function slugToAbbr(slug) {
         escHtml(s.word || '—') + ' <span class="muted">|</span> ' +
         escHtml(s.lemma || '—') + morph + '</div>';
     }).join('');
+  }
+
+  function loadNtGreekIndexOnce() {
+    if (ntGreekIndexPromise) return ntGreekIndexPromise;
+    ntGreekIndexPromise = fetch(GREEK_INDEX_PATH, { cache: 'force-cache' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('No se pudo cargar index-gr.json (' + r.status + ')');
+        return r.json();
+      })
+      .catch(function () {
+        ntGreekIndexPromise = Promise.resolve({ tokens: {} });
+        return ntGreekIndexPromise;
+      });
+    return ntGreekIndexPromise;
+  }
+
+  function loadNtGreekChapterText(book, chapter) {
+    var key = String(book || '') + '|' + String(chapter || '');
+    if (ntGreekChapterCache.has(key)) return ntGreekChapterCache.get(key);
+    var promise = fetch(TEXT_BASE + '/gr/' + book + '/' + chapter + '.json', { cache: 'force-cache' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('No se pudo cargar texto griego');
+        return r.json();
+      })
+      .catch(function () { return []; });
+    ntGreekChapterCache.set(key, promise);
+    return promise;
+  }
+
+  function formatNtRef(book, chapter, verse) {
+    var label = String(book || '')
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, function (m) { return m.toUpperCase(); });
+    return label + ' ' + chapter + ':' + verse;
+  }
+
+  function buildNtGreekSamples(normalizedGreek, max) {
+    var normalized = normalizeGreekLemmaKey(normalizedGreek || '');
+    if (!normalized) return Promise.resolve([]);
+    return loadNtGreekIndexOnce().then(function (index) {
+      var refs = (index && index.tokens && index.tokens[normalized]) || [];
+      if (!refs.length) return [];
+      var tasks = refs.slice(0, max || 4).map(function (ref) {
+        var parts = String(ref || '').split('|');
+        var book = parts[0] || '';
+        var chapter = Number(parts[1]);
+        var verse = Number(parts[2]);
+        if (!book || !chapter || !verse) return Promise.resolve(null);
+        return loadNtGreekChapterText(book, chapter).then(function (verses) {
+          return {
+            ref: formatNtRef(book, chapter, verse),
+            text: String((verses && verses[verse - 1]) || '').trim()
+          };
+        }).catch(function () {
+          return {
+            ref: formatNtRef(book, chapter, verse),
+            text: ''
+          };
+        });
+      });
+      return Promise.all(tasks).then(function (items) {
+        return items.filter(Boolean);
+      });
+    });
   }
   // -------------------- build morph index --------------------
   // JSON: { book, chapters:[ ... ] }
@@ -645,14 +713,18 @@ function slugToAbbr(slug) {
     return max ? results.slice(0, max) : results;
   }
 
-  function renderHebrewCorrespondences(items) {
+  function renderHebrewCorrespondences(items, verseSamples) {
     if (!items || !items.length) {
       return '<div class="lxx-row muted">Sin correspondencia hebrea en el trilingüe.</div>';
     }
-    return items.map(function (item) {
+    var samples = Array.isArray(verseSamples) ? verseSamples : [];
+    return items.map(function (item, index) {
+      var sample = samples[index] || null;
+      var ref = sample && sample.ref ? '<b>' + escHtml(sample.ref) + '</b> — ' : '';
+      var text = sample && sample.text ? '<div class="muted" style="margin-top:2px">' + escHtml(sample.text) + '</div>' : '';
       var greek = item.greek ? ' <span class="muted">|</span> ' + escHtml(item.greek) : '';
       var gloss = item.gloss ? ' <span class="muted">|</span> ' + escHtml(item.gloss) : '';
-      return '<div class="lxx-row">• <b dir="rtl">' + escHtml(item.hebrew) + '</b>' + greek + gloss + '</div>';
+      return '<div class="lxx-row">• ' + ref + '<b dir="rtl">' + escHtml(item.hebrew) + '</b>' + greek + gloss + text + '</div>';
     }).join('');
   }
   function isMissingValue(v) {
@@ -892,13 +964,17 @@ box.querySelector('#gk-lex-toggle').addEventListener('click', function () {
       lxxTarget.innerHTML = renderLxxItems(samples);
     });
 
-    loadTrilingueNtOnce().then(function () {
+    Promise.all([
+      loadTrilingueNtOnce(),
+      buildNtGreekSamples(lxxKey, 4)
+    ]).then(function (payload) {
       var p = document.getElementById('gk-lex-popup');
       if (!p || p.style.display !== 'block') return;
       if (p.getAttribute('data-lxx-key') !== lxxKey) return;
       var hebrewTarget = document.getElementById('gk-lex-hebrew');
       if (!hebrewTarget) return;
-      hebrewTarget.innerHTML = renderHebrewCorrespondences(findHebrewCorrespondences([lemma, g], 4));
+      var verseSamples = payload && payload[1] ? payload[1] : [];
+      hebrewTarget.innerHTML = renderHebrewCorrespondences(findHebrewCorrespondences([lemma, g], 4), verseSamples);
     });
   }
 
