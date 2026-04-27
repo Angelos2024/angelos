@@ -142,10 +142,10 @@
     const compact = direct.replace(/[··;,.!?…]/g, '');
     if (compact) candidates.add(compact);
 
-    if (compact && compact.endsWith('σι')) {
-      candidates.add(`${compact}ν`);
+    if (compact && compact.endsWith('\u03c3\u03b9')) {
+      candidates.add(`${compact}\u03bd`);
     }
-    if (compact && compact.endsWith('ν')) {
+    if (compact && compact.endsWith('\u03bd')) {
       candidates.add(compact.slice(0, -1));
     }
     return [...candidates].filter(Boolean);
