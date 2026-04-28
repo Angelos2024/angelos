@@ -753,7 +753,7 @@ async function loadEsShard(term, options = {}) {
      return { key: 'otros', label: 'Otros' };
    }
 
-  const BOOK_LABEL_OVERRIDES = globalThis.__BX_BOOK_LABEL_OVERRIDES || (globalThis.__BX_BOOK_LABEL_OVERRIDES = {
+  var BOOK_LABEL_OVERRIDES = globalThis.__BX_BOOK_LABEL_OVERRIDES || (globalThis.__BX_BOOK_LABEL_OVERRIDES = {
     genesis: 'Génesis',
     exodo: 'Éxodo',
     levitico: 'Levítico',
