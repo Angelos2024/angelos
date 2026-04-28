@@ -208,7 +208,7 @@ function groupForBook(book) {
   return { key: 'otros', label: 'Otros' };
 }
 
-const BOOK_LABEL_OVERRIDES = {
+const BOOK_LABEL_OVERRIDES = globalThis.__BX_BOOK_LABEL_OVERRIDES || (globalThis.__BX_BOOK_LABEL_OVERRIDES = {
 genesis: 'Génesis',
 exodo: 'Éxodo',
 levitico: 'Levítico',
@@ -275,7 +275,7 @@ santiago: 'Santiago',
 '3_juan': '3 Juan',
 judas: 'Judas',
 apocalipsis: 'Apocalipsis'
-};
+});
 
 function prettyBookLabel(book) {
 const key = String(book || '').trim().toLowerCase();
