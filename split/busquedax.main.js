@@ -198,8 +198,8 @@ function filterRefsByEnabledTestaments(refs) {
 function groupForBook(book) {
   const slug = book;
   if (TORAH.includes(slug)) return { key: 'torah', label: 'Torah' };
-  if (HISTORICAL.includes(slug)) return { key: 'historicos', label: 'HistÃ³ricos' };
-  if (WISDOM.includes(slug)) return { key: 'sabiduria', label: 'SabidurÃ­a' };
+  if (HISTORICAL.includes(slug)) return { key: 'historicos', label: 'Historicos' };
+  if (WISDOM.includes(slug)) return { key: 'sabiduria', label: 'Sabiduria' };
   if (PROPHETS.includes(slug)) return { key: 'profetas', label: 'Profetas' };
   if (GOSPELS.includes(slug)) return { key: 'evangelios', label: 'Evangelios' };
   if (ACTS.includes(slug)) return { key: 'hechos', label: 'Hechos' };
@@ -541,7 +541,7 @@ state.pagination.collapsedSections = { ot: true, nt: true };
     filtersPanel.innerHTML = `
       <div class="d-grid gap-2">
          ${mkBtn('all', 'Todos', allCount, isAll, 'all')}
-        ${mkBtn('ot', 'TorÃ¡h', otCount, isOT, 'ot')}
+        ${mkBtn('ot', 'Torah', otCount, isOT, 'ot')}
   ${otSectionHtml}
         ${mkBtn('nt', 'Evangelios', ntCount, isNT, 'nt')}
         ${ntSectionHtml}
