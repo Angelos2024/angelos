@@ -753,9 +753,79 @@ async function loadEsShard(term, options = {}) {
      return { key: 'otros', label: 'Otros' };
    }
 
+  const BOOK_LABEL_OVERRIDES = {
+    genesis: 'Génesis',
+    exodo: 'Éxodo',
+    levitico: 'Levítico',
+    numeros: 'Números',
+    deuteronomio: 'Deuteronomio',
+    josue: 'Josué',
+    jueces: 'Jueces',
+    rut: 'Rut',
+    '1_samuel': '1 Samuel',
+    '2_samuel': '2 Samuel',
+    '1_reyes': '1 Reyes',
+    '2_reyes': '2 Reyes',
+    '1_cronicas': '1 Crónicas',
+    '2_cronicas': '2 Crónicas',
+    esdras: 'Esdras',
+    nehemias: 'Nehemías',
+    ester: 'Ester',
+    job: 'Job',
+    salmos: 'Salmos',
+    proverbios: 'Proverbios',
+    eclesiastes: 'Eclesiastés',
+    cantares: 'Cantares',
+    isaias: 'Isaías',
+    jeremias: 'Jeremías',
+    lamentaciones: 'Lamentaciones',
+    ezequiel: 'Ezequiel',
+    daniel: 'Daniel',
+    oseas: 'Oseas',
+    joel: 'Joel',
+    amos: 'Amós',
+    abdias: 'Abdías',
+    jonas: 'Jonás',
+    miqueas: 'Miqueas',
+    nahum: 'Nahúm',
+    habacuc: 'Habacuc',
+    sofonias: 'Sofonías',
+    hageo: 'Hageo',
+    zacarias: 'Zacarías',
+    malaquias: 'Malaquías',
+    mateo: 'Mateo',
+    marcos: 'Marcos',
+    lucas: 'Lucas',
+    juan: 'Juan',
+    hechos: 'Hechos',
+    romanos: 'Romanos',
+    '1_corintios': '1 Corintios',
+    '2_corintios': '2 Corintios',
+    galatas: 'Gálatas',
+    efesios: 'Efesios',
+    filipenses: 'Filipenses',
+    colosenses: 'Colosenses',
+    '1_tesalonicenses': '1 Tesalonicenses',
+    '2_tesalonicenses': '2 Tesalonicenses',
+    '1_timoteo': '1 Timoteo',
+    '2_timoteo': '2 Timoteo',
+    tito: 'Tito',
+    filemon: 'Filemón',
+    hebreos: 'Hebreos',
+    santiago: 'Santiago',
+    '1_pedro': '1 Pedro',
+    '2_pedro': '2 Pedro',
+    '1_juan': '1 Juan',
+    '2_juan': '2 Juan',
+    '3_juan': '3 Juan',
+    judas: 'Judas',
+    apocalipsis: 'Apocalipsis'
+  };
+
   function prettyBookLabel(book) {
-     return (book || '').replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
-   }
+    const key = String(book || '').trim().toLowerCase();
+    return BOOK_LABEL_OVERRIDES[key] || key.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+  }
 
    function buildBookCountRows(refs) {
      const counts = new Map();
@@ -958,7 +1028,7 @@ function buildFilterAggFromGroups(groups = [], lang = 'es') {
     filtersPanel.innerHTML = `
       <div class="d-grid gap-2">
         ${mkBtn('all', 'Todos', allCount, isAll)}
-        ${mkBtn('ot', 'Toráh', otCount, isOT)}
+        ${mkBtn('ot', 'Torah', otCount, isOT)}
         <div class="ps-1 d-grid gap-2">${otItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
         ${mkBtn('nt', 'Evangelios', ntCount, isNT)}
         <div class="ps-1 d-grid gap-2">${ntItems || '<div class="small muted ps-2">Sin resultados.</div>'}</div>
