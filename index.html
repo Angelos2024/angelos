@@ -21,7 +21,7 @@
 <script defer src="./annotations-ui.js?v=7"></script>
 <script defer src="./listanotas.js?v=1"></script>
   <script defer src="./backup-panel.js?v=1"></script>
-  <script defer src="./interlinear-view.js?v=10"></script>
+  <script defer src="./interlinear-view.js?v=11"></script>
   <script src="./greek-lexicon-ui.js"></script>
    <script src="./hebrew-lexicon-ui.js"></script>
 <script src="./diccionario/greek-lexicon.js?v=15"></script>
@@ -1503,10 +1503,8 @@ async function navigateToPage(slug, chapter){
 
 function preloadInterlinearAssetsFromStart(){
   const warm = async () => {
-    if(viewMode !== 'interlinear') return;
-
     try{
-      if(isNT(currentBookSlug) && !trData){
+      if(viewMode === 'interlinear' && isNT(currentBookSlug) && !trData){
         trData = await loadJson(GRIEGO_PATH);
       }
     }catch(_err){}

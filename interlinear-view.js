@@ -1649,9 +1649,9 @@
    */
   async function buildInterlinearRows(originalText, options = {}) {
     const { isGreek = false, withAnalysis = false, slug = '' } = options;
-    const targetMap = isGreek
-      ? await getGreekMap()
-      : await getHebrewMaps(slug);
+    const greekMap = isGreek ? await getGreekMap() : null;
+    const hebrewMaps = isGreek ? null : await getHebrewMaps(slug);
+    const targetMap = isGreek ? greekMap : hebrewMaps;
 
     const tokens = splitTokens(originalText)
       .flatMap((token) => (isGreek ? [token] : expandTokenForLookup(token, hebrewMaps.unpointedMap)));
