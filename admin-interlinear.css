@@ -1,0 +1,227 @@
+.admin-interlinear-page{
+  background:
+    radial-gradient(circle at top right, rgba(185,113,64,.12), transparent 28%),
+    radial-gradient(circle at left center, rgba(75,39,67,.08), transparent 22%),
+    var(--bg);
+}
+
+.admin-brand{
+  display:block;
+}
+
+.admin-interlinear-page .topbar{
+  box-shadow:0 8px 32px rgba(15,23,42,.06);
+}
+
+.admin-heading{
+  position:relative;
+}
+
+.admin-heading::before{
+  content:'';
+  position:absolute;
+  inset:auto 0 -12px 0;
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(75,39,67,.24), transparent);
+}
+
+.admin-content-layout{
+  align-items:flex-start;
+}
+
+.admin-sidebar-column{
+  display:block;
+}
+
+.admin-panel{
+  overflow:hidden;
+}
+
+.admin-summary{
+  display:grid;
+  gap:.7rem;
+}
+
+.admin-summary-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.75rem;
+  font-size:.94rem;
+}
+
+.admin-workspace-panel .panel-body{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.85) 0%, rgba(255,250,244,.94) 100%);
+}
+
+.admin-intro-card{
+  margin-bottom:1rem;
+  padding:1rem 1.1rem;
+  border:1px solid rgba(75,39,67,.14);
+  border-radius:16px;
+  background:linear-gradient(135deg, rgba(255,255,255,.94) 0%, rgba(241,226,210,.78) 100%);
+}
+
+.admin-intro-kicker{
+  display:inline-flex;
+  padding:.18rem .55rem;
+  border-radius:999px;
+  background:#f1e0d2;
+  color:#4b2743;
+  font-size:.75rem;
+  font-weight:700;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.admin-intro-card h1{
+  margin:.7rem 0 .4rem;
+  font-size:1.32rem;
+}
+
+.admin-intro-card p{
+  margin:0;
+  max-width:74ch;
+  color:#5c4c44;
+}
+
+.admin-editor-mount{
+  display:grid;
+  gap:1rem;
+}
+
+.admin-verse-card{
+  border:1px solid rgba(75,39,67,.14);
+  border-radius:18px;
+  background:#fff;
+  overflow:hidden;
+  box-shadow:0 12px 28px rgba(15,23,42,.06);
+}
+
+.admin-verse-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1rem 1rem .85rem;
+  background:linear-gradient(180deg, rgba(237,221,206,.42) 0%, rgba(255,255,255,.92) 100%);
+  border-bottom:1px solid rgba(75,39,67,.12);
+}
+
+.admin-verse-ref{
+  font-size:1rem;
+  font-weight:700;
+}
+
+.admin-verse-translation{
+  margin:.35rem 0 0;
+  color:#574941;
+  line-height:1.6;
+}
+
+.admin-verse-raw{
+  font-size:1.12rem;
+  direction:rtl;
+  text-align:right;
+  color:#2c1d1f;
+}
+
+.admin-token-grid{
+  display:grid;
+  gap:.7rem;
+  padding:1rem;
+}
+
+.admin-token-row{
+  display:grid;
+  grid-template-columns:minmax(120px, 1.1fr) minmax(100px, .9fr) minmax(100px, .9fr) minmax(160px, 1fr) minmax(150px, 1fr) minmax(140px, .85fr);
+  gap:.7rem;
+  align-items:start;
+  padding:.78rem;
+  border:1px solid rgba(75,39,67,.08);
+  border-radius:14px;
+  background:#fffaf6;
+}
+
+.admin-token-meta{
+  display:grid;
+  gap:.2rem;
+}
+
+.admin-token-order{
+  font-size:.78rem;
+  font-weight:700;
+  color:#8a5a40;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+.admin-token-orig{
+  font-size:1.2rem;
+  direction:rtl;
+  text-align:right;
+}
+
+.admin-token-strongs{
+  font-size:.86rem;
+  color:#6d5d52;
+}
+
+.admin-field{
+  display:grid;
+  gap:.28rem;
+}
+
+.admin-field label{
+  font-size:.78rem;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:#6b5a52;
+  text-transform:uppercase;
+}
+
+.admin-field input{
+  width:100%;
+  min-height:40px;
+  border:1px solid #d8c2b2;
+  border-radius:10px;
+  padding:.55rem .7rem;
+  background:#fff;
+  color:#24181a;
+}
+
+.admin-field input:focus{
+  outline:none;
+  border-color:#4b2743;
+  box-shadow:0 0 0 4px rgba(75,39,67,.08);
+}
+
+.admin-field input[readonly]{
+  background:#f7efe7;
+  color:#66564d;
+}
+
+.admin-empty-state{
+  padding:1.5rem;
+  border:1px dashed rgba(75,39,67,.24);
+  border-radius:16px;
+  background:rgba(255,255,255,.7);
+  color:#5b4d45;
+}
+
+@media (max-width: 1200px){
+  .admin-token-row{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px){
+  .admin-token-row{
+    grid-template-columns:1fr;
+  }
+
+  .admin-verse-head{
+    flex-direction:column;
+  }
+}
