@@ -323,6 +323,11 @@
     const letter = firstLetter(word);
     if (!BKL_MAP[letter]) return null;
 
+    // Evita dividir el sustantivo lexical בני ("hijos de...") como si fuera ב + prefijo.
+    if (letter === 'ב' && stripNiqqud(word) === '\u05D1\u05E0\u05D9' && /ֵי$/.test(word)) {
+      return null;
+    }
+
     const info     = BKL_MAP[letter];
     const myNiqqud = niqqudAfterFirst(word);
     const rest     = advancePastFirst(word);
