@@ -516,14 +516,23 @@
   // Qatal (perfect) — identified by SUFFIXES
   const QATAL_SUFFIXES = [
     { suffix: 'תִּי', pgn: '1cs', es: 'yo'            },
-    { suffix: 'תָּ',  pgn: '2ms', es: 'tú (m)'        },
-    { suffix: 'תְּ',  pgn: '2fs', es: 'tú (f)'        },
+    { suffix: '\u05EA\u05BC\u05B8',  pgn: '2ms', es: 'tú (m)'        }, // תָּ
+    { suffix: '\u05EA\u05BC\u05B0',  pgn: '2fs', es: 'tú (f)'        }, // תְּ
     { suffix: 'נוּ',  pgn: '1cp', es: 'nosotros'       },
-    { suffix: 'תֶּם', pgn: '2mp', es: 'vosotros (m)'   },
-    { suffix: 'תֶּן', pgn: '2fp', es: 'vosotras (f)'   },
+    { suffix: '\u05EA\u05BC\u05B6\u05DD', pgn: '2mp', es: 'vosotros (m)'   }, // תֶּם
+    { suffix: '\u05EA\u05BC\u05B6\u05DF', pgn: '2fp', es: 'vosotras (f)'   }, // תֶּן
     { suffix: 'וּ',   pgn: '3cp', es: 'ellos/ellas'    },
     { suffix: 'ָה',   pgn: '3fs', es: 'ella'           },
     // 3ms = raíz pura
+  ];
+  const QATAL_SUFFIXES_PLAIN = [
+    '\u05EA\u05D9', // תי
+    '\u05EA',       // ת
+    '\u05E0\u05D5', // נו
+    '\u05EA\u05DD', // תם
+    '\u05EA\u05DF', // תן
+    '\u05D5',       // ו
+    '\u05D4'        // ה
   ];
 
   // Yiqtol (imperfect) — identified by PREFIXES on the root after BKL/Vav stripped
@@ -897,6 +906,16 @@
     if (plainCore === '\u05D0\u05DC\u05D4\u05D9\u05DD') return 'Elohim';
     return null;
   }
+
+  function getQatalLemmaCandidate(word) {
+    const plain = stripNiqqud(word);
+    for (const suffix of QATAL_SUFFIXES_PLAIN) {
+      if (plain.endsWith(suffix) && plain.length > suffix.length + 1) {
+        return plain.slice(0, -suffix.length);
+      }
+    }
+    return plain;
+  }
   function resolvePreciseGloss(token, analysis = null) {
     const candidates = new Set();
     const add = (value) => {
@@ -1207,9 +1226,15 @@
 
     // 2) Ruta verbal: base pelada + eliminación prefijo verbal inicial + intento Lamed-He
     if (analysis.verbal) {
-      const verbalBase = stripNiqqud(stem || root).replace(/^[\u05D0\u05D9\u05EA\u05E0]/, '');
+      const verbalPlain = stripNiqqud(stem || root);
+      const verbalBase = analysis.verbal.tense === 'QATAL'
+        ? verbalPlain
+        : verbalPlain.replace(/^[\u05D0\u05D9\u05EA\u05E0]/, '');
       add(verbalBase);
       add(verbalBase + '\u05D4');
+      if (analysis.verbal.tense === 'QATAL') {
+        add(getQatalLemmaCandidate(stem || root));
+      }
     }
 
     // 3) Claves base (stem preferido; si no, root)
