@@ -303,6 +303,26 @@ function ensureNotesUI() {
         padding:0 1px;
       }
       .note-mark:hover{background:rgba(239,68,68,.08)}
+      .note-mark[data-note-preview]:hover::after{
+        content: attr(data-note-preview);
+        position:absolute;
+        left:50%;
+        bottom:calc(100% + 8px);
+        transform:translateX(-50%);
+        width:max-content;
+        max-width:min(240px, calc(100vw - 32px));
+        padding:8px 10px;
+        border-radius:10px;
+        background:rgba(0,0,0,.94);
+        color:#fff;
+        font-size:12px;
+        line-height:1.35;
+        white-space:normal;
+        text-align:left;
+        box-shadow:0 10px 24px rgba(0,0,0,.32);
+        z-index:30;
+        pointer-events:none;
+      }
       .note-mark .note-icon{
         display:none;
         position:absolute;
@@ -499,7 +519,7 @@ const NotesUI = (() => {
 const id = await window.AnnotationsDB.addNote(note);
 
 // marcar el texto
-wrapNoteMark(state.verseTextEl, a.offset, a.length, id);
+wrapNoteMark(state.verseTextEl, a.offset, a.length, id, note.text);
 
 // ✅ avisar al panel "Notas" que cambió el dataset
 if (window.dispatchNotasChanged) window.dispatchNotasChanged();
@@ -514,6 +534,7 @@ return;
     state.note.text = txt;
     state.note.updated_at = Date.now();
  await window.AnnotationsDB.updateNote(state.note);
+syncNotePreview(state.anchorEl, state.note.text);
 
 // ✅ refrescar lista si está abierta
 if (window.dispatchNotasChanged) window.dispatchNotasChanged();
@@ -571,7 +592,21 @@ document.addEventListener('click', async (ev) => {
     // ==============================
     // Notes: wrap / unwrap / apply
     // ==============================
-    function wrapNoteMark(verseTextEl, offset, length, noteId) {
+    function buildNotePreview(text, maxWords = 40) {
+      const words = String(text || '').trim().split(/\s+/).filter(Boolean);
+      if (!words.length) return '';
+      if (words.length <= maxWords) return words.join(' ');
+      return `${words.slice(0, maxWords).join(' ')} ...`;
+    }
+
+    function syncNotePreview(anchorEl, text) {
+      if (!anchorEl) return;
+      const preview = buildNotePreview(text);
+      if (preview) anchorEl.dataset.notePreview = preview;
+      else delete anchorEl.dataset.notePreview;
+    }
+
+    function wrapNoteMark(verseTextEl, offset, length, noteId, noteText = '') {
       const r = resolveTextRangeByOffset(verseTextEl, offset, length);
       if (!r) return false;
 
@@ -583,6 +618,7 @@ document.addEventListener('click', async (ev) => {
       const span = document.createElement('span');
       span.className = 'note-mark';
       span.dataset.noteId = String(noteId);
+      syncNotePreview(span, noteText);
 
       const icon = document.createElement('span');
       icon.className = 'note-icon';
@@ -651,7 +687,7 @@ document.addEventListener('click', async (ev) => {
 
           list.sort((a, b) => (b.offset - a.offset));
           for (const n of list) {
-            wrapNoteMark(verseTextEl, n.offset, n.length, n.id);
+            wrapNoteMark(verseTextEl, n.offset, n.length, n.id, n.text);
           }
         }
       }

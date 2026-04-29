@@ -1470,22 +1470,24 @@ async function loadLxxBookData(bookCode) {
   function stripHebrewMarks(text) {
     return String(text || '').replace(/[\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '');
   }
-  function resolveDivineNameLabel(rawHebrew) {
+function resolveDivineNameLabel(rawHebrew) {
     const pointed = normalizeHebrewPointedTokenForDivine(rawHebrew);
     if (!pointed) return '';
 
     const pointedCore = pointed.replace(DIVINE_PREFIX_RE, '') || pointed;
     const plainCore = stripHebrewMarks(pointedCore);
+    const clusters = String(pointedCore).match(/[\u05D0-\u05EA][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/g) || [];
 
     if (plainCore === '×™×”×•×”') {
-      if (pointedCore.includes('×•Ö´Ö¹')) return 'Elohim';
-      if (pointedCore.includes('×•Ö¸Ö¹')) return 'Adonai';
+      const secondLetter = clusters[1] || '';
+      const thirdLetter = clusters[2] || '';
+      if (secondLetter.includes('\u05B4')) return 'Elohim';
+      if (secondLetter.includes('\u05B8') && thirdLetter.includes('\u05B9')) return 'Adonai';
       return 'Hashem';
     }
 
-    if (plainCore.startsWith('××“× ')) return 'Adonai';
-    if (plainCore.startsWith('××œ×•×”')) return 'Elohim';
-    if (plainCore.startsWith('××œ×”') && plainCore !== '××œ×”') return 'Elohim';
+    if (plainCore === '××“× ×™') return 'Adonai';
+    if (plainCore === '××œ×”×™×') return 'Elohim';
     if (/^×Öµ×œ/.test(pointedCore)) return 'El';
 
     return '';

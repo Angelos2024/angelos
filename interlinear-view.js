@@ -868,6 +868,30 @@
   const PRECISE_GLOSSES_PLAIN = Object.fromEntries(
     Object.entries(PRECISE_GLOSSES).map(([k, v]) => [normalizeToken(k, true), v])
   );
+  const DIVINE_PREFIX_RE = /^[\u05D5\u05D1\u05DB\u05DC\u05DE\u05E9\u05D4][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/;
+  function splitHebrewLetterClusters(pointed) {
+    return String(pointed || '').match(/[\u05D0-\u05EA][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/g) || [];
+  }
+  function resolveDivineNameGloss(token) {
+    const pointed = normalizeToken(token, true, false, true);
+    if (!pointed) return null;
+
+    const pointedCore = String(pointed).replace(DIVINE_PREFIX_RE, '') || pointed;
+    const plainCore = stripNiqqud(pointedCore);
+    const clusters = splitHebrewLetterClusters(pointedCore);
+
+    if (plainCore === '\u05D9\u05D4\u05D5\u05D4') {
+      const secondLetter = clusters[1] || '';
+      const thirdLetter = clusters[2] || '';
+      if (secondLetter.includes(N.HIREQ)) return 'Elohim';
+      if (secondLetter.includes(N.QAMETS) && thirdLetter.includes(N.HOLAM)) return 'Adonai';
+      return 'Hashem';
+    }
+
+    if (plainCore === '\u05D0\u05D3\u05E0\u05D9') return 'Adonai';
+    if (plainCore === '\u05D0\u05DC\u05D4\u05D9\u05DD') return 'Elohim';
+    return null;
+  }
   function resolvePreciseGloss(token, analysis = null) {
     const candidates = new Set();
     const add = (value) => {
@@ -1301,6 +1325,8 @@
     const plain = normalizeToken(surface, true);
     const pointed = normalizeToken(surface, true, false, true);
     if (plain === '\u05D4\u05D9\u05D4') return 'existir/ser';
+    const divineName = resolveDivineNameGloss(surface);
+    if (divineName) return divineName;
     const precise = PRECISE_GLOSSES[pointed] || PRECISE_GLOSSES_PLAIN[plain];
     if (precise) return precise;
 

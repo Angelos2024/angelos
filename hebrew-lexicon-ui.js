@@ -188,8 +188,11 @@ function normalizeHebrewPointed(text) {
       .replace(/[^\u05D0-\u05EA\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '')
       .trim();
   }
-  function stripSingleHebrewPrefix(pointed) {
+function stripSingleHebrewPrefix(pointed) {
     return String(pointed || '').replace(DIVINE_PREFIX_RE, '');
+  }
+  function splitHebrewLetterClusters(pointed) {
+    return String(pointed || '').match(/[\u05D0-\u05EA][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/g) || [];
   }
   function resolveDivineNameLabel(rawHebrew) {
     const pointed = normalizeHebrewPointedTokenForDivine(rawHebrew);
@@ -197,16 +200,18 @@ function normalizeHebrewPointed(text) {
 
     const pointedCore = stripSingleHebrewPrefix(pointed) || pointed;
     const plainCore = stripHebrewMarks(pointedCore);
+    const clusters = splitHebrewLetterClusters(pointedCore);
 
     if (plainCore === 'יהוה') {
-      if (pointedCore.includes('וִֹ')) return 'Elohim';
-      if (pointedCore.includes('וָֹ')) return 'Adonai';
+      const secondLetter = clusters[1] || '';
+      const thirdLetter = clusters[2] || '';
+      if (secondLetter.includes('\u05B4')) return 'Elohim';
+      if (secondLetter.includes('\u05B8') && thirdLetter.includes('\u05B9')) return 'Adonai';
       return 'Hashem';
     }
 
-    if (plainCore.startsWith('אדנ')) return 'Adonai';
-    if (plainCore.startsWith('אלוה')) return 'Elohim';
-    if (plainCore.startsWith('אלה') && plainCore !== 'אלה') return 'Elohim';
+    if (plainCore === 'אדני') return 'Adonai';
+    if (plainCore === 'אלהים') return 'Elohim';
     if (/^אֵל/.test(pointedCore)) return 'El';
 
     return '';
