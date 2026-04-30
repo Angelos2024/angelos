@@ -46,8 +46,39 @@
     ['malaquias', 'Malaquías', '39_Malaquías.json']
   ];
 
-  const BOOK_MAP = new Map(OT_BOOKS.map(([slug, label, file]) => [slug, { slug, label, file }]));
-  const LABEL_TO_SLUG = new Map(OT_BOOKS.map(([slug, label]) => [normalizeKey(label), slug]));
+  const NT_BOOKS = [
+    ['mateo', 'Mateo', '40_Mateo.json'],
+    ['marcos', 'Marcos', '41_Marcos.json'],
+    ['lucas', 'Lucas', '42_Lucas.json'],
+    ['juan', 'Juan', '43_Juan.json'],
+    ['hechos', 'Hechos', '44_Hechos.json'],
+    ['romanos', 'Romanos', '45_Romanos.json'],
+    ['1_corintios', '1 Corintios', '46_1_Corintios.json'],
+    ['2_corintios', '2 Corintios', '47_2_Corintios.json'],
+    ['galatas', 'Gálatas', '48_Gálatas.json'],
+    ['efesios', 'Efesios', '49_Efesios.json'],
+    ['filipenses', 'Filipenses', '50_Filipenses.json'],
+    ['colosenses', 'Colosenses', '51_Colosenses.json'],
+    ['1_tesalonicenses', '1 Tesalonicenses', '52_1_Tesalonicenses.json'],
+    ['2_tesalonicenses', '2 Tesalonicenses', '53_2_Tesalonicenses.json'],
+    ['1_timoteo', '1 Timoteo', '54_1_Timoteo.json'],
+    ['2_timoteo', '2 Timoteo', '55_2_Timoteo.json'],
+    ['tito', 'Tito', '56_Tito.json'],
+    ['filemon', 'Filemón', '57_Filemón.json'],
+    ['hebreos', 'Hebreos', '58_Hebreos.json'],
+    ['santiago', 'Santiago', '59_Santiago.json'],
+    ['1_pedro', '1 Pedro', '60_1_Pedro.json'],
+    ['2_pedro', '2 Pedro', '61_2_Pedro.json'],
+    ['1_juan', '1 Juan', '62_1_Juan.json'],
+    ['2_juan', '2 Juan', '63_2_Juan.json'],
+    ['3_juan', '3 Juan', '64_3_Juan.json'],
+    ['judas', 'Judas', '65_Judas.json'],
+    ['apocalipsis', 'Apocalipsis', '66_Apocalipsis.json']
+  ];
+
+  const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
+  const BOOK_MAP = new Map(ALL_BOOKS.map(([slug, label, file]) => [slug, { slug, label, file }]));
+  const LABEL_TO_SLUG = new Map(ALL_BOOKS.map(([slug, label]) => [normalizeKey(label), slug]));
   const chapterCountCache = new Map();
   const spanishCache = new Map();
   const interlinearCache = new Map();
@@ -71,7 +102,8 @@
     themeMenuBtn: document.getElementById('adminThemeMenuBtn'),
     bookToggle: document.getElementById('adminBookMenuToggle'),
     bookDropdown: document.getElementById('adminBookMenuDropdown'),
-    bookList: document.getElementById('adminBookList'),
+    bookListOT: document.getElementById('adminBookListOT'),
+    bookListNT: document.getElementById('adminBookListNT'),
     chapterList: document.getElementById('adminChapterList'),
     chapterTitle: document.getElementById('adminChapterTitle')
   };
@@ -190,9 +222,10 @@
     return { slug, chapter };
   }
 
-  function renderBookList(activeSlug){
-    els.bookList.innerHTML = '';
-    OT_BOOKS.forEach(([slug, label]) => {
+  function renderBookListSection(container, books, activeSlug){
+    if(!container) return;
+    container.innerHTML = '';
+    books.forEach(([slug, label]) => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = `book-chip${slug === activeSlug ? ' is-active' : ''}`;
@@ -200,11 +233,16 @@
       button.addEventListener('click', async () => {
         state.slug = slug;
         state.label = label;
-        renderBookList(slug);
+        renderBookLists(slug);
         await renderChapterList(slug);
       });
-      els.bookList.appendChild(button);
+      container.appendChild(button);
     });
+  }
+
+  function renderBookLists(activeSlug){
+    renderBookListSection(els.bookListOT, OT_BOOKS, activeSlug);
+    renderBookListSection(els.bookListNT, NT_BOOKS, activeSlug);
   }
 
   async function renderChapterList(slug){
@@ -250,6 +288,62 @@
     }catch(_error){
       return null;
     }
+  }
+
+  function listDraftsForBook(slug){
+    const drafts = [];
+    const prefix = `${DRAFT_PREFIX}${slug}.`;
+    for(let i = 0; i < localStorage.length; i += 1){
+      const key = localStorage.key(i);
+      if(!key || !key.startsWith(prefix)) continue;
+      try{
+        const raw = localStorage.getItem(key);
+        if(!raw) continue;
+        const parsed = JSON.parse(raw);
+        if(parsed?.slug === slug) drafts.push(parsed);
+      }catch(_error){
+        // Ignorar entradas corruptas para no bloquear la exportación.
+      }
+    }
+    drafts.sort((a, b) => Number(a.chapter || 0) - Number(b.chapter || 0));
+    return drafts;
+  }
+
+  function cloneJson(value){
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function mergeDraftTokens(baseTokens, draftTokens){
+    const base = Array.isArray(baseTokens) ? baseTokens.map((token) => ({ ...token })) : [];
+    if(!Array.isArray(draftTokens) || !draftTokens.length) return base;
+
+    const byNum = new Map(base.map((token) => [String(token.num || ''), token]));
+    draftTokens.forEach((draftToken) => {
+      const key = String(draftToken?.num || '');
+      const target = byNum.get(key);
+      if(!target) return;
+      target.morphs = draftToken.morphs ?? target.morphs ?? '';
+      target.es = draftToken.es ?? target.es ?? '';
+      target.added = draftToken.added ?? target.added ?? '';
+      target.notrans = draftToken.notrans ?? target.notrans ?? '';
+    });
+    return base;
+  }
+
+  function mergeDraftsIntoBook(bookData, drafts){
+    const merged = cloneJson(bookData);
+    drafts.forEach((draft) => {
+      (draft?.verses || []).forEach((verse) => {
+        const ref = String(verse?.verse || '');
+        const parts = ref.split(':');
+        if(parts.length !== 2) return;
+        const [chapterKey, verseKey] = parts;
+        const verseNode = merged?.chapters?.[chapterKey]?.[verseKey];
+        if(!verseNode) return;
+        verseNode.tokens = mergeDraftTokens(verseNode.tokens, verse.tokens);
+      });
+    });
+    return merged;
   }
 
   function writeDraft(){
@@ -403,7 +497,7 @@
     els.tokenCount.textContent = String(tokenCount);
     updateDraftStateLabel();
     bindDirtyTracking();
-    renderBookList(state.slug);
+    renderBookLists(state.slug);
     await renderChapterList(state.slug);
     updateChapterButtons(chapterTotal);
   }
@@ -422,18 +516,27 @@
     await renderEditor();
   }
 
-  function exportDraft(){
-    const payload = collectDraftPayload();
+  function downloadJson(filename, payload){
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `interlinear-${state.slug}-${state.chapter}.json`;
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-    setBadge('Capítulo exportado', 'ok');
+  }
+
+  async function exportBookChanges(){
+    const bookMeta = BOOK_MAP.get(state.slug);
+    if(!bookMeta) throw new Error('Libro no disponible para exportación.');
+    writeDraft();
+    const baseBook = await getInterlinearBook(state.slug);
+    const drafts = listDraftsForBook(state.slug);
+    const payload = mergeDraftsIntoBook(baseBook, drafts);
+    downloadJson(bookMeta.file, payload);
+    setBadge(`Archivo listo: ${bookMeta.file}`, 'ok');
   }
 
   async function resetDraft(){
@@ -474,7 +577,7 @@
   }
 
   function setupBookMenu(){
-    renderBookList(state.slug);
+    renderBookLists(state.slug);
     els.bookToggle?.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -513,7 +616,13 @@
     });
 
     els.saveBtn?.addEventListener('click', writeDraft);
-    els.exportBtn?.addEventListener('click', exportDraft);
+    els.exportBtn?.addEventListener('click', async () => {
+      try{
+        await exportBookChanges();
+      }catch(error){
+        handleError(error);
+      }
+    });
     els.resetBtn?.addEventListener('click', resetDraft);
     els.prevBtn?.addEventListener('click', async () => {
       if(state.chapter <= 1) return;

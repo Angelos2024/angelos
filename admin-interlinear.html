@@ -33,7 +33,11 @@
                   <div class="book-menu-grid admin-book-grid">
                     <section class="book-column" aria-label="Antiguo Testamento">
                       <div class="book-column-title">Antiguo Testamento</div>
-                      <div id="adminBookList" class="book-list"></div>
+                      <div id="adminBookListOT" class="book-list"></div>
+                    </section>
+                    <section class="book-column" aria-label="Nuevo Testamento">
+                      <div class="book-column-title">Nuevo Testamento</div>
+                      <div id="adminBookListNT" class="book-list"></div>
                     </section>
                     <section class="chapter-panel" aria-live="polite">
                       <div id="adminChapterTitle" class="chapter-title">Capítulos</div>
@@ -95,7 +99,7 @@
             <div class="panel-header">Control editorial</div>
             <div class="panel-body d-grid gap-2">
               <button id="adminSaveDraftBtn" type="button" class="btn btn-outline-primary w-100">Guardar borrador</button>
-              <button id="adminExportBtn" type="button" class="btn btn-outline-primary w-100">Exportar capítulo</button>
+              <button id="adminExportBtn" type="button" class="btn btn-outline-primary w-100">Descargar cambios</button>
               <button id="adminResetChapterBtn" type="button" class="btn btn-outline-danger w-100">Limpiar borrador</button>
             </div>
           </section>
@@ -133,7 +137,7 @@
             <div class="admin-intro-card">
               <div class="admin-intro-kicker">Área privada</div>
               <h1>Edición de Biblia interlineal</h1>
-              <p>Este espacio trabaja con borradores locales del capítulo seleccionado. El texto original, las glosas y los campos editoriales quedan aislados del lector público.</p>
+              <p>Este espacio trabaja con borradores locales del capítulo seleccionado. Admite Antiguo y Nuevo Testamento, y permite descargar el libro completo con el nombre final del archivo para reemplazarlo directo en la repo.</p>
             </div>
             <div id="adminEditorMount" class="admin-editor-mount">
               <div class="text-muted">Cargando editor…</div>
