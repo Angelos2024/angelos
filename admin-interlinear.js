@@ -432,7 +432,7 @@
           <div class="admin-token-order">${compactSimpleMode ? `#${escapeHtml(token.num || '—')}` : `Token ${escapeHtml(token.num || '—')}`}</div>
           <div class="admin-token-orig${isGreekToken(token.orig) ? ' is-greek' : ''}">${escapeHtml(token.orig || '')}</div>
           ${isSimpleEditableToken(token)
-            ? `<div class="admin-token-helper">${escapeHtml([token.lemma || '', token.translit || ''].filter(Boolean).join(' · ') || 'Edición simple')}</div>`
+            ? ''
             : `<div class="admin-token-strongs">${escapeHtml(token.strongs || 'Sin strongs')}</div>`
           }
         </div>

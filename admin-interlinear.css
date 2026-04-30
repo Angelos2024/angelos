@@ -150,9 +150,9 @@
 }
 
 .admin-token-grid-compact{
-  grid-template-columns:repeat(auto-fit, minmax(170px, 1fr));
-  gap:.45rem;
-  padding:.7rem .85rem .85rem;
+  grid-template-columns:repeat(auto-fit, minmax(145px, 1fr));
+  gap:.35rem;
+  padding:.58rem .72rem .72rem;
 }
 
 .admin-token-row{
@@ -172,9 +172,9 @@
 
 .admin-token-row-compact{
   grid-template-columns:1fr;
-  gap:.38rem;
-  padding:.58rem .62rem;
-  border-radius:12px;
+  gap:.24rem;
+  padding:.42rem .48rem;
+  border-radius:10px;
 }
 
 .admin-token-meta{
@@ -191,7 +191,7 @@
 }
 
 .admin-token-row-compact .admin-token-order{
-  font-size:.68rem;
+  font-size:.62rem;
   letter-spacing:.03em;
 }
 
@@ -208,8 +208,8 @@
 }
 
 .admin-token-row-compact .admin-token-orig.is-greek{
-  font-size:1.05rem;
-  line-height:1.15;
+  font-size:.92rem;
+  line-height:1.05;
 }
 
 .admin-token-strongs{
@@ -241,11 +241,12 @@
 }
 
 .admin-token-row-compact .admin-field{
-  gap:.18rem;
+  gap:.12rem;
 }
 
 .admin-token-row-compact .admin-field label{
-  font-size:.66rem;
+  font-size:.58rem;
+  margin:0;
 }
 
 .admin-field input{
@@ -259,9 +260,10 @@
 }
 
 .admin-token-row-compact .admin-field input{
-  min-height:34px;
-  padding:.42rem .56rem;
-  font-size:.88rem;
+  min-height:28px;
+  padding:.24rem .38rem;
+  font-size:.8rem;
+  border-radius:8px;
 }
 
 .admin-field input:focus{
