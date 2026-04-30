@@ -425,10 +425,11 @@
   function buildVerseCardHtml(verseNumber, spanishText, verseNode, draftVerse){
     const sourceTokens = Array.isArray(verseNode?.tokens) ? verseNode.tokens : [];
     const tokens = applyDraftToTokens(sourceTokens, draftVerse);
+    const compactSimpleMode = tokens.length > 0 && tokens.every((token) => isSimpleEditableToken(token));
     const rows = tokens.map((token) => `
-      <div class="admin-token-row${isSimpleEditableToken(token) ? ' admin-token-row-simple' : ''}" data-num="${escapeHtml(token.num || '')}" data-orig="${escapeHtml(token.orig || '')}" data-strongs="${escapeHtml(token.strongs || '')}">
+      <div class="admin-token-row${isSimpleEditableToken(token) ? ' admin-token-row-simple' : ''}${compactSimpleMode ? ' admin-token-row-compact' : ''}" data-num="${escapeHtml(token.num || '')}" data-orig="${escapeHtml(token.orig || '')}" data-strongs="${escapeHtml(token.strongs || '')}">
         <div class="admin-token-meta">
-          <div class="admin-token-order">Token ${escapeHtml(token.num || '—')}</div>
+          <div class="admin-token-order">${compactSimpleMode ? `#${escapeHtml(token.num || '—')}` : `Token ${escapeHtml(token.num || '—')}`}</div>
           <div class="admin-token-orig${isGreekToken(token.orig) ? ' is-greek' : ''}">${escapeHtml(token.orig || '')}</div>
           ${isSimpleEditableToken(token)
             ? `<div class="admin-token-helper">${escapeHtml([token.lemma || '', token.translit || ''].filter(Boolean).join(' · ') || 'Edición simple')}</div>`
@@ -463,15 +464,15 @@
     `).join('');
 
     return `
-      <article class="admin-verse-card" data-verse="${verseNumber}">
-        <div class="admin-verse-head">
+      <article class="admin-verse-card${compactSimpleMode ? ' admin-verse-card-compact' : ''}" data-verse="${verseNumber}">
+        <div class="admin-verse-head${compactSimpleMode ? ' admin-verse-head-compact' : ''}">
           <div>
             <div class="admin-verse-ref">${escapeHtml(state.label)} ${verseNumber}</div>
             <p class="admin-verse-translation">${escapeHtml(spanishText || 'Sin texto español')}</p>
           </div>
-          <div class="admin-verse-raw">${escapeHtml(verseNode?.raw || 'Sin texto original')}</div>
+          ${compactSimpleMode ? '' : `<div class="admin-verse-raw">${escapeHtml(verseNode?.raw || 'Sin texto original')}</div>`}
         </div>
-        <div class="admin-token-grid">${rows || '<div class="admin-empty-state">No hay tokens en este versículo.</div>'}</div>
+        <div class="admin-token-grid${compactSimpleMode ? ' admin-token-grid-compact' : ''}">${rows || '<div class="admin-empty-state">No hay tokens en este versículo.</div>'}</div>
       </article>
     `;
   }
