@@ -38,9 +38,9 @@
 .book-menu-dropdown{
   position:absolute;
   top:calc(100% + .55rem);
-  left:50%;
-  transform:translateX(-50%);
+  right:0;
   width:min(760px,92vw);
+  max-width:calc(100vw - 1rem);
   background:#fff;
   border:1px solid #d1d5db;
   border-radius:.85rem;

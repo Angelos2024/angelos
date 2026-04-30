@@ -393,36 +393,72 @@
     });
   }
 
+  function isGreekToken(text){
+    return /[\u0370-\u03FF\u1F00-\u1FFF]/.test(String(text || ''));
+  }
+
+  function isSimpleEditableToken(token){
+    return !String(token?.strongs || '').trim() && !String(token?.morphs || '').trim();
+  }
+
+  async function withGreekSuggestions(verseNode){
+    const tokens = Array.isArray(verseNode?.tokens) ? verseNode.tokens.map((token) => ({ ...token })) : [];
+    if(!tokens.length) return tokens;
+    if(!tokens.some((token) => isGreekToken(token.orig))) return tokens;
+    if(!window.InterlinearView?.buildInterlinearRows) return tokens;
+
+    try{
+      const rows = await window.InterlinearView.buildInterlinearRows(verseNode?.raw || '', {
+        isGreek: true,
+        slug: state.slug
+      });
+      const spanishTokens = Array.isArray(rows?.spanishTokens) ? rows.spanishTokens : [];
+      return tokens.map((token, idx) => ({
+        ...token,
+        es: String(token?.es || '').trim() || String(spanishTokens[idx] || '').trim()
+      }));
+    }catch(_error){
+      return tokens;
+    }
+  }
+
   function buildVerseCardHtml(verseNumber, spanishText, verseNode, draftVerse){
     const sourceTokens = Array.isArray(verseNode?.tokens) ? verseNode.tokens : [];
     const tokens = applyDraftToTokens(sourceTokens, draftVerse);
     const rows = tokens.map((token) => `
-      <div class="admin-token-row" data-num="${escapeHtml(token.num || '')}" data-orig="${escapeHtml(token.orig || '')}" data-strongs="${escapeHtml(token.strongs || '')}">
+      <div class="admin-token-row${isSimpleEditableToken(token) ? ' admin-token-row-simple' : ''}" data-num="${escapeHtml(token.num || '')}" data-orig="${escapeHtml(token.orig || '')}" data-strongs="${escapeHtml(token.strongs || '')}">
         <div class="admin-token-meta">
           <div class="admin-token-order">Token ${escapeHtml(token.num || '—')}</div>
-          <div class="admin-token-orig">${escapeHtml(token.orig || '')}</div>
-          <div class="admin-token-strongs">${escapeHtml(token.strongs || 'Sin strongs')}</div>
+          <div class="admin-token-orig${isGreekToken(token.orig) ? ' is-greek' : ''}">${escapeHtml(token.orig || '')}</div>
+          ${isSimpleEditableToken(token)
+            ? `<div class="admin-token-helper">${escapeHtml([token.lemma || '', token.translit || ''].filter(Boolean).join(' · ') || 'Edición simple')}</div>`
+            : `<div class="admin-token-strongs">${escapeHtml(token.strongs || 'Sin strongs')}</div>`
+          }
         </div>
+        ${isSimpleEditableToken(token) ? '' : `
+          <div class="admin-field">
+            <label>Morfo</label>
+            <input data-field="morphs" type="text" value="${escapeHtml(token.morphs || '')}"/>
+          </div>
+        `}
         <div class="admin-field">
-          <label>Morfo</label>
-          <input data-field="morphs" type="text" value="${escapeHtml(token.morphs || '')}"/>
-        </div>
-        <div class="admin-field">
-          <label>Glosa ES</label>
+          <label>${isSimpleEditableToken(token) ? 'Español' : 'Glosa ES'}</label>
           <input data-field="es" type="text" value="${escapeHtml(token.es || '')}"/>
         </div>
-        <div class="admin-field">
-          <label>Añadido</label>
-          <input data-field="added" type="text" value="${escapeHtml(token.added || '')}"/>
-        </div>
-        <div class="admin-field">
-          <label>Sin trad.</label>
-          <input data-field="notrans" type="text" value="${escapeHtml(token.notrans || '')}"/>
-        </div>
-        <div class="admin-field">
-          <label>Original base</label>
-          <input type="text" readonly value="${escapeHtml(token.orig || '')}"/>
-        </div>
+        ${isSimpleEditableToken(token) ? '' : `
+          <div class="admin-field">
+            <label>Añadido</label>
+            <input data-field="added" type="text" value="${escapeHtml(token.added || '')}"/>
+          </div>
+          <div class="admin-field">
+            <label>Sin trad.</label>
+            <input data-field="notrans" type="text" value="${escapeHtml(token.notrans || '')}"/>
+          </div>
+          <div class="admin-field">
+            <label>Original base</label>
+            <input type="text" readonly value="${escapeHtml(token.orig || '')}"/>
+          </div>
+        `}
       </div>
     `).join('');
 
@@ -477,16 +513,22 @@
     }
 
     let tokenCount = 0;
-    els.mount.innerHTML = verseNumbers.map((verseNumber) => {
+    const cards = [];
+    for(const verseNumber of verseNumbers){
       const verseNode = interlinearVerses[verseNumber];
-      tokenCount += Array.isArray(verseNode?.tokens) ? verseNode.tokens.length : 0;
-      return buildVerseCardHtml(
+      const enrichedVerseNode = {
+        ...verseNode,
+        tokens: await withGreekSuggestions(verseNode)
+      };
+      tokenCount += Array.isArray(enrichedVerseNode?.tokens) ? enrichedVerseNode.tokens.length : 0;
+      cards.push(buildVerseCardHtml(
         `${state.chapter}:${verseNumber}`,
         spanishVerses[Number(verseNumber) - 1] || '',
-        verseNode,
+        enrichedVerseNode,
         draftVersesByNumber.get(`${state.chapter}:${verseNumber}`) || draftVersesByNumber.get(String(verseNumber))
-      );
-    }).join('');
+      ));
+    }
+    els.mount.innerHTML = cards.join('');
 
     state.draft = draft;
     els.title.textContent = `Editor interlineal · ${state.label} ${state.chapter}`;

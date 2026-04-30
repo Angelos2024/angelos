@@ -144,6 +144,10 @@
   background:#fffaf6;
 }
 
+.admin-token-row-simple{
+  grid-template-columns:minmax(180px, 1.2fr) minmax(240px, 1.6fr);
+}
+
 .admin-token-meta{
   display:grid;
   gap:.2rem;
@@ -163,9 +167,20 @@
   text-align:right;
 }
 
+.admin-token-orig.is-greek{
+  direction:ltr;
+  text-align:left;
+  font-family:"Times New Roman", Georgia, serif;
+}
+
 .admin-token-strongs{
   font-size:.86rem;
   color:#6d5d52;
+}
+
+.admin-token-helper{
+  font-size:.82rem;
+  color:#7b6a60;
 }
 
 .admin-field{
