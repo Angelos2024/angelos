@@ -1443,7 +1443,14 @@ function renderStructuredHebrewEntry(entry) {
 }
 
 function renderGreekComparisonCell(entry, rawQuery) {
-    const greek = entry?.gr || entry?.equivalencia_griega || entry?.greek || entry?.texto_hebreo || '—';
+    const greek = entry?.gr
+        || entry?.equivalencia_griega
+        || entry?.greek
+        || entry?.gr_nt
+        || entry?.equivalencia_griega_nt
+        || entry?.greek_nt
+        || (/[Ͱ-Ͽἀ-῿]/.test(String(rawQuery || '')) ? rawQuery : '')
+        || '—';
     const blocks = [];
     if (window.AnalisisDiccionarioAGriego?.renderGreekDictionaryCell) {
         blocks.push(window.AnalisisDiccionarioAGriego.renderGreekDictionaryCell(greek, rawQuery));

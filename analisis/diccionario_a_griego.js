@@ -326,13 +326,15 @@
   }
 
   async function renderGreekDictionaryCell(rawGreek, rawQuery) {
-    const result = lookupGreekWord(rawGreek);
+    const primarySource = String(rawGreek || '').trim();
+    const querySource = String(rawQuery || '').trim();
+    const result = lookupGreekWord(primarySource) || lookupGreekWord(querySource);
 
     if (!result) {
       return `<div class="comparison-pre comparison-pre--greek">Sin término griego utilizable para consulta.</div>`;
     }
 
-    const chavezStrong = resolveChavezStrong(rawGreek, result);
+    const chavezStrong = resolveChavezStrong(primarySource || querySource, result);
     const chavezMeta = chavezStrong ? getChavezStrong(chavezStrong) : null;
     let chavezDefinition = '';
     if (chavezMeta?.shard) {
