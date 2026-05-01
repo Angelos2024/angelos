@@ -31,13 +31,6 @@
 <script>
   window.addEventListener('DOMContentLoaded', () => {
     if (window.GreekLexicon?.init) window.GreekLexicon.init();
-    const analysisDictionaryBtn = document.getElementById('btnAnalysisDictionary');
-    if (analysisDictionaryBtn) {
-      const lockedWidth = `${Math.ceil(analysisDictionaryBtn.getBoundingClientRect().width)}px`;
-      analysisDictionaryBtn.style.width = lockedWidth;
-      analysisDictionaryBtn.style.whiteSpace = 'nowrap';
-      analysisDictionaryBtn.textContent = 'Diccionario';
-    }
   });
 </script>
 
@@ -228,7 +221,7 @@
           <section class="panel tools-panel">
             <div class="panel-header">Herramientas</div>
             <div class="panel-body d-grid gap-2">
-              <a id="btnAnalysisDictionary" class="btn btn-outline-primary btn-scripture-link w-100" href="analisis/buscador_comparativo.html">Análisis textual</a>
+              <a class="btn btn-outline-primary w-100" href="analisis/buscador_comparativo.html">Análisis textual</a>
             <button id="btnNotas" type="button" class="btn btn-outline-primary">
     Notas
   </button>
@@ -243,7 +236,7 @@
                <button class="btn btn-primary w-100" type="button" id="btnRKANTEs">
                 Aparato crítico RKANT
 </button>
-              <button id="btnCopyText" class="btn btn-outline-primary w-100" type="button">Diccionario</button>
+              <button id="btnCopyText" class="btn btn-outline-primary btn-scripture-link w-100" type="button">Diccionario Eric de J.</button>
 
             </div>
           </section>
