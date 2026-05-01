@@ -24,6 +24,9 @@
   var greekStrongFallbackAliasIndex = null;
   var greekStrongIndexLoaded = false;
   var greekStrongIndexEntries = null;
+  var greekStrongIndexAliases = null;
+  var greekStrongDetailTemplate = 'strongs-greek-chavez.shards/{shard}.min.json';
+  var greekStrongShardCache = new Map();
   var trilingueNtLoaded = false;
   var trilingueNtEntries = [];
   var lxxCache = new Map(); // Map<lemma_normalizado, samples[]>
@@ -501,11 +504,16 @@ function slugToAbbr(slug) {
       })
       .then(function (payload) {
         greekStrongIndexEntries = payload && payload.e ? payload.e : {};
+        greekStrongIndexAliases = payload && payload.a ? payload.a : {};
+        greekStrongDetailTemplate = payload && payload.m && payload.m.detail_path_template
+          ? String(payload.m.detail_path_template)
+          : greekStrongDetailTemplate;
         return greekStrongIndexEntries;
       })
       .catch(function (e) {
         console.warn('[greek strong index] fallo:', e);
         greekStrongIndexEntries = {};
+        greekStrongIndexAliases = {};
         return greekStrongIndexEntries;
       });
   }
@@ -524,6 +532,77 @@ function slugToAbbr(slug) {
       shortDefinition: row[3] || '',
       shard: row[4] || ''
     };
+  }
+
+  function normalizeLatinLookup(text) {
+    return String(text || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '');
+  }
+
+  function resolveGreekStrongKey(surface, lemma, translit) {
+    var candidates = [
+      String(surface || '').trim().toLowerCase(),
+      normalizeGreekLemmaKey(surface || ''),
+      String(lemma || '').trim().toLowerCase(),
+      normalizeGreekLemmaKey(lemma || ''),
+      normalizeLatinLookup(translit || '')
+    ];
+
+    for (var i = 0; i < candidates.length; i++) {
+      var candidate = candidates[i];
+      if (!candidate || !greekStrongIndexAliases) continue;
+      var strong = greekStrongIndexAliases[candidate];
+      if (strong && /^G\d+$/.test(String(strong).toUpperCase())) {
+        return String(strong).toUpperCase();
+      }
+    }
+    return '';
+  }
+
+  function stripHtmlToText(html) {
+    var text = String(html || '')
+      .replace(/<\s*(?:p|br)\s*\/?>/gi, '\n')
+      .replace(/<[^>]+>/g, ' ');
+    var box = document.createElement('textarea');
+    box.innerHTML = text;
+    return String(box.value || '')
+      .replace(/\r/g, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  }
+
+  function loadGreekStrongShardOnce(shard) {
+    var shardKey = String(shard || '').trim();
+    if (!shardKey) return Promise.resolve({});
+    if (greekStrongShardCache.has(shardKey)) return greekStrongShardCache.get(shardKey);
+
+    var path = DICT_DIR + greekStrongDetailTemplate.replace('{shard}', shardKey);
+    var promise = fetch(path, { cache: 'force-cache' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('No se pudo cargar shard Chávez griego (' + r.status + ')');
+        return r.json();
+      })
+      .then(function (payload) {
+        return payload && payload.e ? payload.e : {};
+      })
+      .catch(function (e) {
+        console.warn('[greek strong shard] fallo:', shardKey, e);
+        return {};
+      });
+
+    greekStrongShardCache.set(shardKey, promise);
+    return promise;
+  }
+
+  function getGreekChavezDefinition(surface, lemma, translit, fallbackEntry) {
+    var strongKey = (fallbackEntry && fallbackEntry.strong) || resolveGreekStrongKey(surface, lemma, translit);
+    if (!strongKey) return Promise.resolve('');
+    var row = getGreekStrongIndexEntry(strongKey);
+    if (!row || !row.shard) return Promise.resolve('');
+    return loadGreekStrongShardOnce(row.shard).then(function (entries) {
+      return stripHtmlToText(entries[strongKey] || '');
+    });
   }
 
   function resolveGreekStrongReferenceLexeme(strongRef) {
@@ -1091,14 +1170,22 @@ box.querySelector('#gk-lex-toggle').addEventListener('click', function () {
       } else {
         var formaLex = ent['Forma lexica'] || ent['forma_lexica'] || ent['formaLexica'] || '—';
         var entrada = ent['entrada_impresa'] || ent['entrada impresa'] || ent['entrada'] || '—';
-        var definicionHtml = buildCombinedDefinitionHtml(
-          getGreekDefinitionText(masterEntry || ent),
-          getGreekDefinitionText(fallbackEntry)
-        );
+        var primaryDefinition = getGreekDefinitionText(masterEntry || ent);
+        var popupDefKey = normalizeGreekLemmaKey(lemma || g || '');
 
         if (formaLexEl) formaLexEl.textContent = !isMissingValue(formaLex) ? formaLex : (tr || '—');
         if (entradaEl) entradaEl.textContent = entrada;
-        if (defEl) defEl.innerHTML = definicionHtml;
+        if (defEl) {
+          defEl.innerHTML = buildCombinedDefinitionHtml(primaryDefinition, '');
+          defEl.setAttribute('data-def-key', popupDefKey);
+        }
+
+        getGreekChavezDefinition(g, lemma, tr, fallbackEntry).then(function (chavezDefinition) {
+          var currentDefEl = document.getElementById('gk-lex-def');
+          if (!currentDefEl) return;
+          if (currentDefEl.getAttribute('data-def-key') !== popupDefKey) return;
+          currentDefEl.innerHTML = buildCombinedDefinitionHtml(primaryDefinition, chavezDefinition);
+        });
       }
     }
 
