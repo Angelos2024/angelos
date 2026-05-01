@@ -9,6 +9,8 @@
 (function () {
   var DICT_DIR = './diccionario/';
   var MASTER_DICT_URL = DICT_DIR + 'masterdiccionario.json';
+  var GREEK_STRONG_FALLBACK_URL = DICT_DIR + 'greek-strongs-nt-fallback.min.json';
+  var GREEK_STRONG_INDEX_URL = DICT_DIR + 'strongs-greek-chavez.index.min.json';
   var TRILINGUE_NT_DIR = './dic/trilingueNT/';
   var LXX_DIR = './LXX/';
   var GREEK_INDEX_PATH = './search/index-gr.json';
@@ -17,6 +19,11 @@
   var masterDictNormIndex = null; // Map<lemma_normalizado, item>
   var masterDictLoaded = false;
   var masterDictItems = [];
+  var greekStrongFallbackLoaded = false;
+  var greekStrongFallbackEntries = null;
+  var greekStrongFallbackAliasIndex = null;
+  var greekStrongIndexLoaded = false;
+  var greekStrongIndexEntries = null;
   var trilingueNtLoaded = false;
   var trilingueNtEntries = [];
   var lxxCache = new Map(); // Map<lemma_normalizado, samples[]>
@@ -482,6 +489,162 @@ function slugToAbbr(slug) {
     if (!norm || !masterDictNormIndex) return null;
     return masterDictNormIndex.get(norm) || null;
   }
+
+  function loadGreekStrongIndexOnce() {
+    if (greekStrongIndexLoaded) return Promise.resolve(greekStrongIndexEntries);
+    greekStrongIndexLoaded = true;
+
+    return fetch(GREEK_STRONG_INDEX_URL, { cache: 'force-cache' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('No se pudo cargar strongs-greek-chavez.index.min.json (' + r.status + ')');
+        return r.json();
+      })
+      .then(function (payload) {
+        greekStrongIndexEntries = payload && payload.e ? payload.e : {};
+        return greekStrongIndexEntries;
+      })
+      .catch(function (e) {
+        console.warn('[greek strong index] fallo:', e);
+        greekStrongIndexEntries = {};
+        return greekStrongIndexEntries;
+      });
+  }
+
+  function getGreekStrongIndexEntry(strongRef) {
+    var strongKey = String(strongRef || '').trim().toUpperCase();
+    if (!/^G\d+$/.test(strongKey)) return null;
+    if (!greekStrongIndexEntries) return null;
+    var row = greekStrongIndexEntries[strongKey];
+    if (!row || !Array.isArray(row)) return null;
+    return {
+      strong: strongKey,
+      lemma: row[0] || '',
+      formaLexica: row[1] || '',
+      pronunciation: row[2] || '',
+      shortDefinition: row[3] || '',
+      shard: row[4] || ''
+    };
+  }
+
+  function resolveGreekStrongReferenceLexeme(strongRef) {
+    var fromIndex = getGreekStrongIndexEntry(strongRef);
+    if (fromIndex && fromIndex.lemma) return fromIndex.lemma;
+
+    var fromFallback = greekStrongFallbackEntries && greekStrongFallbackEntries[String(strongRef || '').trim().toUpperCase()];
+    if (fromFallback && fromFallback.lemma) return fromFallback.lemma;
+
+    return '';
+  }
+
+  function replaceGreekStrongReferencesWithLexemes(text) {
+    return String(text || '')
+      .replace(/(^|[^A-Za-z0-9])((?:G\d{1,4}))(?=$|[^A-Za-z0-9])/gi, function (match, prefix, strongRef) {
+        var lexeme = resolveGreekStrongReferenceLexeme(strongRef);
+        return String(prefix || '') + String(lexeme || '');
+      })
+      .replace(/\s{2,}/g, ' ')
+      .replace(/\s+([;:,.])/g, '$1')
+      .trim();
+  }
+
+  function extractGreekStrongReference(text) {
+    var match = String(text || '').match(/\b(G\d{1,4})\b/i);
+    return match ? String(match[1] || '').toUpperCase() : '';
+  }
+
+  function loadGreekStrongFallbackOnce() {
+    if (greekStrongFallbackLoaded) return Promise.resolve(greekStrongFallbackEntries);
+    greekStrongFallbackLoaded = true;
+
+    return fetch(GREEK_STRONG_FALLBACK_URL, { cache: 'force-cache' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('No se pudo cargar greek-strongs-nt-fallback.min.json (' + r.status + ')');
+        return r.json();
+      })
+      .then(function (payload) {
+        greekStrongFallbackEntries = payload && payload.entries ? payload.entries : {};
+        greekStrongFallbackAliasIndex = new Map();
+        var aliases = payload && payload.aliases ? payload.aliases : {};
+        Object.keys(aliases).forEach(function (alias) {
+          if (!alias) return;
+          greekStrongFallbackAliasIndex.set(String(alias), String(aliases[alias] || ''));
+        });
+        return greekStrongFallbackEntries;
+      })
+      .catch(function (e) {
+        console.warn('[greek strong fallback] fallo:', e);
+        greekStrongFallbackEntries = {};
+        greekStrongFallbackAliasIndex = new Map();
+        return greekStrongFallbackEntries;
+      });
+  }
+
+  function getGreekStrongFallbackEntry(surface, lemma, translit) {
+    if (!greekStrongFallbackEntries || !greekStrongFallbackAliasIndex) return null;
+
+    var candidates = [
+      String(surface || '').trim().toLowerCase(),
+      normalizeGreekLemmaKey(surface || ''),
+      String(lemma || '').trim().toLowerCase(),
+      normalizeGreekLemmaKey(lemma || ''),
+      String(translit || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '')
+    ];
+
+    for (var i = 0; i < candidates.length; i++) {
+      var candidate = candidates[i];
+      if (!candidate) continue;
+      var strong = greekStrongFallbackAliasIndex.get(candidate);
+      if (!strong) continue;
+      var entry = greekStrongFallbackEntries[strong];
+      if (entry) return entry;
+    }
+    return null;
+  }
+
+  function getGreekDefinitionText(entry) {
+    if (!entry) return '';
+    return String(entry['definicion'] || entry['definici?n'] || entry['def'] || entry.definition || '').trim();
+  }
+
+  function buildCombinedDefinitionHtml(primaryDefinition, secondaryDefinition) {
+    var parts = [];
+    var seen = new Set();
+
+    [primaryDefinition, secondaryDefinition].forEach(function (value) {
+      var text = String(value || '').trim();
+      if (!text || text === '—') return;
+      var normalized = text.replace(/\s+/g, ' ').trim();
+      if (!normalized || seen.has(normalized)) return;
+      seen.add(normalized);
+      parts.push('<p>' + escHtml(text) + '</p>');
+    });
+
+    if (!parts.length) return '—';
+    return parts.join('');
+  }
+
+  function getFallbackRootInfo(entry) {
+    if (!entry) return null;
+    var rootHint = String(entry.root_lemma || '').trim();
+    if (!rootHint) return null;
+
+    var rootEntry = getMasterEntryByLemma(rootHint) || getGreekStrongFallbackEntry(rootHint, rootHint, '');
+    var rootLemma = (rootEntry && rootEntry.lemma) || rootHint || '—';
+    var rootDefinition = (rootEntry && (rootEntry.definicion || rootEntry.definition || rootEntry.root_definition))
+      || entry.root_definition
+      || entry.definicion
+      || '—';
+
+    return {
+      lemma: rootLemma,
+      definition: replaceGreekStrongReferencesWithLexemes(rootDefinition) || rootDefinition
+    };
+  }
+
+  function getGreekPopupEntry(surface, lemma, translit) {
+    return getMasterEntryByLemma(lemma) || getMasterEntryByLemma(surface) || getGreekStrongFallbackEntry(surface, lemma, translit);
+  }
+
   function parseJsonArrayChunks(raw) {
     var text = String(raw || '').trim();
     if (!text) return [];
@@ -624,19 +787,39 @@ function slugToAbbr(slug) {
   function resolveGreekRootInfo(entry, lemma) {
     var targetLemma = String((entry && entry.lemma) || lemma || '').trim();
     var targetNorm = normalizeGreekLemmaKey(targetLemma);
+    var currentStrongEntry = getGreekStrongIndexEntry(entry && entry.strong);
+    var sourceDefinition = String(
+      (currentStrongEntry && currentStrongEntry.shortDefinition)
+      || (entry && entry.definicion)
+      || ''
+    ).trim();
+    var directRootStrong = extractGreekStrongReference(sourceDefinition);
+    var directRootStrongEntry = getGreekStrongIndexEntry(directRootStrong);
+    if (directRootStrongEntry) {
+      return {
+        lemma: directRootStrongEntry.lemma || targetLemma || '—',
+        definition: replaceGreekStrongReferencesWithLexemes(directRootStrongEntry.shortDefinition || sourceDefinition || '—') || '—'
+      };
+    }
+
+    var fallbackRootInfo = getFallbackRootInfo(entry);
+    if (fallbackRootInfo) {
+      return fallbackRootInfo;
+    }
+
     var directRootLemma = extractGreekLemmaFromDefinition(entry && entry.definicion);
     var directRootEntry = directRootLemma ? getMasterEntryByLemma(directRootLemma) : null;
     if (directRootEntry) {
       return {
         lemma: directRootEntry.lemma || directRootLemma,
-        definition: directRootEntry.definicion || (entry && entry.definicion) || '—'
+        definition: replaceGreekStrongReferencesWithLexemes(directRootEntry.definicion || (entry && entry.definicion) || '—') || '—'
       };
     }
 
     if (targetNorm && (targetNorm.endsWith('ω') || targetNorm.endsWith('ομαι'))) {
       return {
         lemma: targetLemma || '—',
-        definition: (entry && entry.definicion) || '—'
+        definition: replaceGreekStrongReferencesWithLexemes((entry && entry.definicion) || '—') || '—'
       };
     }
 
@@ -665,7 +848,7 @@ function slugToAbbr(slug) {
     var rootEntry = candidates[0] || entry || null;
     return {
       lemma: (rootEntry && rootEntry.lemma) || targetLemma || '—',
-      definition: (rootEntry && rootEntry.definicion) || (entry && entry.definicion) || '—'
+      definition: replaceGreekStrongReferencesWithLexemes((rootEntry && rootEntry.definicion) || (entry && entry.definicion) || '—') || '—'
     };
   }
 
@@ -887,8 +1070,8 @@ box.querySelector('#gk-lex-toggle').addEventListener('click', function () {
     if (rootDefEl) rootDefEl.textContent = '—';
     if (hebrewEl) hebrewEl.innerHTML = '<div class="lxx-row muted">Buscando correspondencia hebrea…</div>';
 
-    if (!masterDictIndex) {
-      loadMasterDictionaryOnce().then(function () {
+    if (!masterDictIndex || !greekStrongFallbackEntries || !greekStrongIndexEntries) {
+      Promise.all([loadMasterDictionaryOnce(), loadGreekStrongFallbackOnce(), loadGreekStrongIndexOnce()]).then(function () {
         var p = document.getElementById('gk-lex-popup');
         if (p && p.style.display === 'block') showPopupNear(anchorEl, g, lemma, tr);
       });
@@ -897,20 +1080,25 @@ box.querySelector('#gk-lex-toggle').addEventListener('click', function () {
       if (entradaEl) entradaEl.textContent = '—';
       if (defEl) defEl.textContent = 'Cargando diccionario…';
     } else {
-      ent = getMasterEntryByLemma(lemma);
+      var masterEntry = getMasterEntryByLemma(lemma) || getMasterEntryByLemma(g);
+      var fallbackEntry = getGreekStrongFallbackEntry(g, lemma, tr);
+      ent = masterEntry || fallbackEntry;
 
       if (!ent) {
         if (formaLexEl) formaLexEl.textContent = tr || '—';
         if (entradaEl) entradaEl.textContent = '—';
-        if (defEl) defEl.textContent = 'No hay entrada para este lemma en masterdiccionario.';
+        if (defEl) defEl.textContent = 'No hay entrada disponible para esta palabra.';
       } else {
         var formaLex = ent['Forma lexica'] || ent['forma_lexica'] || ent['formaLexica'] || '—';
         var entrada = ent['entrada_impresa'] || ent['entrada impresa'] || ent['entrada'] || '—';
-        var definicion = ent['definicion'] || ent['definici?n'] || ent['def'] || '—';
+        var definicionHtml = buildCombinedDefinitionHtml(
+          getGreekDefinitionText(masterEntry || ent),
+          getGreekDefinitionText(fallbackEntry)
+        );
 
         if (formaLexEl) formaLexEl.textContent = !isMissingValue(formaLex) ? formaLex : (tr || '—');
         if (entradaEl) entradaEl.textContent = entrada;
-        if (defEl) defEl.textContent = definicion;
+        if (defEl) defEl.innerHTML = definicionHtml;
       }
     }
 
@@ -1309,6 +1497,8 @@ function resolveLemmaFromMorph(ch, v, surface) {
   function init() {
     // Carga masterdiccionario 1 vez
     loadMasterDictionaryOnce();
+    loadGreekStrongFallbackOnce();
+    loadGreekStrongIndexOnce();
     observeOrigPanel();
   }
 
