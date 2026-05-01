@@ -819,7 +819,7 @@ font-size:.96rem;
               class="btn btn-soft btn-sm"
               id="openContextDictionaryBtn"
               href="../buscadordic.html?from=.%2Fanalisis%2Fbuscador_comparativo.html"
-            >Diccionarios</a>
+            >Diccionario Eric de J.</a>
           </div>
                     <div class="panel-body">
   
@@ -888,8 +888,11 @@ font-size:.96rem;
           window.location.href = buildReaderReturnUrl();
         });
       }
-       const dictionaryBtn = document.getElementById('openContextDictionaryBtn');
+      const dictionaryBtn = document.getElementById('openContextDictionaryBtn');
       if (dictionaryBtn) {
+        const lockedWidth = `${Math.ceil(dictionaryBtn.getBoundingClientRect().width)}px`;
+        dictionaryBtn.style.width = lockedWidth;
+        dictionaryBtn.style.whiteSpace = 'nowrap';
         dictionaryBtn.addEventListener('click', (event) => {
           event.preventDefault();
           const from = encodeURIComponent('./analisis/buscador_comparativo.html');

@@ -196,6 +196,39 @@ function searchGreek(query) {
     const normQ = normalizeFuzzy(query);
     if (!normQ) return { ok: false, matches: [] };
 
+    function buildGreekSearchVariants(word) {
+        const variants = new Set([word]);
+        const add = value => {
+            if (!value) return;
+            if (Array.isArray(value)) {
+                value.forEach(add);
+                return;
+            }
+            variants.add(String(value));
+        };
+        const replaceEnding = (ending, replacements) => {
+            if (!word.endsWith(ending) || word.length <= ending.length) return;
+            const stem = word.slice(0, -ending.length);
+            add([].concat(replacements || []).map(item => stem + item));
+        };
+
+        replaceEnding('ουν', ['ους', 'ου', 'οι']);
+        replaceEnding('ους', ['ουν', 'ου', 'οι']);
+        replaceEnding('ου', ['ους', 'ουν', 'οι']);
+        replaceEnding('ον', ['ος', 'ου']);
+        replaceEnding('ος', ['ον', 'ου', 'οι']);
+        replaceEnding('οι', ['ος', 'ου', 'ον']);
+        replaceEnding('ει', ['ω', 'εις']);
+        replaceEnding('εις', ['ει', 'ω']);
+        replaceEnding('ην', ['η', 'α']);
+        replaceEnding('ης', ['η', 'α']);
+        replaceEnding('ας', ['α', 'η']);
+
+        if (word.endsWith('ν') && word.length > 2) add(word.slice(0, -1));
+
+        return Array.from(variants).filter(Boolean);
+    }
+
     function getMainGreekTexts(entry) {
         return [entry.gr, entry.equivalencia_griega, entry.greek]
             .filter(Boolean)
@@ -317,7 +350,9 @@ function searchGreek(query) {
     }
 
     const pluralVariants = getGreekPluralVariants(normQ);
-    const candidatePool = getIndexedComparativeCandidates('gr', [normQ, ...pluralVariants]) || entries;
+    const morphologyVariants = buildGreekSearchVariants(normQ);
+    const allVariants = Array.from(new Set([normQ, ...pluralVariants, ...morphologyVariants]));
+    const candidatePool = getIndexedComparativeCandidates('gr', allVariants) || entries;
 
     const exactMainFieldMatches = [];
     const exactCandidateFieldMatches = [];
@@ -333,22 +368,22 @@ function searchGreek(query) {
         const candidateTexts = getCandidateGreekTexts(e);
         if (!mainTexts.length && !candidateTexts.length) return;
 
-        if (hasExactGreekField(mainTexts, normQ)) {
+        if (allVariants.some(v => hasExactGreekField(mainTexts, v))) {
             exactMainFieldMatches.push(e);
             return;
         }
 
-        if (hasExactGreekField(candidateTexts, normQ)) {
+        if (allVariants.some(v => hasExactGreekField(candidateTexts, v))) {
             exactCandidateFieldMatches.push(e);
             return;
         }
 
-        if (hasExactGreekToken(mainTexts, normQ)) {
+        if (allVariants.some(v => hasExactGreekToken(mainTexts, v))) {
             exactMainTokenMatches.push(e);
             return;
         }
 
-        if (hasExactGreekToken(candidateTexts, normQ)) {
+        if (allVariants.some(v => hasExactGreekToken(candidateTexts, v))) {
             exactCandidateTokenMatches.push(e);
             return;
         }
@@ -399,11 +434,11 @@ function searchGreek(query) {
         matches: finalMatches,
         trace: [
             `Búsqueda exacta griega para: ${query}`,
-            `Variantes plurales aceptadas: ${Array.from(pluralVariants).join(', ') || 'ninguna'}`,
+            `Variantes griegas aceptadas: ${allVariants.join(', ') || 'ninguna'}`,
             candidatePool === entries ? 'Prefiltro indexado: no disponible; se escaneó la base cargada.' : `Prefiltro indexado: ${candidatePool.length} candidato(s).`,
-            'Orden: exacto visible completo > exacto en listas léxicas (coma/punto y coma) > exacto como palabra completa en frase > plurales exactos.'
+            'Orden: exacto visible completo > exacto en listas léxicas (coma/punto y coma) > exacto como palabra completa en frase > variantes gramaticales/plurales.'
         ],
-        diag: 'Se priorizan primero las coincidencias exactas de campo completo; después las coincidencias exactas como palabra completa; al final, plurales griegos relacionados.'
+        diag: 'Se priorizan primero las coincidencias exactas de campo completo; después las coincidencias exactas como palabra completa; al final, variantes gramaticales griegas relacionadas.'
     };
 }
 
@@ -1420,7 +1455,7 @@ if (window.AnalisisDiccionarioBEric?.renderEricDictionaryCell) {
         blocks.push(window.AnalisisDiccionarioBEric.renderEricDictionaryCell(rawQuery, entry, { lang: 'gr', tableValue: greek }));
     }
 
-    return blocks.join('');
+    return Promise.all(blocks).then(items => items.join(''));
 }
 
  
@@ -1449,7 +1484,7 @@ const fallbackEricOnly = async (message, fallbackEntry = null, fallbackTableValu
               ? window.AnalisisDiccionarioBEric.renderEricDictionaryCell(rawQuery, fallbackEntry, { lang: 'he', tableValue: ericLookupValue })
             : '<div class="comparison-pre comparison-pre--hebrew">Sin datos en el diccionario Eric.</div>';
 
-        tbody.innerHTML = `
+            tbody.innerHTML = `
           <tr>
             <td><div class="comparison-pre comparison-pre--greek">${escapeHtml(message)}</div></td>
             <td>${ericBlock}</td>
@@ -1500,9 +1535,10 @@ if (window.AnalisisDiccionarioBEric?.renderEricDictionaryCell) {
     const hebrewHtml = hebrewBlocks.length
         ? hebrewBlocks.join('')
         : '<div class="comparison-pre comparison-pre--hebrew">Sin datos en el diccionario.</div>';
+    const greekHtml = await renderGreekComparisonCell(primary, rawQuery);
             tbody.innerHTML = `
       <tr>
-        <td>${renderGreekComparisonCell(primary, rawQuery)}</td>
+        <td>${greekHtml}</td>
         <td>${hebrewHtml}</td>
       </tr>
     `;
