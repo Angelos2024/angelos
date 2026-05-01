@@ -31,6 +31,13 @@
 <script>
   window.addEventListener('DOMContentLoaded', () => {
     if (window.GreekLexicon?.init) window.GreekLexicon.init();
+    const analysisDictionaryBtn = document.getElementById('btnAnalysisDictionary');
+    if (analysisDictionaryBtn) {
+      const lockedWidth = `${Math.ceil(analysisDictionaryBtn.getBoundingClientRect().width)}px`;
+      analysisDictionaryBtn.style.width = lockedWidth;
+      analysisDictionaryBtn.style.whiteSpace = 'nowrap';
+      analysisDictionaryBtn.textContent = 'Diccionario';
+    }
   });
 </script>
 
@@ -91,6 +98,32 @@
     border:1px solid #d5c1b1;
     background:#ffffff;
     color:#2c1d1f;
+  }
+  .btn-scripture-link{
+    position:relative;
+    border-color:#b08968 !important;
+    background:
+      linear-gradient(180deg, #fffaf0 0%, #f5e8cf 100%);
+    color:#5a3e1b !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.85),
+      0 4px 10px rgba(90,62,27,.08);
+    font-weight:600;
+    letter-spacing:.01em;
+  }
+  .btn-scripture-link:hover,
+  .btn-scripture-link:focus-visible{
+    border-color:#9a6b3f !important;
+    background:linear-gradient(180deg, #fff6e7 0%, #ecd9b4 100%);
+    color:#4a3115 !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.85),
+      0 6px 14px rgba(90,62,27,.14);
+  }
+  .btn-scripture-link::before{
+    content:"\03DC";
+    margin-right:.35rem;
+    font-weight:700;
   }
 </style>
 
@@ -195,7 +228,7 @@
           <section class="panel tools-panel">
             <div class="panel-header">Herramientas</div>
             <div class="panel-body d-grid gap-2">
-              <a class="btn btn-outline-primary w-100" href="analisis/buscador_comparativo.html">Análisis textual</a>
+              <a id="btnAnalysisDictionary" class="btn btn-outline-primary btn-scripture-link w-100" href="analisis/buscador_comparativo.html">Análisis textual</a>
             <button id="btnNotas" type="button" class="btn btn-outline-primary">
     Notas
   </button>
