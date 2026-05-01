@@ -360,11 +360,20 @@ function resolveBySeparatedParts(parts, rawSpan, label, options = {}) {
   if (parts.length > 1 && partsFound.length === parts.length) {
       const combinedHe = parts.join(' ־ '); // Mostramos con Maqaf visual
       const combinedEs = topTranslations.join(' + ');
+      const topGreekTranslations = [];
+      for (const part of (parts || [])) {
+        const partMatch = allMatches.find(m => (m?._queryPart || '') === part && (m.gr || m.equivalencia_griega || m.greek));
+        if (!partMatch) continue;
+        topGreekTranslations.push(partMatch.gr || partMatch.equivalencia_griega || partMatch.greek);
+      }
+      const combinedGr = topGreekTranslations.join(' + ');
       const syntheticEntry = {
           he: combinedHe,
+          gr: combinedGr,
           es: combinedEs,
           source: "Traducción combinada automática",
-          _queryPart: rawSpan
+          _queryPart: rawSpan,
+          _isSynthetic: true
       };
       // Colocar la entrada sintética al inicio de los resultados
       merged = [syntheticEntry, ...merged];
@@ -393,7 +402,8 @@ function dedupeResultEntries(list) {
   const out = [];
   for (const e of (list || [])) {
     if (!e) continue;
-    const k = `${e.he || ''}\u0000${e.es || ''}`;
+    const greekKey = e.gr || e.equivalencia_griega || e.greek || '';
+    const k = `${e.he || ''}\u0000${e.es || ''}\u0000${greekKey}`;
     if (seen.has(k)) continue;
     seen.add(k);
     out.push(e);

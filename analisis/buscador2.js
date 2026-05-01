@@ -293,7 +293,8 @@ function buildDisplayResults(items, rawQuery) {
     const qPart = e._queryPart || rawQuery || '';
     const esDisplay = composeSpanishGlossForDisplay(e, qPart);
     const row = { ...e, es: esDisplay };
-    const k = `${row.he || ''}\u0000${row.es || ''}`;
+    const greekKey = row.gr || row.equivalencia_griega || row.greek || '';
+    const k = `${row.he || ''}\u0000${row.es || ''}\u0000${greekKey}`;
     if (seen.has(k)) continue;
     seen.add(k);
     out.push(row);

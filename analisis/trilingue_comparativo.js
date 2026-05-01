@@ -736,7 +736,21 @@ function renderResults(items, rawQuery = '') {
         return;
     }
 
-const limitedItems = displayItems.slice(0, 4).map(item => {
+    const prioritizedItems = displayItems
+        .map((item, index) => ({
+            item,
+            index,
+            hasLxxGreek: !!(item?.gr || item?.equivalencia_griega || item?.greek),
+            isSynthetic: !!item?._isSynthetic
+        }))
+        .sort((a, b) => {
+            if (a.hasLxxGreek !== b.hasLxxGreek) return a.hasLxxGreek ? -1 : 1;
+            if (a.isSynthetic !== b.isSynthetic) return a.isSynthetic ? 1 : -1;
+            return a.index - b.index;
+        })
+        .map(entry => entry.item);
+
+const limitedItems = prioritizedItems.slice(0, 4).map(item => {
         const rkantMatches = getRkantMatchesForEntry(item);
         const ntGreekVariants = uniqueByKey(rkantMatches.map(m => m.gr).filter(Boolean), x => normalizeGreekComparable(x));
         const ntSpanishVariants = uniqueByKey(rkantMatches.map(m => m.es).filter(Boolean), x => normalizeSpanishComparable(x));
