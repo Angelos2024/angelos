@@ -328,6 +328,28 @@ function slugToAbbr(slug) {
     }).join('');
   }
 
+  function findLxxGlossFallback(greekValues, max) {
+    return findHebrewCorrespondences(greekValues, max).map(function (item) {
+      return {
+        hebrew: String(item.hebrew || '').trim(),
+        greek: String(item.greek || '').trim(),
+        gloss: String(item.gloss || '').trim()
+      };
+    });
+  }
+
+  function renderLxxFallbackItems(items) {
+    if (!items || !items.length) {
+      return '<div class="lxx-row muted">Sin resultados en la LXX.</div>';
+    }
+    return items.map(function (item) {
+      var hebrew = item.hebrew ? '<b dir="rtl">' + escHtml(item.hebrew) + '</b>' : '—';
+      var greek = item.greek ? ' <span class="muted">|</span> ' + escHtml(item.greek) : '';
+      var gloss = item.gloss ? ' <span class="muted">|</span> ' + escHtml(item.gloss) : '';
+      return '<div class="lxx-row">• ' + hebrew + greek + gloss + '</div>';
+    }).join('');
+  }
+
   function loadNtGreekIndexOnce() {
     if (ntGreekIndexPromise) return ntGreekIndexPromise;
     ntGreekIndexPromise = fetch(GREEK_INDEX_PATH, { cache: 'force-cache' })
@@ -1230,13 +1252,21 @@ box.querySelector('#gk-lex-toggle').addEventListener('click', function () {
     var lxxKey = normalizeGreekLemmaKey(lemma || g);
     box.setAttribute('data-lxx-key', lxxKey);
 
-    findLxxSamples(lemma || g, 4).then(function (samples) {
+    Promise.all([
+      findLxxSamples(lemma || g, 4),
+      loadTrilingueNtOnce()
+    ]).then(function (payload) {
+      var samples = payload && payload[0] ? payload[0] : [];
       var p = document.getElementById('gk-lex-popup');
       if (!p || p.style.display !== 'block') return;
       if (p.getAttribute('data-lxx-key') !== lxxKey) return;
       var lxxTarget = document.getElementById('gk-lex-lxx');
       if (!lxxTarget) return;
-      lxxTarget.innerHTML = renderLxxItems(samples);
+      if (samples.length) {
+        lxxTarget.innerHTML = renderLxxItems(samples);
+        return;
+      }
+      lxxTarget.innerHTML = renderLxxFallbackItems(findLxxGlossFallback([lemma, g], 4));
     });
 
     Promise.all([

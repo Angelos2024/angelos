@@ -380,9 +380,9 @@ function ensureNotesUI() {
       }
       .note-mark:hover .note-icon{display:flex}
       .highlight-legend-dock{
-        position:fixed;
-        top:92px;
-        right:108px;
+        position:absolute;
+        top:-42px;
+        right:12px;
         z-index:9992;
         display:flex;
         align-items:flex-start;
@@ -418,6 +418,9 @@ function ensureNotesUI() {
         display:flex;
         align-items:center;
         gap:.5rem;
+      }
+      .highlight-legend-host{
+        position:relative;
       }
       .highlight-legend-toggle{
         pointer-events:auto;
@@ -463,13 +466,14 @@ function ensureNotesUI() {
       }
       @media (max-width: 900px){
         .highlight-legend-dock{
-          top:112px;
-          right:16px;
-          left:16px;
+          top:-34px;
+          right:10px;
+          left:auto;
           justify-content:flex-end;
         }
         .highlight-legend-panel{
           min-width:0;
+          max-width:min(88vw, 520px);
         }
         .highlight-legend-row{
           flex-wrap:wrap;
@@ -914,6 +918,11 @@ document.addEventListener('click', async (ev) => {
 
     function ensureHighlightLegendDock() {
       let dock = document.getElementById('highlightLegendDock');
+      const host =
+        document.getElementById('panelHeaderTitle')?.closest('.panel') ||
+        document.querySelector('.main-column .panel') ||
+        document.body;
+      if (host && host !== document.body) host.classList.add('highlight-legend-host');
       if (!dock) {
         dock = document.createElement('div');
         dock.id = 'highlightLegendDock';
@@ -921,7 +930,9 @@ document.addEventListener('click', async (ev) => {
         dock.innerHTML =
           '<div class="highlight-legend-panel" id="highlightLegendPanel"></div>' +
           '<button type="button" class="highlight-legend-toggle" id="highlightLegendToggle" aria-expanded="false">Etiquetas</button>';
-        document.body.appendChild(dock);
+        host.appendChild(dock);
+      } else if (dock.parentElement !== host) {
+        host.appendChild(dock);
       }
       return dock;
     }
