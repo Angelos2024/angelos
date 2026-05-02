@@ -380,17 +380,19 @@ function ensureNotesUI() {
       }
       .note-mark:hover .note-icon{display:flex}
       .highlight-legend-dock{
-        position:absolute;
-        top:-42px;
-        right:12px;
-        z-index:9992;
+        position:relative;
+        z-index:8;
         display:flex;
-        align-items:flex-start;
+        align-items:center;
         gap:.5rem;
-        pointer-events:none;
+        pointer-events:auto;
+        flex:0 0 auto;
       }
       .highlight-legend-panel{
         pointer-events:auto;
+        position:absolute;
+        top:calc(100% + 8px);
+        right:0;
         display:flex;
         flex-direction:column;
         align-items:stretch;
@@ -421,6 +423,9 @@ function ensureNotesUI() {
       }
       .highlight-legend-host{
         position:relative;
+        display:flex;
+        align-items:center;
+        gap:.5rem;
       }
       .highlight-legend-toggle{
         pointer-events:auto;
@@ -466,9 +471,6 @@ function ensureNotesUI() {
       }
       @media (max-width: 900px){
         .highlight-legend-dock{
-          top:-34px;
-          right:10px;
-          left:auto;
           justify-content:flex-end;
         }
         .highlight-legend-panel{
@@ -919,6 +921,8 @@ document.addEventListener('click', async (ev) => {
     function ensureHighlightLegendDock() {
       let dock = document.getElementById('highlightLegendDock');
       const host =
+        document.getElementById('panelHeaderTitle')?.closest('.panel-header')?.querySelector('.d-flex.align-items-center.gap-2') ||
+        document.getElementById('panelHeaderTitle')?.closest('.panel-header') ||
         document.getElementById('panelHeaderTitle')?.closest('.panel') ||
         document.querySelector('.main-column .panel') ||
         document.body;
