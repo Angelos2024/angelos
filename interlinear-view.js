@@ -1646,11 +1646,11 @@
   }
 
   async function getHebrewMaps(slug) {
-    const primary = await getHebrewInterlinearMaps(slug);
-    // El fallback es útil para cobertura extra, pero no debe bloquear
-    // el primer render del interlineal hebreo.
-    void getHebrewFallbackMaps();
-    return primary;
+    const [primary, fallback] = await Promise.all([
+      getHebrewInterlinearMaps(slug),
+      getHebrewFallbackMaps().catch(() => ({ pointedMap: new Map(), unpointedMap: new Map() }))
+    ]);
+    return mergeHebrewMaps(primary, fallback);
   }
 
   async function preload(options = {}) {
