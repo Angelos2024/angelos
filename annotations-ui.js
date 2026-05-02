@@ -380,8 +380,10 @@ function ensureNotesUI() {
       }
       .note-mark:hover .note-icon{display:flex}
       .highlight-legend-dock{
-        position:relative;
-        z-index:8;
+        position:absolute;
+        top:-48px;
+        right:12px;
+        z-index:20;
         display:flex;
         align-items:center;
         gap:.5rem;
@@ -391,8 +393,8 @@ function ensureNotesUI() {
       .highlight-legend-panel{
         pointer-events:auto;
         position:absolute;
-        top:calc(100% + 8px);
-        right:0;
+        top:0;
+        right:calc(100% + 8px);
         display:flex;
         flex-direction:column;
         align-items:stretch;
@@ -403,8 +405,8 @@ function ensureNotesUI() {
         background:rgba(255,250,245,.97);
         box-shadow:0 14px 34px rgba(15,23,42,.12);
         backdrop-filter:blur(8px);
-        min-width:min(560px, calc(100vw - 420px));
-        max-width:min(620px, calc(100vw - 320px));
+        min-width:min(470px, calc(100vw - 520px));
+        max-width:min(510px, calc(100vw - 420px));
       }
       .highlight-legend-dock.is-collapsed .highlight-legend-panel{
         display:none;
@@ -422,12 +424,10 @@ function ensureNotesUI() {
         display:flex;
         align-items:center;
         gap:.38rem;
+        justify-content:flex-end;
       }
       .highlight-legend-host{
         position:relative;
-        display:flex;
-        align-items:center;
-        gap:.5rem;
       }
       .highlight-legend-toggle{
         pointer-events:auto;
@@ -473,10 +473,14 @@ function ensureNotesUI() {
       }
       @media (max-width: 900px){
         .highlight-legend-dock{
+          top:-42px;
+          right:10px;
           justify-content:flex-end;
         }
         .highlight-legend-panel{
           min-width:0;
+          top:calc(100% + 8px);
+          right:0;
           max-width:min(88vw, 420px);
         }
         .highlight-legend-row{
@@ -923,8 +927,6 @@ document.addEventListener('click', async (ev) => {
     function ensureHighlightLegendDock() {
       let dock = document.getElementById('highlightLegendDock');
       const host =
-        document.getElementById('panelHeaderTitle')?.closest('.panel-header')?.querySelector('.d-flex.align-items-center.gap-2') ||
-        document.getElementById('panelHeaderTitle')?.closest('.panel-header') ||
         document.getElementById('panelHeaderTitle')?.closest('.panel') ||
         document.querySelector('.main-column .panel') ||
         document.body;
