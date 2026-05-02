@@ -396,30 +396,32 @@ function ensureNotesUI() {
         display:flex;
         flex-direction:column;
         align-items:stretch;
-        gap:.5rem;
-        padding:.45rem .55rem;
+        gap:.34rem;
+        padding:.38rem .45rem;
         border:1px solid rgba(75,39,67,.16);
-        border-radius:16px;
+        border-radius:14px;
         background:rgba(255,250,245,.97);
         box-shadow:0 14px 34px rgba(15,23,42,.12);
         backdrop-filter:blur(8px);
-        min-width:min(720px, calc(100vw - 360px));
+        min-width:min(560px, calc(100vw - 420px));
+        max-width:min(620px, calc(100vw - 320px));
       }
       .highlight-legend-dock.is-collapsed .highlight-legend-panel{
         display:none;
       }
       .highlight-legend-title{
         margin:0;
-        font-size:.78rem;
+        font-size:.72rem;
         font-weight:700;
         color:#4b2743;
         text-transform:uppercase;
         letter-spacing:.03em;
+        line-height:1.1;
       }
       .highlight-legend-row{
         display:flex;
         align-items:center;
-        gap:.5rem;
+        gap:.38rem;
       }
       .highlight-legend-host{
         position:relative;
@@ -433,7 +435,7 @@ function ensureNotesUI() {
         background:#fffaf5;
         color:#4b2743;
         border-radius:999px;
-        padding:.38rem .7rem;
+        padding:.36rem .78rem;
         font-size:.78rem;
         font-weight:700;
         line-height:1;
@@ -443,25 +445,25 @@ function ensureNotesUI() {
       .highlight-legend-item{
         display:flex;
         align-items:center;
-        gap:.38rem;
+        gap:.28rem;
         min-width:0;
       }
       .highlight-legend-swatch{
-        width:.92rem;
-        height:.92rem;
+        width:.8rem;
+        height:.8rem;
         border-radius:4px;
         border:1px solid rgba(15,23,42,.18);
         flex:0 0 auto;
       }
       .highlight-legend-input{
-        width:7.25rem;
+        width:6.4rem;
         min-width:0;
         border:1px solid #d8c5b6;
         border-radius:10px;
         background:#ffffff;
         color:#2c1d1f;
-        padding:.24rem .5rem;
-        font-size:.76rem;
+        padding:.18rem .42rem;
+        font-size:.74rem;
         line-height:1.2;
       }
       .highlight-legend-input:focus{
@@ -475,14 +477,14 @@ function ensureNotesUI() {
         }
         .highlight-legend-panel{
           min-width:0;
-          max-width:min(88vw, 520px);
+          max-width:min(88vw, 420px);
         }
         .highlight-legend-row{
           flex-wrap:wrap;
           justify-content:flex-end;
         }
         .highlight-legend-input{
-          width:6.2rem;
+          width:5.5rem;
         }
       }
     `;
