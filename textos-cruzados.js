@@ -57,6 +57,7 @@
       .xrefs-panel{ margin:.3rem 0 0 1.55rem; padding:.45rem .65rem; border-radius:10px; border:1px solid rgba(0,0,0,.11); background:#eef6ff; }
       .xrefs-panel ul{ margin:0; padding-left:1rem; }
       .xrefs-panel li{ margin:.2rem 0; }
+      .xrefs-panel-actions{ display:flex; justify-content:flex-end; margin-top:.45rem; }
       .xrefs-ref{ color:#0b57d0; cursor:pointer; text-decoration:underline; }
       .xrefs-remove{ margin-left:.35rem; border:0; background:#ffe4e6; border-radius:8px; font-size:.72rem; padding:.06rem .35rem; }
       .xrefs-tip{ position:fixed; z-index:99999; max-width:380px; background:#111827; color:#fff; border-radius:10px; padding:.5rem .65rem; font-size:.82rem; line-height:1.35; box-shadow:0 8px 24px rgba(0,0,0,.25); pointer-events:none; }
@@ -227,8 +228,30 @@ function snippetText(text, maxLength = 180){
       ul.appendChild(li);
     });
 
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(ul);
+
+    if (refs.length < MAX_LINKS_PER_VERSE) {
+      const actions = document.createElement('div');
+      actions.className = 'xrefs-panel-actions';
+
+      const addBtn = document.createElement('button');
+      addBtn.type = 'button';
+      addBtn.className = 'xrefs-add-inline';
+      addBtn.textContent = 'Agregar';
+      addBtn.addEventListener('click', () => {
+        createModalForVerse(line, async () => {
+          panel.style.display = 'block';
+          await renderPanel(line, panel);
+        });
+      });
+
+      actions.appendChild(addBtn);
+      fragment.appendChild(actions);
+    }
+
     panel.innerHTML = '';
-    panel.appendChild(ul);
+    panel.appendChild(fragment);
   }
 
   function createModalForVerse(line, onSaved){
