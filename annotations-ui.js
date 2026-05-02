@@ -38,7 +38,12 @@
     let highlightLegendLabels = null;
 
     function getDefaultHighlightLabels() {
-      return { yellow: 'Amarillo', red: 'Rojo', blue: 'Azul', green: 'Verde' };
+      return {
+        yellow: 'Énfasis',
+        red: 'Añadidos',
+        blue: 'Referencia',
+        green: 'Importante'
+      };
     }
 
     function loadHighlightLegendLabels() {
@@ -377,7 +382,7 @@ function ensureNotesUI() {
       .highlight-legend-dock{
         position:fixed;
         top:92px;
-        right:72px;
+        right:108px;
         z-index:9992;
         display:flex;
         align-items:flex-start;
@@ -387,7 +392,8 @@ function ensureNotesUI() {
       .highlight-legend-panel{
         pointer-events:auto;
         display:flex;
-        align-items:center;
+        flex-direction:column;
+        align-items:stretch;
         gap:.5rem;
         padding:.45rem .55rem;
         border:1px solid rgba(75,39,67,.16);
@@ -395,9 +401,23 @@ function ensureNotesUI() {
         background:rgba(255,250,245,.97);
         box-shadow:0 14px 34px rgba(15,23,42,.12);
         backdrop-filter:blur(8px);
+        min-width:min(720px, calc(100vw - 360px));
       }
       .highlight-legend-dock.is-collapsed .highlight-legend-panel{
         display:none;
+      }
+      .highlight-legend-title{
+        margin:0;
+        font-size:.78rem;
+        font-weight:700;
+        color:#4b2743;
+        text-transform:uppercase;
+        letter-spacing:.03em;
+      }
+      .highlight-legend-row{
+        display:flex;
+        align-items:center;
+        gap:.5rem;
       }
       .highlight-legend-toggle{
         pointer-events:auto;
@@ -443,12 +463,15 @@ function ensureNotesUI() {
       }
       @media (max-width: 900px){
         .highlight-legend-dock{
-          top:84px;
+          top:112px;
           right:16px;
           left:16px;
           justify-content:flex-end;
         }
         .highlight-legend-panel{
+          min-width:0;
+        }
+        .highlight-legend-row{
           flex-wrap:wrap;
           justify-content:flex-end;
         }
@@ -911,6 +934,13 @@ document.addEventListener('click', async (ev) => {
 
       panel.innerHTML = '';
       const labels = loadHighlightLegendLabels();
+      const title = document.createElement('div');
+      title.className = 'highlight-legend-title';
+      title.textContent = 'Asignación de etiquetas';
+      const row = document.createElement('div');
+      row.className = 'highlight-legend-row';
+      panel.appendChild(title);
+      panel.appendChild(row);
 
       COLORS.filter((item) => item.key !== 'clear').forEach((color) => {
         const item = document.createElement('label');
@@ -941,7 +971,7 @@ document.addEventListener('click', async (ev) => {
 
         item.appendChild(swatch);
         item.appendChild(input);
-        panel.appendChild(item);
+        row.appendChild(item);
       });
 
       toggle.onclick = () => {
