@@ -16,17 +16,55 @@
     // ==============================
     // Config
     // ==============================
+    const HIGHLIGHT_LABELS_STORAGE_KEY = 'highlight_color_labels_v1';
     const COLORS = [
-      { key: 'clear',  css: 'transparent', label: '✕', title: 'Quitar subrayado' },
-      { key: 'yellow', css: '#fbbf24' },
-      { key: 'pink',   css: '#fb7185' },
-      { key: 'blue',   css: '#60a5fa' },
-      { key: 'green',  css: '#4ade80' },
+      { key: 'clear',  css: 'transparent', label: '???', title: 'Quitar subrayado' },
+      { key: 'yellow', css: '#fbbf24', defaultLabel: 'Amarillo' },
+      { key: 'red',    css: '#fb7185', defaultLabel: 'Rojo' },
+      { key: 'blue',   css: '#60a5fa', defaultLabel: 'Azul' },
+      { key: 'green',  css: '#4ade80', defaultLabel: 'Verde' },
     ];
+    const HIGHLIGHT_COLORS = {
+      yellow: '#fbbf24',
+      red: '#fb7185',
+      pink: '#fb7185',
+      blue: '#60a5fa',
+      green: '#4ade80',
+    };
 
     let lastTarget = null;     // .verse-line
     let lastSelection = '';
     let lastRange = null;      // Range clonado
+    let highlightLegendLabels = null;
+
+    function getDefaultHighlightLabels() {
+      return { yellow: 'Amarillo', red: 'Rojo', blue: 'Azul', green: 'Verde' };
+    }
+
+    function loadHighlightLegendLabels() {
+      if (highlightLegendLabels) return highlightLegendLabels;
+      const defaults = getDefaultHighlightLabels();
+      try {
+        const raw = localStorage.getItem(HIGHLIGHT_LABELS_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        highlightLegendLabels = { ...defaults, ...(parsed && typeof parsed === 'object' ? parsed : {}) };
+      } catch (_error) {
+        highlightLegendLabels = defaults;
+      }
+      return highlightLegendLabels;
+    }
+
+    function saveHighlightLegendLabels() {
+      try {
+        localStorage.setItem(HIGHLIGHT_LABELS_STORAGE_KEY, JSON.stringify(loadHighlightLegendLabels()));
+      } catch (_error) {}
+    }
+
+    function getHighlightColorLabel(colorKey) {
+      const labels = loadHighlightLegendLabels();
+      if (colorKey === 'pink') return labels.red || 'Rojo';
+      return labels[colorKey] || colorKey;
+    }
 
     // ==============================
     // Helpers DOM
@@ -130,7 +168,7 @@
 
       const span = document.createElement('span');
       span.className = 'hl';
-      span.style.backgroundColor = colors[colorKey] || colors.yellow;
+      span.style.backgroundColor = HIGHLIGHT_COLORS[colorKey] || HIGHLIGHT_COLORS.yellow;
       span.style.padding = '0 2px';
       span.style.borderRadius = '4px';
       span.dataset.hlColor = colorKey;
@@ -336,6 +374,88 @@ function ensureNotesUI() {
         color:#f8fafc;
       }
       .note-mark:hover .note-icon{display:flex}
+      .highlight-legend-dock{
+        position:fixed;
+        top:92px;
+        right:72px;
+        z-index:9992;
+        display:flex;
+        align-items:flex-start;
+        gap:.5rem;
+        pointer-events:none;
+      }
+      .highlight-legend-panel{
+        pointer-events:auto;
+        display:flex;
+        align-items:center;
+        gap:.5rem;
+        padding:.45rem .55rem;
+        border:1px solid rgba(75,39,67,.16);
+        border-radius:16px;
+        background:rgba(255,250,245,.97);
+        box-shadow:0 14px 34px rgba(15,23,42,.12);
+        backdrop-filter:blur(8px);
+      }
+      .highlight-legend-dock.is-collapsed .highlight-legend-panel{
+        display:none;
+      }
+      .highlight-legend-toggle{
+        pointer-events:auto;
+        border:1px solid rgba(75,39,67,.18);
+        background:#fffaf5;
+        color:#4b2743;
+        border-radius:999px;
+        padding:.38rem .7rem;
+        font-size:.78rem;
+        font-weight:700;
+        line-height:1;
+        box-shadow:0 8px 22px rgba(15,23,42,.10);
+      }
+      .highlight-legend-toggle:hover{background:#ffffff}
+      .highlight-legend-item{
+        display:flex;
+        align-items:center;
+        gap:.38rem;
+        min-width:0;
+      }
+      .highlight-legend-swatch{
+        width:.92rem;
+        height:.92rem;
+        border-radius:4px;
+        border:1px solid rgba(15,23,42,.18);
+        flex:0 0 auto;
+      }
+      .highlight-legend-input{
+        width:7.25rem;
+        min-width:0;
+        border:1px solid #d8c5b6;
+        border-radius:10px;
+        background:#ffffff;
+        color:#2c1d1f;
+        padding:.24rem .5rem;
+        font-size:.76rem;
+        line-height:1.2;
+      }
+      .highlight-legend-input:focus{
+        outline:none;
+        border-color:#8f3d0f;
+        box-shadow:0 0 0 3px rgba(201,106,29,.15);
+      }
+      @media (max-width: 900px){
+        .highlight-legend-dock{
+          top:84px;
+          right:16px;
+          left:16px;
+          justify-content:flex-end;
+        }
+        .highlight-legend-panel{
+          flex-wrap:wrap;
+          justify-content:flex-end;
+        }
+        .highlight-legend-input{
+          width:6.2rem;
+        }
+      }
     `;
     document.head.appendChild(st);
   }
@@ -721,7 +841,7 @@ document.addEventListener('click', async (ev) => {
           dot.style.lineHeight = '1';
         } else {
           dot.style.background = c.css;
-          dot.title = `Subrayar (${c.key})`;
+          dot.title = `Subrayar (${getHighlightColorLabel(c.key)})`;
         }
 
         dot.addEventListener('mousedown', (ev) => ev.preventDefault());
@@ -767,6 +887,68 @@ document.addEventListener('click', async (ev) => {
       });
 
       menu.appendChild(noteBtn);
+    }
+
+    function ensureHighlightLegendDock() {
+      let dock = document.getElementById('highlightLegendDock');
+      if (!dock) {
+        dock = document.createElement('div');
+        dock.id = 'highlightLegendDock';
+        dock.className = 'highlight-legend-dock is-collapsed';
+        dock.innerHTML =
+          '<div class="highlight-legend-panel" id="highlightLegendPanel"></div>' +
+          '<button type="button" class="highlight-legend-toggle" id="highlightLegendToggle" aria-expanded="false">Etiquetas</button>';
+        document.body.appendChild(dock);
+      }
+      return dock;
+    }
+
+    function buildHighlightLegendDock() {
+      const dock = ensureHighlightLegendDock();
+      const panel = dock.querySelector('#highlightLegendPanel');
+      const toggle = dock.querySelector('#highlightLegendToggle');
+      if (!panel || !toggle) return;
+
+      panel.innerHTML = '';
+      const labels = loadHighlightLegendLabels();
+
+      COLORS.filter((item) => item.key !== 'clear').forEach((color) => {
+        const item = document.createElement('label');
+        item.className = 'highlight-legend-item';
+
+        const swatch = document.createElement('span');
+        swatch.className = 'highlight-legend-swatch';
+        swatch.style.background = color.css;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'highlight-legend-input';
+        input.value = labels[color.key] || color.defaultLabel || color.key;
+        input.setAttribute('aria-label', 'Etiqueta para ' + color.key);
+        input.addEventListener('input', () => {
+          const nextValue = String(input.value || '').trim();
+          loadHighlightLegendLabels()[color.key] = nextValue || color.defaultLabel || color.key;
+          saveHighlightLegendLabels();
+          buildMenuUI();
+        });
+        input.addEventListener('blur', () => {
+          const normalized = String(input.value || '').trim() || color.defaultLabel || color.key;
+          input.value = normalized;
+          loadHighlightLegendLabels()[color.key] = normalized;
+          saveHighlightLegendLabels();
+          buildMenuUI();
+        });
+
+        item.appendChild(swatch);
+        item.appendChild(input);
+        panel.appendChild(item);
+      });
+
+      toggle.onclick = () => {
+        const collapsed = dock.classList.toggle('is-collapsed');
+        toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        toggle.textContent = collapsed ? 'Etiquetas' : 'Ocultar';
+      };
     }
 
     async function highlightSelection(ref, colorKey) {
@@ -851,6 +1033,7 @@ document.addEventListener('click', async (ev) => {
     // Init
     // ==============================
     buildMenuUI();
+    buildHighlightLegendDock();
 
     document.addEventListener('selectionchange', () => {
       const sel = window.getSelection();
