@@ -410,7 +410,8 @@
     try{
       const rows = await window.InterlinearView.buildInterlinearRows(verseNode?.raw || '', {
         isGreek: true,
-        slug: state.slug
+        slug: state.slug,
+        sourceTokens: tokens
       });
       const spanishTokens = Array.isArray(rows?.spanishTokens) ? rows.spanishTokens : [];
       return tokens.map((token, idx) => ({

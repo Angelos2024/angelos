@@ -158,6 +158,18 @@
     }
     return '-';
   }
+  function lookupGreekGlossWithLemma(targetMap, token, sourceToken = null) {
+    const direct = lookupGreekGloss(targetMap, token);
+    if (direct && direct !== '-') return direct;
+
+    const lemma = String(sourceToken?.lemma || '').trim();
+    if (lemma) {
+      const lemmaGloss = lookupGreekGloss(targetMap, lemma);
+      if (lemmaGloss && lemmaGloss !== '-') return lemmaGloss;
+    }
+
+    return direct;
+  }
 
   // Limpia solo bordes (puntuacion/corchetes) sin alterar letras hebreas internas.
   function sanitizeTokenForAnalysis(token) {
@@ -1704,7 +1716,7 @@
    * }
    */
   async function buildInterlinearRows(originalText, options = {}) {
-    const { isGreek = false, withAnalysis = false, slug = '' } = options;
+    const { isGreek = false, withAnalysis = false, slug = '', sourceTokens = [] } = options;
     const greekMap = isGreek ? await getGreekMap() : null;
     const hebrewMaps = isGreek ? null : await getHebrewMaps(slug);
     const targetMap = isGreek ? greekMap : hebrewMaps;
@@ -1716,8 +1728,8 @@
     let spanishTokens;
 
     if (isGreek) {
-      spanishTokens = tokens.map((token) => {
-        return lookupGreekGloss(targetMap, token);
+      spanishTokens = tokens.map((token, idx) => {
+        return lookupGreekGlossWithLemma(targetMap, token, sourceTokens[idx] || null);
       });
     } else {
       spanishTokens = [];

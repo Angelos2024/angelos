@@ -42,6 +42,14 @@
     return String(slug || '').replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   }
   function makeKey(book, ch, v){ return `${book}|${ch}|${v}`; }
+  function escapeHtml(value){
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
   function ensureStyles(){
     if (document.getElementById('xrefs-style')) return;
@@ -63,6 +71,10 @@
       .xrefs-tip{ position:fixed; z-index:99999; max-width:380px; background:#111827; color:#fff; border-radius:10px; padding:.5rem .65rem; font-size:.82rem; line-height:1.35; box-shadow:0 8px 24px rgba(0,0,0,.25); pointer-events:none; }
       .xrefs-modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:99998; display:flex; align-items:center; justify-content:center; padding:1rem; }
       .xrefs-modal-card{ width:min(520px,95vw); background:white; border-radius:12px; border:1px solid #d1d5db; padding:1rem; }
+      .xrefs-modal-freeform{ margin:.5rem 0 .75rem; }
+      .xrefs-modal-freeform textarea{ min-height:4.75rem; resize:vertical; }
+      .xrefs-modal-help{ margin:.35rem 0 0; font-size:.76rem; color:#64748b; }
+      .xrefs-modal-preview{ margin:.45rem 0 0; font-size:.78rem; color:#374151; }
       .xrefs-modal-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:.5rem; margin:.75rem 0; }
       .xrefs-modal-actions{ display:flex; justify-content:flex-end; gap:.5rem; }
       .xrefs-msg{ font-size:.84rem; margin:.25rem 0 .6rem; color:#374151; }
@@ -125,6 +137,68 @@
     const verses = Array.isArray(chapters[ch - 1]) ? chapters[ch - 1] : [];
     if (!Number.isInteger(v) || v < 1 || v > verses.length) return null;
     return { slug, chapter: ch, verse: v, text: String(verses[v - 1] || '') };
+  }
+  function parseManualReferenceInput(input, defaultBook = ''){
+    const raw = String(input || '').trim();
+    if (!raw) return [];
+
+    const chunks = raw.split(/[\n;]+/g).map((part) => part.trim()).filter(Boolean);
+    const refs = [];
+
+    for (const chunk of chunks) {
+      const normalized = chunk.replace(/\s+/g, ' ').trim();
+      let match = normalized.match(/^(.+?)\s+(\d+)(?::(\d+)(?:\s*[-–]\s*(\d+))?)?$/);
+      let bookRaw = '';
+      let chapterRaw = '';
+      let verseStartRaw = '';
+      let verseEndRaw = '';
+
+      if (match) {
+        [, bookRaw, chapterRaw, verseStartRaw = '', verseEndRaw = ''] = match;
+      } else {
+        match = normalized.match(/^(\d+)(?::(\d+)(?:\s*[-–]\s*(\d+))?)?$/);
+        if (!match || !defaultBook) return null;
+        bookRaw = defaultBook;
+        [, chapterRaw, verseStartRaw = '', verseEndRaw = ''] = match;
+      }
+
+      const bookKey = normalizeKey(bookRaw);
+      const slug = BOOK_ALIASES[bookKey] || BOOK_ALIASES[bookKey.replace(/[^a-z0-9]/g, '')] || '';
+      const chapter = Number(chapterRaw);
+      const verseStart = verseStartRaw ? Number(verseStartRaw) : 1;
+      const verseEnd = verseEndRaw ? Number(verseEndRaw) : verseStart;
+
+      if (!slug || !Number.isInteger(chapter) || chapter < 1) return null;
+      if (!Number.isInteger(verseStart) || verseStart < 1) return null;
+      if (!Number.isInteger(verseEnd) || verseEnd < verseStart) return null;
+
+      refs.push({ slug, chapter, verseStart, verseEnd });
+    }
+
+    return refs;
+  }
+  async function expandManualReferenceInput(input, defaultBook = ''){
+    const ranges = parseManualReferenceInput(input, defaultBook);
+    if (!ranges || !ranges.length) return null;
+
+    const out = [];
+    for (const range of ranges) {
+      const chapters = await loadBook(range.slug);
+      if (!Array.isArray(chapters) || range.chapter < 1 || range.chapter > chapters.length) return null;
+      const verses = Array.isArray(chapters[range.chapter - 1]) ? chapters[range.chapter - 1] : [];
+      if (!verses.length || range.verseEnd > verses.length) return null;
+
+      for (let verse = range.verseStart; verse <= range.verseEnd; verse++) {
+        out.push({
+          slug: range.slug,
+          chapter: range.chapter,
+          verse,
+          text: String(verses[verse - 1] || '')
+        });
+      }
+    }
+
+    return out;
   }
 
   function parseSource(line){
@@ -262,6 +336,12 @@ function snippetText(text, maxLength = 180){
       <div class="xrefs-modal-card">
         <h6 class="mb-2">Relacionar texto para ${prettyBookName(source.book)} ${source.chapter}:${source.verse}</h6>
         <p class="xrefs-msg">Puedes agregar hasta ${MAX_LINKS_PER_VERSE} conexiones válidas.</p>
+        <div class="xrefs-modal-freeform">
+          <label for="xManualRef" class="form-label form-label-sm mb-1">Pegar o escribir referencia</label>
+          <textarea id="xManualRef" class="form-control form-control-sm" placeholder="Ej.: Lucas 3:2-6&#10;Juan 1:1"></textarea>
+          <div class="xrefs-modal-help">Acepta referencias normalizadas y rangos por capítulo. Si escribes aquí, esto tiene prioridad sobre los selectores.</div>
+          <div id="xManualPreview" class="xrefs-modal-preview"></div>
+        </div>
         <div class="xrefs-modal-grid">
           <select id="xBook" class="form-select form-select-sm"></select>
           <select id="xChapter" class="form-select form-select-sm"></select>
@@ -277,6 +357,8 @@ function snippetText(text, maxLength = 180){
     const bookSel = host.querySelector('#xBook');
     const chSel = host.querySelector('#xChapter');
     const vSel = host.querySelector('#xVerse');
+    const manualInput = host.querySelector('#xManualRef');
+    const manualPreview = host.querySelector('#xManualPreview');
 
     BOOK_OPTIONS.forEach((slug) => {
       const op = document.createElement('option');
@@ -315,6 +397,23 @@ function snippetText(text, maxLength = 180){
 
     bookSel.addEventListener('change', () => fillChapters().catch(console.error));
     chSel.addEventListener('change', () => fillVerses().catch(console.error));
+    manualInput?.addEventListener('input', () => {
+      const raw = String(manualInput.value || '').trim();
+      if (!raw) {
+        manualPreview.textContent = '';
+        return;
+      }
+      const parsed = parseManualReferenceInput(raw, source.book);
+      if (!parsed) {
+        manualPreview.textContent = 'Formato no reconocido.';
+        return;
+      }
+      const labels = parsed.map((item) => {
+        const end = item.verseEnd > item.verseStart ? `-${item.verseEnd}` : '';
+        return `${prettyBookName(item.slug)} ${item.chapter}:${item.verseStart}${end}`;
+      });
+      manualPreview.innerHTML = `Se anexará: ${escapeHtml(labels.join(' · '))}`;
+    });
 
     host.addEventListener('click', async (ev) => {
       const action = ev.target?.getAttribute?.('data-act');
@@ -330,22 +429,39 @@ function snippetText(text, maxLength = 180){
           return;
         }
 
-        const valid = await validateRef({
-          book: bookSel.value,
-          chapter: chSel.value,
-          verse: vSel.value
-        });
+        let refsToAdd = null;
+        const manualValue = String(manualInput?.value || '').trim();
+        if (manualValue) {
+          refsToAdd = await expandManualReferenceInput(manualValue, source.book);
+          if (!refsToAdd?.length) {
+            alert('La referencia escrita no es válida o contiene versos inexistentes.');
+            return;
+          }
+        } else {
+          const valid = await validateRef({
+            book: bookSel.value,
+            chapter: chSel.value,
+            verse: vSel.value
+          });
 
-        if (!valid) {
-          alert('Solo se permiten referencias que existan.');
+          if (!valid) {
+            alert('Solo se permiten referencias que existan.');
+            return;
+          }
+          refsToAdd = [valid];
+        }
+
+        const nextMap = new Map(current.map((ref) => [`${ref.slug}|${ref.chapter}|${ref.verse}`, ref]));
+        refsToAdd.forEach((ref) => {
+          nextMap.set(`${ref.slug}|${ref.chapter}|${ref.verse}`, ref);
+        });
+        const next = [...nextMap.values()];
+        if (next.length > MAX_LINKS_PER_VERSE) {
+          alert(`La selección supera el límite de ${MAX_LINKS_PER_VERSE} conexiones.`);
           return;
         }
 
-        const exists = current.some((x) => x.slug === valid.slug && x.chapter === valid.chapter && x.verse === valid.verse);
-        if (!exists) {
-          current.push(valid);
-          await saveLinks(sourceKey, current);
-        }
+        await saveLinks(sourceKey, next);
 
         host.remove();
         await onSaved();
