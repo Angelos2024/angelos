@@ -1573,6 +1573,21 @@ function buildChaptersFromVersesForBook(allVerses, bookName){
   return chapters;
 }
 
+function normalizeHebrewBookToDisplayVersification(slug, chapters){
+  const list = Array.isArray(chapters)
+    ? chapters.map((ch) => Array.isArray(ch) ? ch.map((v) => (v ?? '')) : [])
+    : [];
+
+  if(slug !== 'joel') return list;
+  if(list.length !== 4) return list;
+
+  return [
+    list[0] || [],
+    (list[1] || []).concat(list[2] || []),
+    list[3] || []
+  ];
+}
+
 /***********************
  * Cargar libro: Español + (opcional) Original
  ***********************/
@@ -1648,8 +1663,11 @@ async function ensureBookLoaded(slug, displayName){
            throw new Error(`Estructura hebrea inválida en ${loadedPath}: falta "text" como array (chapters[][]).`);
         }
 
-        // Normaliza a strings (por si hay nulls)
-        heBookCache[slug] = heBook.text.map(ch => Array.isArray(ch) ? ch.map(v => (v ?? '')) : []);
+        // Normaliza a strings (por si hay nulls) y ajusta versificación visible cuando aplica.
+        heBookCache[slug] = normalizeHebrewBookToDisplayVersification(
+          slug,
+          heBook.text.map(ch => Array.isArray(ch) ? ch.map(v => (v ?? '')) : [])
+        );
       }
 
       bookDataOrig = heBookCache[slug] || null;

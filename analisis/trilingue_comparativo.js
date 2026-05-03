@@ -871,6 +871,119 @@ function normalizeGreekComparable(text) {
     return normalizeFuzzy(String(text || '')).replace(/ς/g, 'σ').replace(/[^a-zͰ-Ͽἀ-῿0-9]+/g, '');
 }
 
+const LXX_TEXT_FALLBACK_FILES = [
+    'lxx_rahlfs_1935_1Chr.json','lxx_rahlfs_1935_1Esdr.json','lxx_rahlfs_1935_1Kgs.json','lxx_rahlfs_1935_1Macc.json',
+    'lxx_rahlfs_1935_1Sam.json','lxx_rahlfs_1935_2Chr.json','lxx_rahlfs_1935_2Esdr.json','lxx_rahlfs_1935_2Kgs.json',
+    'lxx_rahlfs_1935_2Macc.json','lxx_rahlfs_1935_2Sam.json','lxx_rahlfs_1935_3Macc.json','lxx_rahlfs_1935_4Macc.json',
+    'lxx_rahlfs_1935_Amos.json','lxx_rahlfs_1935_Bar.json','lxx_rahlfs_1935_BelOG.json','lxx_rahlfs_1935_BelTh.json',
+    'lxx_rahlfs_1935_DanOG.json','lxx_rahlfs_1935_DanTh.json','lxx_rahlfs_1935_Deut.json','lxx_rahlfs_1935_Eccl.json',
+    'lxx_rahlfs_1935_EpJer.json','lxx_rahlfs_1935_Esth.json','lxx_rahlfs_1935_Exod.json','lxx_rahlfs_1935_Ezek.json',
+    'lxx_rahlfs_1935_Gen.json','lxx_rahlfs_1935_Hab.json','lxx_rahlfs_1935_Hag.json','lxx_rahlfs_1935_Hos.json',
+    'lxx_rahlfs_1935_Isa.json','lxx_rahlfs_1935_Jdt.json','lxx_rahlfs_1935_Jer.json','lxx_rahlfs_1935_Job.json',
+    'lxx_rahlfs_1935_Joel.json','lxx_rahlfs_1935_Jonah.json','lxx_rahlfs_1935_JoshA.json','lxx_rahlfs_1935_JoshB.json',
+    'lxx_rahlfs_1935_JudgA.json','lxx_rahlfs_1935_JudgB.json','lxx_rahlfs_1935_Lam.json','lxx_rahlfs_1935_Lev.json',
+    'lxx_rahlfs_1935_Mal.json','lxx_rahlfs_1935_Mic.json','lxx_rahlfs_1935_Nah.json','lxx_rahlfs_1935_Num.json',
+    'lxx_rahlfs_1935_Obad.json','lxx_rahlfs_1935_Odes.json','lxx_rahlfs_1935_Prov.json','lxx_rahlfs_1935_Ps.json',
+    'lxx_rahlfs_1935_PsSol.json','lxx_rahlfs_1935_Ruth.json','lxx_rahlfs_1935_Sir.json','lxx_rahlfs_1935_Song.json',
+    'lxx_rahlfs_1935_SusOG.json','lxx_rahlfs_1935_SusTh.json','lxx_rahlfs_1935_TobBA.json','lxx_rahlfs_1935_TobS.json',
+    'lxx_rahlfs_1935_Wis.json','lxx_rahlfs_1935_Zech.json','lxx_rahlfs_1935_Zeph.json'
+];
+
+const LXX_TEXT_FALLBACK_CACHE = new Map();
+const LXX_TEXT_SEARCH_CACHE = new Map();
+
+function buildGreekComparableVariants(word) {
+    const value = normalizeGreekComparable(word);
+    const variants = new Set(value ? [value] : []);
+    const add = next => { if (next) variants.add(String(next)); };
+    const replaceEnding = (ending, replacements) => {
+        if (!value.endsWith(ending) || value.length <= ending.length) return;
+        const stem = value.slice(0, -ending.length);
+        [].concat(replacements || []).forEach(item => add(stem + item));
+    };
+
+    replaceEnding('ουν', ['ους', 'ου', 'οι']);
+    replaceEnding('ους', ['ουν', 'ου', 'οι']);
+    replaceEnding('ου', ['ους', 'ουν', 'οι']);
+    replaceEnding('ον', ['ος', 'ου', 'α']);
+    replaceEnding('ος', ['ον', 'ου', 'οι']);
+    replaceEnding('οι', ['ος', 'ου', 'ον']);
+    replaceEnding('ει', ['ω', 'εις']);
+    replaceEnding('εις', ['ει', 'ω']);
+    replaceEnding('ην', ['η', 'α']);
+    replaceEnding('ης', ['η', 'α']);
+    replaceEnding('ας', ['α', 'η']);
+    if (value.endsWith('ν') && value.length > 2) add(value.slice(0, -1));
+
+    return Array.from(variants).filter(Boolean);
+}
+
+async function loadLxxFallbackFile(file) {
+    if (LXX_TEXT_FALLBACK_CACHE.has(file)) return LXX_TEXT_FALLBACK_CACHE.get(file);
+    const promise = fetch(`../LXX/${file}`, { cache: 'force-cache' })
+        .then(res => {
+            if (!res.ok) throw new Error(`No se pudo cargar ${file}`);
+            return res.json();
+        });
+    LXX_TEXT_FALLBACK_CACHE.set(file, promise);
+    try {
+        return await promise;
+    } catch (error) {
+        LXX_TEXT_FALLBACK_CACHE.delete(file);
+        throw error;
+    }
+}
+
+function formatLxxFallbackRef(book, chapter, verse) {
+    return `${String(book || '').replace(/_/g, ' ')} ${chapter}:${verse}`;
+}
+
+async function searchLxxGreekFallback(rawQuery, maxResults = 4) {
+    const variants = buildGreekComparableVariants(rawQuery);
+    const cacheKey = variants.join('|');
+    if (!variants.length) return [];
+    if (LXX_TEXT_SEARCH_CACHE.has(cacheKey)) return LXX_TEXT_SEARCH_CACHE.get(cacheKey);
+
+    const variantSet = new Set(variants);
+    const matches = [];
+    outer:
+    for (const file of LXX_TEXT_FALLBACK_FILES) {
+        try {
+            const data = await loadLxxFallbackFile(file);
+            const text = data?.text || {};
+            for (const [book, chapters] of Object.entries(text)) {
+                for (const [chapter, verses] of Object.entries(chapters || {})) {
+                    for (const [verse, tokens] of Object.entries(verses || {})) {
+                        const tokenList = Array.isArray(tokens) ? tokens : [];
+                        const hit = tokenList.some(token => {
+                            const lemmaKey = normalizeGreekComparable(token?.lemma || '');
+                            const wordKey = normalizeGreekComparable(token?.w || '');
+                            return variantSet.has(lemmaKey) || variantSet.has(wordKey);
+                        });
+                        if (!hit) continue;
+                        const verseText = tokenList.map(token => token?.w || '').filter(Boolean).join(' ').trim();
+                        matches.push({
+                            he: '',
+                            gr: verseText || rawQuery,
+                            gr_nt: '',
+                            es: `LXX ${formatLxxFallbackRef(book, chapter, verse)}`,
+                            candidatos: [],
+                            _lxxOnly: true,
+                            _lxxRef: formatLxxFallbackRef(book, chapter, verse)
+                        });
+                        if (matches.length >= maxResults) break outer;
+                    }
+                }
+            }
+        } catch (_) {
+            continue;
+        }
+    }
+
+    LXX_TEXT_SEARCH_CACHE.set(cacheKey, matches);
+    return matches;
+}
+
 function normalizeHebrewComparable(text) {
     return normalizeHebrewComparableKey(text || '');
 }
@@ -1618,6 +1731,25 @@ if (diagEl) diagEl.textContent = 'Por favor, cargue los archivos JSON de los lib
         // Motor español limitado a una palabra
         res = searchSpanish(rawQuery);
     }
+
+// Fallback LXX textual: si el corpus comparativo no devolvió resultados griegos,
+// buscar directamente en los textos LXX antes de caer al NT.
+        if (isGreek && !res.matches.length) {
+            const lxxTextMatches = await searchLxxGreekFallback(rawQuery, 4);
+            if (lxxTextMatches.length) {
+                res = {
+                    ...res,
+                    ok: true,
+                    tier: `${res.tier} + LXX`,
+                    matches: lxxTextMatches,
+                    trace: [
+                        ...(res.trace || []),
+                        `Fallback LXX textual: ${lxxTextMatches.length} coincidencia(s) directa(s) en archivos LXX.`
+                    ],
+                    diag: 'Sin fila directa en el corpus trilingüe; se muestran coincidencias textuales encontradas en la LXX.'
+                };
+            }
+        }
 
 // Fallback RKANT: si LXX no devolvió resultados, usar NT
         if (!res.matches.length) {
