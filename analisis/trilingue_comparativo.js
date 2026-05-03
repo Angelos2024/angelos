@@ -720,18 +720,19 @@ const firstPartTokenCount = normalizeFuzzy(firstPart).split(/\s+/).filter(Boolea
  * RENDERIZADO UNIFICADO
  * Asegura que se vean las 3 columnas pase lo que pase.
  */
-function renderResults(items, rawQuery = '') {
+async function renderResults(items, rawQuery = '') {
     // Usamos la función de buscador2.js para procesar las glosas si vienen del hebreo
-    const displayItems = typeof buildDisplayResults === 'function'
+    const baseDisplayItems = typeof buildDisplayResults === 'function'
         ? buildDisplayResults(items, rawQuery)
         : items;
+    const displayItems = await rehydrateHebrewTrilingualRows(baseDisplayItems);
     
 
     if (!displayItems || !displayItems.length) {
         if (resultsTbodyEl) {
             resultsTbodyEl.innerHTML = '<tr><td colspan="4" class="muted">Sin resultados precisos para esta entrada.</td></tr>';
                     }
-        updateDictionaryComparison([], rawQuery);
+        await updateDictionaryComparison([], rawQuery);
         notifyRenderedResults([], rawQuery);
         return;
     }
@@ -790,7 +791,7 @@ const limitedItems = prioritizedItems.slice(0, 4).map(item => {
         </tr>
     `}).join('');
 
- updateDictionaryComparison(limitedItems, rawQuery);
+ await updateDictionaryComparison(limitedItems, rawQuery);
     notifyRenderedResults(limitedItems, rawQuery);
 }
 
@@ -986,6 +987,87 @@ async function searchLxxGreekFallback(rawQuery, maxResults = 4) {
 
 function normalizeHebrewComparable(text) {
     return normalizeHebrewComparableKey(text || '');
+}
+
+const TRILINGUE_AT_FALLBACK_FILES = [
+    '01genesis.json','02Éxodo.json','03Levítico.json','04Números.json','05Deuteronomio.json','06Josué.json',
+    '07Jueces.json','08Rut.json','09Samuel1.json','10Samuel2.json','11Reyes1.json','12Reyes2.json','13Crónicas1.json',
+    '14Crónicas2.json','15Esdras.json','16Nehemías.json','17Ester.json','18Job.json','19Salmos.json','20Proverbios.json',
+    '21Eclesiastes.json','22Cantares.json','23Isaías.json','24Jeremías.json','25Lamentaciones.json','26Ezequiel.json',
+    '27Daniel.json','28Oseas.json','29Joel.json','30Amós.json','31Abdías.json','32Jonás.json','33Miqueas.json',
+    '34Nahúm.json','35Habacuc.json','36Sofonías.json','37Hageo.json','38zacarias.json','39malaquias.json'
+];
+
+const TRILINGUE_AT_FILE_CACHE = new Map();
+const HEBREW_LXX_BACKFILL_CACHE = new Map();
+
+async function loadTrilingueAtFallbackFile(file) {
+    if (TRILINGUE_AT_FILE_CACHE.has(file)) return TRILINGUE_AT_FILE_CACHE.get(file);
+    const promise = fetch(`../dic/trilingue/${encodeURIComponent(file)}`, { cache: 'force-cache' })
+        .then(res => {
+            if (!res.ok) throw new Error(`No se pudo cargar ${file}`);
+            return res.json();
+        });
+    TRILINGUE_AT_FILE_CACHE.set(file, promise);
+    try {
+        return await promise;
+    } catch (error) {
+        TRILINGUE_AT_FILE_CACHE.delete(file);
+        throw error;
+    }
+}
+
+async function findLxxByHebrewFallback(hebrew) {
+    const key = normalizeHebrewComparable(hebrew);
+    if (!key) return null;
+    if (HEBREW_LXX_BACKFILL_CACHE.has(key)) return HEBREW_LXX_BACKFILL_CACHE.get(key);
+
+    let found = null;
+    outer:
+    for (const file of TRILINGUE_AT_FALLBACK_FILES) {
+        try {
+            const rows = await loadTrilingueAtFallbackFile(file);
+            const list = Array.isArray(rows) ? rows : [];
+            for (const row of list) {
+                const he = String(row?.texto_hebreo || row?.he || '').trim();
+                if (!he) continue;
+                if (normalizeHebrewComparable(he) !== key) continue;
+                found = {
+                    he,
+                    gr: String(row?.equivalencia_griega || row?.gr || row?.greek || '').trim(),
+                    es: String(row?.equivalencia_espanol || row?.equivalencia_español || row?.es || '').trim(),
+                    candidatos: Array.isArray(row?.candidatos) ? row.candidatos : []
+                };
+                break outer;
+            }
+        } catch (_) {
+            continue;
+        }
+    }
+
+    HEBREW_LXX_BACKFILL_CACHE.set(key, found);
+    return found;
+}
+
+async function rehydrateHebrewTrilingualRows(items) {
+    const list = Array.isArray(items) ? items : [];
+    const tasks = list.map(async item => {
+        if (!item) return item;
+        const hebrew = String(item.he || item.hebrew || item.texto_hebreo || '').trim();
+        if (!hebrew) return item;
+        const fallback = await findLxxByHebrewFallback(hebrew);
+        if (!fallback) return item;
+        return {
+            ...item,
+            he: fallback.he || item.he || '',
+            gr: fallback.gr || item.gr || item.equivalencia_griega || item.greek || '',
+            es: fallback.es || item.es || '',
+            candidatos: Array.isArray(fallback.candidatos) && fallback.candidatos.length
+                ? fallback.candidatos
+                : (Array.isArray(item.candidatos) ? item.candidatos : [])
+        };
+    });
+    return Promise.all(tasks);
 }
 
 function normalizeSpanishComparable(text) {
@@ -1706,7 +1788,7 @@ if (diagEl) diagEl.textContent = 'Por favor, cargue los archivos JSON de los lib
     const rawQuery = queryEl?.value?.trim() || '';
     if (!rawQuery) return;
     if (!isSingleWordQuery(rawQuery)) {
-        renderResults([], rawQuery);
+        await renderResults([], rawQuery);
         if (resultCountEl) resultCountEl.textContent = '0 resultado(s)';
         setTierBadge('Entrada no válida', false);
         if (diagEl) diagEl.textContent = 'Solo se aceptan entradas de palabras únicas, no frases.';
@@ -1773,7 +1855,7 @@ if (diagEl) diagEl.textContent = 'Por favor, cargue los archivos JSON de los lib
         }
     
      // Actualizar Interfaz
-        renderResults(res.matches, rawQuery);
+        await renderResults(res.matches, rawQuery);
 
          if (resultCountEl) resultCountEl.textContent = `${res.matches.length} resultado(s)`;
         setTierBadge(res.tier, !!res.ok);
