@@ -832,18 +832,26 @@ function getEquivalenceSearchTerms(term, langHint = detectLang(term)) {
       .map((token) => normalizeByLang(token, lang).trim())
       .filter((token) => token.length >= minLength);
   }
-  function getRefsForTokenByLang(lang, token, index) {
+  function hasExactSpanishWordIntent(term) {
+    return /\s+$/.test(String(term || ''));
+  }
+  function getRefsForTokenByLang(lang, token, index, options = {}) {
     if (!token) return [];
     if (lang === 'gr') return getGreekRefs(token, index);
     if (lang === 'he') return getHebrewRefs(token, index);
-return getSpanishRefs(token, index);
+return getSpanishRefs(token, index, options);
   }
-  function getSpanishRefs(normalized, index) {
+  function getSpanishRefs(normalized, index, options = {}) {
     if (!normalized) return [];
     const tokensMap = index.tokens || {};
     const direct = tokensMap[normalized] || [];
     const refs = direct.slice();
     const seen = new Set(refs);
+    const exactWord = Boolean(options.exactWord);
+
+    if (exactWord) {
+      return refs;
+    }
 
     // Rendimiento: buckets por prefijo (2 letras) construidos una sola vez.
     if (!index.__tokenBucketsBuilt) {
@@ -942,13 +950,17 @@ function containsHebrewTokenPhrase(normalizedVerse, phrase) {
 
     if (!normalized) return [];
 
+    const tokenOptions = {
+      exactWord: lang === 'es' && hasExactSpanishWordIntent(term)
+    };
+
     const tokenMinLength = lang === 'he' ? 2 : 3;
     const tokens = getNormalizedQueryTokens(term, lang, tokenMinLength);
-    if (!tokens.length) return getRefsForTokenByLang(lang, normalized, index);
+    if (!tokens.length) return getRefsForTokenByLang(lang, normalized, index, tokenOptions);
 
     const uniqueTokens = [...new Set(tokens)];
     const tokenRefLists = uniqueTokens
-      .map((token) => getRefsForTokenByLang(lang, token, index))
+      .map((token) => getRefsForTokenByLang(lang, token, index, tokenOptions))
       .filter((list) => Array.isArray(list) && list.length);
 
     if (!tokenRefLists.length) return [];
@@ -2551,13 +2563,14 @@ bookList.className = 'mt-2 d-grid gap-1';
  
   async function analyze() {
         if (!(state.queryCache instanceof Map)) state.queryCache = new Map();
-    const term = queryInput.value.trim();
+    const rawTerm = String(queryInput?.value || '');
+    const term = rawTerm.trim();
      if (!term) {
       setValidationMessage('');
       return;
     }
 
-    const validation = getSearchValidation(term);
+    const validation = getSearchValidation(rawTerm);
     if (!validation.ok) {
       setValidationMessage(validation.message);
       renderCorrespondence([]);
@@ -2627,7 +2640,7 @@ bookList.className = 'mt-2 d-grid gap-1';
 
       const index = await loadIndex(searchLang, options);
       throwIfAborted(options.signal);
-      const refs = await getRefsForQuery(term, searchLang, index, options);
+      const refs = await getRefsForQuery(rawTerm, searchLang, index, options);
       // UI: el corpus base de resultados es searchLang
       state.pagination.activeLang = searchLang;
    let initialLxxMatches = { refs: [], texts: new Map() };

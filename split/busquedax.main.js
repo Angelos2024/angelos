@@ -481,11 +481,12 @@ return BOOK_LABEL_OVERRIDES[key] || key.replace(/_/g, ' ').replace(/\b\w/g, (m) 
     return groups.sort((a, b) => b.count - a.count);
   }
 
-  function getQueryCacheKey(term, lang) {
+ function getQueryCacheKey(term, lang) {
   const enabled = state.pagination.enabledTestaments || { ot: true, nt: true };
   return [
     lang,
     normalizeByLang(term, lang),
+    lang === 'es' && /\s+$/.test(String(term || '')) ? 'exact1' : 'exact0',
     enabled.ot ? 'ot1' : 'ot0',
     enabled.nt ? 'nt1' : 'nt0'
   ].join('|');
@@ -1090,13 +1091,14 @@ async function warmSearchAssets(term = '') {
 }
   async function analyze() {
         if (!(state.queryCache instanceof Map)) state.queryCache = new Map();
-    const term = queryInput.value.trim();
+    const rawTerm = String(queryInput?.value || '');
+    const term = rawTerm.trim();
 if (!term) {
       setValidationMessage('');
       return;
     }
 
-    const validation = getSearchValidation(term);
+    const validation = getSearchValidation(rawTerm);
     if (!validation.ok) {
       setValidationMessage(validation.message);
       renderCorrespondence([]);
@@ -1155,7 +1157,7 @@ if (!term) {
       const searchLang = (selectedScope === 'es' || selectedScope === 'gr' || selectedScope === 'he')
         ? selectedScope
         : detectedLang;
-        const cacheKey = getQueryCacheKey(term, searchLang);
+        const cacheKey = getQueryCacheKey(rawTerm, searchLang);
       const cached = state.queryCache.get(cacheKey);
 
   updateDetectedLanguageLabel(searchLang);
@@ -1226,7 +1228,7 @@ let indexPromise = searchLang === 'es'
             resetFilterSectionsCollapsed();
 
       throwIfAborted(options.signal);
-      const refs = await getRefsForQuery(term, searchLang, index, options);
+      const refs = await getRefsForQuery(rawTerm, searchLang, index, options);
       const filteredRefs = filterRefsByEnabledTestaments(refs);
 
       throwIfAborted(options.signal);

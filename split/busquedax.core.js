@@ -106,18 +106,26 @@ function countHebrewConsonants(text) {
       .map((token) => normalizeByLang(token, lang).trim())
       .filter((token) => token.length >= minLength);
   }
-  function getRefsForTokenByLang(lang, token, index) {
+  function hasExactSpanishWordIntent(term) {
+    return /\s+$/.test(String(term || ''));
+  }
+  function getRefsForTokenByLang(lang, token, index, options = {}) {
     if (!token) return [];
     if (lang === 'gr') return getGreekRefs(token, index);
     if (lang === 'he') return getHebrewRefs(token, index);
-return getSpanishRefs(token, index);
+return getSpanishRefs(token, index, options);
   }
-  function getSpanishRefs(normalized, index) {
+  function getSpanishRefs(normalized, index, options = {}) {
     if (!normalized) return [];
     const tokensMap = index.tokens || {};
     const direct = tokensMap[normalized] || [];
     const refs = direct.slice();
     const seen = new Set(refs);
+    const exactWord = Boolean(options.exactWord);
+
+    if (exactWord) {
+      return refs;
+    }
 
     // Rendimiento: buckets por prefijo (2 letras) construidos una sola vez.
     if (!index.__tokenBucketsBuilt) {
@@ -216,13 +224,17 @@ function containsHebrewTokenPhrase(normalizedVerse, phrase) {
 
     if (!normalized) return [];
 
+    const tokenOptions = {
+      exactWord: lang === 'es' && hasExactSpanishWordIntent(term)
+    };
+
     const tokenMinLength = lang === 'he' ? 2 : 3;
     const tokens = getNormalizedQueryTokens(term, lang, tokenMinLength);
-    if (!tokens.length) return getRefsForTokenByLang(lang, normalized, index);
+    if (!tokens.length) return getRefsForTokenByLang(lang, normalized, index, tokenOptions);
 
     const uniqueTokens = [...new Set(tokens)];
     const tokenRefLists = uniqueTokens
-      .map((token) => getRefsForTokenByLang(lang, token, index))
+      .map((token) => getRefsForTokenByLang(lang, token, index, tokenOptions))
       .filter((list) => Array.isArray(list) && list.length);
 
     if (!tokenRefLists.length) return [];
