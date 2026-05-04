@@ -29,6 +29,12 @@
   align-items:flex-start;
 }
 
+.admin-book-list-note{
+  color:#7a675d;
+  font-size:.92rem;
+  line-height:1.45;
+}
+
 .admin-sidebar-column{
   display:block;
 }
@@ -130,6 +136,15 @@
   line-height:1.6;
 }
 
+.admin-verse-translation.hebrew-only{
+  direction:rtl;
+  text-align:right;
+  font-size:1.36rem;
+  line-height:1.9;
+  color:#2c1d1f;
+  font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;
+}
+
 .admin-verse-head-compact .admin-verse-translation{
   margin:.2rem 0 0;
   font-size:.94rem;
@@ -149,6 +164,11 @@
   padding:1rem;
 }
 
+.admin-token-grid-hebrew{
+  grid-template-columns:repeat(auto-fit, minmax(124px, 1fr));
+  gap:.5rem;
+}
+
 .admin-token-grid-compact{
   grid-template-columns:repeat(auto-fit, minmax(145px, 1fr));
   gap:.35rem;
@@ -166,6 +186,14 @@
   background:#fffaf6;
 }
 
+.admin-token-row-hebrew{
+  grid-template-columns:1fr;
+  gap:.22rem;
+  padding:.72rem .78rem;
+  background:#fff;
+  text-align:right;
+}
+
 .admin-token-row-simple{
   grid-template-columns:minmax(180px, 1.2fr) minmax(240px, 1.6fr);
 }
@@ -180,6 +208,10 @@
 .admin-token-meta{
   display:grid;
   gap:.2rem;
+}
+
+.admin-token-row-hebrew .admin-token-meta{
+  justify-items:end;
 }
 
 .admin-token-order{
@@ -199,6 +231,12 @@
   font-size:1.2rem;
   direction:rtl;
   text-align:right;
+}
+
+.admin-token-row-hebrew .admin-token-orig{
+  font-size:1.42rem;
+  line-height:1.4;
+  font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;
 }
 
 .admin-token-orig.is-greek{
