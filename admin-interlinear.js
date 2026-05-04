@@ -389,13 +389,6 @@
     };
     if(exact[code]) return exact[code];
 
-    if(code.startsWith('NC')) return 'SUST';
-    if(code.startsWith('NP')) return 'N PROP';
-    if(code.startsWith('AA') || code.startsWith('AC')) return 'ADJ';
-    if(code.startsWith('AV')) return 'ADV';
-    if(code.startsWith('V')) return 'VERBO';
-    if(code.startsWith('P')) return 'PRON';
-    if(code.startsWith('T')) return 'PART';
     return code;
   }
 
