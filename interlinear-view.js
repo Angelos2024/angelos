@@ -1453,6 +1453,14 @@
     return clean ? [clean] : [];
   }
 
+  function getSourceTokenDisplayText(orig) {
+    if (Array.isArray(orig)) {
+      const parts = orig.map((part) => String(part || '').trim()).filter(Boolean);
+      return parts.join('').trim();
+    }
+    return String(orig || '').trim();
+  }
+
   function buildHebrewMapFromInterlinear(books) {
     const pointedRanked   = new Map();
     const unpointedRanked = new Map();
@@ -1762,12 +1770,11 @@
     const greekMap = isGreek ? await getGreekMap() : null;
     const hebrewMaps = isGreek ? null : await getHebrewMaps(slug);
     const targetMap = isGreek ? greekMap : hebrewMaps;
-
-    const tokens = (!isGreek && Array.isArray(sourceTokens) && sourceTokens.length)
+    const hasHebrewSourceTokens = !isGreek && Array.isArray(sourceTokens) && sourceTokens.length;
+    const tokens = hasHebrewSourceTokens
       ? sourceTokens
-        .map((token) => sanitizeTokenForAnalysis(token?.orig || ''))
+        .map((token) => getSourceTokenDisplayText(token?.orig || ''))
         .filter(Boolean)
-        .flatMap((token) => expandTokenForLookup(token, hebrewMaps.unpointedMap))
       : splitTokens(originalText)
         .flatMap((token) => (isGreek ? [token] : expandTokenForLookup(token, hebrewMaps.unpointedMap)));
 
@@ -1782,13 +1789,17 @@
       spanishTokens = [];
       if (withAnalysis) analysisData = [];
 
-      for (const token of tokens) {
-        const sourceToken = sourceTokens[spanishTokens.length] || null;
+      for (let idx = 0; idx < tokens.length; idx += 1) {
+        const token = tokens[idx];
+        const sourceToken = hasHebrewSourceTokens ? (sourceTokens[idx] || null) : null;
         const sourceSpanish = getSourceTokenSpanishGloss(sourceToken);
-        const spanish = sourceSpanish || mapHebrewTokenToSpanish(token, hebrewMaps);
+        const analysisToken = sanitizeTokenForAnalysis(
+          hasHebrewSourceTokens ? getHebrewTokenLookupForms(sourceToken?.orig || '')[0] || token : token
+        ) || token;
+        const spanish = sourceSpanish || mapHebrewTokenToSpanish(analysisToken, hebrewMaps);
         spanishTokens.push(spanish);
         if (withAnalysis) {
-          analysisData.push(analyzeHebrewToken(token));
+          analysisData.push(analyzeHebrewToken(analysisToken));
         }
       }
     }
