@@ -393,11 +393,20 @@
   }
 
   async function resolveMorphLabel(token){
+    const strongKey = normalizeStrong(token?.strongs);
+    const decodedTokenMorph = decodeHebrewMorphCode(token?.morphs);
+
     try{
       const index = await getHebrewMorphIndex();
-      const strongKey = normalizeStrong(token?.strongs);
-      const strongLabel = pickStrongMorphCandidate(index.byStrong.get(strongKey), token);
-      if(strongLabel) return strongLabel;
+      if(strongKey){
+        const strongLabel = pickStrongMorphCandidate(index.byStrong.get(strongKey), token);
+        if(strongLabel) return strongLabel;
+      }
+
+      if(!strongKey && decodedTokenMorph && decodedTokenMorph !== String(token?.morphs || '').trim().toUpperCase()){
+        return decodedTokenMorph;
+      }
+
       const pointedKey = normalizeHebrew(token?.orig || '', true);
       const plainKey = normalizeHebrew(token?.orig || '', false);
       const label = pickMorphCandidate(index.pointed.get(pointedKey), token)
@@ -406,7 +415,6 @@
     }catch(_error){
       // Si el diccionario no carga, seguimos con la morfología del interlineal.
     }
-    const decodedTokenMorph = decodeHebrewMorphCode(token?.morphs);
     if(decodedTokenMorph) return decodedTokenMorph;
     return String(token?.morphs || '').trim();
   }
