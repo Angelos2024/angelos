@@ -13,8 +13,7 @@
  *  - API pública `analyzeHebrewToken(token)` → objeto de diagnóstico exegético
  *  - `buildInterlinearRows` retorna `analysis[]` opcional para tooltips en UI
  */
-(function () {
-  const ExternalGrammar = window.InterlinearGrammar || null;
+window.InterlinearGrammar = (function () {
 
   // ─────────────────────────────────────────────
   // PATHS & CONSTANTS
@@ -1604,220 +1603,20 @@
   }
 
   // ─────────────────────────────────────────────
-  //  LOADING / CACHING
-  // ─────────────────────────────────────────────
 
-  let greekDictionaryPromise = null;
-  let hebrewFallbackPromise = null;
-  const hebrewInterlinearBookCache = new Map();
-  const hebrewInterlinearMapCache = new Map();
-
-  async function loadJson(path) {
-    const response = await fetch(path, { cache: 'force-cache' });
-    if (!response.ok) throw new Error(`No se pudo cargar ${path} (HTTP ${response.status})`);
-    return response.json();
-  }
-
-  async function loadHebrewInterlinearBookBySlug(slug) {
-    const file = HEBREW_INTERLINEAR_FILE_BY_SLUG[slug];
-    if (!file) return null;
-    if (!hebrewInterlinearBookCache.has(file)) {
-      hebrewInterlinearBookCache.set(
-        file,
-        loadJson(`${HEBREW_INTERLINEAR_BASE}/${file}`).catch(() => null)
-      );
-    }
-    return hebrewInterlinearBookCache.get(file);
-  }
-
-  async function getGreekMap() {
-    if (!greekDictionaryPromise) {
-      greekDictionaryPromise = loadJson(GREEK_DICT_PATH).then((rows) => {
-        const builder = ExternalGrammar?.buildGreekMap || buildGreekMap;
-        return builder(rows);
-      });
-    }
-    return greekDictionaryPromise;
-  }
-
-  async function getHebrewFallbackMaps() {
-    if (!hebrewFallbackPromise) {
-      hebrewFallbackPromise = loadJson(HEBREW_FALLBACK_DICT_PATH)
-        .catch(() => [])
-        .then((rows) => {
-          const builder = ExternalGrammar?.buildHebrewFallbackMap || buildHebrewFallbackMap;
-          return builder(rows);
-        });
-    }
-    return hebrewFallbackPromise;
-  }
-
-  async function getHebrewInterlinearMaps(slug) {
-    const file = HEBREW_INTERLINEAR_FILE_BY_SLUG[String(slug || '').trim()];
-    if (!file) return { pointedMap: new Map(), unpointedMap: new Map() };
-    if (!hebrewInterlinearMapCache.has(file)) {
-      const mapPromise = loadHebrewInterlinearBookBySlug(slug)
-        .then((book) => {
-          const builder = ExternalGrammar?.buildHebrewMapFromInterlinear || buildHebrewMapFromInterlinear;
-          return builder(book ? [book] : []);
-        })
-        .catch(() => ({ pointedMap: new Map(), unpointedMap: new Map() }));
-      hebrewInterlinearMapCache.set(file, mapPromise);
-    }
-    return hebrewInterlinearMapCache.get(file);
-  }
-
-  async function getHebrewMaps(slug) {
-    const [primary, fallback] = await Promise.all([
-      getHebrewInterlinearMaps(slug),
-      getHebrewFallbackMaps().catch(() => ({ pointedMap: new Map(), unpointedMap: new Map() }))
-    ]);
-    const merger = ExternalGrammar?.mergeHebrewMaps || mergeHebrewMaps;
-    return merger(primary, fallback);
-  }
-
-  async function preload(options = {}) {
-    const slug = String(options?.slug || '').trim();
-    const isGreek = Boolean(options?.isGreek);
-
-    if (isGreek) {
-      await getGreekMap();
-      return true;
-    }
-
-    await getHebrewFallbackMaps();
-    if (slug && HEBREW_INTERLINEAR_FILE_BY_SLUG[slug]) {
-      await Promise.all([
-        loadHebrewInterlinearBookBySlug(slug),
-        getHebrewInterlinearMaps(slug)
-      ]);
-    }
-    return true;
-  }
-
-  async function getHebrewRawVerse(slug, chapter, verse) {
-    const book = await loadHebrewInterlinearBookBySlug(slug);
-    const chapterNode = book?.chapters?.[String(chapter)] || null;
-    const verseNode   = chapterNode?.[String(verse)] || null;
-    const raw = String(verseNode?.raw || '').trim();
-    return raw || '';
-  }
-
-  async function getHebrewVerseData(slug, chapter, verse) {
-    const book = await loadHebrewInterlinearBookBySlug(slug);
-    const chapterNode = book?.chapters?.[String(chapter)] || null;
-    return chapterNode?.[String(verse)] || null;
-  }
-
-  // ─────────────────────────────────────────────
-  //  MAIN INTERLINEAR ROW BUILDER
-  // ─────────────────────────────────────────────
-
-  /**
-   * buildInterlinearRows(originalText, options)
-   *
-   * options:
-   *   isGreek  — boolean
-   *   withAnalysis — boolean (default false)
-   *     If true, returns `analysisData[]` alongside tokens,
-   *     where each entry is the full analyzeHebrewToken result.
-   *     Useful for rendering exegetical tooltips in the UI.
-   *
-   * Returns:
-   * {
-   *   tokens[],
-   *   spanishTokens[],
-   *   originalLine,
-   *   spanishLine,
-   *   analysisData[]   // only if options.withAnalysis = true
-   * }
-   */
-  async function buildInterlinearRows(originalText, options = {}) {
-    const { isGreek = false, withAnalysis = false, slug = '', sourceTokens = [] } = options;
-    const greekMap = isGreek ? await getGreekMap() : null;
-    const hebrewMaps = isGreek ? null : await getHebrewMaps(slug);
-    const targetMap = isGreek ? greekMap : hebrewMaps;
-
-    const tokens = splitTokens(originalText)
-      .flatMap((token) => (isGreek ? [token] : expandTokenForLookup(token, hebrewMaps.unpointedMap)));
-
-    let analysisData = null;
-    let spanishTokens;
-
-    if (isGreek) {
-      spanishTokens = tokens.map((token, idx) => {
-        return lookupGreekGlossWithLemma(targetMap, token, sourceTokens[idx] || null);
-      });
-    } else {
-      spanishTokens = [];
-      if (withAnalysis) analysisData = [];
-
-      for (const token of tokens) {
-        const mapper = ExternalGrammar?.mapHebrewTokenToSpanish || mapHebrewTokenToSpanish;
-        const analyzer = ExternalGrammar?.analyzeHebrewToken || analyzeHebrewToken;
-        const spanish = mapper(token, hebrewMaps);
-        spanishTokens.push(spanish);
-        if (withAnalysis) {
-          analysisData.push(analyzer(token));
-        }
-      }
-    }
-
-    const result = {
-      tokens,
-      spanishTokens,
-      originalLine: tokens.join(' '),
-      spanishLine:  spanishTokens.join(' ')
-    };
-    if (Array.isArray(sourceTokens) && sourceTokens.length) result.sourceTokenMeta = sourceTokens;
-    if (withAnalysis && analysisData) result.analysisData = analysisData;
-    return result;
-  }
-
-  // ─────────────────────────────────────────────
-  //  PUBLIC API
-  // ─────────────────────────────────────────────
-
-  window.verifySystemFormsV25 = ExternalGrammar?.verifySystemFormsV25 || verifySystemFormsV25;
-
-  window.InterlinearView = {
-    /** Core rendering function */
-    buildInterlinearRows,
-
-    /** Fetch raw verse text from JSON */
-    getHebrewRawVerse,
-    getHebrewVerseData,
-
-    /** Preload dictionaries for a given book slug */
-    preload,
-
-    /**
-     * analyzeHebrewToken(token) → Analysis object
-     *
-     * Use this in your UI to render:
-     *   - Exegetical tooltip on hover
-     *   - Color-coded prefix badges
-     *   - Grammar annotation below each word
-     *
-     * Example usage in your UI code:
-     *   const a = InterlinearView.analyzeHebrewToken('בְּרֵאשִׁית');
-     *   console.log(a.debugLog);   // step-by-step Hebrew grammar
-     *   console.log(a.isDefinite); // false (sin artículo = indefinido)
-     *   console.log(a.prefixes);   // [{type:'BKL', ruleId:'REG_01_DEFAULT', es:'en', ...}]
-     */
-    analyzeHebrewToken: ExternalGrammar?.analyzeHebrewToken || analyzeHebrewToken,
-    verifySystemForms: ExternalGrammar?.verifySystemForms || verifySystemForms,
-    verifySystemFormsV25: ExternalGrammar?.verifySystemFormsV25 || verifySystemFormsV25,
-
-    /**
-     * Convenience: analyze multiple tokens at once.
-     * Returns Analysis[] in the same order.
-     */
+  return {
+    analyzeHebrewToken,
+    verifySystemForms,
+    verifySystemFormsV25,
+    mapHebrewTokenToSpanish,
+    buildHebrewMapFromInterlinear,
+    buildHebrewFallbackMap,
+    mergeHebrewMaps,
+    buildGreekMap,
+    normalizeToken,
+    splitTokens,
     analyzeVerse(text) {
-      const analyzer = ExternalGrammar?.analyzeHebrewToken || analyzeHebrewToken;
-      return splitTokens(String(text || '')).map(analyzer);
+      return splitTokens(String(text || '')).map(analyzeHebrewToken);
     }
   };
-
 })();
-

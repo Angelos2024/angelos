@@ -22,6 +22,7 @@
 <script defer src="./annotations-ui.js?v=7"></script>
 <script defer src="./listanotas.js?v=1"></script>
   <script defer src="./backup-panel.js?v=1"></script>
+  <script defer src="./interlinear-grammar.js?v=1"></script>
   <script defer src="./interlinear-view.js?v=11"></script>
   <script src="./greek-lexicon-ui.js"></script>
    <script src="./hebrew-lexicon-ui.js"></script>
@@ -1371,10 +1372,80 @@ function formatInterlinearSpanishTokenDisplay(value){
   return text.replace(/\s+/g, ' ').trim();
 }
 
+function rebalanceHebrewInterlinearSpanishTokens(spanishTokens, sourceTokenMeta, analysisData){
+  if(!Array.isArray(spanishTokens) || !Array.isArray(sourceTokenMeta) || !sourceTokenMeta.length){
+    return spanishTokens;
+  }
+
+  const normalizePart = (value) => String(value || '')
+    .replace(/[←→]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^[,;:.!?]+|[,;:.!?]+$/g, '')
+    .trim();
+  const asArray = (value) => Array.isArray(value) ? value : [value];
+  const isArticle = (value) => /^(el|la|los|las|un|una|unos|unas)$/i.test(String(value || '').trim());
+  const morphString = (value) => Array.isArray(value) ? value.join(' ') : String(value || '');
+
+  let pendingArticle = '';
+
+  return spanishTokens.map((fallback, idx) => {
+    const meta = sourceTokenMeta[idx] || null;
+    const analysis = Array.isArray(analysisData) ? (analysisData[idx] || null) : null;
+    if(!meta || typeof meta !== 'object'){
+      const fallbackText = formatInterlinearSpanishTokenDisplay(fallback);
+      if(pendingArticle && fallbackText && fallbackText !== '-'){
+        const combined = `${pendingArticle} ${fallbackText}`.trim();
+        pendingArticle = '';
+        return combined;
+      }
+      return fallbackText;
+    }
+
+    const morph = morphString(meta.morphs);
+    const parts = asArray(meta.es).map(normalizePart).filter(Boolean);
+    const addedParts = asArray(meta.added).map(normalizePart).filter(Boolean);
+    const contentParts = parts.filter((part) => !isArticle(part));
+    const articleParts = parts.filter((part) => isArticle(part));
+    const isConstruct = /C$/.test(morph) || Boolean(analysis?.constructState?.isConstruct);
+    const isCarrier = !isConstruct && articleParts.length > 0 && /^(?:CC|CS|Pu|PL|PB|PM)$/i.test(morph.trim());
+
+    const out = [];
+
+    if(pendingArticle && !articleParts.length){
+      out.push(pendingArticle);
+      pendingArticle = '';
+    }
+
+    if(isConstruct){
+      out.push(...contentParts);
+      out.push(...addedParts.map((part) => /^de(l| la| los| las)?$/i.test(part) ? 'de' : part));
+      if(articleParts.length) pendingArticle = articleParts.join(' ');
+      return formatInterlinearSpanishTokenDisplay(out.join(' ') || fallback);
+    }
+
+    if(isCarrier){
+      out.push(...contentParts);
+      if(articleParts.length) pendingArticle = articleParts.join(' ');
+      return formatInterlinearSpanishTokenDisplay(out.join(' ') || fallback);
+    }
+
+    if(articleParts.length) out.push(articleParts.join(' '));
+    out.push(...contentParts);
+    out.push(...addedParts);
+
+    return formatInterlinearSpanishTokenDisplay(out.join(' ') || fallback);
+  });
+}
+
     function buildInterlinearWordMarkup(rows, fallbackText, isGreek){
       const tokens = Array.isArray(rows?.tokens) ? rows.tokens : [];
-  const spanishTokens = Array.isArray(rows?.spanishTokens) ? rows.spanishTokens : [];
+  const sourceTokenMeta = Array.isArray(rows?.sourceTokenMeta) ? rows.sourceTokenMeta : [];
+  const rawSpanishTokens = Array.isArray(rows?.spanishTokens) ? rows.spanishTokens : [];
   const analysisData = Array.isArray(rows?.analysisData) ? rows.analysisData : [];
+  const spanishTokens = isGreek
+    ? rawSpanishTokens
+    : rebalanceHebrewInterlinearSpanishTokens(rawSpanishTokens, sourceTokenMeta, analysisData);
       const originalWordClass = isGreek ? 'interlinear-greek' : 'interlinear-hebrew';
   const directionClass = isGreek ? 'interlinear-dir-ltr' : 'interlinear-dir-rtl';
   if(!tokens.length){
@@ -1900,10 +1971,15 @@ lastRef = { chapter: ch, verseStart: v1, verseEnd: v2 };
  if(viewMode === 'interlinear'){
  if(window.InterlinearView?.buildInterlinearRows){
            let interlinearSource = t;
+           let sourceTokens = [];
+           if(!isGreekBook && window.InterlinearView?.getHebrewVerseData){
+             const hebrewVerseData = await window.InterlinearView.getHebrewVerseData(currentBookSlug, ch, v);
+             if(Array.isArray(hebrewVerseData?.tokens)) sourceTokens = hebrewVerseData.tokens;
+           }
            if(!isGreekBook && !String(interlinearSource || '').trim() && window.InterlinearView?.getHebrewRawVerse){
              interlinearSource = await window.InterlinearView.getHebrewRawVerse(currentBookSlug, ch, v);
            }
-           const rows = await window.InterlinearView.buildInterlinearRows(interlinearSource, { isGreek: isGreekBook, withAnalysis: !isGreekBook, slug: currentBookSlug });
+           const rows = await window.InterlinearView.buildInterlinearRows(interlinearSource, { isGreek: isGreekBook, withAnalysis: !isGreekBook, slug: currentBookSlug, sourceTokens });
      htmlOrig += `<p class="mb-2 verse-line interlinear-verse" data-side="orig" data-book="${esc(currentBookSlug)}" data-ch="${ch}" data-v="${v}">
             <span class="verse-num">${v}</span>
  <span class="interlinear-original ${isGreekBook ? 'interlinear-dir-ltr' : 'interlinear-dir-rtl'}">${buildInterlinearWordMarkup(rows, interlinearSource, isGreekBook)}</span>
