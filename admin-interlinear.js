@@ -221,6 +221,24 @@
     return values;
   }
 
+  function normalizeStrong(value){
+    const text = String(value || '').trim().toUpperCase();
+    if(!text) return '';
+    if(/^H\d+$/.test(text)) return text;
+    if(/^\d+$/.test(text)) return `H${text}`;
+    return text;
+  }
+
+  function normalizeGloss(value){
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  }
+
   async function getHebrewMorphIndex(){
     if(!hebrewMorphIndexPromise){
       hebrewMorphIndexPromise = (async () => {
@@ -228,6 +246,7 @@
         const entries = Array.isArray(raw) ? raw : (raw?.items || raw?.entries || []);
         const pointed = new Map();
         const plain = new Map();
+        const byStrong = new Map();
 
         const register = (map, key, payload) => {
           if(!key) return;
@@ -236,6 +255,11 @@
         };
 
         entries.forEach((entry) => {
+          const strongKey = normalizeStrong(entry?.strong || entry?.strongs || entry?.strong_detail?.strong);
+          if(strongKey){
+            if(!byStrong.has(strongKey)) byStrong.set(strongKey, []);
+            byStrong.get(strongKey).push(entry);
+          }
           const forms = [
             entry?.palabra,
             entry?.lemma,
@@ -258,7 +282,7 @@
           });
         });
 
-        return { pointed, plain };
+        return { pointed, plain, byStrong };
       })().catch((error) => {
         hebrewMorphIndexPromise = null;
         throw error;
@@ -276,6 +300,61 @@
     const exactPlain = candidates.find((candidate) => normalizeHebrew(candidate?.form || '', false) === tokenPlain && candidate?.morph);
     if(exactPlain) return exactPlain.morph;
     return candidates.find((candidate) => candidate?.morph)?.morph || '';
+  }
+
+  function pickStrongMorphCandidate(entries, token){
+    if(!Array.isArray(entries) || !entries.length) return '';
+    const tokenGloss = normalizeGloss(token?.es || '');
+    const tokenPointed = normalizeHebrew(token?.orig || '', true);
+    const tokenPlain = normalizeHebrew(token?.orig || '', false);
+    const isPossessiveGloss = /\b(mi|mis|tu|tus|su|sus|nuestro|nuestra|nuestros|nuestras|vuestro|vuestra|vuestros|vuestras)\b/.test(tokenGloss);
+    const isConstructGloss = !isPossessiveGloss && /\bde(l| la| los| las)?\b/.test(tokenGloss);
+
+    for(const entry of entries){
+      const forms = Array.isArray(entry?.formas) ? entry.formas : [];
+      const morphs = Array.isArray(entry?.morfs) ? entry.morfs : [];
+      const glosses = Array.isArray(entry?.glosas) ? entry.glosas : [];
+
+      for(let i = 0; i < glosses.length; i += 1){
+        const gloss = normalizeGloss(glosses[i]);
+        const morph = String(morphs[i] || '').trim();
+        if(!morph) continue;
+        if(tokenGloss && gloss === tokenGloss) return morph;
+      }
+
+      for(let i = 0; i < glosses.length; i += 1){
+        const gloss = normalizeGloss(glosses[i]);
+        const morph = String(morphs[i] || '').trim();
+        if(!morph) continue;
+        if(tokenGloss && (gloss.includes(tokenGloss) || tokenGloss.includes(gloss))) return morph;
+      }
+
+      for(let i = 0; i < forms.length; i += 1){
+        const formPointed = normalizeHebrew(forms[i], true);
+        const formPlain = normalizeHebrew(forms[i], false);
+        const morph = String(morphs[i] || '').trim();
+        if(!morph) continue;
+        if((formPointed && formPointed === tokenPointed) || (formPlain && formPlain === tokenPlain)){
+          return morph;
+        }
+      }
+
+      if(morphs.length){
+        const cleanMorphs = morphs.map((morph) => String(morph || '').trim()).filter(Boolean);
+        if(isPossessiveGloss){
+          const possessive = cleanMorphs.find((morph) => morph.includes('.PRS.'));
+          if(possessive) return possessive;
+        }
+        if(isConstructGloss){
+          const construct = cleanMorphs.find((morph) => /\.C(?:\.|$)/.test(morph) && !morph.includes('.PRS.'));
+          if(construct) return construct;
+        }
+        const absolute = cleanMorphs.find((morph) => /\.A(?:\.|$)/.test(morph) && !morph.includes('.PRS.'));
+        if(absolute) return absolute;
+        return cleanMorphs[0] || '';
+      }
+    }
+    return '';
   }
 
   function decodeHebrewMorphCode(rawCode){
@@ -321,11 +400,11 @@
   }
 
   async function resolveMorphLabel(token){
-    const decodedTokenMorph = decodeHebrewMorphCode(token?.morphs);
-    if(decodedTokenMorph) return decodedTokenMorph;
-
     try{
       const index = await getHebrewMorphIndex();
+      const strongKey = normalizeStrong(token?.strongs);
+      const strongLabel = pickStrongMorphCandidate(index.byStrong.get(strongKey), token);
+      if(strongLabel) return strongLabel;
       const pointedKey = normalizeHebrew(token?.orig || '', true);
       const plainKey = normalizeHebrew(token?.orig || '', false);
       const label = pickMorphCandidate(index.pointed.get(pointedKey), token)
@@ -334,6 +413,8 @@
     }catch(_error){
       // Si el diccionario no carga, seguimos con la morfología del interlineal.
     }
+    const decodedTokenMorph = decodeHebrewMorphCode(token?.morphs);
+    if(decodedTokenMorph) return decodedTokenMorph;
     return String(token?.morphs || '').trim();
   }
 
