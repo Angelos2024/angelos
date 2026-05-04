@@ -1348,6 +1348,29 @@ function buildInterlinearAnalysisTooltip(analysis){
   return lines.join('\n').trim();
 }
 
+function formatInterlinearSpanishTokenDisplay(value){
+  let text = String(value || '').replace(/\s+/g, ' ').trim();
+  if(!text || text === '-') return text || '-';
+
+  text = text.replace(/\s*([,;:.])\s*/g, '$1');
+
+  const articleMatch = text.match(/^(.+?)[,;:.](el|la|los|las|un|una|unos|unas)$/i);
+  if(articleMatch){
+    const base = articleMatch[1].trim();
+    const article = articleMatch[2].trim();
+    const prefixMatch = base.match(/^((?:y|e|o|u|mas|en|de|del|a|para|por|con|sin)\s+)(.+)$/i);
+    if(prefixMatch){
+      text = `${prefixMatch[1].trim()} ${article} ${prefixMatch[2].trim()}`;
+    }else{
+      text = `${article} ${base}`;
+    }
+  }else{
+    text = text.replace(/[,;:.]+/g, ' ');
+  }
+
+  return text.replace(/\s+/g, ' ').trim();
+}
+
     function buildInterlinearWordMarkup(rows, fallbackText, isGreek){
       const tokens = Array.isArray(rows?.tokens) ? rows.tokens : [];
   const spanishTokens = Array.isArray(rows?.spanishTokens) ? rows.spanishTokens : [];
@@ -1360,7 +1383,7 @@ function buildInterlinearAnalysisTooltip(analysis){
 
   const words = tokens.map((token, idx) => {
     const originalWord = esc(token || '-');
-    const spanishWord = esc(spanishTokens[idx] || '-');
+    const spanishWord = esc(formatInterlinearSpanishTokenDisplay(spanishTokens[idx] || '-'));
     const analysis = analysisData[idx] || null;
     const tooltip = buildInterlinearAnalysisTooltip(analysis);
     const hasAnalysis = tooltip ? '1' : '0';
