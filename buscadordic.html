@@ -205,8 +205,7 @@ const SOURCES = [
 
       const seenTerms = new Set();
       state.filtered = rankedEntries.filter((entry) => {
-        const key = [
-          normalizeHebrewSurface(entry.texto_hebreo),
+        const key = normalizeHebrewSurface(entry.texto_hebreo) || [
           normalizeSearchText(entry.transliteracion),
           normalizeSearchText(entry.equivalencia_espanol)
         ].join('||');
