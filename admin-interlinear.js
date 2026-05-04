@@ -50,6 +50,8 @@
   const LABEL_TO_SLUG = new Map(OT_BOOKS.map(([slug, label]) => [normalizeKey(label), slug]));
   const chapterCountCache = new Map();
   const interlinearCache = new Map();
+  let hebrewDictionaryPromise = null;
+  let hebrewMorphIndexPromise = null;
 
   const els = {
     form: document.getElementById('adminSearchForm'),
@@ -97,6 +99,18 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  function normalizeHebrew(value, preservePoints = false){
+    let clean = String(value || '')
+      .replace(/[\u200c-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, '')
+      .replace(/[\u0591-\u05AF]/g, '')
+      .replace(/[\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4]/g, '')
+      .trim();
+    if(!preservePoints){
+      clean = clean.replace(/[\u05B0-\u05BC\u05BD\u05BF\u05C1-\u05C2\u05C7]/g, '');
+    }
+    return clean;
   }
 
   function setBadge(message, tone){
@@ -165,6 +179,117 @@
     const count = Object.keys(book?.chapters || {}).length;
     chapterCountCache.set(slug, count);
     return count;
+  }
+
+  async function getHebrewDictionary(){
+    if(!hebrewDictionaryPromise){
+      hebrewDictionaryPromise = loadJson('./diccionario/diccionario_unificado.min.json')
+        .catch((error) => {
+          hebrewDictionaryPromise = null;
+          throw error;
+        });
+    }
+    return hebrewDictionaryPromise;
+  }
+
+  function getEntryPrintedMorph(entry){
+    const candidates = [
+      entry?.morfologia_impresa,
+      entry?.['morfología_impresa'],
+      entry?.morfologia,
+      entry?.['morfología'],
+      entry?.printed_entry,
+      entry?.entrada_impresa
+    ];
+    for(const candidate of candidates){
+      const text = String(candidate || '').replace(/\s+/g, ' ').trim();
+      if(text && !/\bstrong\b/i.test(text)) return text;
+    }
+    return '';
+  }
+
+  function buildEntryMorphValues(entry){
+    const values = [];
+    const add = (value) => {
+      const text = String(value || '').replace(/\s+/g, ' ').trim();
+      if(text && !values.includes(text)) values.push(text);
+    };
+
+    add(getEntryPrintedMorph(entry));
+    const morphs = Array.isArray(entry?.morfs) ? entry.morfs : [];
+    morphs.forEach(add);
+    return values;
+  }
+
+  async function getHebrewMorphIndex(){
+    if(!hebrewMorphIndexPromise){
+      hebrewMorphIndexPromise = (async () => {
+        const raw = await getHebrewDictionary();
+        const entries = Array.isArray(raw) ? raw : (raw?.items || raw?.entries || []);
+        const pointed = new Map();
+        const plain = new Map();
+
+        const register = (map, key, payload) => {
+          if(!key) return;
+          if(!map.has(key)) map.set(key, []);
+          map.get(key).push(payload);
+        };
+
+        entries.forEach((entry) => {
+          const forms = [
+            entry?.palabra,
+            entry?.lemma,
+            entry?.hebreo,
+            entry?.forma,
+            ...(Array.isArray(entry?.formas) ? entry.formas : []),
+            ...(Array.isArray(entry?.forms) ? entry.forms : []),
+            ...(Array.isArray(entry?.variantes) ? entry.variantes : [])
+          ];
+          const morphValues = buildEntryMorphValues(entry);
+          forms.forEach((form, index) => {
+            const rawForm = String(form || '').trim();
+            if(!rawForm) return;
+            const payload = {
+              form: rawForm,
+              morph: morphValues[index] || morphValues[0] || ''
+            };
+            register(pointed, normalizeHebrew(rawForm, true), payload);
+            register(plain, normalizeHebrew(rawForm, false), payload);
+          });
+        });
+
+        return { pointed, plain };
+      })().catch((error) => {
+        hebrewMorphIndexPromise = null;
+        throw error;
+      });
+    }
+    return hebrewMorphIndexPromise;
+  }
+
+  function pickMorphCandidate(candidates, token){
+    if(!Array.isArray(candidates) || !candidates.length) return '';
+    const tokenPointed = normalizeHebrew(token?.orig || '', true);
+    const tokenPlain = normalizeHebrew(token?.orig || '', false);
+    const exactPointed = candidates.find((candidate) => normalizeHebrew(candidate?.form || '', true) === tokenPointed && candidate?.morph);
+    if(exactPointed) return exactPointed.morph;
+    const exactPlain = candidates.find((candidate) => normalizeHebrew(candidate?.form || '', false) === tokenPlain && candidate?.morph);
+    if(exactPlain) return exactPlain.morph;
+    return candidates.find((candidate) => candidate?.morph)?.morph || '';
+  }
+
+  async function resolveMorphLabel(token){
+    try{
+      const index = await getHebrewMorphIndex();
+      const pointedKey = normalizeHebrew(token?.orig || '', true);
+      const plainKey = normalizeHebrew(token?.orig || '', false);
+      const label = pickMorphCandidate(index.pointed.get(pointedKey), token)
+        || pickMorphCandidate(index.plain.get(plainKey), token);
+      if(label) return label;
+    }catch(_error){
+      // Si el diccionario no carga, seguimos con la morfología del interlineal.
+    }
+    return String(token?.morphs || '').trim();
   }
 
   function parseReference(text){
@@ -246,17 +371,20 @@
     return String(rawText || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() || 'Sin texto hebreo';
   }
 
-  function buildVerseCardHtml(verseNumber, verseNode){
+async function buildVerseCardHtml(verseNumber, verseNode){
     const tokens = Array.isArray(verseNode?.tokens) ? verseNode.tokens : [];
     const hebrewLine = buildHebrewVerseText(tokens, verseNode?.raw);
-    const rows = tokens.map((token) => `
+    const rows = await Promise.all(tokens.map(async (token) => {
+      const morphLabel = await resolveMorphLabel(token);
+      return `
       <div class="admin-token-row admin-token-row-hebrew" data-num="${escapeHtml(token.num || '')}" data-orig="${escapeHtml(token.orig || '')}">
         <div class="admin-token-meta">
-          <div class="admin-token-order">Token ${escapeHtml(token.num || '—')}</div>
+          <div class="admin-token-morph">${escapeHtml(morphLabel || '—')}</div>
           <div class="admin-token-orig">${escapeHtml(token.orig || '')}</div>
         </div>
       </div>
-    `).join('');
+    `;
+    }));
 
     return `
       <article class="admin-verse-card" data-verse="${verseNumber}">
@@ -266,7 +394,7 @@
             <p class="admin-verse-translation hebrew-only">${escapeHtml(hebrewLine)}</p>
           </div>
         </div>
-        <div class="admin-token-grid admin-token-grid-hebrew">${rows || '<div class="admin-empty-state">No hay tokens hebreos en este versículo.</div>'}</div>
+        <div class="admin-token-grid admin-token-grid-hebrew">${rows.join('') || '<div class="admin-empty-state">No hay tokens hebreos en este versículo.</div>'}</div>
       </article>
     `;
   }
@@ -294,7 +422,7 @@
     for(const verseNumber of verseNumbers){
       const verseNode = interlinearVerses[verseNumber];
       tokenCount += Array.isArray(verseNode?.tokens) ? verseNode.tokens.length : 0;
-      cards.push(buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode));
+      cards.push(await buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode));
     }
 
     if(els.mount) els.mount.innerHTML = cards.join('');
