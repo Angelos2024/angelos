@@ -188,41 +188,6 @@
     return clean || '-';
   }
 
-  function cleanInlineSpanishSegment(value) {
-    return String(value || '')
-      .replace(/[←→]/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .replace(/^[,.;:!?]+|[,.;:!?]+$/g, '')
-      .trim();
-  }
-
-  function getSourceTokenSpanishGloss(token) {
-    if (!token || typeof token !== 'object') return '';
-    const segments = [];
-    const pushSegment = (value) => {
-      if (Array.isArray(value)) {
-        value.forEach(pushSegment);
-        return;
-      }
-      const clean = cleanInlineSpanishSegment(value);
-      if (clean) segments.push(clean);
-    };
-
-    const esValue = token.es;
-    if (Array.isArray(esValue) && esValue.length > 1) {
-      pushSegment(esValue[0]);
-      pushSegment(token.added);
-      esValue.slice(1).forEach(pushSegment);
-    } else {
-      pushSegment(esValue);
-      pushSegment(token.added);
-    }
-    if (!segments.length) pushSegment(token.notrans);
-
-    return normalizeGloss(segments.join(' '));
-  }
-
   function takeFirstGloss(value) {
     if (!value) return '-';
     if (Array.isArray(value)) {
@@ -1453,14 +1418,6 @@
     return clean ? [clean] : [];
   }
 
-  function getSourceTokenDisplayText(orig) {
-    if (Array.isArray(orig)) {
-      const parts = orig.map((part) => String(part || '').trim()).filter(Boolean);
-      return parts.join('').trim();
-    }
-    return String(orig || '').trim();
-  }
-
   function buildHebrewMapFromInterlinear(books) {
     const pointedRanked   = new Map();
     const unpointedRanked = new Map();
@@ -1735,13 +1692,6 @@
     return raw || '';
   }
 
-  async function getHebrewVerseData(slug, chapter, verse) {
-    const book = await loadHebrewInterlinearBookBySlug(slug);
-    const chapterNode = book?.chapters?.[String(chapter)] || null;
-    const verseNode = chapterNode?.[String(verse)] || null;
-    return verseNode || null;
-  }
-
   // ─────────────────────────────────────────────
   //  MAIN INTERLINEAR ROW BUILDER
   // ─────────────────────────────────────────────
@@ -1770,13 +1720,9 @@
     const greekMap = isGreek ? await getGreekMap() : null;
     const hebrewMaps = isGreek ? null : await getHebrewMaps(slug);
     const targetMap = isGreek ? greekMap : hebrewMaps;
-    const hasHebrewSourceTokens = !isGreek && Array.isArray(sourceTokens) && sourceTokens.length;
-    const tokens = hasHebrewSourceTokens
-      ? sourceTokens
-        .map((token) => getSourceTokenDisplayText(token?.orig || ''))
-        .filter(Boolean)
-      : splitTokens(originalText)
-        .flatMap((token) => (isGreek ? [token] : expandTokenForLookup(token, hebrewMaps.unpointedMap)));
+
+    const tokens = splitTokens(originalText)
+      .flatMap((token) => (isGreek ? [token] : expandTokenForLookup(token, hebrewMaps.unpointedMap)));
 
     let analysisData = null;
     let spanishTokens;
@@ -1789,17 +1735,11 @@
       spanishTokens = [];
       if (withAnalysis) analysisData = [];
 
-      for (let idx = 0; idx < tokens.length; idx += 1) {
-        const token = tokens[idx];
-        const sourceToken = hasHebrewSourceTokens ? (sourceTokens[idx] || null) : null;
-        const sourceSpanish = getSourceTokenSpanishGloss(sourceToken);
-        const analysisToken = sanitizeTokenForAnalysis(
-          hasHebrewSourceTokens ? getHebrewTokenLookupForms(sourceToken?.orig || '')[0] || token : token
-        ) || token;
-        const spanish = sourceSpanish || mapHebrewTokenToSpanish(analysisToken, hebrewMaps);
+      for (const token of tokens) {
+        const spanish = mapHebrewTokenToSpanish(token, hebrewMaps);
         spanishTokens.push(spanish);
         if (withAnalysis) {
-          analysisData.push(analyzeHebrewToken(analysisToken));
+          analysisData.push(analyzeHebrewToken(token));
         }
       }
     }
@@ -1826,7 +1766,6 @@
 
     /** Fetch raw verse text from JSON */
     getHebrewRawVerse,
-    getHebrewVerseData,
 
     /** Preload dictionaries for a given book slug */
     preload,
