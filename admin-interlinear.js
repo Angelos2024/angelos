@@ -304,57 +304,9 @@
 
   function pickStrongMorphCandidate(entries, token){
     if(!Array.isArray(entries) || !entries.length) return '';
-    const tokenGloss = normalizeGloss(token?.es || '');
-    const tokenPointed = normalizeHebrew(token?.orig || '', true);
-    const tokenPlain = normalizeHebrew(token?.orig || '', false);
-    const isPossessiveGloss = /\b(mi|mis|tu|tus|su|sus|nuestro|nuestra|nuestros|nuestras|vuestro|vuestra|vuestros|vuestras)\b/.test(tokenGloss);
-    const isConstructGloss = !isPossessiveGloss && /\bde(l| la| los| las)?\b/.test(tokenGloss);
-
-    for(const entry of entries){
-      const forms = Array.isArray(entry?.formas) ? entry.formas : [];
-      const morphs = Array.isArray(entry?.morfs) ? entry.morfs : [];
-      const glosses = Array.isArray(entry?.glosas) ? entry.glosas : [];
-
-      for(let i = 0; i < glosses.length; i += 1){
-        const gloss = normalizeGloss(glosses[i]);
-        const morph = String(morphs[i] || '').trim();
-        if(!morph) continue;
-        if(tokenGloss && gloss === tokenGloss) return morph;
-      }
-
-      for(let i = 0; i < glosses.length; i += 1){
-        const gloss = normalizeGloss(glosses[i]);
-        const morph = String(morphs[i] || '').trim();
-        if(!morph) continue;
-        if(tokenGloss && (gloss.includes(tokenGloss) || tokenGloss.includes(gloss))) return morph;
-      }
-
-      for(let i = 0; i < forms.length; i += 1){
-        const formPointed = normalizeHebrew(forms[i], true);
-        const formPlain = normalizeHebrew(forms[i], false);
-        const morph = String(morphs[i] || '').trim();
-        if(!morph) continue;
-        if((formPointed && formPointed === tokenPointed) || (formPlain && formPlain === tokenPlain)){
-          return morph;
-        }
-      }
-
-      if(morphs.length){
-        const cleanMorphs = morphs.map((morph) => String(morph || '').trim()).filter(Boolean);
-        if(isPossessiveGloss){
-          const possessive = cleanMorphs.find((morph) => morph.includes('.PRS.'));
-          if(possessive) return possessive;
-        }
-        if(isConstructGloss){
-          const construct = cleanMorphs.find((morph) => /\.C(?:\.|$)/.test(morph) && !morph.includes('.PRS.'));
-          if(construct) return construct;
-        }
-        const absolute = cleanMorphs.find((morph) => /\.A(?:\.|$)/.test(morph) && !morph.includes('.PRS.'));
-        if(absolute) return absolute;
-        return cleanMorphs[0] || '';
-      }
-    }
-    return '';
+    const firstEntry = entries[0] || null;
+    const morphs = Array.isArray(firstEntry?.morfs) ? firstEntry.morfs : [];
+    return String(morphs[0] || '').trim();
   }
 
   function decodeHebrewMorphCode(rawCode){
