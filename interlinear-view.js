@@ -1713,6 +1713,52 @@
   //  MAIN INTERLINEAR ROW BUILDER
   // ─────────────────────────────────────────────
 
+  function buildExactHebrewSourceGloss(tokenMeta) {
+    if (!tokenMeta || typeof tokenMeta !== 'object') return '-';
+
+    const asArray = (value) => Array.isArray(value) ? value : (value == null ? [] : [value]);
+    const clean = (value) => String(value || '')
+      .replace(/[←→]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/^[,;:.!?]+|[,;:.!?]+$/g, '')
+      .trim();
+    const morph = Array.isArray(tokenMeta.morphs) ? tokenMeta.morphs.join(' ') : String(tokenMeta.morphs || '');
+    const esParts = asArray(tokenMeta.es).map(clean).filter(Boolean);
+    const addedParts = asArray(tokenMeta.added).map(clean).filter(Boolean);
+    const notransParts = asArray(tokenMeta.notrans).map(clean).filter(Boolean);
+
+    if (notransParts.length && !esParts.length && !addedParts.length) return '-';
+
+    // Usa la glosa fuente del token como autoridad. Evita arrastrar extras de concordancia
+    // en conjunciones o artículos que estaban pensados para cuadrar con RVR1960.
+    if (/^(?:CC|Cc)$/i.test(morph.trim())) {
+      return esParts[0] || '-';
+    }
+    if (/^XD$/i.test(morph.trim())) {
+      return esParts[0] || '-';
+    }
+
+    const out = [];
+    if (esParts.length) {
+      out.push(esParts[0]);
+    }
+
+    for (const part of addedParts) {
+      if (!part) continue;
+      // Conserva "de" para constructo; descarta injertos de concordancia tipo "el", "a".
+      if (/^de(l| la| los| las)?$/i.test(part)) {
+        out.push(part);
+        continue;
+      }
+      if (!out.length) out.push(part);
+      else if (!/^(?:el|la|los|las|un|una|unos|unas|a|al)$/i.test(part)) out.push(part);
+    }
+
+    if (!out.length && esParts.length > 1) out.push(esParts[1]);
+    return out.join(' ').replace(/\s+/g, ' ').trim() || '-';
+  }
+
   /**
    * buildInterlinearRows(originalText, options)
    *
@@ -1737,9 +1783,10 @@
     const greekMap = isGreek ? await getGreekMap() : null;
     const hebrewMaps = isGreek ? null : await getHebrewMaps(slug);
     const targetMap = isGreek ? greekMap : hebrewMaps;
-
-    const tokens = splitTokens(originalText)
-      .flatMap((token) => (isGreek ? [token] : expandTokenForLookup(token, hebrewMaps.unpointedMap)));
+    const hasExactHebrewSource = !isGreek && Array.isArray(sourceTokens) && sourceTokens.length > 0;
+    const tokens = hasExactHebrewSource
+      ? sourceTokens.map((token) => String(token?.orig || '').trim()).filter(Boolean)
+      : splitTokens(originalText).flatMap((token) => (isGreek ? [token] : expandTokenForLookup(token, hebrewMaps.unpointedMap)));
 
     let analysisData = null;
     let spanishTokens;
@@ -1749,16 +1796,23 @@
         return lookupGreekGlossWithLemma(targetMap, token, sourceTokens[idx] || null);
       });
     } else {
-      spanishTokens = [];
-      if (withAnalysis) analysisData = [];
-
-      for (const token of tokens) {
-        const mapper = ExternalGrammar?.mapHebrewTokenToSpanish || mapHebrewTokenToSpanish;
-        const analyzer = ExternalGrammar?.analyzeHebrewToken || analyzeHebrewToken;
-        const spanish = mapper(token, hebrewMaps);
-        spanishTokens.push(spanish);
+      const analyzer = ExternalGrammar?.analyzeHebrewToken || analyzeHebrewToken;
+      if (hasExactHebrewSource) {
+        spanishTokens = sourceTokens.map(buildExactHebrewSourceGloss);
         if (withAnalysis) {
-          analysisData.push(analyzer(token));
+          analysisData = tokens.map((token) => analyzer(token));
+        }
+      } else {
+        spanishTokens = [];
+        if (withAnalysis) analysisData = [];
+
+        for (const token of tokens) {
+          const mapper = ExternalGrammar?.mapHebrewTokenToSpanish || mapHebrewTokenToSpanish;
+          const spanish = mapper(token, hebrewMaps);
+          spanishTokens.push(spanish);
+          if (withAnalysis) {
+            analysisData.push(analyzer(token));
+          }
         }
       }
     }
@@ -1770,6 +1824,7 @@
       spanishLine:  spanishTokens.join(' ')
     };
     if (Array.isArray(sourceTokens) && sourceTokens.length) result.sourceTokenMeta = sourceTokens;
+    if (hasExactHebrewSource) result.spanishTokenSource = 'source_exact';
     if (withAnalysis && analysisData) result.analysisData = analysisData;
     return result;
   }

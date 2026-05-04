@@ -1443,9 +1443,12 @@ function rebalanceHebrewInterlinearSpanishTokens(spanishTokens, sourceTokenMeta,
   const sourceTokenMeta = Array.isArray(rows?.sourceTokenMeta) ? rows.sourceTokenMeta : [];
   const rawSpanishTokens = Array.isArray(rows?.spanishTokens) ? rows.spanishTokens : [];
   const analysisData = Array.isArray(rows?.analysisData) ? rows.analysisData : [];
+  const spanishTokenSource = String(rows?.spanishTokenSource || '');
   const spanishTokens = isGreek
     ? rawSpanishTokens
-    : rebalanceHebrewInterlinearSpanishTokens(rawSpanishTokens, sourceTokenMeta, analysisData);
+    : (spanishTokenSource === 'source_exact'
+        ? rawSpanishTokens
+        : rebalanceHebrewInterlinearSpanishTokens(rawSpanishTokens, sourceTokenMeta, analysisData));
       const originalWordClass = isGreek ? 'interlinear-greek' : 'interlinear-hebrew';
   const directionClass = isGreek ? 'interlinear-dir-ltr' : 'interlinear-dir-rtl';
   if(!tokens.length){
