@@ -278,7 +278,52 @@
     return candidates.find((candidate) => candidate?.morph)?.morph || '';
   }
 
+  function decodeHebrewMorphCode(rawCode){
+    const code = String(rawCode || '').trim().toUpperCase();
+    if(!code) return '';
+
+    const exact = {
+      PB: 'PREP',
+      PM: 'PREP',
+      PA: 'PART',
+      CC: 'CONJ',
+      CS: 'CONJ',
+      CO: 'CONJ',
+      AA: 'ADJ',
+      AC: 'ADJ',
+      AV: 'ADV',
+      RD: 'ART',
+      RI: 'INTERR',
+      RP: 'PRON',
+      RR: 'REL',
+      TD: 'ART',
+      TI: 'INTERR',
+      TN: 'NEG',
+      TP: 'PRON',
+      TR: 'REL',
+      XC: 'CONJ',
+      XD: 'ART',
+      XN: 'NEG',
+      XP: 'PART',
+      XR: 'REL',
+      XT: 'PART'
+    };
+    if(exact[code]) return exact[code];
+
+    if(code.startsWith('NC')) return 'SUST';
+    if(code.startsWith('NP')) return 'N PROP';
+    if(code.startsWith('AA') || code.startsWith('AC')) return 'ADJ';
+    if(code.startsWith('AV')) return 'ADV';
+    if(code.startsWith('V')) return 'VERBO';
+    if(code.startsWith('P')) return 'PRON';
+    if(code.startsWith('T')) return 'PART';
+    return code;
+  }
+
   async function resolveMorphLabel(token){
+    const decodedTokenMorph = decodeHebrewMorphCode(token?.morphs);
+    if(decodedTokenMorph) return decodedTokenMorph;
+
     try{
       const index = await getHebrewMorphIndex();
       const pointedKey = normalizeHebrew(token?.orig || '', true);
