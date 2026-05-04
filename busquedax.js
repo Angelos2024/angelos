@@ -1012,6 +1012,18 @@ function getGreekRefs(normalized, index) {
     });
     return refs;
   }
+function cleanSearchVerseText(text, lang = 'es') {
+  let value = String(text ?? '');
+  if (!value) return '';
+  if (lang === 'es') {
+    value = value
+      .replace(/^\s*RVR1960\s*[\r\n]+/i, '')
+      .replace(/[\r\n]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+  return value;
+}
 async function loadJson(url, options = {}) {
    const { signal } = options;
  const failedRequest = failedJsonRequests.get(url);
@@ -1189,7 +1201,12 @@ const tokens = String(term || '').split(/\s+/).filter(Boolean);
     const key = `${lang}/${book}/${chapter}`;
      if (state.textCache.has(key)) return state.textCache.get(key);
      const url = `${TEXT_BASE}/${lang}/${book}/${chapter}.json`;
-     const data = await loadJson(url, options);
+     const rawData = await loadJson(url, options);
+    const data = Array.isArray(rawData)
+      ? rawData.map((verse) => cleanSearchVerseText(verse, lang))
+      : (rawData && typeof rawData === 'object'
+        ? Object.fromEntries(Object.entries(rawData).map(([verse, text]) => [verse, cleanSearchVerseText(text, lang)]))
+        : rawData);
     state.textCache.set(key, data);
      return data;
    }
