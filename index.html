@@ -1875,12 +1875,21 @@ lastRef = { chapter: ch, verseStart: v1, verseEnd: v2 };
     for(let v=v1; v<=v2; v++){
       const t = versesOrig[v-1] ?? '';
  if(viewMode === 'interlinear'){
-  if(window.InterlinearView?.buildInterlinearRows){
+ if(window.InterlinearView?.buildInterlinearRows){
            let interlinearSource = t;
+           let sourceTokens = [];
+           let hebrewVerseData = null;
+           if(!isGreekBook && window.InterlinearView?.getHebrewVerseData){
+             hebrewVerseData = await window.InterlinearView.getHebrewVerseData(currentBookSlug, ch, v);
+             if(Array.isArray(hebrewVerseData?.tokens)) sourceTokens = hebrewVerseData.tokens;
+             if(!String(interlinearSource || '').trim() && String(hebrewVerseData?.raw || '').trim()){
+               interlinearSource = hebrewVerseData.raw;
+             }
+           }
            if(!isGreekBook && !String(interlinearSource || '').trim() && window.InterlinearView?.getHebrewRawVerse){
              interlinearSource = await window.InterlinearView.getHebrewRawVerse(currentBookSlug, ch, v);
            }
-           const rows = await window.InterlinearView.buildInterlinearRows(interlinearSource, { isGreek: isGreekBook, withAnalysis: !isGreekBook, slug: currentBookSlug });
+           const rows = await window.InterlinearView.buildInterlinearRows(interlinearSource, { isGreek: isGreekBook, withAnalysis: !isGreekBook, slug: currentBookSlug, sourceTokens });
      htmlOrig += `<p class="mb-2 verse-line interlinear-verse" data-side="orig" data-book="${esc(currentBookSlug)}" data-ch="${ch}" data-v="${v}">
             <span class="verse-num">${v}</span>
  <span class="interlinear-original ${isGreekBook ? 'interlinear-dir-ltr' : 'interlinear-dir-rtl'}">${buildInterlinearWordMarkup(rows, interlinearSource, isGreekBook)}</span>
