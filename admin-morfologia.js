@@ -560,7 +560,6 @@
 
   async function buildVerseCardHtml(verseNumber, verseNode){
     const tokens = Array.isArray(verseNode?.tokens) ? verseNode.tokens : [];
-    const hebrewLine = buildHebrewVerseText(tokens, verseNode?.raw);
     const [chapterNumber, localVerseNumber] = String(verseNumber).split(':');
     let oshbVerseNode = null;
     try{
@@ -587,7 +586,6 @@
         <div class="admin-verse-head">
           <div>
             <div class="admin-verse-ref">${escapeHtml(state.label)} ${verseNumber}</div>
-            <p class="admin-morph-verse-line">${escapeHtml(hebrewLine)}</p>
           </div>
         </div>
         <div class="admin-morph-card-body">
