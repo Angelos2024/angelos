@@ -305,13 +305,29 @@
   function pickStrongMorphCandidate(entries, token){
     if(!Array.isArray(entries) || !entries.length) return '';
     const firstEntry = entries[0] || null;
+    const tokenPointed = normalizeHebrew(token?.orig || '', true);
+    const tokenPlain = normalizeHebrew(token?.orig || '', false);
+    const forms = Array.isArray(firstEntry?.formas) ? firstEntry.formas : [];
     const morphs = Array.isArray(firstEntry?.morfs) ? firstEntry.morfs : [];
-    return String(morphs[0] || '').trim();
+
+    for(let i = 0; i < forms.length; i += 1){
+      const formPointed = normalizeHebrew(forms[i], true);
+      const formPlain = normalizeHebrew(forms[i], false);
+      const morph = String(morphs[i] || '').trim();
+      if(!morph) continue;
+      if((formPointed && formPointed === tokenPointed) || (formPlain && formPlain === tokenPlain)){
+        return /^INTJ\./i.test(morph) ? 'INTJ' : morph;
+      }
+    }
+
+    const fallbackMorph = String(morphs[0] || '').trim();
+    return /^INTJ\./i.test(fallbackMorph) ? 'INTJ' : fallbackMorph;
   }
 
   function decodeHebrewMorphCode(rawCode){
     const code = String(rawCode || '').trim().toUpperCase();
     if(!code) return '';
+    if(/^INTJ\./.test(code)) return 'INTJ';
     if(code.includes('.')) return code;
 
     const exact = {
