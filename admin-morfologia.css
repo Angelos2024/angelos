@@ -11,27 +11,28 @@
 }
 
 .admin-morph-token-strip{
-  display:block;
+  display:flex;
+  flex-direction:row-reverse;
+  flex-wrap:wrap;
+  justify-content:flex-start;
+  align-items:flex-start;
   width:100%;
   direction:rtl;
   text-align:right;
-  line-height:1;
-  unicode-bidi:plaintext;
+  line-height:1.1;
 }
 
 .admin-morph-token{
-  display:inline-flex;
+  display:flex;
   flex-direction:column;
   gap:.22rem;
-  margin:0 0 .2rem .82rem;
+  margin:0 0 1rem .82rem;
   padding:0;
   border:0;
   background:transparent;
   box-shadow:none;
-  justify-items:start;
   align-items:center;
   text-align:center;
-  vertical-align:top;
 }
 
 .admin-morph-token-hebrew{
