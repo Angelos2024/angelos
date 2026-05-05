@@ -2,48 +2,48 @@
   const ACCESS_KEY = 'angelos.admin.interlinear.access';
   const ACCESS_TTL_MS = 8 * 60 * 60 * 1000;
   const ADMIN_PASSWORD_HASH = '9ece8d19ac8b4bb531ad35e6e6ef440e9e4815868d0f8912585b97f0e6dc2d8c';
-  const LAB_MODE_LABEL = 'Hebreo AT';
+  const LAB_MODE_LABEL = 'Morfologia AT';
 
   const OT_BOOKS = [
-    ['genesis', 'Génesis', '01_Génesis.json'],
-    ['exodo', 'Éxodo', '02_Éxodo.json'],
-    ['levitico', 'Levítico', '03_Levítico.json'],
-    ['numeros', 'Números', '04_Números.json'],
+    ['genesis', 'Genesis', '01_Génesis.json'],
+    ['exodo', 'Exodo', '02_Éxodo.json'],
+    ['levitico', 'Levitico', '03_Levítico.json'],
+    ['numeros', 'Numeros', '04_Números.json'],
     ['deuteronomio', 'Deuteronomio', '05_Deuteronomio.json'],
-    ['josue', 'Josué', '06_Josué.json'],
+    ['josue', 'Josue', '06_Josué.json'],
     ['jueces', 'Jueces', '07_Jueces.json'],
     ['rut', 'Rut', '08_Rut.json'],
     ['1_samuel', '1 Samuel', '09_1_Samuel.json'],
     ['2_samuel', '2 Samuel', '10_2_Samuel.json'],
     ['1_reyes', '1 Reyes', '11_1_Reyes.json'],
     ['2_reyes', '2 Reyes', '12_2_Reyes.json'],
-    ['1_cronicas', '1 Crónicas', '13_1_Crónicas.json'],
-    ['2_cronicas', '2 Crónicas', '14_2_Crónicas.json'],
+    ['1_cronicas', '1 Cronicas', '13_1_Crónicas.json'],
+    ['2_cronicas', '2 Cronicas', '14_2_Crónicas.json'],
     ['esdras', 'Esdras', '15_Esdras.json'],
-    ['nehemias', 'Nehemías', '16_Nehemías.json'],
+    ['nehemias', 'Nehemias', '16_Nehemías.json'],
     ['ester', 'Ester', '17_Ester.json'],
     ['job', 'Job', '18_Job.json'],
     ['salmos', 'Salmos', '19_Salmos.json'],
     ['proverbios', 'Proverbios', '20_Proverbios.json'],
-    ['eclesiastes', 'Eclesiastés', '21_Eclesiastés.json'],
+    ['eclesiastes', 'Eclesiastes', '21_Eclesiastés.json'],
     ['cantares', 'Cantares', '22_Cantares.json'],
-    ['isaias', 'Isaías', '23_Isaías.json'],
-    ['jeremias', 'Jeremías', '24_Jeremías.json'],
+    ['isaias', 'Isaias', '23_Isaías.json'],
+    ['jeremias', 'Jeremias', '24_Jeremías.json'],
     ['lamentaciones', 'Lamentaciones', '25_Lamentaciones.json'],
     ['ezequiel', 'Ezequiel', '26_Ezequiel.json'],
     ['daniel', 'Daniel', '27_Daniel.json'],
     ['oseas', 'Oseas', '28_Oseas.json'],
     ['joel', 'Joel', '29_Joel.json'],
-    ['amos', 'Amós', '30_Amós.json'],
-    ['abdias', 'Abdías', '31_Abdías.json'],
-    ['jonas', 'Jonás', '32_Jonás.json'],
+    ['amos', 'Amos', '30_Amós.json'],
+    ['abdias', 'Abdias', '31_Abdías.json'],
+    ['jonas', 'Jonas', '32_Jonás.json'],
     ['miqueas', 'Miqueas', '33_Miqueas.json'],
-    ['nahum', 'Nahúm', '34_Nahúm.json'],
+    ['nahum', 'Nahum', '34_Nahúm.json'],
     ['habacuc', 'Habacuc', '35_Habacuc.json'],
-    ['sofonias', 'Sofonías', '36_Sofonías.json'],
+    ['sofonias', 'Sofonias', '36_Sofonías.json'],
     ['hageo', 'Hageo', '37_Hageo.json'],
-    ['zacarias', 'Zacarías', '38_Zacarías.json'],
-    ['malaquias', 'Malaquías', '39_Malaquías.json']
+    ['zacarias', 'Zacarias', '38_Zacarías.json'],
+    ['malaquias', 'Malaquias', '39_Malaquías.json']
   ];
 
   const BOOK_MAP = new Map(OT_BOOKS.map(([slug, label, file]) => [slug, { slug, label, file }]));
@@ -80,7 +80,7 @@
 
   const state = {
     slug: 'genesis',
-    label: 'Génesis',
+    label: 'Genesis',
     chapter: 1
   };
 
@@ -147,11 +147,11 @@
       sessionStorage.setItem(ACCESS_KEY, String(Date.now()));
       return true;
     }
-    const password = window.prompt('Contraseña de admin');
+    const password = window.prompt('Contrasena de admin');
     if(!password) return false;
     const candidateHash = await sha256(password.trim());
     if(candidateHash !== ADMIN_PASSWORD_HASH){
-      window.alert('Contraseña incorrecta.');
+      window.alert('Contrasena incorrecta.');
       return false;
     }
     sessionStorage.setItem(ACCESS_KEY, String(Date.now()));
@@ -183,11 +183,10 @@
 
   async function getHebrewDictionary(){
     if(!hebrewDictionaryPromise){
-      hebrewDictionaryPromise = loadJson('./diccionario/diccionario_unificado.min.json')
-        .catch((error) => {
-          hebrewDictionaryPromise = null;
-          throw error;
-        });
+      hebrewDictionaryPromise = loadJson('./diccionario/diccionario_unificado.min.json').catch((error) => {
+        hebrewDictionaryPromise = null;
+        throw error;
+      });
     }
     return hebrewDictionaryPromise;
   }
@@ -195,9 +194,7 @@
   function getEntryPrintedMorph(entry){
     const candidates = [
       entry?.morfologia_impresa,
-      entry?.['morfología_impresa'],
       entry?.morfologia,
-      entry?.['morfología'],
       entry?.printed_entry,
       entry?.entrada_impresa
     ];
@@ -227,16 +224,6 @@
     if(/^H\d+$/.test(text)) return text;
     if(/^\d+$/.test(text)) return `H${text}`;
     return text;
-  }
-
-  function normalizeGloss(value){
-    return String(value || '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^\p{L}\p{N}\s]/gu, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .toLowerCase();
   }
 
   async function getHebrewMorphIndex(){
@@ -428,8 +415,9 @@
         || pickMorphCandidate(index.plain.get(plainKey), token);
       if(label) return label;
     }catch(_error){
-      // Si el diccionario no carga, seguimos con la morfología del interlineal.
+      // Seguimos con la morfologia del interlineal.
     }
+
     if(decodedTokenMorph) return decodedTokenMorph;
     return String(token?.morphs || '').trim();
   }
@@ -470,7 +458,7 @@
   async function renderChapterList(slug){
     const total = await getChapterCount(slug);
     const book = BOOK_MAP.get(slug);
-    if(els.chapterTitle) els.chapterTitle.textContent = `${book?.label || ''} · capítulos`;
+    if(els.chapterTitle) els.chapterTitle.textContent = `${book?.label || ''} · capitulos`;
     if(!els.chapterList) return;
     els.chapterList.innerHTML = '';
     for(let i = 1; i <= total; i += 1){
@@ -507,9 +495,8 @@
       String(rawText || '').matchAll(/<l>(.*?)<\/l>/g),
       (match) => String(match[1] || '').trim()
     ).filter(Boolean);
-    if(rawMatches.length){
-      return rawMatches.join(' ');
-    }
+    if(rawMatches.length) return rawMatches.join(' ');
+
     const sourceTokens = Array.isArray(tokens) ? tokens : [];
     if(sourceTokens.length){
       return sourceTokens
@@ -520,17 +507,29 @@
     return String(rawText || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() || 'Sin texto hebreo';
   }
 
-async function buildVerseCardHtml(verseNumber, verseNode){
+  async function buildVerseCardHtml(verseNumber, verseNode){
     const tokens = Array.isArray(verseNode?.tokens) ? verseNode.tokens : [];
     const hebrewLine = buildHebrewVerseText(tokens, verseNode?.raw);
+    const rows = await Promise.all(tokens.map(async (token) => {
+      const morphLabel = await resolveMorphLabel(token);
+      return `
+        <div class="admin-morph-token" data-num="${escapeHtml(token.num || '')}">
+          <div class="admin-morph-token-hebrew">${escapeHtml(token.orig || '')}</div>
+          <div class="admin-morph-token-label">${escapeHtml(morphLabel || '-')}</div>
+        </div>
+      `;
+    }));
 
     return `
       <article class="admin-verse-card" data-verse="${verseNumber}">
         <div class="admin-verse-head">
           <div>
             <div class="admin-verse-ref">${escapeHtml(state.label)} ${verseNumber}</div>
-            <p class="admin-verse-translation hebrew-only">${escapeHtml(hebrewLine)}</p>
+            <p class="admin-morph-verse-line">${escapeHtml(hebrewLine)}</p>
           </div>
+        </div>
+        <div class="admin-morph-card-body">
+          <div class="admin-morph-token-strip">${rows.join('') || '<div class="admin-morph-empty">No hay tokens hebreos en este versiculo.</div>'}</div>
         </div>
       </article>
     `;
@@ -538,7 +537,7 @@ async function buildVerseCardHtml(verseNumber, verseNode){
 
   async function renderEditor(){
     setBadge('', '');
-    if(els.mount) els.mount.innerHTML = '<div class="text-muted">Cargando texto hebreo…</div>';
+    if(els.mount) els.mount.innerHTML = '<div class="text-muted">Cargando morfologia...</div>';
 
     const interlinearBook = await getInterlinearBook(state.slug);
     const chapterTotal = await getChapterCount(state.slug);
@@ -547,7 +546,7 @@ async function buildVerseCardHtml(verseNumber, verseNode){
     const interlinearVerses = getInterlinearVerses(interlinearBook, state.chapter);
     const verseNumbers = Object.keys(interlinearVerses).sort((a, b) => Number(a) - Number(b));
     if(!verseNumbers.length){
-      if(els.mount) els.mount.innerHTML = '<div class="admin-empty-state">No se encontró texto hebreo para este capítulo.</div>';
+      if(els.mount) els.mount.innerHTML = '<div class="admin-empty-state">No se encontro texto hebreo para este capitulo.</div>';
       if(els.verseCount) els.verseCount.textContent = '0';
       if(els.tokenCount) els.tokenCount.textContent = '0';
       updateDraftStateLabel();
@@ -563,7 +562,7 @@ async function buildVerseCardHtml(verseNumber, verseNode){
     }
 
     if(els.mount) els.mount.innerHTML = cards.join('');
-    if(els.title) els.title.textContent = `Laboratorio hebreo · ${state.label} ${state.chapter}`;
+    if(els.title) els.title.textContent = `Laboratorio morfologico · ${state.label} ${state.chapter}`;
     if(els.meta) els.meta.textContent = `${state.label} ${state.chapter}`;
     if(els.panelTitle) els.panelTitle.textContent = `${state.label} ${state.chapter}`;
     if(els.input) els.input.value = `${state.label} ${state.chapter}`;
@@ -592,7 +591,7 @@ async function buildVerseCardHtml(verseNumber, verseNode){
   function handleError(error){
     const message = error instanceof Error ? error.message : String(error);
     if(els.mount) els.mount.innerHTML = `<div class="admin-empty-state">${escapeHtml(message)}</div>`;
-    setBadge('No se pudo abrir el capítulo', 'err');
+    setBadge('No se pudo abrir el capitulo', 'err');
   }
 
   function setupThemeMenu(){
@@ -647,7 +646,7 @@ async function buildVerseCardHtml(verseNumber, verseNode){
       event.preventDefault();
       const parsed = parseReference(els.input?.value);
       if(!parsed){
-        setBadge('Usa el formato "Libro capítulo"', 'err');
+        setBadge('Usa el formato "Libro capitulo"', 'err');
         return;
       }
       try{
