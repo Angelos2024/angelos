@@ -312,11 +312,12 @@
   function decodeHebrewMorphCode(rawCode){
     const code = String(rawCode || '').trim().toUpperCase();
     if(!code) return '';
+    if(code.includes('.')) return code;
 
     const exact = {
       PB: 'PREP',
       PM: 'PREP',
-      PA: 'PART',
+      PA: 'PART.OBJ.DIR',
       CC: 'CONJ',
       CS: 'CONJ',
       CO: 'CONJ',
@@ -341,12 +342,58 @@
     };
     if(exact[code]) return exact[code];
 
+    const stemMap = {
+      Q: 'QAL',
+      N: 'NIF',
+      P: 'PIEL',
+      H: 'HIF',
+      T: 'HIT',
+      V: 'HOF',
+      O: 'POLEL',
+      M: 'POAL'
+    };
+    const verbalFormMap = {
+      S: 'PERF',
+      F: 'IMPF',
+      M: 'WAYQ',
+      J: 'JUSS',
+      I: 'IMPV',
+      T: 'INFC',
+      P: 'PTCA',
+      R: 'PTCP'
+    };
+    const numberMap = {
+      S: 'SG',
+      P: 'PL',
+      D: 'DU'
+    };
+    const genderMap = {
+      M: 'M',
+      F: 'F',
+      C: 'C',
+      U: 'U'
+    };
+
+    const simpleVerb = code.match(/^V([A-Z])A([A-Z])([SPD])([MFCU])([123])$/);
+    if(simpleVerb){
+      const [, stemCode, formCode, numberCode, genderCode, personCode] = simpleVerb;
+      const stem = stemMap[stemCode] || stemCode;
+      const form = verbalFormMap[formCode] || formCode;
+      const number = numberMap[numberCode] || numberCode;
+      const gender = genderMap[genderCode] || genderCode;
+      return `VERBO.${stem}.${form}.P${personCode}.${gender}.${number}`;
+    }
+
     return code;
   }
 
   async function resolveMorphLabel(token){
     const strongKey = normalizeStrong(token?.strongs);
     const decodedTokenMorph = decodeHebrewMorphCode(token?.morphs);
+
+    if(/^VERBO\./.test(decodedTokenMorph) || /^PART\.OBJ\.DIR$/.test(decodedTokenMorph)){
+      return decodedTokenMorph;
+    }
 
     try{
       const index = await getHebrewMorphIndex();
