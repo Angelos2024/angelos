@@ -50,6 +50,7 @@
   const LABEL_TO_SLUG = new Map(OT_BOOKS.map(([slug, label]) => [normalizeKey(label), slug]));
   const chapterCountCache = new Map();
   const interlinearCache = new Map();
+  const oshbMorphCache = new Map();
   let hebrewDictionaryPromise = null;
   let hebrewMorphIndexPromise = null;
 
@@ -173,6 +174,18 @@
     return interlinearCache.get(slug);
   }
 
+  async function getOshbMorphBook(slug){
+    const book = BOOK_MAP.get(slug);
+    if(!book) throw new Error('Libro no soportado en la capa OSHB2.');
+    if(!oshbMorphCache.has(slug)){
+      oshbMorphCache.set(slug, loadJson(`./IdiomaORIGEN/oshb-morph/${book.file}`).catch((error) => {
+        oshbMorphCache.delete(slug);
+        throw error;
+      }));
+    }
+    return oshbMorphCache.get(slug);
+  }
+
   async function getChapterCount(slug){
     if(chapterCountCache.has(slug)) return chapterCountCache.get(slug);
     const book = await getInterlinearBook(slug);
@@ -224,6 +237,41 @@
     if(/^H\d+$/.test(text)) return text;
     if(/^\d+$/.test(text)) return `H${text}`;
     return text;
+  }
+
+  function findOshbMorphLabel(oshbVerseNode, token, tokenIndex){
+    const forms = Array.isArray(oshbVerseNode?.forms) ? oshbVerseNode.forms : [];
+    const morphs = Array.isArray(oshbVerseNode?.morphs) ? oshbVerseNode.morphs : [];
+    if(!forms.length || !morphs.length) return '';
+
+    const tokenPointed = normalizeHebrew(token?.orig || '', true);
+    const tokenPlain = normalizeHebrew(token?.orig || '', false);
+
+    const indexedForm = forms[tokenIndex];
+    const indexedMorph = String(morphs[tokenIndex] || '').trim();
+    if(indexedForm && indexedMorph){
+      const indexedPointed = normalizeHebrew(indexedForm, true);
+      const indexedPlain = normalizeHebrew(indexedForm, false);
+      if(
+        (indexedPointed && indexedPointed === tokenPointed) ||
+        (indexedPlain && indexedPlain === tokenPlain)
+      ){
+        return indexedMorph;
+      }
+    }
+
+    for(let i = 0; i < forms.length; i += 1){
+      const form = forms[i];
+      const morph = String(morphs[i] || '').trim();
+      if(!morph) continue;
+      const formPointed = normalizeHebrew(form, true);
+      const formPlain = normalizeHebrew(form, false);
+      if((formPointed && formPointed === tokenPointed) || (formPlain && formPlain === tokenPlain)){
+        return morph;
+      }
+    }
+
+    return '';
   }
 
   async function getHebrewMorphIndex(){
@@ -390,7 +438,10 @@
     return code;
   }
 
-  async function resolveMorphLabel(token){
+  async function resolveMorphLabel(token, context = {}){
+    const oshbLabel = findOshbMorphLabel(context.oshbVerseNode, token, context.tokenIndex ?? -1);
+    if(oshbLabel) return oshbLabel;
+
     const strongKey = normalizeStrong(token?.strongs);
     const decodedTokenMorph = decodeHebrewMorphCode(token?.morphs);
 
@@ -510,8 +561,19 @@
   async function buildVerseCardHtml(verseNumber, verseNode){
     const tokens = Array.isArray(verseNode?.tokens) ? verseNode.tokens : [];
     const hebrewLine = buildHebrewVerseText(tokens, verseNode?.raw);
+    const [chapterNumber, localVerseNumber] = String(verseNumber).split(':');
+    let oshbVerseNode = null;
+    try{
+      const oshbBook = await getOshbMorphBook(state.slug);
+      oshbVerseNode = oshbBook?.chapters?.[chapterNumber]?.[localVerseNumber] || null;
+    }catch(_error){
+      oshbVerseNode = null;
+    }
     const rows = await Promise.all(tokens.map(async (token) => {
-      const morphLabel = await resolveMorphLabel(token);
+      const morphLabel = await resolveMorphLabel(token, {
+        oshbVerseNode,
+        tokenIndex: Math.max(Number(token?.num || 0) - 1, 0)
+      });
       return `
         <div class="admin-morph-token" data-num="${escapeHtml(token.num || '')}">
           <div class="admin-morph-token-hebrew">${escapeHtml(token.orig || '')}</div>
