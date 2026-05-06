@@ -35,7 +35,31 @@
   text-align:center;
 }
 
-.admin-morph-token-hebrew{
+.admin-morph-token-strip-inner{
+  display:flex;
+  flex-direction:row;
+  align-items:flex-start;
+  justify-content:flex-start;
+  gap:.45rem;
+  direction:rtl;
+}
+
+.admin-morph-segment{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.18rem;
+}
+
+.admin-morph-segment-prefix .admin-morph-segment-label{
+  color:#9c7a47;
+}
+
+.admin-morph-segment-suffix .admin-morph-segment-label{
+  color:#9c7a47;
+}
+
+.admin-morph-segment-hebrew{
   direction:rtl;
   text-align:center;
   font-size:1.34rem;
@@ -44,7 +68,7 @@
   font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;
 }
 
-.admin-morph-token-label{
+.admin-morph-segment-label{
   direction:ltr;
   text-align:center;
   font-size:.64rem;
@@ -64,11 +88,11 @@
 }
 
 @media (max-width: 900px){
-  .admin-morph-token-hebrew{
+  .admin-morph-segment-hebrew{
     font-size:1.16rem;
   }
 
-  .admin-morph-token-label{
+  .admin-morph-segment-label{
     font-size:.58rem;
   }
 }

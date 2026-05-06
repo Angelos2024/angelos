@@ -566,22 +566,33 @@
     const versePlan = AdminEngine?.buildAdminVersePlan
       ? AdminEngine.buildAdminVersePlan(verseNode, oshbVerseNode)
       : { items: [] };
-    const tokens = versePlan.items.length
-      ? versePlan.items.map((entry) => entry.token)
-      : [];
-    const rows = await Promise.all(tokens.map(async (token, posIndex) => {
+    const rows = await Promise.all(versePlan.items.map(async (entry, posIndex) => {
+      const token = entry.token || {};
       const parsedNum = Number(token?.num);
       const tokenIndex = Number.isInteger(parsedNum) && parsedNum >= 1
         ? parsedNum - 1
         : posIndex;
-      const morphLabel = await resolveMorphLabel(token, {
+      const fallbackMorphLabel = await resolveMorphLabel(token, {
         oshbVerseNode,
         tokenIndex
       });
+      const morphemes = Array.isArray(entry?.layer?.morphemes) && entry.layer.morphemes.length
+        ? entry.layer.morphemes
+        : [{
+            surface: token.orig || '',
+            label: fallbackMorphLabel || '-',
+            type: 'base',
+            gloss: entry?.baseGloss || ''
+          }];
+      const morphemeHtml = morphemes.map((morpheme) => `
+        <div class="admin-morph-segment admin-morph-segment-${escapeHtml(morpheme.type || 'base')}">
+          <div class="admin-morph-segment-hebrew">${escapeHtml(morpheme.surface || '')}</div>
+          <div class="admin-morph-segment-label">${escapeHtml(morpheme.label || '-')}</div>
+        </div>
+      `).join('');
       return `
         <div class="admin-morph-token" data-num="${escapeHtml(token.num || '')}">
-          <div class="admin-morph-token-hebrew">${escapeHtml(token.orig || '')}</div>
-          <div class="admin-morph-token-label">${escapeHtml(morphLabel || '-')}</div>
+          <div class="admin-morph-token-strip-inner">${morphemeHtml}</div>
         </div>
       `;
     }));
