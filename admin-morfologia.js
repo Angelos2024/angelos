@@ -584,7 +584,7 @@
             type: 'base',
             gloss: entry?.baseGloss || ''
           }];
-      const tokenGloss = String(entry?.tokenGloss || '').trim();
+      const tokenGloss = String(entry?.phraseGloss || entry?.tokenGloss || '').trim();
       const morphemeHtml = morphemes.map((morpheme) => `
         <div class="admin-morph-segment admin-morph-segment-${escapeHtml(morpheme.type || 'base')}">
           <div class="admin-morph-segment-hebrew">${escapeHtml(morpheme.surface || '')}</div>

@@ -151,8 +151,39 @@
       isConstruct: /\.C(?:$|\.)/.test(upper),
       isNominal: /^(SUBS|ADJ|NPROP)(?:\.|$)/.test(upper),
       isProper: /^NPROP(?:\.|$)/.test(upper),
-      isVerbal: /^VERBO(?:\.|$)/.test(upper)
+      isVerbal: /^VERBO(?:\.|$)/.test(upper),
+      isPlural: /\.PL(?:$|\.)/.test(upper),
+      isDual: /\.DU(?:$|\.)/.test(upper),
+      isFeminine: /\.F(?:$|\.)/.test(upper)
     };
+  }
+
+  function resolveDependentArticle(features){
+    if(features.isPlural || features.isDual){
+      return features.isFeminine ? 'de las' : 'de los';
+    }
+    return features.isFeminine ? 'de la' : 'del';
+  }
+
+  function normalizeSpanishPhrase(text){
+    return String(text || '')
+      .replace(/\s+/g, ' ')
+      .replace(/\bde el\b/gi, 'del')
+      .trim();
+  }
+
+  function buildConstructPhrase(headGloss, dependentGloss){
+    const head = String(headGloss || '').trim();
+    const dependent = String(dependentGloss || '').trim();
+    if(!head) return dependent;
+    if(!dependent) return head;
+    if(/^(el|la|los|las)\b/i.test(dependent)){
+      return normalizeSpanishPhrase(`${head} de ${dependent}`);
+    }
+    if(/^(del|de la|de los|de las)\b/i.test(dependent)){
+      return normalizeSpanishPhrase(`${head} ${dependent}`);
+    }
+    return normalizeSpanishPhrase(`${head} de ${dependent}`);
   }
 
   function hasArticleMorpheme(entry){
@@ -167,17 +198,20 @@
 
   function findConstructTailIndex(items, startIndex){
     let sawArticleBridge = false;
+    let articleIndex = -1;
     for(let index = startIndex + 1; index < items.length; index += 1){
       const entry = items[index];
       const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
       if(isArticleOnlyToken(entry)){
         sawArticleBridge = true;
+        if(articleIndex < 0) articleIndex = index;
         continue;
       }
       if(features.isNominal || features.isProper){
         return {
           index,
-          viaArticle: sawArticleBridge || hasArticleMorpheme(entry)
+          viaArticle: sawArticleBridge || hasArticleMorpheme(entry),
+          articleIndex
         };
       }
       if(features.isVerbal){
@@ -192,26 +226,48 @@
   }
 
   function applyConstructSemantics(items){
-    return items.map((entry, index) => {
+    const updated = items.map((entry) => ({ ...entry }));
+
+    updated.forEach((entry, index) => {
       const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
       const hasPronominalSuffix = Boolean(entry?.layer?.hasPronominalSuffix);
       const tokenGloss = String(entry?.tokenGloss || '').trim();
-      if(!features.isConstruct || !features.isNominal || hasPronominalSuffix || !tokenGloss){
-        return entry;
-      }
+      if(!features.isConstruct || !features.isNominal || hasPronominalSuffix || !tokenGloss) return;
 
-      const tail = findConstructTailIndex(items, index);
-      if(!tail) return entry;
+      const tail = findConstructTailIndex(updated, index);
+      if(!tail) return;
 
-      const normalizedGloss = /\bde$/i.test(tokenGloss) ? tokenGloss : `${tokenGloss} de`;
-      return {
+      const dependentEntry = updated[tail.index];
+      const dependentFeatures = extractMorphFeatures(dependentEntry?.baseMorph || dependentEntry?.layer?.baseLabel || '');
+      const dependentGloss = String(dependentEntry?.tokenGloss || dependentEntry?.baseGloss || '').trim();
+      const bridgeGloss = tail.viaArticle && tail.articleIndex >= 0
+        ? resolveDependentArticle(dependentFeatures)
+        : '';
+      const phraseGloss = tail.viaArticle
+        ? buildConstructPhrase(tokenGloss, `${bridgeGloss} ${dependentGloss}`.trim())
+        : buildConstructPhrase(tokenGloss, dependentGloss);
+
+      updated[index] = {
         ...entry,
-        tokenGloss: normalizedGloss,
+        tokenGloss: tail.viaArticle ? tokenGloss : (/\bde$/i.test(tokenGloss) ? tokenGloss : `${tokenGloss} de`),
+        phraseGloss,
         semanticRole: 'construct-head',
         constructTargetIndex: tail.index,
         constructViaArticle: tail.viaArticle
       };
+
+      if(tail.viaArticle && tail.articleIndex >= 0 && updated[tail.articleIndex]){
+        updated[tail.articleIndex] = {
+          ...updated[tail.articleIndex],
+          tokenGloss: resolveDependentArticle(dependentFeatures),
+          semanticRole: 'construct-bridge-article',
+          constructHeadIndex: index,
+          constructTargetIndex: tail.index
+        };
+      }
     });
+
+    return updated;
   }
 
   function buildAdminVersePlan(verseNode, oshbVerseNode){
