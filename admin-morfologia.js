@@ -619,8 +619,10 @@
     const forms = Array.isArray(oshbVerseNode?.forms) ? oshbVerseNode.forms : [];
     if(!forms.length || !Number.isInteger(tokenIndex) || tokenIndex < 0) return morphemes;
     if(!canDisplayMaqafOnRow(token, morphemes)) return morphemes;
-    const currentForm = String(forms[tokenIndex] || '');
-    const nextForm = String(forms[tokenIndex + 1] || '');
+    const currentIndex = resolveOshbFormIndex(token, tokenIndex, oshbVerseNode);
+    if(currentIndex < 0) return morphemes;
+    const currentForm = String(forms[currentIndex] || '');
+    const nextForm = String(forms[currentIndex + 1] || '');
     const maqafOnCurrentLeft = currentForm.includes('\u05BE') && !currentForm.startsWith('\u05BE');
     const maqafOnNextRight = nextForm.startsWith('\u05BE');
     const shouldShowMaqaf = maqafOnCurrentLeft || maqafOnNextRight;
@@ -635,6 +637,35 @@
     const lastMorpheme = cloned[cloned.length - 1];
     lastMorpheme.surface = `${lastMorpheme.surface || ''}\u05BE`;
     return cloned;
+  }
+
+  function resolveOshbFormIndex(token, tokenIndex, oshbVerseNode){
+    const forms = Array.isArray(oshbVerseNode?.forms) ? oshbVerseNode.forms : [];
+    if(!forms.length) return -1;
+
+    const tokenPointed = normalizeHebrew(token?.orig || '', true);
+    const tokenPlain = normalizeHebrew(token?.orig || '', false);
+    const matchesToken = (form) => {
+      const pointed = normalizeHebrew(form, true);
+      const plain = normalizeHebrew(form, false);
+      return (tokenPointed && pointed === tokenPointed) || (tokenPlain && plain === tokenPlain);
+    };
+
+    if(Number.isInteger(tokenIndex) && tokenIndex >= 0 && tokenIndex < forms.length && matchesToken(forms[tokenIndex])){
+      return tokenIndex;
+    }
+
+    const start = Math.max(0, tokenIndex - 2);
+    const end = Math.min(forms.length - 1, tokenIndex + 2);
+    for(let index = start; index <= end; index += 1){
+      if(matchesToken(forms[index])) return index;
+    }
+
+    for(let index = 0; index < forms.length; index += 1){
+      if(matchesToken(forms[index])) return index;
+    }
+
+    return -1;
   }
 
   function mergeDisplayMorphemes(items){
