@@ -215,6 +215,20 @@
     return /^(el|la|los|las|del|de la|de los|de las|mi|mis|tu|tus|su|sus|nuestro|nuestra|nuestros|nuestras|vuestro|vuestra|vuestros|vuestras)\b/i.test(String(text || '').trim());
   }
 
+  function isConjunctionEntry(entry){
+    const baseLabel = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
+    if(baseLabel === 'CONJ') return true;
+    const morphemes = Array.isArray(entry?.layer?.morphemes) ? entry.layer.morphemes : [];
+    return morphemes.some((morpheme) => String(morpheme?.label || '').trim().toUpperCase() === 'CONJ');
+  }
+
+  function isCopularVerb(entry){
+    const strong = normalizeStrong(entry?.token?.strongs || '');
+    if(strong === 'H1961') return true;
+    const gloss = String(entry?.tokenGloss || '').trim().toLowerCase();
+    return /^(es|era|eran|fue|fueron|sera|seran|seria|serian|esta|estan|estaba|estaban|estuvo|estuvieron)\b/.test(gloss);
+  }
+
   function hasArticleMorpheme(entry){
     const morphemes = Array.isArray(entry?.layer?.morphemes) ? entry.layer.morphemes : [];
     return morphemes.some((morpheme) => String(morpheme?.label || '').trim().toUpperCase() === 'ART');
@@ -339,6 +353,33 @@
     return null;
   }
 
+  function findSubjectAfterVerb(items, verbIndex){
+    for(let index = verbIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(isDirectObjectMarker(entry) || isArticleOnlyToken(entry)){
+        continue;
+      }
+      if(isPrepositionEntry(entry)){
+        return null;
+      }
+      if(features.isNominal || features.isProper){
+        const gloss = getEntryGloss(entry);
+        if(gloss){
+          return { index, gloss };
+        }
+      }
+      if(features.isVerbal){
+        return null;
+      }
+      const gloss = getEntryGloss(entry);
+      if(gloss){
+        return null;
+      }
+    }
+    return null;
+  }
+
   function findDirectObjectAfterVerb(items, verbIndex){
     let sawObjectMarker = false;
     for(let index = verbIndex + 1; index < items.length; index += 1){
@@ -352,6 +393,9 @@
         continue;
       }
       if(isPrepositionEntry(entry) || features.isVerbal){
+        return null;
+      }
+      if(!sawObjectMarker && (features.isProper || /^NPROP(?:\.|$)/.test(String(entry?.baseMorph || '').trim().toUpperCase()))){
         return null;
       }
       if(features.isNominal || features.isProper){
@@ -389,6 +433,55 @@
       }
     }
     return phrases;
+  }
+
+  function findLeadingClauseConjunction(items, verbIndex, subjectIndex){
+    const stopIndex = Math.min(
+      verbIndex,
+      Number.isInteger(subjectIndex) && subjectIndex >= 0 ? subjectIndex : verbIndex
+    );
+    for(let index = 0; index < stopIndex; index += 1){
+      const entry = items[index];
+      if(!isConjunctionEntry(entry)) continue;
+      const gloss = getEntryGloss(entry);
+      if(gloss) return { index, gloss };
+    }
+    return null;
+  }
+
+  function collectPredicateComplementsAfterVerb(items, verbIndex){
+    const complements = [];
+    let pendingConjunction = '';
+    for(let index = verbIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(isDirectObjectMarker(entry) || isArticleOnlyToken(entry)) continue;
+      if(isPrepositionEntry(entry) || features.isVerbal) break;
+
+      if(isConjunctionEntry(entry)){
+        const gloss = getEntryGloss(entry);
+        pendingConjunction = gloss || 'y';
+        continue;
+      }
+
+      if(features.isNominal || features.isProper){
+        const gloss = getEntryGloss(entry);
+        if(gloss){
+          complements.push(pendingConjunction ? `${pendingConjunction} ${gloss}` : gloss);
+          pendingConjunction = '';
+          continue;
+        }
+      }
+
+      const gloss = getEntryGloss(entry);
+      if(gloss){
+        complements.push(pendingConjunction ? `${pendingConjunction} ${gloss}` : gloss);
+        pendingConjunction = '';
+        continue;
+      }
+      break;
+    }
+    return complements;
   }
 
   function applySyntacticPhraseSemantics(items){
@@ -441,15 +534,21 @@
       const verbGloss = String(entry?.tokenGloss || '').trim();
       if(!verbGloss) return;
 
-      const subject = findSubjectBeforeVerb(updated, index);
+      const subject = findSubjectBeforeVerb(updated, index) || findSubjectAfterVerb(updated, index);
       const directObject = findDirectObjectAfterVerb(updated, index);
       const prepStartIndex = directObject?.index ?? index;
+      const predicateComplements = !directObject && isCopularVerb(entry)
+        ? collectPredicateComplementsAfterVerb(updated, index)
+        : [];
       const complements = collectTrailingPrepositionPhrases(updated, prepStartIndex);
+      const leadingConjunction = findLeadingClauseConjunction(updated, index, subject?.index ?? -1);
 
       const parts = [];
+      if(leadingConjunction?.gloss) parts.push(leadingConjunction.gloss);
       if(subject?.gloss) parts.push(subject.gloss);
       parts.push(verbGloss);
       if(directObject?.gloss) parts.push(directObject.gloss);
+      if(predicateComplements.length) parts.push(...predicateComplements);
       if(complements.length) parts.push(...complements);
 
       const clauseGloss = normalizeSpanishPhrase(parts.join(' '));
