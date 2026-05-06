@@ -405,6 +405,181 @@
           simbolo: 'Guion alto (־)',
           efecto: 'Une palabras en una sola unidad tonica. La palabra anterior pierde su acento y puede acortar su vocal.'
         }
+      },
+      modulo_9_sintaxis_particulas_negacion: {
+        lo: {
+          particula: 'לֹא',
+          funcion: 'Negacion permanente o de hechos',
+          uso: 'No es, No fue'
+        },
+        al: {
+          particula: 'אַל',
+          funcion: 'Negacion volitiva o inmediata',
+          uso: 'Se usa exclusivamente con el futuro y el yusivo'
+        }
+      },
+      debugger_vav_consecutiva: {
+        instruccion: 'Cuando proceses una Vav Consecutiva (וַ), busca Dagesh Forte en la letra siguiente para confirmar que es tiempo invertido.',
+        fallback: 'Si no hay Dagesh ni alargamiento compensatorio, tratarla como Vav Conjuncion simple.'
+      }
+    },
+    full_exegesis_complement: {
+      version: '4.0_Full_Exegesis_Complement',
+      descripcion: 'Modulos faltantes: Dagesh, Sufijos Verbales, Qere-Ketiv, Particulas Relativas, Preposiciones Declinadas, Numeros, Silabacion y Arameo Biblico',
+      modulo_dagesh_lene_vs_forte: {
+        concepto: 'El punto dentro de una consonante puede ser Lene (suavizador) o Forte (duplicador). Son foneticamente distintos.',
+        dagesh_lene: {
+          definicion: 'Endurece la pronunciacion de la consonante. No duplica.',
+          letras_validas: ['בּ', 'גּ', 'דּ', 'כּ', 'פּ', 'תּ'],
+          nombre_grupo: 'BeGaD KeFaT',
+          condicion: 'Aparece cuando la letra esta al inicio de silaba y la silaba anterior termina en consonante (o es inicio de palabra)',
+          condicion_negativa: 'No aparece si la letra sigue directamente a una vocal (silaba abierta previa)',
+          ejemplo_con: 'בַּיִת (Bayit) - La בּ lleva Dagesh Lene porque esta al inicio absoluto',
+          ejemplo_sin: 'אֲבִי (Avi) - La בּ no lleva Dagesh porque sigue a una vocal'
+        },
+        dagesh_forte: {
+          definicion: 'Duplica la consonante. La letra se pronuncia dos veces (cierra la silaba anterior y abre la siguiente).',
+          letras_validas: 'Todas excepto guturales (א, ה, ח, ע) y Resh (ר)',
+          origenes_comunes: [
+            'Asimilacion de Nun (ן/נ) en preposicion MIN o Pe-Nun',
+            'Articulo definido הַ ante consonantes no guturales',
+            'Binyanim intensivos (PIEL, PUAL, HITPAEL) en la 2da radical'
+          ],
+          regla_de_diagnostico: 'Si ves Dagesh en una letra que no es BeGaD KeFaT, es siempre Forte. Si es BeGaD KeFaT, analizar contexto vocalico para distinguir.',
+          ejemplo: 'הַמֶּלֶךְ - El Dagesh en מּ es Forte (viene del articulo). שִׁמֵּר - El Dagesh en מּ es Forte (PIEL, duplica la 2da radical)'
+        }
+      },
+      modulo_sufijos_pronominales_sobre_verbos: {
+        concepto: 'El objeto directo puede pegarse al verbo como sufijo, eliminando la necesidad de la particula אֵת',
+        nota: 'Distinto a los sufijos sobre sustantivos (posesion). Aqui expresan objeto de la accion.',
+        regla_de_fusion_vocalica: 'La vocal final del verbo generalmente se reduce o se alarga para recibir el sufijo. Sheva vocal suele aparecer como puente.',
+        tabla_sufijos_objeto: {
+          '1cs_me': 'נִי (-ni) ej. שְׁמָרַנִי (El me guardo)',
+          '2ms_te_m': 'ךָ (-kha) ej. אֶשְׁמָרְךָ (Yo te guardare)',
+          '2fs_te_f': 'ךְ (-kh)',
+          '3ms_lo': 'הוּ / וֹ (-hu / -o) ej. שְׁלָחוֹ (El lo envio)',
+          '3fs_la': 'הָ (-ha)',
+          '1cp_nos': 'נוּ (-nu)',
+          '2mp_os_m': 'כֶם (-khem)',
+          '2fp_os_f': 'כֶן (-khen)',
+          '3mp_los': 'ם (-m) ej. שְׁמָרָם (El los guardo)',
+          '3fp_las': 'ן (-n)'
+        },
+        regla_diagnostico: 'Si un verbo tiene una consonante final inesperada (נ, ה, ו, ם) que no corresponde al paradigma verbal, verificar si es sufijo de objeto.',
+        diferencia_clave: 'Sustantivo + sufijo = posesion (סוּסוֹ = su caballo). Verbo + sufijo = objeto directo (שְׁמָרוֹ = el lo guardo).'
+      },
+      modulo_qere_ketiv: {
+        concepto: 'En el texto masoretico, la consonante escrita (Ketiv) y la palabra que debe leerse (Qere) pueden diferir.',
+        ketiv: 'Lo que esta escrito en las consonantes del texto.',
+        qere: 'Lo que debe leerse segun la nota marginal de los masoretas. La vocalizacion del Qere se coloca sobre las consonantes del Ketiv.',
+        casos_frecuentes: [
+          {
+            caso: 'Qere Perpetuo',
+            descripcion: 'Palabras cuyo Qere nunca se escribe porque es conocido universalmente',
+            ejemplo_principal: 'יהוה (YHWH) - Se vocaliza con las vocales de אֲדֹנָי (Adonai) pero se lee siempre Adonai.',
+            otros: ['הִוא escrito, pero se lee הִיא (Ella) en muchos pasajes del Pentateuco']
+          },
+          {
+            caso: 'Qere Normal',
+            descripcion: 'Correccion de escribas anotada al margen',
+            regla_parser: 'Si la morfologia de la forma escrita no resuelve, intentar la lectura alternativa del Qere antes de marcar como desconocido.'
+          }
+        ],
+        impacto_en_parser: 'Una forma escrita puede no coincidir con ningun paradigma morfologico conocido porque sus vocales pertenecen a una palabra diferente. El Qere explica la disonancia.'
+      },
+      modulo_particula_relativa: {
+        concepto: 'Equivalente hebreo de que / quien / el cual. Existe en dos formas con comportamiento sintactico distinto.',
+        forma_independiente: {
+          particula: 'אֲשֶׁר',
+          tipo: 'Palabra separada, invariable (no cambia por genero ni numero)',
+          uso: 'Introduce una clausula relativa. Puede funcionar tambien como donde, cuando, porque segun contexto.',
+          ejemplo: 'הָאִישׁ אֲשֶׁר בָּא (El hombre que vino)'
+        },
+        forma_prefijada: {
+          particula: 'שֶׁ / שׁ',
+          tipo: 'Prefijo inseparable, se comporta como BKL',
+          vocalizacion_estandar: 'Sheva (ְ)',
+          vocalizacion_ante_sheva: 'Hireq (ִ), igual que BKL en REGLA_DOS_SHEVAS',
+          uso: 'Mas frecuente en poesia y textos tardios (Eclesiastes, Cantar de Cantares)',
+          ejemplo: 'שֶׁאָהַבְתִּי (Que yo ame - Cantar 1:7)'
+        },
+        regla_diagnostico: 'Si aparece שׁ o ש pegado al inicio de una palabra que no es el verbo שׁוּב ni raiz similar, evaluar si es el prefijo relativo antes de analizar como raiz.'
+      },
+      modulo_preposiciones_el_vs_lamed: {
+        concepto: 'אֶל y לְ ambas significan a / hacia pero con matices distintos que afectan la exegesis.',
+        preposicion_el: {
+          forma: 'אֶל',
+          tipo: 'Separable (palabra independiente)',
+          matiz: 'Movimiento fisico direccional hacia un punto. Indica llegada o acercamiento.',
+          ejemplo: 'וַיָּבֹא אֶל הַבַּיִת (Y el llego a la casa - movimiento fisico)',
+          sufijos: {
+            '1cs': 'אֵלַי (Elai - hacia mi)',
+            '2ms': 'אֵלֶיךָ (Elekha - hacia ti)',
+            '3ms': 'אֵלָיו (Elav - hacia el)',
+            '3fs': 'אֵלֶיהָ (Eleyha - hacia ella)',
+            '1cp': 'אֵלֵינוּ (Eleinu - hacia nosotros)',
+            '3mp': 'אֲלֵיהֶם (Aleihem - hacia ellos)'
+          }
+        },
+        preposicion_lamed: {
+          forma: 'לְ',
+          tipo: 'Inseparable (prefijo)',
+          matiz: 'Destino, beneficio, proposito o referencia. No implica movimiento fisico necesariamente.',
+          ejemplo: 'נָתַן לוֹ (Le dio a el - beneficiario, no direccion fisica)'
+        },
+        diferencia_exegetica: 'Genesis 3:24: וַיְשַׁלְּחֵהוּ יהוה אֱלֹהִים מִגַּן עֵדֶן. Usar אֶל o לְ cambiaria si Adan llego a un lugar especifico o fue enviado con un proposito.'
+      },
+      modulo_preposiciones_separables_declinadas: {
+        concepto: 'Las preposiciones separables (אֶל, עַל, בֵּין, תַּחַת, עִם, לִפְנֵי) se declinan con sufijos pronominales propios. Cada una tiene paradigma irregular.',
+        preposicion_al_sobre: {
+          base: 'עַל',
+          sufijos: {
+            '1cs': 'עָלַי (sobre mi)',
+            '2ms': 'עָלֶיךָ (sobre ti)',
+            '3ms': 'עָלָיו (sobre el)',
+            '3fs': 'עָלֶיהָ (sobre ella)',
+            '1cp': 'עָלֵינוּ (sobre nosotros)',
+            '2mp': 'עֲלֵיכֶם (sobre vosotros)',
+            '3mp': 'עֲלֵיהֶם (sobre ellos)'
+          }
+        },
+        preposicion_im_con: {
+          base: 'עִם',
+          sufijos: {
+            '1cs': 'עִמִּי (conmigo)',
+            '2ms': 'עִמְּךָ (contigo)',
+            '3ms': 'עִמּוֹ (con el)',
+            '1cp': 'עִמָּנוּ (con nosotros)',
+            '3mp': 'עִמָּהֶם (con ellos)'
+          }
+        },
+        preposicion_tachat_bajo: {
+          base: 'תַּחַת',
+          sufijos: {
+            '1cs': 'תַּחְתַּי (bajo mi)',
+            '3ms': 'תַּחְתָּיו (bajo el)',
+            '3mp': 'תַּחְתֵּיהֶם (bajo ellos)'
+          }
+        },
+        preposicion_ben_entre: {
+          base: 'בֵּין',
+          nota: 'Casi siempre aparece repetida para indicar entre A y B: בֵּין X וּבֵין Y',
+          sufijos: {
+            '1cp': 'בֵּינֵינוּ (entre nosotros)',
+            '3mp': 'בֵּינֵיהֶם (entre ellos)'
+          }
+        },
+        preposicion_lifney_delante: {
+          base: 'לִפְנֵי (literalmente: a la cara de)',
+          sufijos: {
+            '1cs': 'לְפָנַי (delante de mi)',
+            '2ms': 'לְפָנֶיךָ (delante de ti)',
+            '3ms': 'לְפָנָיו (delante de el)',
+            '1cp': 'לְפָנֵינוּ (delante de nosotros)',
+            '3mp': 'לִפְנֵיהֶם (delante de ellos)'
+          }
+        },
+        regla_diagnostico: 'Si una preposicion conocida termina con una consonante inesperada seguida de vocal, probablemente lleva sufijo pronominal. Aislar la base y buscar en la tabla.'
       }
     }
   };
