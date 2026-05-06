@@ -88,6 +88,18 @@
   white-space:nowrap;
 }
 
+.admin-morph-token-composed{
+  direction:ltr;
+  text-align:center;
+  font-size:.68rem;
+  line-height:1.22;
+  color:#6a584c;
+  font-weight:600;
+  letter-spacing:.01em;
+  white-space:nowrap;
+  margin-top:.08rem;
+}
+
 .admin-morph-empty{
   padding:.8rem .9rem;
   border:1px dashed rgba(75,39,67,.18);
@@ -107,5 +119,9 @@
 
   .admin-morph-segment-gloss{
     font-size:.56rem;
+  }
+
+  .admin-morph-token-composed{
+    font-size:.6rem;
   }
 }

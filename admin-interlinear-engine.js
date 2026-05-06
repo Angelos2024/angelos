@@ -132,12 +132,16 @@
             gloss: baseGloss
           }]
         };
+    const tokenGloss = Rules?.composeSpanishTokenGloss
+      ? Rules.composeSpanishTokenGloss(layer)
+      : baseGloss;
 
     return {
       token,
       baseMorph,
       baseGloss,
-      layer
+      layer,
+      tokenGloss
     };
   }
 

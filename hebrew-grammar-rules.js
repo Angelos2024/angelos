@@ -1037,6 +1037,99 @@
     };
   }
 
+  function extractMorphFeatures(label){
+    const upper = String(label || '').trim().toUpperCase();
+    return {
+      isPlural: /\.PL(?:$|\.)/.test(upper),
+      isDual: /\.DU(?:$|\.)/.test(upper),
+      isFeminine: /\.F(?:$|\.)/.test(upper),
+      isMasculine: /\.M(?:$|\.)/.test(upper),
+      isConstruct: /\.C(?:$|\.)/.test(upper)
+    };
+  }
+
+  function resolveSpanishArticle(baseLabel){
+    const features = extractMorphFeatures(baseLabel);
+    if(features.isPlural || features.isDual){
+      return features.isFeminine ? 'las' : 'los';
+    }
+    return features.isFeminine ? 'la' : 'el';
+  }
+
+  function resolvePossessiveArticle(baseLabel, suffixGloss){
+    const features = extractMorphFeatures(baseLabel);
+    const gloss = String(suffixGloss || '').trim().toLowerCase();
+    if(!gloss) return '';
+
+    if(gloss === 'mi') return features.isPlural || features.isDual ? 'mis' : 'mi';
+    if(gloss === 'tu') return features.isPlural || features.isDual ? 'tus' : 'tu';
+    if(gloss === 'su') return features.isPlural || features.isDual ? 'sus' : 'su';
+    if(gloss === 'nuestro'){
+      return features.isFeminine ? (features.isPlural || features.isDual ? 'nuestras' : 'nuestra') : (features.isPlural || features.isDual ? 'nuestros' : 'nuestro');
+    }
+    if(gloss === 'vuestro'){
+      return features.isFeminine ? (features.isPlural || features.isDual ? 'vuestras' : 'vuestra') : (features.isPlural || features.isDual ? 'vuestros' : 'vuestro');
+    }
+    if(gloss === 'vuestra'){
+      return features.isPlural || features.isDual ? 'vuestras' : 'vuestra';
+    }
+    return gloss;
+  }
+
+  function composeSpanishTokenGloss(plan){
+    const morphemes = Array.isArray(plan?.morphemes) ? plan.morphemes : [];
+    if(!morphemes.length) return '';
+
+    const prefixGlosses = [];
+    const suffixGlosses = [];
+    let articlePresent = false;
+    let baseGloss = '';
+    let baseLabel = '';
+
+    for(const morpheme of morphemes){
+      const gloss = String(morpheme?.gloss || '').trim();
+      if(morpheme.type === 'base'){
+        baseGloss = gloss;
+        baseLabel = String(morpheme?.label || '').trim();
+        continue;
+      }
+      if(morpheme.type === 'suffix'){
+        if(!gloss) continue;
+        suffixGlosses.push(gloss);
+        continue;
+      }
+      if(morpheme.label === 'ART'){
+        articlePresent = true;
+        continue;
+      }
+      if(!gloss) continue;
+      prefixGlosses.push(gloss);
+    }
+
+    let phrase = baseGloss;
+    const possessiveGloss = suffixGlosses[0] || '';
+    const articleGloss = articlePresent ? resolveSpanishArticle(baseLabel) : '';
+    const possessiveArticle = resolvePossessiveArticle(baseLabel, possessiveGloss);
+
+    if(baseGloss){
+      if(possessiveArticle){
+        phrase = `${possessiveArticle} ${baseGloss}`.trim();
+      }else if(articleGloss){
+        phrase = `${articleGloss} ${baseGloss}`.trim();
+      }
+      if(suffixGlosses.length > 1){
+        phrase = `${suffixGlosses.slice(1).join(' ')} ${phrase}`.trim();
+      }
+      if(prefixGlosses.length){
+        phrase = `${prefixGlosses.join(' ')} ${phrase}`.trim();
+      }
+    }else{
+      phrase = [...prefixGlosses, articlePresent ? resolveSpanishArticle(baseLabel) : '', ...suffixGlosses].filter(Boolean).join(' ').trim();
+    }
+
+    return phrase.replace(/\s+/g, ' ').trim();
+  }
+
   function createInterlinearLayer1Adapter(){
     return {
       analyzeWordLayers,
@@ -1095,6 +1188,7 @@
     analyzeSuffixLayer,
     analyzeWordLayers,
     buildSpanishInterlinearPlan,
+    composeSpanishTokenGloss,
     createInterlinearLayer1Adapter,
     explainRuleSet
   };
