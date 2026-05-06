@@ -234,6 +234,12 @@
       if(/JUSS|YUSIV|JUSS/.test(upperMorph)) return { gloss: 'sea', articleHint: '' };
       return { gloss: 'fue', articleHint: '' };
     }
+    if(strong === 'H3426'){
+      return { gloss: '[hay]', articleHint: '' };
+    }
+    if(strong === 'H369'){
+      return { gloss: '[no hay]', articleHint: '' };
+    }
     if(strong === 'H259' && /^NUM\.CARD/.test(upperMorph)){
       return { gloss: 'uno', articleHint: '' };
     }
@@ -521,6 +527,7 @@
       isProper: /^NPROP(?:\.|$)/.test(upper),
       isVerbal: /^VERBO(?:\.|$)/.test(upper),
       isParticiple,
+      isAdjective: /^ADJ(?:\.|$)/.test(upper),
       isPlural: /\.PL(?:$|\.)/.test(upper),
       isDual: /\.DU(?:$|\.)/.test(upper),
       isFeminine: /\.F(?:$|\.)/.test(upper),
@@ -529,6 +536,31 @@
       isVolitive: /COHORT|YUSIV|JUSS/.test(upper),
       isFinite: /^VERBO(?:\.|$)/.test(upper) && !isParticiple && !/INFC|INFA|INFINIT|---C$/.test(upper)
     };
+  }
+
+  function findLastActiveFiniteVerb(items, startIndex){
+    for(let index = startIndex - 1; index >= 0; index -= 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(features.isFinite){
+        return { entry, index };
+      }
+    }
+    return null;
+  }
+
+  function resolveVirtualCopulaGloss(items, insertionIndex, options = {}){
+    const subjectGloss = String(options.subjectGloss || '').trim().toLowerCase();
+    if(subjectGloss === 'yo') return '[soy]';
+
+    const lastFinite = findLastActiveFiniteVerb(items, insertionIndex);
+    if(lastFinite){
+      const label = String(lastFinite.entry?.baseMorph || lastFinite.entry?.layer?.baseLabel || '').trim().toUpperCase();
+      if(/WAYYIQT|PERF|QATAL/.test(label)) return '[era]';
+      if(/IMPF|YIQTOL|JUSS|YUSIV|COHORT/.test(label)) return '[es]';
+    }
+
+    return '[es]';
   }
 
   function resolveDependentArticle(features){
@@ -798,12 +830,17 @@
   function resolveKiGloss(items, index){
     const previous = findPreviousSignificantEntry(items, index);
     const next = findNextSignificantEntry(items, index);
+    const previousFinite = findLastActiveFiniteVerb(items, index);
 
     if(previous?.entry && isNegationEntry(previous.entry)){
       return 'sino';
     }
 
     if(previous?.entry && isSensoryOrCognitiveVerb(previous.entry)){
+      return 'que';
+    }
+
+    if(previousFinite?.entry && isSensoryOrCognitiveVerb(previousFinite.entry)){
       return 'que';
     }
 
@@ -1556,7 +1593,8 @@
 
     const subjectGloss = getEntryGloss(updated[pair.subjectIndex]);
     const predicateGloss = getEntryGloss(updated[pair.predicateIndex]);
-    const phraseGloss = normalizeSpanishPhrase(`${subjectGloss} es ${predicateGloss}`);
+    const copula = resolveVirtualCopulaGloss(updated, pair.predicateIndex, { subjectGloss });
+    const phraseGloss = normalizeSpanishPhrase(`${subjectGloss} ${copula} ${predicateGloss}`);
     updated[pair.predicateIndex] = {
       ...updated[pair.predicateIndex],
       phraseGloss,
@@ -1737,7 +1775,12 @@
       const complements = collectTrailingPrepositionPhrases(updated, index);
       const parts = [];
       if(subject?.gloss) parts.push(subject.gloss);
-      parts.push(verbGloss);
+      if(findLastActiveFiniteVerb(updated, index)){
+        parts.push(verbGloss);
+      }else{
+        parts.push(resolveVirtualCopulaGloss(updated, index, { subjectGloss: subject?.gloss || '' }));
+        parts.push(verbGloss);
+      }
       if(complements.length) parts.push(...complements);
 
       const clauseGloss = normalizeSpanishPhrase(parts.join(' '));
@@ -1900,11 +1943,12 @@
             if(/^(ADJ|SUBS)(?:\.|$)/.test(String(next?.baseMorph || '').trim().toUpperCase())){
               const predicate = getNominalPhraseAt(updated, j) || getEntryGloss(next);
               if(predicate){
+                const copula = resolveVirtualCopulaGloss(updated, j, { subjectGloss: objectPhrase });
                 const pieces = [];
                 if(lead?.gloss) pieces.push(lead.gloss);
                 if(subject?.gloss) pieces.push(subject.gloss);
                 pieces.push(String(entry.tokenGloss || '').trim());
-                pieces.push(`que ${objectPhrase} era ${predicate}`);
+                pieces.push(`que ${objectPhrase} ${copula} ${predicate}`);
                 updated[index] = {
                   ...entry,
                   phraseGloss: normalizeSpanishPhrase(pieces.join(' '))
@@ -1922,11 +1966,12 @@
             if(/^(ADJ|SUBS)(?:\.|$)/.test(String(next?.baseMorph || '').trim().toUpperCase())){
               const predicate = getNominalPhraseAt(updated, j) || getEntryGloss(next);
               if(predicate){
+                const copula = resolveVirtualCopulaGloss(updated, j, { subjectGloss: '' });
                 const pieces = [];
                 if(lead?.gloss) pieces.push(lead.gloss);
                 if(subject?.gloss) pieces.push(subject.gloss);
                 pieces.push(String(entry.tokenGloss || '').trim());
-                pieces.push(`que era ${predicate}`);
+                pieces.push(`que ${copula} ${predicate}`);
                 updated[index] = {
                   ...entry,
                   phraseGloss: normalizeSpanishPhrase(pieces.join(' '))
