@@ -349,6 +349,16 @@
           funcion: 'Senala quien o que recibe la accion del verbo. No tiene traduccion al espanol.',
           regla_de_uso: 'Aparece solo antes de sustantivos definidos (con articulo, nombres propios o con sufijos pronominales).',
           ejemplo: 'Bara Elohim ET ha-shamayim (Creo Dios [marcador] los cielos)'
+        },
+        logica_particula_KI: {
+          etiqueta_base: 'CONJ',
+          modos_de_traduccion: [
+            { trigger: 'POST_NEGACION', resultado: 'Sino / Mas bien' },
+            { trigger: 'POST_VERBO_SENSORIAL', resultado: 'Que' },
+            { trigger: 'CLAUSULA_RAZON', resultado: 'Porque / Pues' },
+            { trigger: 'INICIO_CONDICION', resultado: 'Si / Cuando' }
+          ],
+          nota_eficiencia: 'No duplicar entradas. El diccionario solo contiene KI. La traduccion se resuelve por posicion.'
         }
       },
       guia_diagnostico_interlinear_actualizada: {

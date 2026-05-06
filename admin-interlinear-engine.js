@@ -743,6 +743,8 @@
   function isClauseParticleEntry(entry){
     const gloss = getEntryGloss(entry).toLowerCase();
     const morph = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
+    const strong = normalizeStrong(entry?.token?.strongs || '');
+    if(strong === 'H3588') return true;
     if(['CK', 'CI', 'AYT', 'AM', 'INTJ', 'AQB', 'AJ', 'AGT', 'ANT'].includes(morph)){
       return true;
     }
@@ -759,6 +761,78 @@
       'he aqui',
       'pues'
     ].includes(gloss);
+  }
+
+  function findPreviousSignificantEntry(items, startIndex){
+    for(let index = startIndex - 1; index >= 0; index -= 1){
+      const entry = items[index];
+      if(!entry) continue;
+      if(isArticleOnlyToken(entry)) continue;
+      const gloss = getEntryGloss(entry);
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(isConjunctionEntry(entry) && !gloss) continue;
+      if(!gloss && !features.isVerbal && !features.isNominal && !features.isProper) continue;
+      return { entry, index };
+    }
+    return null;
+  }
+
+  function findNextSignificantEntry(items, startIndex){
+    for(let index = startIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      if(!entry) continue;
+      if(isArticleOnlyToken(entry)) continue;
+      const gloss = getEntryGloss(entry);
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(!gloss && !features.isVerbal && !features.isNominal && !features.isProper) continue;
+      return { entry, index };
+    }
+    return null;
+  }
+
+  function isSensoryOrCognitiveVerb(entry){
+    const strong = normalizeStrong(entry?.token?.strongs || '');
+    return ['H7200', 'H3045', 'H559', 'H8085'].includes(strong);
+  }
+
+  function resolveKiGloss(items, index){
+    const previous = findPreviousSignificantEntry(items, index);
+    const next = findNextSignificantEntry(items, index);
+
+    if(previous?.entry && isNegationEntry(previous.entry)){
+      return 'sino';
+    }
+
+    if(previous?.entry && isSensoryOrCognitiveVerb(previous.entry)){
+      return 'que';
+    }
+
+    const hasNoPriorClause = !previous || isConjunctionEntry(previous.entry);
+    if(hasNoPriorClause){
+      const nextFeatures = extractMorphFeatures(next?.entry?.baseMorph || next?.entry?.layer?.baseLabel || '');
+      if(nextFeatures.isVerbal && !nextFeatures.isVolitive){
+        return 'si';
+      }
+      return 'ciertamente';
+    }
+
+    return 'porque';
+  }
+
+  function applyKiParticleSemantics(items){
+    return items.map((entry, index, array) => {
+      if(normalizeStrong(entry?.token?.strongs || '') !== 'H3588'){
+        return { ...entry };
+      }
+      const gloss = resolveKiGloss(array, index);
+      return {
+        ...entry,
+        baseGloss: gloss,
+        tokenGloss: gloss,
+        phraseGloss: '',
+        semanticRole: 'ki-particle'
+      };
+    });
   }
 
   function isSpeechFormulaEntry(entry){
@@ -1875,7 +1949,8 @@
       posIndex,
       ...buildConstructContext(tokens, oshbVerseNode, posIndex)
     }));
-    const constructItems = applyConstructSemantics(baseItems);
+    const kiItems = applyKiParticleSemantics(baseItems);
+    const constructItems = applyConstructSemantics(kiItems);
     const phraseItems = applySyntacticPhraseSemantics(constructItems);
     const clauseItems = applyClauseSemantics(phraseItems);
     const participleItems = applyParticipleClauseSemantics(clauseItems);
