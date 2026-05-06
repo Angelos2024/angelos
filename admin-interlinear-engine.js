@@ -306,6 +306,18 @@
     return String(entry?.phraseGloss || entry?.tokenGloss || entry?.baseGloss || '').trim();
   }
 
+  function getNominalPhraseAt(items, index){
+    const entry = items[index];
+    if(!entry) return '';
+    let gloss = getEntryGloss(entry);
+    if(!gloss) return '';
+    const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+    if(index > 0 && isArticleOnlyToken(items[index - 1]) && !features.isProper && !startsWithDeterminer(gloss)){
+      gloss = `${getEntryGloss(items[index - 1]) || resolveStandaloneArticle(features)} ${gloss}`.trim();
+    }
+    return normalizeSpanishPhrase(gloss);
+  }
+
   function isDirectObjectMarker(entry){
     const baseLabel = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
     if(baseLabel === 'PART.OBJ.DIR') return true;
@@ -493,8 +505,11 @@
       if(isDirectObjectMarker(entry) || isArticleOnlyToken(entry) || isPrepositionEntry(entry)){
         continue;
       }
+      if(index > 0 && isPrepositionEntry(items[index - 1])){
+        continue;
+      }
       if(features.isNominal || features.isProper){
-        const gloss = getEntryGloss(entry);
+        const gloss = getNominalPhraseAt(items, index);
         if(gloss) return { index, gloss };
       }
       if(features.isVerbal){
@@ -515,7 +530,7 @@
         return null;
       }
       if(features.isNominal || features.isProper){
-        const gloss = getEntryGloss(entry);
+        const gloss = getNominalPhraseAt(items, index);
         if(gloss){
           return { index, gloss };
         }
@@ -559,7 +574,7 @@
       if(features.isNominal || features.isProper){
         candidates.push({
           index,
-          gloss,
+          gloss: getNominalPhraseAt(items, index) || gloss,
           explicitObjectMarker: sawObjectMarker,
           articleIndex,
           hasArticle: articleIndex >= 0 || hasArticleMorpheme(entry),
@@ -597,7 +612,7 @@
         return null;
       }
       if(features.isNominal || features.isProper){
-        const gloss = getEntryGloss(entry);
+        const gloss = getNominalPhraseAt(items, index);
         if(gloss){
           return {
             index,
@@ -612,6 +627,52 @@
       }
     }
     return null;
+  }
+
+  function collectDirectObjectPhrasesAfterVerb(items, verbIndex){
+    const phrases = [];
+    let pendingConjunction = '';
+    let sawObjectMarker = false;
+    let articleIndex = -1;
+
+    for(let index = verbIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+
+      if(isDirectObjectMarker(entry)){
+        sawObjectMarker = true;
+        continue;
+      }
+      if(isArticleOnlyToken(entry)){
+        if(articleIndex < 0) articleIndex = index;
+        continue;
+      }
+      if(isConjunctionEntry(entry)){
+        pendingConjunction = getEntryGloss(entry) || 'y';
+        continue;
+      }
+      if(isPrepositionEntry(entry) || features.isVerbal){
+        break;
+      }
+      if(features.isNominal || features.isProper){
+        let gloss = getNominalPhraseAt(items, index);
+        if(!gloss && articleIndex >= 0 && !features.isProper){
+          gloss = `${getEntryGloss(items[articleIndex]) || resolveStandaloneArticle(features)} ${getEntryGloss(entry)}`.trim();
+        }
+        if(gloss && (sawObjectMarker || phrases.length > 0)){
+          phrases.push(pendingConjunction ? `${pendingConjunction} ${gloss}` : gloss);
+          pendingConjunction = '';
+        }
+        sawObjectMarker = false;
+        articleIndex = -1;
+        continue;
+      }
+      if(getEntryGloss(entry)){
+        break;
+      }
+    }
+
+    return phrases;
   }
 
   function determineVerbArguments(items, verbIndex){
@@ -776,7 +837,8 @@
       if(features.isNominal || features.isProper){
         const gloss = getEntryGloss(entry);
         if(gloss){
-          complements.push(pendingConjunction ? `${pendingConjunction} ${gloss}` : gloss);
+          const phrase = getNominalPhraseAt(items, index) || gloss;
+          complements.push(pendingConjunction ? `${pendingConjunction} ${phrase}` : phrase);
           pendingConjunction = '';
           continue;
         }
@@ -905,6 +967,7 @@
 
       const { subject, directObject } = determineVerbArguments(updated, index);
       const prepStartIndex = directObject?.index ?? index;
+      const objectPhrases = collectDirectObjectPhrasesAfterVerb(updated, index);
       const predicateComplements = !directObject && isCopularVerb(entry)
         ? collectPredicateComplementsAfterVerb(updated, index)
         : [];
@@ -921,7 +984,11 @@
       if(negations.length) parts.push(...negations);
       parts.push(verbGloss);
       if(speechFormula) parts.push(speechFormula);
-      if(directObject?.gloss) parts.push(directObject.gloss);
+      if(objectPhrases.length){
+        parts.push(...objectPhrases);
+      }else if(directObject?.gloss){
+        parts.push(directObject.gloss);
+      }
       if(predicateComplements.length) parts.push(...predicateComplements);
       if(complements.length) parts.push(...complements);
 

@@ -985,6 +985,16 @@
     return { morphemes, remainder };
   }
 
+  function shouldAnalyzePrefixes(baseLabel = '', options = {}){
+    if(options.enablePrefixAnalysis === true) return true;
+    if(options.enablePrefixAnalysis === false) return false;
+    const label = String(baseLabel || '').trim().toUpperCase();
+    if(!label) return false;
+    if(/^(PREP|CONJ|ART|REL|INTJ|PART)(?:\.|$)/.test(label)) return false;
+    if(/^(VERBO|SUBS|ADJ|NPROP)(?:\.|$)/.test(label)) return false;
+    return false;
+  }
+
   function analyzeSuffixLayer(form){
     const suffixResult = detectSuffixSegment(form);
     if(!suffixResult.suffix){
@@ -1000,7 +1010,9 @@
 
   function analyzeWordLayers(form, baseLabel = '', options = {}){
     const normalized = normalizeHebrew(form, true);
-    const prefixLayer = analyzePrefixLayer(normalized);
+    const prefixLayer = shouldAnalyzePrefixes(baseLabel, options)
+      ? analyzePrefixLayer(normalized)
+      : { morphemes: [], remainder: normalized };
     const suffixLayer = analyzeSuffixLayer(prefixLayer.remainder);
     const forcedBaseLabel = forceConstructState(baseLabel, {
       ...options,
