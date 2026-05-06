@@ -154,7 +154,10 @@
       isVerbal: /^VERBO(?:\.|$)/.test(upper),
       isPlural: /\.PL(?:$|\.)/.test(upper),
       isDual: /\.DU(?:$|\.)/.test(upper),
-      isFeminine: /\.F(?:$|\.)/.test(upper)
+      isFeminine: /\.F(?:$|\.)/.test(upper),
+      isInfinitive: /INFC|INFA|INFINIT|---C$/.test(upper),
+      isImperative: /IMPV|IMPERAT/.test(upper),
+      isVolitive: /COHORT|YUSIV|JUSS/.test(upper)
     };
   }
 
@@ -227,6 +230,45 @@
     if(strong === 'H1961') return true;
     const gloss = String(entry?.tokenGloss || '').trim().toLowerCase();
     return /^(es|era|eran|fue|fueron|sera|seran|seria|serian|esta|estan|estaba|estaban|estuvo|estuvieron)\b/.test(gloss);
+  }
+
+  function isNegationEntry(entry){
+    const gloss = getEntryGloss(entry).toLowerCase();
+    const morph = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
+    return gloss === 'no' || gloss === 'ni' || morph === 'ANN' || morph === 'AND' || morph === 'AQN';
+  }
+
+  function isVolitiveNegationEntry(entry){
+    const morph = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
+    const strong = normalizeStrong(entry?.token?.strongs || '');
+    return morph === 'AND' || strong === 'H408';
+  }
+
+  function isClauseParticleEntry(entry){
+    const gloss = getEntryGloss(entry).toLowerCase();
+    const morph = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
+    if(['CK', 'CI', 'AYT', 'AM', 'INTJ', 'AQB', 'AJ', 'AGT', 'ANT'].includes(morph)){
+      return true;
+    }
+    return [
+      'si',
+      'porque',
+      'que',
+      'antes',
+      'antes que',
+      'cuando',
+      'entonces',
+      'ahora',
+      'he aqui',
+      'pues'
+    ].includes(gloss);
+  }
+
+  function isSpeechFormulaEntry(entry){
+    const strong = normalizeStrong(entry?.token?.strongs || '');
+    const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+    const gloss = getEntryGloss(entry).toLowerCase();
+    return strong === 'H559' && (features.isInfinitive || gloss.includes('decir') || gloss.includes('diciendo'));
   }
 
   function hasArticleMorpheme(entry){
@@ -324,6 +366,9 @@
       if(isArticleOnlyToken(entry)){
         if(articleIndex < 0) articleIndex = index;
         continue;
+      }
+      if(features.isVerbal && features.isInfinitive){
+        return { index, articleIndex: -1, infinitive: true };
       }
       if(features.isNominal || features.isProper){
         return { index, articleIndex };
@@ -544,6 +589,54 @@
     return phrases;
   }
 
+  function collectClauseOpeners(items, boundaryIndex, excludedIndex){
+    const openers = [];
+    const seen = new Set();
+    for(let index = 0; index < boundaryIndex; index += 1){
+      if(index === excludedIndex) continue;
+      const entry = items[index];
+      if(isConjunctionEntry(entry)) continue;
+      if(!isClauseParticleEntry(entry)) continue;
+      const gloss = getEntryGloss(entry);
+      if(gloss && !seen.has(gloss)){
+        openers.push(gloss);
+        seen.add(gloss);
+      }
+    }
+    return openers;
+  }
+
+  function collectPreVerbNegations(items, verbIndex, subjectIndex){
+    const negations = [];
+    const start = Number.isInteger(subjectIndex) && subjectIndex >= 0 ? subjectIndex + 1 : 0;
+    for(let index = start; index < verbIndex; index += 1){
+      const entry = items[index];
+      if(isConjunctionEntry(entry) || isClauseParticleEntry(entry)) continue;
+      if(isNegationEntry(entry)){
+        const gloss = getEntryGloss(entry);
+        if(gloss) negations.push(gloss);
+        continue;
+      }
+    }
+    return negations;
+  }
+
+  function collectSpeechFormulaAfterVerb(items, verbIndex){
+    for(let index = verbIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      if(isDirectObjectMarker(entry) || isArticleOnlyToken(entry)) continue;
+      if(isSpeechFormulaEntry(entry)){
+        const gloss = getEntryGloss(entry);
+        return gloss || 'diciendo';
+      }
+      if(isConjunctionEntry(entry)) continue;
+      if(isPrepositionEntry(entry)) return '';
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(features.isVerbal || features.isNominal || features.isProper) return '';
+    }
+    return '';
+  }
+
   function findLeadingClauseConjunction(items, verbIndex, subjectIndex){
     const stopIndex = Math.min(
       verbIndex,
@@ -593,6 +686,49 @@
     return complements;
   }
 
+  function findNominalPredicatePair(items){
+    for(let index = 0; index < items.length - 1; index += 1){
+      const left = items[index];
+      const right = items[index + 1];
+      const leftFeatures = extractMorphFeatures(left?.baseMorph || left?.layer?.baseLabel || '');
+      const rightFeatures = extractMorphFeatures(right?.baseMorph || right?.layer?.baseLabel || '');
+      if(leftFeatures.isVerbal || rightFeatures.isVerbal) continue;
+      if(isConjunctionEntry(left) || isConjunctionEntry(right)) continue;
+      if(isPrepositionEntry(left) || isPrepositionEntry(right)) continue;
+      if(isDirectObjectMarker(left) || isDirectObjectMarker(right)) continue;
+      if(!getEntryGloss(left) || !getEntryGloss(right)) continue;
+      if(leftFeatures.isNominal || leftFeatures.isProper){
+        if(rightFeatures.isNominal || rightFeatures.isProper){
+          return { subjectIndex: index, predicateIndex: index + 1 };
+        }
+      }
+    }
+    return null;
+  }
+
+  function applyNominalPredicateSemantics(items){
+    const updated = items.map((entry) => ({ ...entry }));
+    const hasFiniteVerb = updated.some((entry) => {
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      return features.isVerbal && !features.isInfinitive;
+    });
+    if(hasFiniteVerb) return updated;
+
+    const pair = findNominalPredicatePair(updated);
+    if(!pair) return updated;
+
+    const subjectGloss = getEntryGloss(updated[pair.subjectIndex]);
+    const predicateGloss = getEntryGloss(updated[pair.predicateIndex]);
+    const phraseGloss = normalizeSpanishPhrase(`${subjectGloss} es ${predicateGloss}`);
+    updated[pair.predicateIndex] = {
+      ...updated[pair.predicateIndex],
+      phraseGloss,
+      semanticRole: 'nominal-predicate',
+      clauseSubjectIndex: pair.subjectIndex
+    };
+    return updated;
+  }
+
   function applySyntacticPhraseSemantics(items){
     const updated = items.map((entry) => ({ ...entry }));
 
@@ -617,6 +753,22 @@
       const targetFeatures = extractMorphFeatures(targetEntry?.baseMorph || targetEntry?.layer?.baseLabel || '');
       let targetGloss = getEntryGloss(targetEntry);
       if(!targetGloss) return;
+
+      if(target.infinitive){
+        const loweredPrep = prepGloss.toLowerCase();
+        const phraseGloss = loweredPrep === 'a'
+          ? `para ${targetGloss}`
+          : loweredPrep === 'en'
+            ? `al ${targetGloss}`
+            : `${prepGloss} ${targetGloss}`;
+        updated[index] = {
+          ...entry,
+          phraseGloss: normalizeSpanishPhrase(phraseGloss),
+          semanticRole: 'preposition-infinitive',
+          phraseTargetIndex: target.index
+        };
+        return;
+      }
 
       if(target.articleIndex >= 0 && !targetFeatures.isProper && !startsWithDeterminer(targetGloss)){
         targetGloss = `${resolveStandaloneArticle(targetFeatures)} ${targetGloss}`.trim();
@@ -650,11 +802,17 @@
         : [];
       const complements = collectTrailingPrepositionPhrases(updated, prepStartIndex);
       const leadingConjunction = findLeadingClauseConjunction(updated, index, subject?.index ?? -1);
+      const clauseOpeners = collectClauseOpeners(updated, subject?.index >= 0 ? subject.index : index, subject?.index ?? -1);
+      const negations = collectPreVerbNegations(updated, index, subject?.index ?? -1);
+      const speechFormula = collectSpeechFormulaAfterVerb(updated, index);
 
       const parts = [];
       if(leadingConjunction?.gloss) parts.push(leadingConjunction.gloss);
+      if(clauseOpeners.length) parts.push(...clauseOpeners);
       if(subject?.gloss) parts.push(subject.gloss);
+      if(negations.length) parts.push(...negations);
       parts.push(verbGloss);
+      if(speechFormula) parts.push(speechFormula);
       if(directObject?.gloss) parts.push(directObject.gloss);
       if(predicateComplements.length) parts.push(...predicateComplements);
       if(complements.length) parts.push(...complements);
@@ -665,9 +823,13 @@
       updated[index] = {
         ...entry,
         phraseGloss: clauseGloss,
-        semanticRole: 'clause-verb',
+        semanticRole: features.isImperative || features.isVolitive ? 'volitive-verb' : 'clause-verb',
         clauseSubjectIndex: subject?.index ?? -1,
-        clauseObjectIndex: directObject?.index ?? -1
+        clauseObjectIndex: directObject?.index ?? -1,
+        clauseVolitiveNegation: negations.some((gloss, negIndex) => {
+          const negEntry = updated.find((candidate) => getEntryGloss(candidate) === gloss);
+          return negEntry ? isVolitiveNegationEntry(negEntry) : false;
+        })
       };
     });
 
@@ -682,7 +844,8 @@
     }));
     const constructItems = applyConstructSemantics(baseItems);
     const phraseItems = applySyntacticPhraseSemantics(constructItems);
-    const items = applyClauseSemantics(phraseItems);
+    const clauseItems = applyClauseSemantics(phraseItems);
+    const items = applyNominalPredicateSemantics(clauseItems);
 
     return {
       tokenCount: items.length,
