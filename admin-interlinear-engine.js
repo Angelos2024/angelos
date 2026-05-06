@@ -1,5 +1,11 @@
 (function(global){
   const Rules = global.HebrewGrammarRules || null;
+  const SPANISH_RENDER_POLICY = {
+    preserveHebrewPriority: true,
+    namingOrder: 'name-first',
+    repeatedPairStyle: 'contrastive',
+    capitalizeAssignedNames: true
+  };
 
   function normalizeHebrew(value, preservePoints = true){
     return Rules?.normalizeHebrew
@@ -23,6 +29,17 @@
       .replace(/\s+/g, ' ')
       .replace(/[,:;.]+$/g, '')
       .trim();
+  }
+
+  function normalizeSpanishLexicalCase(text, baseMorph = ''){
+    const value = normalizeSpanishSourceText(text);
+    if(!value) return '';
+    const upperMorph = String(baseMorph || '').trim().toUpperCase();
+    if(/^NPROP(?:\.|$)/.test(upperMorph)) return value;
+    if(/^(Dios|YHWH|Yehoshua|Israel|Jud[aá]|Jerusal[eé]n)$/i.test(value)){
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+    return value.charAt(0).toLowerCase() + value.slice(1);
   }
 
   function splitSpanishSourceParts(value){
@@ -180,7 +197,7 @@
   }
 
   function resolveLexicalFallback(token, baseMorph, sourceGloss){
-    const current = normalizeSpanishSourceText(sourceGloss);
+    const current = normalizeSpanishLexicalCase(sourceGloss, baseMorph);
     const currentClass = classifySourceGlossPart(current);
     const upperMorph = String(baseMorph || '').trim().toUpperCase();
     const strong = normalizeStrong(token?.strongs || '');
@@ -463,7 +480,7 @@
 
   function resolveStandaloneArticleForEntry(entry, features){
     const gloss = normalizeSpanishSourceText(entry?.baseGloss || entry?.tokenGloss || '').toLowerCase();
-    if(/(cion|sion|ción|sión|dad|tud|umbre|ie|ez|a)$/.test(gloss) && !/(dia|mapa|planeta|tema|poema|problema)$/.test(gloss)){
+    if(/(ion|ión|cion|sion|ción|sión|dad|tud|umbre|ie|ez|a)$/.test(gloss) && !/(dia|mapa|planeta|tema|poema|problema)$/.test(gloss)){
       if(features.isPlural || features.isDual) return 'las';
       return 'la';
     }
@@ -486,6 +503,10 @@
       .replace(/\s+/g, ' ')
       .replace(/\bde el\b/gi, 'del')
       .replace(/\ba el\b/gi, 'al')
+      .replace(/\blo lo\b/gi, 'lo')
+      .replace(/\bla la\b/gi, 'la')
+      .replace(/\blos los\b/gi, 'los')
+      .replace(/\blas las\b/gi, 'las')
       .replace(/\bhe aqui que\b/gi, 'he aqui')
       .replace(/\bque que\b/gi, 'que')
       .replace(/\by y\b/gi, 'y')
@@ -510,6 +531,34 @@
     if(/^día segundo$/i.test(value)) return 'segundo día';
     if(/^día tercero$/i.test(value)) return 'tercer día';
     return value;
+  }
+
+  function normalizeRepeatedPairPhrase(firstGloss, secondGloss){
+    const left = normalizeSpanishPhrase(firstGloss);
+    const right = normalizeSpanishPhrase(secondGloss);
+    if(!left || !right) return '';
+    if(
+      SPANISH_RENDER_POLICY.repeatedPairStyle === 'contrastive' &&
+      left.toLowerCase() === right.toLowerCase() &&
+      /^aguas$/i.test(left)
+    ){
+      return 'unas aguas y otras';
+    }
+    return `${left} y ${right}`;
+  }
+
+  function shouldCapitalizeAssignedName(text){
+    const value = normalizeSpanishPhrase(text);
+    if(!value) return false;
+    return /^(dia|día|noche|cielos|tierra|mares)$/i.test(value);
+  }
+
+  function formatAssignedName(text){
+    const value = normalizeSpanishPhrase(text);
+    if(!value) return '';
+    return SPANISH_RENDER_POLICY.capitalizeAssignedNames && shouldCapitalizeAssignedName(value)
+      ? capitalizeSpanishLabel(value)
+      : value;
   }
 
   function buildConstructPhrase(headGloss, dependentGloss){
@@ -553,6 +602,31 @@
       gloss = `${getEntryGloss(items[index - 1]) || resolveStandaloneArticleForEntry(entry, features)} ${gloss}`.trim();
     }
     return normalizeSpanishPhrase(gloss);
+  }
+
+  function getNominalPhraseBundleAt(items, index){
+    let phrase = getNominalPhraseAt(items, index);
+    if(!phrase) return { phrase: '', endIndex: index };
+    let endIndex = index;
+    for(let j = index + 1; j < items.length; j += 1){
+      const entry = items[j];
+      const label = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
+      if(isArticleOnlyToken(entry) || isConjunctionEntry(entry) || isDirectObjectMarker(entry) || isPrepositionEntry(entry)) break;
+      const gloss = getEntryGloss(entry);
+      if(!gloss) break;
+      if(/^NUM\.CARD/.test(label) && /^(uno|una)$/i.test(gloss) && !startsWithDeterminer(phrase)){
+        phrase = normalizeSpanishPhrase(`un ${phrase}`);
+        endIndex = j;
+        continue;
+      }
+      if(/^NUM\.(CARD|ORD)|^ADJ/.test(label)){
+        phrase = normalizeSpanishPhrase(`${phrase} ${gloss}`);
+        endIndex = j;
+        continue;
+      }
+      break;
+    }
+    return { phrase, endIndex };
   }
 
   function isDirectObjectMarker(entry){
@@ -748,6 +822,53 @@
       if(gloss) return null;
     }
     return null;
+  }
+
+  function collectRelativeLocationQualifier(items, nominalIndex){
+    const relEntry = items[nominalIndex + 1];
+    if(!relEntry || String(relEntry?.baseMorph || relEntry?.layer?.baseLabel || '').trim().toUpperCase() !== 'REL'){
+      return '';
+    }
+    const prepPieces = [];
+    let articleIndex = -1;
+    let targetIndex = -1;
+    for(let index = nominalIndex + 2; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(isArticleOnlyToken(entry)){
+        if(articleIndex < 0) articleIndex = index;
+        continue;
+      }
+      if(isPrepositionEntry(entry)){
+        const gloss = getEntryGloss(entry);
+        if(gloss) prepPieces.push(gloss.toLowerCase());
+        continue;
+      }
+      if(features.isNominal || features.isProper){
+        targetIndex = index;
+      }
+      break;
+    }
+    if(targetIndex < 0 || !prepPieces.length) return '';
+    let prepPhrase = prepPieces.join(' ').trim();
+    prepPhrase = prepPhrase
+      .replace(/^de debajo de\b/i, 'debajo de')
+      .replace(/^de sobre\b/i, 'sobre')
+      .replace(/^debajo de a\b/i, 'debajo de')
+      .replace(/^sobre a\b/i, 'sobre');
+    let targetGloss = getNominalPhraseAt(items, targetIndex);
+    if(!targetGloss){
+      const targetEntry = items[targetIndex];
+      const targetFeatures = extractMorphFeatures(targetEntry?.baseMorph || targetEntry?.layer?.baseLabel || '');
+      const raw = getEntryGloss(targetEntry);
+      if(raw){
+        targetGloss = articleIndex >= 0 && !targetFeatures.isProper && !startsWithDeterminer(raw)
+          ? `${getEntryGloss(items[articleIndex]) || resolveStandaloneArticleForEntry(targetEntry, targetFeatures)} ${raw}`.trim()
+          : raw;
+      }
+    }
+    if(!targetGloss) return '';
+    return normalizeSpanishPhrase(`que estaban ${prepPhrase} ${targetGloss}`);
   }
 
   function findSubjectBeforeVerb(items, verbIndex){
@@ -1048,19 +1169,29 @@
     if(!first || String(first?.tokenGloss || '').trim().toLowerCase() !== 'entre') return null;
     const firstTarget = findPhraseTargetAfter(items, startIndex);
     if(!firstTarget) return null;
-    const firstGloss = getNominalPhraseAt(items, firstTarget.index);
+    const firstBundle = getNominalPhraseBundleAt(items, firstTarget.index);
+    const firstGloss = firstBundle.phrase;
+    const firstQualifier = collectRelativeLocationQualifier(items, firstTarget.index);
     if(!firstGloss) return null;
-    for(let index = firstTarget.index + 1; index < items.length; index += 1){
+    for(let index = firstBundle.endIndex + 1; index < items.length; index += 1){
       const entry = items[index];
       if(isConjunctionEntry(entry)) continue;
-      if(isPrepositionEntry(entry) && String(entry?.tokenGloss || '').trim().toLowerCase() === 'entre'){
+      const lowerPrep = String(entry?.tokenGloss || '').trim().toLowerCase();
+      const allowSimpleA = lowerPrep === 'a' && index === firstBundle.endIndex + 1;
+      if(isPrepositionEntry(entry) && (lowerPrep === 'entre' || allowSimpleA)){
         const secondTarget = findPhraseTargetAfter(items, index);
-        const secondGloss = secondTarget ? getNominalPhraseAt(items, secondTarget.index) : '';
+        const secondBundle = secondTarget ? getNominalPhraseBundleAt(items, secondTarget.index) : { phrase: '' };
+        const secondGloss = secondBundle.phrase;
+        const secondQualifier = secondTarget ? collectRelativeLocationQualifier(items, secondTarget.index) : '';
         if(secondGloss){
+          const pairCore = normalizeRepeatedPairPhrase(
+            `${firstGloss}${firstQualifier ? ` ${firstQualifier}` : ''}`,
+            `${secondGloss}${secondQualifier ? ` ${secondQualifier}` : ''}`
+          );
           return {
             startIndex,
             secondIndex: index,
-            phrase: normalizeSpanishPhrase(`entre ${firstGloss} y ${secondGloss}`)
+            phrase: normalizeSpanishPhrase(`entre ${pairCore}`)
           };
         }
       }
@@ -1092,13 +1223,13 @@
         const next = items[j];
         const features = extractMorphFeatures(next?.baseMorph || next?.layer?.baseLabel || '');
         if(features.isNominal || features.isProper){
-          nameGloss = capitalizeSpanishLabel(getNominalPhraseAt(items, j) || getEntryGloss(next));
+          nameGloss = formatAssignedName(getNominalPhraseAt(items, j) || getEntryGloss(next));
           break;
         }
         if(features.isVerbal || isPrepositionEntry(next)) break;
       }
       if(objectGloss && nameGloss){
-        return normalizeSpanishPhrase(`${objectGloss} ${nameGloss}`);
+        return normalizeSpanishPhrase(`${nameGloss} a ${objectGloss.replace(/^a\s+/i, '')}`);
       }
       return objectGloss || '';
     }
@@ -1107,9 +1238,9 @@
         const next = items[j];
         const features = extractMorphFeatures(next?.baseMorph || next?.layer?.baseLabel || '');
         if(features.isNominal || features.isProper){
-          const nameGloss = capitalizeSpanishLabel(getNominalPhraseAt(items, j) || getEntryGloss(next));
+          const nameGloss = formatAssignedName(getNominalPhraseAt(items, j) || getEntryGloss(next));
           if(nameGloss){
-            return normalizeSpanishPhrase(`${preVerbObject} ${nameGloss}`);
+            return normalizeSpanishPhrase(`${nameGloss} a ${preVerbObject.replace(/^a\s+/i, '')}`);
           }
         }
         if(features.isVerbal || isPrepositionEntry(next)) break;
@@ -1310,13 +1441,21 @@
       if(!isPrepositionEntry(entry)) return;
       const prepGloss = String(entry?.tokenGloss || '').trim();
       if(!prepGloss) return;
+      if(
+        /^a$/i.test(prepGloss) &&
+        index > 0 &&
+        isPrepositionEntry(updated[index - 1]) &&
+        /^(debajo de|sobre|hacia|entre)$/i.test(String(updated[index - 1]?.tokenGloss || '').trim())
+      ){
+        return;
+      }
 
       const target = findPhraseTargetAfter(updated, index);
       if(!target) return;
 
       const targetEntry = updated[target.index];
       const targetFeatures = extractMorphFeatures(targetEntry?.baseMorph || targetEntry?.layer?.baseLabel || '');
-      let targetGloss = getEntryGloss(targetEntry);
+      let targetGloss = getNominalPhraseBundleAt(updated, target.index).phrase || getEntryGloss(targetEntry);
       if(!targetGloss) return;
 
       if(target.infinitive){
@@ -1338,6 +1477,13 @@
       if(target.articleIndex >= 0 && !targetFeatures.isProper && !startsWithDeterminer(targetGloss)){
         const articleSourceGloss = getEntryGloss(updated[target.articleIndex]);
         targetGloss = `${articleSourceGloss || resolveStandaloneArticleForEntry(targetEntry, targetFeatures)} ${targetGloss}`.trim();
+      }
+      if(
+        targetEntry?.semanticRole === 'construct-head' &&
+        !startsWithDeterminer(targetGloss) &&
+        !/^(medio|faz|rostro|cara|frente|presencia)\b/i.test(targetGloss)
+      ){
+        targetGloss = `${resolveStandaloneArticleForEntry(targetEntry, targetFeatures)} ${targetGloss}`.trim();
       }
 
       updated[index] = {
@@ -1486,6 +1632,38 @@
         }
       }
 
+      if(strong === 'H1961'){
+        const next = updated[index + 1];
+        const nextFeatures = extractMorphFeatures(next?.baseMorph || next?.layer?.baseLabel || '');
+        if(nextFeatures.isParticiple){
+          const lead = findLeadingClauseConjunction(updated, index, -1);
+          let nextPhrase = stripLeadingConjunction(next?.phraseGloss || getEntryGloss(next));
+          if(normalizeStrong(next?.token?.strongs || '') === 'H914'){
+            const betweenIndex = updated.findIndex((candidate, candidateIndex) => (
+              candidateIndex > index &&
+              String(candidate?.tokenGloss || '').trim().toLowerCase() === 'entre'
+            ));
+            if(betweenIndex > index){
+              const between = collectBetweenPair(updated, betweenIndex);
+              if(between?.phrase){
+                nextPhrase = normalizeSpanishPhrase(`separe ${between.phrase}`);
+              }
+            }
+          }
+          if(nextPhrase){
+            updated[index] = {
+              ...entry,
+              phraseGloss: normalizeSpanishPhrase(`${lead?.gloss || ''} que ${nextPhrase}`),
+              semanticRole: 'hayah-participle-bridge'
+            };
+            updated[index + 1] = {
+              ...next,
+              phraseGloss: normalizeSpanishPhrase(`que ${nextPhrase}`)
+            };
+          }
+        }
+      }
+
       if(strong === 'H914'){
         for(let j = index + 1; j < updated.length; j += 1){
           const between = collectBetweenPair(updated, j);
@@ -1551,8 +1729,12 @@
           const pieces = [];
           if(lead?.gloss) pieces.push(lead.gloss);
           if(subject?.gloss) pieces.push(subject.gloss);
-          pieces.push(String(entry.tokenGloss || '').trim());
-          pieces.push(naming);
+          if(/llam/i.test(naming)){
+            pieces.push(naming);
+          }else{
+            pieces.push(String(entry.tokenGloss || '').trim());
+            pieces.push(naming);
+          }
           updated[index] = {
             ...entry,
             phraseGloss: normalizeSpanishPhrase(pieces.join(' '))
