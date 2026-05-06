@@ -165,6 +165,13 @@
     return features.isFeminine ? 'de la' : 'del';
   }
 
+  function resolveStandaloneArticle(features){
+    if(features.isPlural || features.isDual){
+      return features.isFeminine ? 'las' : 'los';
+    }
+    return features.isFeminine ? 'la' : 'el';
+  }
+
   function normalizeSpanishPhrase(text){
     return String(text || '')
       .replace(/\s+/g, ' ')
@@ -184,6 +191,28 @@
       return normalizeSpanishPhrase(`${head} ${dependent}`);
     }
     return normalizeSpanishPhrase(`${head} de ${dependent}`);
+  }
+
+  function getEntryGloss(entry){
+    return String(entry?.phraseGloss || entry?.tokenGloss || entry?.baseGloss || '').trim();
+  }
+
+  function isDirectObjectMarker(entry){
+    const baseLabel = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
+    if(baseLabel === 'PART.OBJ.DIR') return true;
+    const morphemes = Array.isArray(entry?.layer?.morphemes) ? entry.layer.morphemes : [];
+    return morphemes.some((morpheme) => String(morpheme?.label || '').trim().toUpperCase() === 'PART.OBJ.DIR');
+  }
+
+  function isPrepositionEntry(entry){
+    const baseLabel = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
+    if(baseLabel === 'PREP' || baseLabel.startsWith('PREP.')) return true;
+    const morphemes = Array.isArray(entry?.layer?.morphemes) ? entry.layer.morphemes : [];
+    return morphemes.some((morpheme) => String(morpheme?.label || '').trim().toUpperCase() === 'PREP');
+  }
+
+  function startsWithDeterminer(text){
+    return /^(el|la|los|las|del|de la|de los|de las|mi|mis|tu|tus|su|sus|nuestro|nuestra|nuestros|nuestras|vuestro|vuestra|vuestros|vuestras)\b/i.test(String(text || '').trim());
   }
 
   function hasArticleMorpheme(entry){
@@ -270,13 +299,183 @@
     return updated;
   }
 
+  function findPhraseTargetAfter(items, startIndex){
+    let articleIndex = -1;
+    for(let index = startIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(isDirectObjectMarker(entry)){
+        continue;
+      }
+      if(isArticleOnlyToken(entry)){
+        if(articleIndex < 0) articleIndex = index;
+        continue;
+      }
+      if(features.isNominal || features.isProper){
+        return { index, articleIndex };
+      }
+      if(features.isVerbal) return null;
+      const gloss = getEntryGloss(entry);
+      if(gloss) return null;
+    }
+    return null;
+  }
+
+  function findSubjectBeforeVerb(items, verbIndex){
+    for(let index = verbIndex - 1; index >= 0; index -= 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(isDirectObjectMarker(entry) || isArticleOnlyToken(entry) || isPrepositionEntry(entry)){
+        continue;
+      }
+      if(features.isNominal || features.isProper){
+        const gloss = getEntryGloss(entry);
+        if(gloss) return { index, gloss };
+      }
+      if(features.isVerbal){
+        return null;
+      }
+    }
+    return null;
+  }
+
+  function findDirectObjectAfterVerb(items, verbIndex){
+    let sawObjectMarker = false;
+    for(let index = verbIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(isDirectObjectMarker(entry)){
+        sawObjectMarker = true;
+        continue;
+      }
+      if(isArticleOnlyToken(entry)){
+        continue;
+      }
+      if(isPrepositionEntry(entry) || features.isVerbal){
+        return null;
+      }
+      if(features.isNominal || features.isProper){
+        const gloss = getEntryGloss(entry);
+        if(gloss){
+          return {
+            index,
+            gloss,
+            explicitMarker: sawObjectMarker
+          };
+        }
+      }
+      const gloss = getEntryGloss(entry);
+      if(gloss && !sawObjectMarker){
+        return null;
+      }
+    }
+    return null;
+  }
+
+  function collectTrailingPrepositionPhrases(items, startIndex){
+    const phrases = [];
+    const seen = new Set();
+    for(let index = startIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(features.isVerbal) break;
+      if(isPrepositionEntry(entry)){
+        const gloss = getEntryGloss(entry);
+        if(gloss && !seen.has(index)){
+          phrases.push(gloss);
+          seen.add(index);
+        }
+        continue;
+      }
+    }
+    return phrases;
+  }
+
+  function applySyntacticPhraseSemantics(items){
+    const updated = items.map((entry) => ({ ...entry }));
+
+    updated.forEach((entry, index) => {
+      if(isDirectObjectMarker(entry)){
+        updated[index] = {
+          ...entry,
+          phraseGloss: '',
+          semanticRole: 'direct-object-marker'
+        };
+        return;
+      }
+
+      if(!isPrepositionEntry(entry)) return;
+      const prepGloss = String(entry?.tokenGloss || '').trim();
+      if(!prepGloss) return;
+
+      const target = findPhraseTargetAfter(updated, index);
+      if(!target) return;
+
+      const targetEntry = updated[target.index];
+      const targetFeatures = extractMorphFeatures(targetEntry?.baseMorph || targetEntry?.layer?.baseLabel || '');
+      let targetGloss = getEntryGloss(targetEntry);
+      if(!targetGloss) return;
+
+      if(target.articleIndex >= 0 && !targetFeatures.isProper && !startsWithDeterminer(targetGloss)){
+        targetGloss = `${resolveStandaloneArticle(targetFeatures)} ${targetGloss}`.trim();
+      }
+
+      updated[index] = {
+        ...entry,
+        phraseGloss: normalizeSpanishPhrase(`${prepGloss} ${targetGloss}`),
+        semanticRole: 'preposition-head',
+        phraseTargetIndex: target.index
+      };
+    });
+
+    return updated;
+  }
+
+  function applyClauseSemantics(items){
+    const updated = items.map((entry) => ({ ...entry }));
+
+    updated.forEach((entry, index) => {
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(!features.isVerbal) return;
+
+      const verbGloss = String(entry?.tokenGloss || '').trim();
+      if(!verbGloss) return;
+
+      const subject = findSubjectBeforeVerb(updated, index);
+      const directObject = findDirectObjectAfterVerb(updated, index);
+      const prepStartIndex = directObject?.index ?? index;
+      const complements = collectTrailingPrepositionPhrases(updated, prepStartIndex);
+
+      const parts = [];
+      if(subject?.gloss) parts.push(subject.gloss);
+      parts.push(verbGloss);
+      if(directObject?.gloss) parts.push(directObject.gloss);
+      if(complements.length) parts.push(...complements);
+
+      const clauseGloss = normalizeSpanishPhrase(parts.join(' '));
+      if(!clauseGloss) return;
+
+      updated[index] = {
+        ...entry,
+        phraseGloss: clauseGloss,
+        semanticRole: 'clause-verb',
+        clauseSubjectIndex: subject?.index ?? -1,
+        clauseObjectIndex: directObject?.index ?? -1
+      };
+    });
+
+    return updated;
+  }
+
   function buildAdminVersePlan(verseNode, oshbVerseNode){
     const tokens = getAdminVerseTokens(verseNode);
     const baseItems = tokens.map((token, posIndex) => buildSpanishLayerForToken(token, {
       oshbVerseNode,
       posIndex
     }));
-    const items = applyConstructSemantics(baseItems);
+    const constructItems = applyConstructSemantics(baseItems);
+    const phraseItems = applySyntacticPhraseSemantics(constructItems);
+    const items = applyClauseSemantics(phraseItems);
 
     return {
       tokenCount: items.length,
