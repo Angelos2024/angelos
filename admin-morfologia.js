@@ -570,9 +570,41 @@
     return /^[\u05BE]+$/.test(String(value || '').trim());
   }
 
+  function isArticleOnlyMorphemeRow(morphemes){
+    const items = Array.isArray(morphemes) ? morphemes : [];
+    return items.length > 0 && items.every((morpheme) => String(morpheme?.label || '').trim().toUpperCase() === 'ART');
+  }
+
+  function countHebrewLetters(value){
+    const match = String(value || '').match(/[\u05D0-\u05EA]/g);
+    return match ? match.length : 0;
+  }
+
+  function canDisplayMaqafOnRow(token, morphemes){
+    const items = Array.isArray(morphemes) ? morphemes : [];
+    if(!items.length) return false;
+    if(isArticleOnlyMorphemeRow(items)) return false;
+
+    const baseMorphemes = items.filter((morpheme) => String(morpheme?.type || '').trim().toLowerCase() === 'base');
+    if(!baseMorphemes.length) return false;
+
+    const baseLabels = baseMorphemes.map((morpheme) => String(morpheme?.label || '').trim().toUpperCase());
+    if(baseLabels.every((label) => /^(ART|CONJ)$/.test(label))) return false;
+
+    const strong = String(token?.strong || token?.strongs || '').trim().toUpperCase();
+    if(strong) return true;
+
+    const surface = String(token?.orig || '');
+    const letterCount = countHebrewLetters(surface);
+    if(letterCount <= 1 && baseLabels.every((label) => /^(PREP|CONJ|REL|ART)$/.test(label))) return false;
+
+    return true;
+  }
+
   function appendVisibleMaqafToRow(token, morphemes){
     const tokenSurface = String(token?.orig || '');
     if(!tokenSurface.includes('\u05BE')) return morphemes;
+    if(!canDisplayMaqafOnRow(token, morphemes)) return morphemes;
     const cloned = (Array.isArray(morphemes) ? morphemes : []).map((morpheme) => ({ ...morpheme }));
     if(!cloned.length) return cloned;
     if(cloned.some((morpheme) => String(morpheme?.surface || '').includes('\u05BE'))){
@@ -583,12 +615,15 @@
     return cloned;
   }
 
-  function appendVisibleMaqafFromOshb(tokenIndex, oshbVerseNode, morphemes){
+  function appendVisibleMaqafFromOshb(token, tokenIndex, oshbVerseNode, morphemes){
     const forms = Array.isArray(oshbVerseNode?.forms) ? oshbVerseNode.forms : [];
     if(!forms.length || !Number.isInteger(tokenIndex) || tokenIndex < 0) return morphemes;
+    if(!canDisplayMaqafOnRow(token, morphemes)) return morphemes;
     const currentForm = String(forms[tokenIndex] || '');
     const nextForm = String(forms[tokenIndex + 1] || '');
-    const shouldShowMaqaf = currentForm.includes('\u05BE') || nextForm.startsWith('\u05BE');
+    const maqafOnCurrentLeft = currentForm.includes('\u05BE') && !currentForm.startsWith('\u05BE');
+    const maqafOnNextRight = nextForm.startsWith('\u05BE');
+    const shouldShowMaqaf = maqafOnCurrentLeft || maqafOnNextRight;
     if(!shouldShowMaqaf) return morphemes;
 
     const cloned = (Array.isArray(morphemes) ? morphemes : []).map((morpheme) => ({ ...morpheme }));
@@ -673,7 +708,7 @@
             gloss: entry?.baseGloss || ''
           }];
       const maqafByToken = appendVisibleMaqafToRow(token, morphemes);
-      const maqafByOshb = appendVisibleMaqafFromOshb(tokenIndex, oshbVerseNode, maqafByToken);
+      const maqafByOshb = appendVisibleMaqafFromOshb(token, tokenIndex, oshbVerseNode, maqafByToken);
       return { token, morphemes: maqafByOshb };
     }));
     const rows = mergeDisplayMorphemes(rawRows).map(({ token, morphemes }) => {
