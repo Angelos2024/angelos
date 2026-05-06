@@ -380,6 +380,53 @@
     return null;
   }
 
+  function collectPostVerbNominalCandidates(items, verbIndex){
+    const candidates = [];
+    let sawObjectMarker = false;
+    let articleIndex = -1;
+
+    for(let index = verbIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+
+      if(isDirectObjectMarker(entry)){
+        sawObjectMarker = true;
+        continue;
+      }
+      if(isArticleOnlyToken(entry)){
+        if(articleIndex < 0) articleIndex = index;
+        continue;
+      }
+      if(isConjunctionEntry(entry)){
+        continue;
+      }
+      if(isPrepositionEntry(entry) || features.isVerbal){
+        break;
+      }
+
+      const gloss = getEntryGloss(entry);
+      if(features.isNominal || features.isProper){
+        candidates.push({
+          index,
+          gloss,
+          explicitObjectMarker: sawObjectMarker,
+          articleIndex,
+          hasArticle: articleIndex >= 0 || hasArticleMorpheme(entry),
+          isProper: features.isProper
+        });
+        sawObjectMarker = false;
+        articleIndex = -1;
+        continue;
+      }
+
+      if(gloss){
+        break;
+      }
+    }
+
+    return candidates;
+  }
+
   function findDirectObjectAfterVerb(items, verbIndex){
     let sawObjectMarker = false;
     for(let index = verbIndex + 1; index < items.length; index += 1){
@@ -414,6 +461,68 @@
       }
     }
     return null;
+  }
+
+  function determineVerbArguments(items, verbIndex){
+    const subjectBefore = findSubjectBeforeVerb(items, verbIndex);
+    if(subjectBefore){
+      return {
+        subject: subjectBefore,
+        directObject: findDirectObjectAfterVerb(items, verbIndex)
+      };
+    }
+
+    const candidates = collectPostVerbNominalCandidates(items, verbIndex);
+    if(!candidates.length){
+      return {
+        subject: null,
+        directObject: null
+      };
+    }
+
+    const explicitObject = candidates.find((candidate) => candidate.explicitObjectMarker) || null;
+    if(explicitObject){
+      const subject = candidates.find((candidate) => candidate.index < explicitObject.index) || null;
+      return {
+        subject,
+        directObject: explicitObject
+      };
+    }
+
+    if(candidates.length === 1){
+      return {
+        subject: candidates[0],
+        directObject: null
+      };
+    }
+
+    const [first, second] = candidates;
+
+    if(first.isProper && second && !second.isProper){
+      return {
+        subject: first,
+        directObject: second
+      };
+    }
+
+    if(!first.hasArticle && second.hasArticle){
+      return {
+        subject: first,
+        directObject: second
+      };
+    }
+
+    if(first.isProper && second.isProper){
+      return {
+        subject: first,
+        directObject: second
+      };
+    }
+
+    return {
+      subject: first,
+      directObject: second || null
+    };
   }
 
   function collectTrailingPrepositionPhrases(items, startIndex){
@@ -534,8 +643,7 @@
       const verbGloss = String(entry?.tokenGloss || '').trim();
       if(!verbGloss) return;
 
-      const subject = findSubjectBeforeVerb(updated, index) || findSubjectAfterVerb(updated, index);
-      const directObject = findDirectObjectAfterVerb(updated, index);
+      const { subject, directObject } = determineVerbArguments(updated, index);
       const prepStartIndex = directObject?.index ?? index;
       const predicateComplements = !directObject && isCopularVerb(entry)
         ? collectPredicateComplementsAfterVerb(updated, index)
