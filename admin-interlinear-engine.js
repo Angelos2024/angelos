@@ -59,6 +59,7 @@
   function resolveTokenSourceGloss(token){
     const esParts = compactSpanishSourceParts(splitSpanishSourceParts(token?.es));
     const addedParts = compactSpanishSourceParts(splitSpanishSourceParts(token?.added));
+    const morph = String(token?.morphs || '').trim().toUpperCase();
 
     if(esParts.length === 1){
       return esParts[0];
@@ -68,6 +69,8 @@
       const first = esParts[0];
       const second = esParts[1] || '';
       const joined = normalizeSpanishSourceText(esParts.join(' '));
+      const lexicalParts = esParts.filter((part) => classifySourceGlossPart(part) === 'lex');
+      const functionalParts = esParts.filter((part) => classifySourceGlossPart(part) !== 'lex');
 
       if(/^(y|e|o|u|ni|mas|pero|sino|entonces|pues)$/i.test(first)){
         return first;
@@ -83,6 +86,18 @@
       }
       if(/^(he|ha|han|habia|habían|voy|vaya|os|me|se|le|les)$/i.test(first)){
         return second || first;
+      }
+      if(/^VERBO(?:\.|$)/.test(morph) && lexicalParts.length){
+        return lexicalParts[0];
+      }
+      if(/^(SUBS|ADJ|NPROP)(?:\.|$)/.test(morph) && lexicalParts.length){
+        return lexicalParts[0];
+      }
+      if(functionalParts.length && lexicalParts.length === 1){
+        return lexicalParts[0];
+      }
+      if(lexicalParts.length > 1){
+        return lexicalParts.sort((left, right) => right.length - left.length)[0];
       }
       return joined;
     }
@@ -226,17 +241,20 @@
 
   function extractMorphFeatures(label){
     const upper = String(label || '').trim().toUpperCase();
+    const isParticiple = /PTCA|PTCP|PTC|(?:^|\.)(AP|AV)(?:$|[A-Z.])/.test(upper);
     return {
       isConstruct: /\.C(?:$|\.)/.test(upper),
       isNominal: /^(SUBS|ADJ|NPROP)(?:\.|$)/.test(upper),
       isProper: /^NPROP(?:\.|$)/.test(upper),
       isVerbal: /^VERBO(?:\.|$)/.test(upper),
+      isParticiple,
       isPlural: /\.PL(?:$|\.)/.test(upper),
       isDual: /\.DU(?:$|\.)/.test(upper),
       isFeminine: /\.F(?:$|\.)/.test(upper),
       isInfinitive: /INFC|INFA|INFINIT|---C$/.test(upper),
       isImperative: /IMPV|IMPERAT/.test(upper),
-      isVolitive: /COHORT|YUSIV|JUSS/.test(upper)
+      isVolitive: /COHORT|YUSIV|JUSS/.test(upper),
+      isFinite: /^VERBO(?:\.|$)/.test(upper) && !isParticiple && !/INFC|INFA|INFINIT|---C$/.test(upper)
     };
   }
 
@@ -258,6 +276,15 @@
     return String(text || '')
       .replace(/\s+/g, ' ')
       .replace(/\bde el\b/gi, 'del')
+      .replace(/\bhe aqui que\b/gi, 'he aqui')
+      .replace(/\bque que\b/gi, 'que')
+      .replace(/\by y\b/gi, 'y')
+      .replace(/\bno no\b/gi, 'no')
+      .replace(/\bdiciendo decir\b/gi, 'diciendo')
+      .replace(/\bdecir diciendo\b/gi, 'diciendo')
+      .replace(/\bque (?=era|es|fue|estaba|estaban|sera|seran\b)/gi, '')
+      .replace(/\s+,/g, ',')
+      .replace(/\s+:/g, ':')
       .trim();
   }
 
@@ -677,7 +704,7 @@
       if(isConjunctionEntry(entry)) continue;
       if(!isClauseParticleEntry(entry)) continue;
       const gloss = getEntryGloss(entry);
-      if(gloss && !seen.has(gloss)){
+      if(gloss && !seen.has(gloss) && !isSpanishAuxiliaryGloss(gloss)){
         openers.push(gloss);
         seen.add(gloss);
       }
@@ -738,6 +765,7 @@
       const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
       if(isDirectObjectMarker(entry) || isArticleOnlyToken(entry)) continue;
       if(isPrepositionEntry(entry) || features.isVerbal) break;
+      if(isClauseParticleEntry(entry)) continue;
 
       if(isConjunctionEntry(entry)){
         const gloss = getEntryGloss(entry);
@@ -773,6 +801,7 @@
       const rightFeatures = extractMorphFeatures(right?.baseMorph || right?.layer?.baseLabel || '');
       if(leftFeatures.isVerbal || rightFeatures.isVerbal) continue;
       if(isConjunctionEntry(left) || isConjunctionEntry(right)) continue;
+      if(isClauseParticleEntry(left) || isClauseParticleEntry(right)) continue;
       if(isPrepositionEntry(left) || isPrepositionEntry(right)) continue;
       if(isDirectObjectMarker(left) || isDirectObjectMarker(right)) continue;
       if(!getEntryGloss(left) || !getEntryGloss(right)) continue;
@@ -869,7 +898,7 @@
 
     updated.forEach((entry, index) => {
       const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
-      if(!features.isVerbal) return;
+      if(!features.isVerbal || !features.isFinite) return;
 
       const verbGloss = String(entry?.tokenGloss || '').trim();
       if(!verbGloss) return;
