@@ -589,13 +589,16 @@
     if(!baseMorphemes.length) return false;
 
     const baseLabels = baseMorphemes.map((morpheme) => String(morpheme?.label || '').trim().toUpperCase());
-    if(baseLabels.every((label) => /^(ART|CONJ)$/.test(label))) return false;
-
     const strong = String(token?.strong || token?.strongs || '').trim().toUpperCase();
-    if(strong) return true;
-
     const surface = String(token?.orig || '');
     const letterCount = countHebrewLetters(surface);
+
+    if(strong){
+      if(letterCount <= 1 && baseLabels.every((label) => /^(PREP|CONJ|REL|ART)$/.test(label))) return false;
+      return true;
+    }
+
+    if(baseLabels.every((label) => /^(ART|CONJ)$/.test(label))) return false;
     if(letterCount <= 1 && baseLabels.every((label) => /^(PREP|CONJ|REL|ART)$/.test(label))) return false;
 
     return true;
