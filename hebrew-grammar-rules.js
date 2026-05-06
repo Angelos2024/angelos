@@ -18,6 +18,7 @@
 
   const SUFFIX_RULES = {
     'ִי': 'RBSC1',
+    'ַי': 'RBPC1',
     'ִיךָ': 'RBSC2',
     'ֵךְ': 'RBSF2',
     'וֹ': 'RBSM3',
@@ -743,11 +744,39 @@
     return { segments, remainder };
   }
 
-  function detectSuffixSegment(form){
+  function startsWithEitanPrefix(word){
+    const first = firstHebrewLetter(word);
+    return ['א', 'י', 'ת', 'נ'].includes(first);
+  }
+
+  function isNominalBaseLabel(baseLabel){
+    return /^(SUBS|ADJ|NPROP)(?:\.|$)/.test(String(baseLabel || '').trim().toUpperCase());
+  }
+
+  function isVerbalBaseLabel(baseLabel){
+    return /^VERBO(?:\.|$)/.test(String(baseLabel || '').trim().toUpperCase());
+  }
+
+  function shouldAcceptYodSuffix(normalized, suffix, baseLabel = ''){
+    const label = String(baseLabel || '').trim().toUpperCase();
+    if(!suffix.includes('י')) return true;
+    if(isVerbalBaseLabel(label)) return false;
+    if(!isNominalBaseLabel(label)) return false;
+
+    const beforeSuffix = normalized.slice(0, Math.max(0, normalized.length - suffix.length));
+    const strippedBefore = normalizeHebrew(beforeSuffix, false);
+    if(strippedBefore.length < 2){
+      return false;
+    }
+
+    return true;
+  }
+
+  function detectSuffixSegment(form, baseLabel = ''){
     const normalized = normalizeHebrew(form, true);
     const suffix = Object.keys(SUFFIX_RULES)
       .sort((left, right) => right.length - left.length)
-      .find((candidate) => normalized.endsWith(candidate));
+      .find((candidate) => normalized.endsWith(candidate) && shouldAcceptYodSuffix(normalized, candidate, baseLabel));
 
     if(!suffix){
       return {
@@ -785,6 +814,7 @@
     PART: 'part',
     'PART.OBJ.DIR': '',
     RBSC1: 'mi',
+    RBPC1: 'mis',
     RBSC2: 'tu',
     RBSF2: 'tu',
     RBSM3: 'su',
@@ -818,6 +848,7 @@
     }
 
     if(label === 'RBSC1') return 'mi';
+    if(label === 'RBPC1') return 'mis';
     if(label === 'RBSC2' || label === 'RBSF2') return 'tu';
     if(label === 'RBSM3' || label === 'RBSF3' || label === 'RBPM3' || label === 'RBPF3') return 'su';
     if(label === 'RBPM2') return 'vuestro';
@@ -1005,8 +1036,8 @@
     return false;
   }
 
-  function analyzeSuffixLayer(form){
-    const suffixResult = detectSuffixSegment(form);
+  function analyzeSuffixLayer(form, baseLabel = ''){
+    const suffixResult = detectSuffixSegment(form, baseLabel);
     if(!suffixResult.suffix){
       return { base: suffixResult.base, suffixes: [] };
     }
@@ -1024,7 +1055,7 @@
       ? analyzePrefixLayer(normalized)
       : { morphemes: [], remainder: normalized };
     const suffixLayer = shouldAnalyzeSuffixes(baseLabel, options)
-      ? analyzeSuffixLayer(prefixLayer.remainder)
+      ? analyzeSuffixLayer(prefixLayer.remainder, baseLabel)
       : { base: prefixLayer.remainder, suffixes: [] };
     const forcedBaseLabel = forceConstructState(baseLabel, {
       ...options,

@@ -21,7 +21,7 @@
       .replace(/[‹›►]/g, ' ')
       .replace(/[→←]/g, ' ')
       .replace(/\s+/g, ' ')
-      .replace(/[,:;]+$/g, '')
+      .replace(/[,:;.]+$/g, '')
       .trim();
   }
 
@@ -66,9 +66,10 @@
       candidate = match[2].trim();
     }
     candidate = candidate
+      .replace(/^[([{"'“”]+/, '')
+      .replace(/[)\]}"'“”]+$/g, '')
       .replace(/\bde$/i, '')
-      .replace(/\.$/, '')
-      .replace(/,$/, '')
+      .replace(/[,:;.]+$/g, '')
       .trim();
     return {
       gloss: candidate,
@@ -140,6 +141,9 @@
     if(strong === 'H1961'){
       if(/JUSS|YUSIV|JUSS/.test(upperMorph)) return { gloss: 'sea', articleHint: '' };
       return { gloss: 'fue', articleHint: '' };
+    }
+    if(strong === 'H259' && /^NUM\.CARD/.test(upperMorph)){
+      return { gloss: 'uno', articleHint: '' };
     }
     const entries = getLexiconEntriesByStrong(token?.strongs);
     for(const entry of entries){
@@ -1116,6 +1120,37 @@
     return complements;
   }
 
+  function collectNarrativeHayahComplements(items, verbIndex){
+    const pieces = [];
+    const labels = [];
+    for(let index = verbIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(isDirectObjectMarker(entry) || isArticleOnlyToken(entry)) continue;
+      if(isConjunctionEntry(entry)) break;
+      if(isPrepositionEntry(entry) || features.isVerbal) break;
+      const gloss = getNominalPhraseAt(items, index) || getEntryGloss(entry);
+      if(!gloss) break;
+      pieces.push(gloss);
+      labels.push(String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase());
+    }
+    if(!pieces.length) return '';
+    if(pieces.length === 1) return pieces[0];
+    if(pieces.length === 2 && /^NUM\.CARD/.test(labels[1])){
+      return normalizeSpanishPhrase(`${pieces[0]} ${pieces[1]}`);
+    }
+    if(
+      pieces.length === 3 &&
+      (/^NUM\.(CARD|ORD)/.test(labels[2]) || /^ADJ/.test(labels[2])) &&
+      /^(SUBS|ADJ|NPROP)/.test(labels[1])
+    ){
+      return normalizeSpanishPhrase(`${pieces[0]}, ${pieces[1]} ${pieces[2]}`);
+    }
+    const last = pieces[pieces.length - 1];
+    const head = pieces.slice(0, -1).join(' ');
+    return normalizeSpanishPhrase(`${head}, ${last}`);
+  }
+
   function findNominalPredicatePair(items){
     for(let index = 0; index < items.length - 1; index += 1){
       const left = items[index];
@@ -1228,8 +1263,14 @@
       if(!verbGloss) return;
 
       const detected = determineVerbArguments(updated, index);
-      const subject = features.isVolitive ? null : detected.subject;
-      const directObject = detected.directObject;
+      let subject = features.isVolitive ? null : detected.subject;
+      let directObject = detected.directObject;
+      const strong = normalizeStrong(entry?.token?.strongs || '');
+      const isNarrativeHayah = strong === 'H1961' && !findSubjectBeforeVerb(updated, index);
+      if(isNarrativeHayah){
+        subject = null;
+        directObject = null;
+      }
       const prepStartIndex = directObject?.index ?? index;
       const objectPhrases = collectDirectObjectPhrasesAfterVerb(updated, index);
       const predicateComplements = !directObject && isCopularVerb(entry)
@@ -1255,6 +1296,22 @@
       }
       if(predicateComplements.length) parts.push(...predicateComplements);
       if(complements.length) parts.push(...complements);
+
+      if(isNarrativeHayah && !subject && !directObject){
+        const narrativeComplement = collectNarrativeHayahComplements(updated, index);
+        if(narrativeComplement){
+          const narrativeParts = [];
+          if(leadingConjunction?.gloss) narrativeParts.push(leadingConjunction.gloss);
+          narrativeParts.push(verbGloss);
+          narrativeParts.push(narrativeComplement);
+          updated[index] = {
+            ...entry,
+            phraseGloss: normalizeSpanishPhrase(narrativeParts.join(' ')),
+            semanticRole: 'narrative-hayah'
+          };
+          return;
+        }
+      }
 
       const clauseGloss = normalizeSpanishPhrase(parts.join(' '));
       if(!clauseGloss) return;
@@ -1375,7 +1432,17 @@
       if(strong === 'H7121'){
         const naming = collectNamingPhrase(updated, index);
         if(naming){
-          const subject = findSubjectBeforeVerb(updated, index);
+          const hasPreVerbA = (() => {
+            for(let k = index - 1; k >= 0; k -= 1){
+              const candidate = updated[k];
+              if(isConjunctionEntry(candidate)) break;
+              if(isPrepositionEntry(candidate) && String(candidate?.tokenGloss || '').trim().toLowerCase() === 'a'){
+                return true;
+              }
+            }
+            return false;
+          })();
+          const subject = findSubjectBeforeVerb(updated, index) || (!hasPreVerbA ? findSubjectAfterVerb(updated, index) : null);
           const lead = findLeadingClauseConjunction(updated, index, subject?.index ?? -1);
           const pieces = [];
           if(lead?.gloss) pieces.push(lead.gloss);
