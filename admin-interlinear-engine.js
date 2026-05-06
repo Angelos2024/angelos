@@ -39,6 +39,23 @@
       .filter((part, index, array) => array.indexOf(part) === index);
   }
 
+  function isSpanishFunctionGloss(text){
+    return /^(y|e|o|u|ni|mas|pero|sino|entonces|pues|que|si|porque|cuando|donde|antes|antes que|para|como|he|aqui|he aqui|me|te|se|le|les|lo|la|los|las|un|una|unos|unas|el|del|de la|de los|de las)$/i.test(String(text || '').trim());
+  }
+
+  function isSpanishAuxiliaryGloss(text){
+    return /^(es|era|eran|fue|fueron|esta|estan|estaba|estaban|sera|seran|seria|serian|habia|habian|ha|han|habra|habran|haya|hayan|soy|eres|somos|son|fui|fueramos)$/i.test(String(text || '').trim());
+  }
+
+  function classifySourceGlossPart(part){
+    const text = normalizeSpanishSourceText(part).toLowerCase();
+    if(!text) return 'empty';
+    if(isSpanishAuxiliaryGloss(text)) return 'aux';
+    if(isSpanishFunctionGloss(text)) return 'func';
+    if(text.split(/\s+/).length > 2) return 'editorial';
+    return 'lex';
+  }
+
   function resolveTokenSourceGloss(token){
     const esParts = compactSpanishSourceParts(splitSpanishSourceParts(token?.es));
     const addedParts = compactSpanishSourceParts(splitSpanishSourceParts(token?.added));
