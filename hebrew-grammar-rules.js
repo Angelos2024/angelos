@@ -211,6 +211,18 @@
           }
         ]
       },
+      logica_constructo_fija: {
+        caso_especial_monosilabos: {
+          palabra: 'רוּחַ',
+          comportamiento: 'Aunque no cambia su forma externa, al preceder a un nombre divino o sustantivo definido, se fuerza el estado Constructo.',
+          etiqueta_requerida: 'SUBS.F.SG.C'
+        },
+        validacion_sintactica: {
+          paso_01: 'Detectar secuencia: [Sustantivo A] + [Sustantivo B/NPROP].',
+          paso_02: 'Verificar si [Sustantivo A] tiene reduccion vocalica o terminacion constructa, o si pertenece a la lista fija de constructos nominales.',
+          paso_03: 'Si se cumple, asignar RELACION_SMIKHUT y traducir como A de B.'
+        }
+      },
       logica_sufijos_pronominales_sustantivos: {
         nota: 'Se anaden al final del sustantivo para indicar posesion',
         tabla_sufijos_singular: {
@@ -798,8 +810,20 @@
   function forceConstructState(baseLabel, options = {}){
     const label = String(baseLabel || '').trim().toUpperCase();
     if(!label) return '';
-    if(!options.hasPronominalSuffix) return label;
     if(!/^SUBS\.|^ADJ\.|^NPROP\./.test(label)) return label;
+    const normalizedForm = normalizeHebrew(options.normalizedForm || '', false);
+    const nextStrong = String(options.nextStrong || '').trim().toUpperCase();
+    const nextIsNominal = Boolean(options.followedByNominal);
+    const nextIsDefinedOrDivine = Boolean(options.nextIsDefinedOrDivine);
+    const fixedConstructWords = new Set(['רוח']);
+    const fixedConstructCase = nextIsNominal && (
+      fixedConstructWords.has(normalizedForm) ||
+      (
+        nextIsDefinedOrDivine &&
+        normalizedForm === 'רוח'
+      )
+    );
+    if(!options.hasPronominalSuffix && !fixedConstructCase) return label;
     if(/\.C(?:$|\.)/.test(label)) return label;
     if(/\.A(?:$|\.)/.test(label)) return label.replace(/\.A(?=$|\.)/, '.C');
     return `${label}.C`;
@@ -1059,7 +1083,11 @@
       : { base: prefixLayer.remainder, suffixes: [] };
     const forcedBaseLabel = forceConstructState(baseLabel, {
       ...options,
-      hasPronominalSuffix: suffixLayer.suffixes.length > 0
+      hasPronominalSuffix: suffixLayer.suffixes.length > 0,
+      normalizedForm: suffixLayer.base || normalized,
+      nextStrong: options.nextStrong || '',
+      followedByNominal: options.followedByNominal,
+      nextIsDefinedOrDivine: options.nextIsDefinedOrDivine
     });
 
     const morphemes = [

@@ -429,6 +429,40 @@
     return raw;
   }
 
+  function isNominalLikeMorph(label){
+    const upper = String(label || '').trim().toUpperCase();
+    return /^(SUBS|ADJ|NPROP)(?:\.|$)/.test(upper);
+  }
+
+  function hasArticleSignal(token){
+    const morph = String(token?.morphs || '').trim().toUpperCase();
+    return morph === 'XD' || /\bXD\b/.test(morph) || normalizeHebrew(token?.orig || '', true).startsWith('ה');
+  }
+
+  function buildConstructContext(tokens, oshbVerseNode, posIndex){
+    const nextToken = tokens[posIndex + 1] || null;
+    if(!nextToken){
+      return {
+        nextStrong: '',
+        followedByNominal: false,
+        nextIsDefinedOrDivine: false
+      };
+    }
+    const nextMorph = getOshbMorphAt(oshbVerseNode, nextToken, posIndex + 1) || resolveSourceMorphFallback(nextToken);
+    const nextStrong = normalizeStrong(nextToken?.strongs || '');
+    const followedByNominal = isNominalLikeMorph(nextMorph);
+    const nextIsDefinedOrDivine = followedByNominal && (
+      hasArticleSignal(nextToken) ||
+      nextStrong === 'H430' ||
+      /^NPROP(?:\.|$)/.test(String(nextMorph || '').trim().toUpperCase())
+    );
+    return {
+      nextStrong,
+      followedByNominal,
+      nextIsDefinedOrDivine
+    };
+  }
+
   function resolveSurfacePrepositionGloss(token){
     const plain = normalizeHebrew(token?.orig || '', false);
     if(plain === 'בין') return 'entre';
@@ -450,7 +484,10 @@
     const baseGloss = lexical.gloss || sourceGloss;
     const layer = Rules?.buildSpanishInterlinearPlan
       ? Rules.buildSpanishInterlinearPlan(token?.orig || '', baseMorph, baseGloss, {
-          strong: normalizeStrong(token?.strongs)
+          strong: normalizeStrong(token?.strongs),
+          nextStrong: context.nextStrong || '',
+          followedByNominal: context.followedByNominal === true,
+          nextIsDefinedOrDivine: context.nextIsDefinedOrDivine === true
         })
       : {
           original: String(token?.orig || ''),
@@ -1835,7 +1872,8 @@
     const tokens = getAdminVerseTokens(verseNode);
     const baseItems = tokens.map((token, posIndex) => buildSpanishLayerForToken(token, {
       oshbVerseNode,
-      posIndex
+      posIndex,
+      ...buildConstructContext(tokens, oshbVerseNode, posIndex)
     }));
     const constructItems = applyConstructSemantics(baseItems);
     const phraseItems = applySyntacticPhraseSemantics(constructItems);

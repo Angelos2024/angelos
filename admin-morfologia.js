@@ -570,6 +570,19 @@
     return /^[\u05BE]+$/.test(String(value || '').trim());
   }
 
+  function appendVisibleMaqafToRow(token, morphemes){
+    const tokenSurface = String(token?.orig || '');
+    if(!tokenSurface.includes('\u05BE')) return morphemes;
+    const cloned = (Array.isArray(morphemes) ? morphemes : []).map((morpheme) => ({ ...morpheme }));
+    if(!cloned.length) return cloned;
+    if(cloned.some((morpheme) => String(morpheme?.surface || '').includes('\u05BE'))){
+      return cloned;
+    }
+    const lastMorpheme = cloned[cloned.length - 1];
+    lastMorpheme.surface = `${lastMorpheme.surface || ''}\u05BE`;
+    return cloned;
+  }
+
   function mergeDisplayMorphemes(items){
     const merged = [];
     items.forEach((item) => {
@@ -640,7 +653,7 @@
             type: 'base',
             gloss: entry?.baseGloss || ''
           }];
-      return { token, morphemes };
+      return { token, morphemes: appendVisibleMaqafToRow(token, morphemes) };
     }));
     const rows = mergeDisplayMorphemes(rawRows).map(({ token, morphemes }) => {
       const morphemeHtml = morphemes.map((morpheme) => `
