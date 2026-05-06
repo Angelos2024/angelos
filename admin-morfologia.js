@@ -84,6 +84,7 @@
     label: 'Genesis',
     chapter: 1
   };
+  const AdminEngine = window.AdminHebrewInterlinearEngine || null;
 
   function normalizeKey(value){
     return String(value || '')
@@ -239,75 +240,10 @@
     return text;
   }
 
-  function flattenMorphValues(value){
-    if(Array.isArray(value)){
-      return value
-        .flatMap((item) => flattenMorphValues(item))
-        .filter(Boolean);
-    }
-
-    return String(value || '')
-      .split(',')
-      .map((item) => item.trim())
-      .filter((item) => item && item !== ',');
-  }
-
-  function flattenTokenForDisplay(token){
-    const origParts = Array.isArray(token?.orig) ? token.orig : [token?.orig];
-    if(origParts.length <= 1){
-      return [{ ...token }];
-    }
-
-    const morphParts = flattenMorphValues(token?.morphs);
-    const numParts = Array.isArray(token?.num) ? token.num : [token?.num];
-    const strongParts = Array.isArray(token?.strongs) ? token.strongs : [token?.strongs];
-
-    return origParts.map((origPart, index) => ({
-      orig: origPart,
-      morphs: morphParts[index] || '',
-      num: numParts[index] || String(index + 1),
-      strongs: strongParts.length === origParts.length ? strongParts[index] : '',
-      es: Array.isArray(token?.es) ? token.es[index] || '' : (index === 0 ? token?.es : ''),
-      added: Array.isArray(token?.added) ? token.added[index] || '' : '',
-      marks: Array.isArray(token?.marks) ? token.marks[index] || '' : ''
-    }));
-  }
-
-  function tokensFromFormsMorphs(verseNode){
-    const forms = Array.isArray(verseNode?.forms) ? verseNode.forms : [];
-    const morphs = Array.isArray(verseNode?.morphs) ? verseNode.morphs : [];
-    if(!forms.length) return [];
-
-    return forms.map((orig, index) => ({
-      orig,
-      morphs: morphs[index] || '',
-      num: String(index + 1)
-    }));
-  }
-
-  function getDisplayTokens(verseNode){
-    const sourceTokens = Array.isArray(verseNode?.tokens) && verseNode.tokens.length
-      ? verseNode.tokens
-      : tokensFromFormsMorphs(verseNode);
-    return sourceTokens
-      .flatMap((token, index) => flattenTokenForDisplay(token).map((part, partIndex) => ({
-        ...part,
-        __order: `${index}:${partIndex}`
-      })))
-      .sort((left, right) => {
-        const leftNum = Number(left?.num);
-        const rightNum = Number(right?.num);
-        const leftHasNum = Number.isFinite(leftNum) && leftNum > 0;
-        const rightHasNum = Number.isFinite(rightNum) && rightNum > 0;
-        if(leftHasNum && rightHasNum && leftNum !== rightNum) return leftNum - rightNum;
-        if(leftHasNum && !rightHasNum) return -1;
-        if(!leftHasNum && rightHasNum) return 1;
-        return String(left?.__order || '').localeCompare(String(right?.__order || ''));
-      })
-      .map(({ __order, ...token }) => token);
-  }
-
   function findOshbMorphLabel(oshbVerseNode, token, tokenIndex){
+    if(AdminEngine?.getOshbMorphAt){
+      return AdminEngine.getOshbMorphAt(oshbVerseNode, token, tokenIndex);
+    }
     const forms = Array.isArray(oshbVerseNode?.forms) ? oshbVerseNode.forms : [];
     const morphs = Array.isArray(oshbVerseNode?.morphs) ? oshbVerseNode.morphs : [];
     if(!forms.length || !morphs.length) return '';
@@ -626,16 +562,13 @@
     return String(rawText || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() || 'Sin texto hebreo';
   }
 
-  async function buildVerseCardHtml(verseNumber, verseNode){
-    const tokens = getDisplayTokens(verseNode);
-    const [chapterNumber, localVerseNumber] = String(verseNumber).split(':');
-    let oshbVerseNode = null;
-    try{
-      const oshbBook = await getOshbMorphBook(state.slug);
-      oshbVerseNode = oshbBook?.chapters?.[chapterNumber]?.[localVerseNumber] || null;
-    }catch(_error){
-      oshbVerseNode = null;
-    }
+  async function buildVerseCardHtml(verseNumber, verseNode, oshbVerseNode = null){
+    const versePlan = AdminEngine?.buildAdminVersePlan
+      ? AdminEngine.buildAdminVersePlan(verseNode, oshbVerseNode)
+      : { items: [] };
+    const tokens = versePlan.items.length
+      ? versePlan.items.map((entry) => entry.token)
+      : [];
     const rows = await Promise.all(tokens.map(async (token, posIndex) => {
       const parsedNum = Number(token?.num);
       const tokenIndex = Number.isInteger(parsedNum) && parsedNum >= 1
@@ -674,6 +607,7 @@
     const interlinearBook = await getInterlinearBook(state.slug);
     const chapterTotal = await getChapterCount(state.slug);
     if(state.chapter > chapterTotal) state.chapter = chapterTotal;
+    const oshbBook = await getOshbMorphBook(state.slug).catch(() => null);
 
     const interlinearVerses = getInterlinearVerses(interlinearBook, state.chapter);
     const verseNumbers = Object.keys(interlinearVerses).sort((a, b) => Number(a) - Number(b));
@@ -689,8 +623,12 @@
     const cards = [];
     for(const verseNumber of verseNumbers){
       const verseNode = interlinearVerses[verseNumber];
-      tokenCount += getDisplayTokens(verseNode).length;
-      cards.push(await buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode));
+      const oshbVerseNode = oshbBook?.chapters?.[String(state.chapter)]?.[verseNumber] || null;
+      const versePlan = AdminEngine?.buildAdminVersePlan
+        ? AdminEngine.buildAdminVersePlan(verseNode, oshbVerseNode)
+        : { tokenCount: 0 };
+      tokenCount += versePlan.tokenCount || 0;
+      cards.push(await buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode, oshbVerseNode));
     }
 
     if(els.mount) els.mount.innerHTML = cards.join('');
