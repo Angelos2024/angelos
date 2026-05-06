@@ -145,12 +145,82 @@
     };
   }
 
+  function extractMorphFeatures(label){
+    const upper = String(label || '').trim().toUpperCase();
+    return {
+      isConstruct: /\.C(?:$|\.)/.test(upper),
+      isNominal: /^(SUBS|ADJ|NPROP)(?:\.|$)/.test(upper),
+      isProper: /^NPROP(?:\.|$)/.test(upper),
+      isVerbal: /^VERBO(?:\.|$)/.test(upper)
+    };
+  }
+
+  function hasArticleMorpheme(entry){
+    const morphemes = Array.isArray(entry?.layer?.morphemes) ? entry.layer.morphemes : [];
+    return morphemes.some((morpheme) => String(morpheme?.label || '').trim().toUpperCase() === 'ART');
+  }
+
+  function isArticleOnlyToken(entry){
+    const morphemes = Array.isArray(entry?.layer?.morphemes) ? entry.layer.morphemes : [];
+    return morphemes.length > 0 && morphemes.every((morpheme) => String(morpheme?.label || '').trim().toUpperCase() === 'ART');
+  }
+
+  function findConstructTailIndex(items, startIndex){
+    let sawArticleBridge = false;
+    for(let index = startIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(isArticleOnlyToken(entry)){
+        sawArticleBridge = true;
+        continue;
+      }
+      if(features.isNominal || features.isProper){
+        return {
+          index,
+          viaArticle: sawArticleBridge || hasArticleMorpheme(entry)
+        };
+      }
+      if(features.isVerbal){
+        return null;
+      }
+      const gloss = String(entry?.tokenGloss || entry?.baseGloss || '').trim();
+      if(gloss){
+        return null;
+      }
+    }
+    return null;
+  }
+
+  function applyConstructSemantics(items){
+    return items.map((entry, index) => {
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      const hasPronominalSuffix = Boolean(entry?.layer?.hasPronominalSuffix);
+      const tokenGloss = String(entry?.tokenGloss || '').trim();
+      if(!features.isConstruct || !features.isNominal || hasPronominalSuffix || !tokenGloss){
+        return entry;
+      }
+
+      const tail = findConstructTailIndex(items, index);
+      if(!tail) return entry;
+
+      const normalizedGloss = /\bde$/i.test(tokenGloss) ? tokenGloss : `${tokenGloss} de`;
+      return {
+        ...entry,
+        tokenGloss: normalizedGloss,
+        semanticRole: 'construct-head',
+        constructTargetIndex: tail.index,
+        constructViaArticle: tail.viaArticle
+      };
+    });
+  }
+
   function buildAdminVersePlan(verseNode, oshbVerseNode){
     const tokens = getAdminVerseTokens(verseNode);
-    const items = tokens.map((token, posIndex) => buildSpanishLayerForToken(token, {
+    const baseItems = tokens.map((token, posIndex) => buildSpanishLayerForToken(token, {
       oshbVerseNode,
       posIndex
     }));
+    const items = applyConstructSemantics(baseItems);
 
     return {
       tokenCount: items.length,
