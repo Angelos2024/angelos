@@ -562,11 +562,67 @@
     return String(rawText || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() || 'Sin texto hebreo';
   }
 
+  function isNiqqudOnlySurface(value){
+    return /^[\u0591-\u05BD\u05BF-\u05C7]+$/.test(String(value || '').trim());
+  }
+
+  function isMaqafOnlySurface(value){
+    return /^[\u05BE]+$/.test(String(value || '').trim());
+  }
+
+  function mergeDisplayMorphemes(items){
+    const merged = [];
+    items.forEach((item) => {
+      const current = {
+        token: item.token,
+        morphemes: (Array.isArray(item.morphemes) ? item.morphemes : []).map((morpheme) => ({ ...morpheme }))
+      };
+      if(
+        current.morphemes.length === 1 &&
+        isNiqqudOnlySurface(current.morphemes[0]?.surface) &&
+        merged.length
+      ){
+        const previous = merged[merged.length - 1];
+        const lastMorpheme = previous.morphemes[previous.morphemes.length - 1];
+        if(lastMorpheme){
+          lastMorpheme.surface = `${lastMorpheme.surface || ''}${current.morphemes[0].surface || ''}`;
+          const extraLabel = String(current.morphemes[0].label || '').trim();
+          const extraGloss = String(current.morphemes[0].gloss || '').trim();
+          if(extraLabel){
+            lastMorpheme.label = lastMorpheme.label && lastMorpheme.label !== extraLabel
+              ? `${lastMorpheme.label}+${extraLabel}`
+              : (lastMorpheme.label || extraLabel);
+          }
+          if(extraGloss){
+            lastMorpheme.gloss = lastMorpheme.gloss && lastMorpheme.gloss !== extraGloss
+              ? `${lastMorpheme.gloss} ${extraGloss}`.trim()
+              : (lastMorpheme.gloss || extraGloss);
+          }
+        }
+        return;
+      }
+      if(
+        current.morphemes.length === 1 &&
+        isMaqafOnlySurface(current.morphemes[0]?.surface) &&
+        merged.length
+      ){
+        const previous = merged[merged.length - 1];
+        const lastMorpheme = previous.morphemes[previous.morphemes.length - 1];
+        if(lastMorpheme){
+          lastMorpheme.surface = `${lastMorpheme.surface || ''}${current.morphemes[0].surface || ''}`;
+        }
+        return;
+      }
+      merged.push(current);
+    });
+    return merged;
+  }
+
   async function buildVerseCardHtml(verseNumber, verseNode, oshbVerseNode = null){
     const versePlan = AdminEngine?.buildAdminVersePlan
       ? AdminEngine.buildAdminVersePlan(verseNode, oshbVerseNode)
       : { items: [] };
-    const rows = await Promise.all(versePlan.items.map(async (entry, posIndex) => {
+    const rawRows = await Promise.all(versePlan.items.map(async (entry, posIndex) => {
       const token = entry.token || {};
       const parsedNum = Number(token?.num);
       const tokenIndex = Number.isInteger(parsedNum) && parsedNum >= 1
@@ -584,6 +640,9 @@
             type: 'base',
             gloss: entry?.baseGloss || ''
           }];
+      return { token, morphemes };
+    }));
+    const rows = mergeDisplayMorphemes(rawRows).map(({ token, morphemes }) => {
       const morphemeHtml = morphemes.map((morpheme) => `
         <div class="admin-morph-segment admin-morph-segment-${escapeHtml(morpheme.type || 'base')}">
           <div class="admin-morph-segment-hebrew">${escapeHtml(morpheme.surface || '')}</div>
@@ -596,7 +655,7 @@
           <div class="admin-morph-token-strip-inner">${morphemeHtml}</div>
         </div>
       `;
-    }));
+    });
 
     return `
       <article class="admin-verse-card" data-verse="${verseNumber}">

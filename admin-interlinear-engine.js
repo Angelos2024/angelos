@@ -102,6 +102,10 @@
     return true;
   }
 
+  function isHebrewMarkOnly(value){
+    return /^[\u0591-\u05BD\u05BE\u05BF-\u05C7]+$/.test(String(value || '').trim());
+  }
+
   function isDefectiveConstructGloss(text){
     const value = normalizeSpanishSourceText(text).toLowerCase();
     return /^(el|la|los|las)\s+de$/i.test(value) || /^(de|del|de la|de los|de las)$/i.test(value);
@@ -131,6 +135,7 @@
 
   function resolveConstructHeadLexeme(entry){
     const items = getLexiconEntriesByStrong(entry?.token?.strongs);
+    const normalizedForm = normalizeHebrew(entry?.token?.orig || '', false);
     for(const item of items){
       const candidates = [];
       const add = (value) => {
@@ -148,6 +153,9 @@
           const words = lower.split(/\s+/).filter(Boolean);
           if(words.length === 1) score += 6;
           if(words.length === 2) score += 2;
+          if(normalizedForm === 'פני' && /\b(faz|rostro|superficie|frente|presencia)\b/i.test(lower)) score += 10;
+          if(normalizedForm === 'בני' && /\bhijo\b/i.test(lower)) score += 10;
+          if(normalizedForm === 'דברי' && /\bpalabra\b/i.test(lower)) score += 10;
           if(!/\bde\b/.test(lower) && !/\b(delante|ante|contra|hacia|antes|sobre|debajo|frente)\b/.test(lower)) score += 4;
           if(!startsWithDeterminer(candidate)) score += 2;
           if(/\b(faz|rostro|cara|frente|presencia|superficie|medio|reuni[oó]n|esp[ií]ritu|palabra|hijo|nombre)\b/i.test(lower)) score += 6;
@@ -334,7 +342,7 @@
       ? verseNode.tokens
       : tokensFromFormsMorphs(verseNode);
 
-    return sourceTokens
+    const expanded = sourceTokens
       .flatMap((token, index) => expandCompositeToken(token).map((part, partIndex) => ({
         ...part,
         __order: `${index}:${partIndex}`
@@ -350,6 +358,28 @@
         return String(left?.__order || '').localeCompare(String(right?.__order || ''));
       })
       .map(({ __order, ...token }) => token);
+
+    const merged = [];
+    expanded.forEach((token) => {
+      const orig = String(token?.orig || '').trim();
+      if(isHebrewMarkOnly(orig) && merged.length){
+        const previous = merged[merged.length - 1];
+        previous.orig = `${previous.orig || ''}${orig}`;
+        const nextMorph = String(token?.morphs || '').trim();
+        const prevMorph = String(previous?.morphs || '').trim();
+        if(nextMorph){
+          previous.morphs = prevMorph && nextMorph ? `${prevMorph}+${nextMorph}` : (prevMorph || nextMorph);
+        }
+        const nextGloss = String(token?.es || '').trim();
+        if(nextGloss && !String(previous?.es || '').trim()){
+          previous.es = nextGloss;
+        }
+        return;
+      }
+      merged.push({ ...token });
+    });
+
+    return merged;
   }
 
   function getOshbMorphAt(oshbVerseNode, token, posIndex){
