@@ -239,6 +239,60 @@
     return text;
   }
 
+  function flattenMorphValues(value){
+    if(Array.isArray(value)){
+      return value
+        .flatMap((item) => flattenMorphValues(item))
+        .filter(Boolean);
+    }
+
+    return String(value || '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter((item) => item && item !== ',');
+  }
+
+  function flattenTokenForDisplay(token){
+    const origParts = Array.isArray(token?.orig) ? token.orig : [token?.orig];
+    if(origParts.length <= 1){
+      return [{ ...token }];
+    }
+
+    const morphParts = flattenMorphValues(token?.morphs);
+    const numParts = Array.isArray(token?.num) ? token.num : [token?.num];
+    const strongParts = Array.isArray(token?.strongs) ? token.strongs : [token?.strongs];
+
+    return origParts.map((origPart, index) => ({
+      orig: origPart,
+      morphs: morphParts[index] || '',
+      num: numParts[index] || String(index + 1),
+      strongs: strongParts.length === origParts.length ? strongParts[index] : '',
+      es: Array.isArray(token?.es) ? token.es[index] || '' : (index === 0 ? token?.es : ''),
+      added: Array.isArray(token?.added) ? token.added[index] || '' : '',
+      marks: Array.isArray(token?.marks) ? token.marks[index] || '' : ''
+    }));
+  }
+
+  function getDisplayTokens(verseNode){
+    const sourceTokens = Array.isArray(verseNode?.tokens) ? verseNode.tokens : [];
+    return sourceTokens
+      .flatMap((token, index) => flattenTokenForDisplay(token).map((part, partIndex) => ({
+        ...part,
+        __order: `${index}:${partIndex}`
+      })))
+      .sort((left, right) => {
+        const leftNum = Number(left?.num);
+        const rightNum = Number(right?.num);
+        const leftHasNum = Number.isFinite(leftNum) && leftNum > 0;
+        const rightHasNum = Number.isFinite(rightNum) && rightNum > 0;
+        if(leftHasNum && rightHasNum && leftNum !== rightNum) return leftNum - rightNum;
+        if(leftHasNum && !rightHasNum) return -1;
+        if(!leftHasNum && rightHasNum) return 1;
+        return String(left?.__order || '').localeCompare(String(right?.__order || ''));
+      })
+      .map(({ __order, ...token }) => token);
+  }
+
   function findOshbMorphLabel(oshbVerseNode, token, tokenIndex){
     const forms = Array.isArray(oshbVerseNode?.forms) ? oshbVerseNode.forms : [];
     const morphs = Array.isArray(oshbVerseNode?.morphs) ? oshbVerseNode.morphs : [];
@@ -559,7 +613,7 @@
   }
 
   async function buildVerseCardHtml(verseNumber, verseNode){
-    const tokens = Array.isArray(verseNode?.tokens) ? verseNode.tokens : [];
+    const tokens = getDisplayTokens(verseNode);
     const [chapterNumber, localVerseNumber] = String(verseNumber).split(':');
     let oshbVerseNode = null;
     try{
