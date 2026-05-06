@@ -372,7 +372,7 @@
       orig: origPart,
       morphs: morphParts[index] || '',
       num: numParts[index] || String(index + 1),
-      strongs: strongParts.length === origParts.length ? strongParts[index] : '',
+      strongs: strongParts.length === origParts.length ? strongParts[index] : (strongParts[0] || ''),
       es: Array.isArray(token?.es) ? token.es[index] || '' : (index === 0 ? token?.es : ''),
       added: Array.isArray(token?.added) ? token.added[index] || '' : '',
       marks: Array.isArray(token?.marks) ? token.marks[index] || '' : ''
@@ -382,6 +382,11 @@
   function isHebrewSuffixFragment(value){
     const text = String(value || '').trim();
     return /^[\u05B0-\u05C7]+[ויוךםןה]+$/.test(text);
+  }
+
+  function isPronominalSuffixMorph(value){
+    const morph = String(value || '').trim().toUpperCase();
+    return /^(RB|PRS\.)/.test(morph);
   }
 
   function tokensFromFormsMorphs(verseNode){
@@ -449,6 +454,22 @@
         }
         return;
       }
+      if(isPronominalSuffixMorph(token?.morphs) && merged.length){
+        const previous = merged[merged.length - 1];
+        previous.orig = `${previous.orig || ''}${orig}`;
+        const nextMorph = String(token?.morphs || '').trim();
+        const prevMorph = String(previous?.morphs || '').trim();
+        if(nextMorph){
+          previous.morphs = prevMorph && nextMorph ? `${prevMorph}+${nextMorph}` : (prevMorph || nextMorph);
+        }
+        const nextGloss = String(token?.es || '').trim();
+        if(nextGloss){
+          previous.es = previous.es
+            ? [previous.es, nextGloss].flat().join(' ').trim()
+            : nextGloss;
+        }
+        return;
+      }
       merged.push({ ...token });
     });
 
@@ -495,6 +516,12 @@
   function resolveSourceMorphFallback(token){
     const raw = String(token?.morphs || '').trim();
     if(!raw) return '';
+    if(normalizeStrong(token?.strongs || '') === 'H853' && /PA.*(RB|PRS\.)|(RB|PRS\.).*PA/i.test(raw)){
+      return 'PRON.OBJ';
+    }
+    if(normalizeStrong(token?.strongs || '') === 'H853' && /(RB|PRS\.)/i.test(raw)){
+      return 'PRON.OBJ';
+    }
     if(raw === 'XD') return 'ART';
     if(raw === 'PA') return 'PART.OBJ.DIR';
     if(raw === 'CC' || raw === 'Cc') return 'CONJ';
