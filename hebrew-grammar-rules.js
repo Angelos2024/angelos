@@ -580,6 +580,128 @@
           }
         },
         regla_diagnostico: 'Si una preposicion conocida termina con una consonante inesperada seguida de vocal, probablemente lleva sufijo pronominal. Aislar la base y buscar en la tabla.'
+      },
+      modulo_numeros_cardinales: {
+        concepto: 'Los cardinales hebreos tienen genero invertido respecto al sustantivo que modifican.',
+        regla_genero_invertido: {
+          descripcion: 'El numeral masculino se usa con sustantivos femeninos y el numeral femenino con sustantivos masculinos. Aplica del 3 al 10.',
+          ejemplo: 'שְׁלֹשָׁה אֲנָשִׁים (Tres hombres) - אֲנָשִׁים es masculino pero שְׁלֹשָׁה tiene la terminacion femenina ָה',
+          ejemplo2: 'שָׁלֹשׁ נָשִׁים (Tres mujeres) - נָשִׁים es femenino pero שָׁלֹשׁ es la forma sin terminacion (masculina)'
+        },
+        rangos: [
+          {
+            rango: '1-2',
+            comportamiento: 'Concuerdan normalmente con el sustantivo (sin inversion)'
+          },
+          {
+            rango: '3-10',
+            comportamiento: 'Genero invertido (ver regla arriba)'
+          },
+          {
+            rango: '11-19',
+            comportamiento: 'Compuestos. La unidad sigue la regla de inversion; el 10 (עָשָׂר/עֶשְׂרֵה) concuerda normalmente.',
+            ejemplo: 'אַחַד עָשָׂר (Once, con sust. masc.) vs אַחַת עֶשְׂרֵה (Once, con sust. fem.)'
+          },
+          {
+            rango: '20-90 (decenas)',
+            comportamiento: 'Forma unica invariable (plural del numeral de unidad). Sin distincion de genero.',
+            ejemplo: 'עֶשְׂרִים (Veinte), שְׁלֹשִׁים (Treinta)'
+          },
+          {
+            rango: '100+',
+            comportamiento: 'מֵאָה (100), אֶלֶף (1000). Invariables en genero. Se combinan en aposicion.'
+          }
+        ],
+        posicion_sintactica: 'Los cardinales pueden ir antes o despues del sustantivo. Antes: funcion atributiva directa. Despues: funcion mas enfatica.',
+        regla_diagnostico: 'Si ves una forma con terminacion ָה que morfologicamente parece femenino pero el sustantivo asociado es masculino, verificar si es un numeral antes de marcar como error de concordancia.'
+      },
+      modulo_silabacion_y_acento: {
+        concepto: 'Las reglas de silabacion determinan que vocales pueden aparecer donde. Son la base mecanica de todos los cambios vocalicos.',
+        tipos_de_silaba: {
+          abierta: {
+            estructura: 'Consonante + Vocal (CV)',
+            descripcion: 'Termina en vocal. Puede tener vocal larga o breve.',
+            regla_acentuada: 'En silaba abierta acentuada, la vocal tiende a ser larga',
+            ejemplo: 'בָּ en בָּרָא (primera silaba abierta acentuada, Qamets largo)'
+          },
+          cerrada: {
+            estructura: 'Consonante + Vocal + Consonante (CVC)',
+            descripcion: 'Termina en consonante.',
+            regla: 'La vocal en silaba cerrada no acentuada tiende a ser breve',
+            ejemplo: 'מֶל en מֶלֶךְ (silaba cerrada, Segol breve)'
+          },
+          semiabierta_sheva: {
+            estructura: 'Consonante + Sheva vocal',
+            descripcion: 'El Sheva vocal abre una silaba muy breve (semi-vocal)',
+            regla: 'Solo puede aparecer en posicion pre-tonica (antes del acento), nunca al final de palabra ni dos seguidos al inicio'
+          }
+        },
+        reglas_de_cambio_vocalico: [
+          {
+            nombre: 'REDUCCION',
+            condicion: 'Una vocal larga en silaba abierta pierde el acento al anadir sufijo',
+            resultado: 'La vocal larga se reduce a Sheva o a Chatef (guturales)',
+            ejemplo: 'דָּבָר (Palabra) -> דְּבַר (Palabra-de, en constructo)'
+          },
+          {
+            nombre: 'ALARGAMIENTO_COMPENSATORIO',
+            condicion: 'Una consonante que deberia duplicarse (Dagesh Forte) no puede porque es gutural o Resh',
+            resultado: 'La vocal precedente se alarga un grado (Pathach->Qamets, Hireq->Tsere)',
+            ejemplo: 'מִן + ר = מֵרֹאשׁ (Tsere compensa la Nun asimilada)'
+          },
+          {
+            nombre: 'FORMA_PAUSA',
+            condicion: 'Palabra en posicion de pausa (acento Silluq o Atnaj, al final de versiculo o hemistiquio)',
+            resultado: 'Vocal breve en silaba acentuada se alarga: Pathach->Qamets, Segol->Tsere, Hireq->Tsere',
+            ejemplo: 'יֶלֶד (Nino) -> יָלֶד en pausa'
+          }
+        ],
+        posicion_del_acento: {
+          regla_general: 'El acento hebreo es oxitono por defecto (cae en la ultima silaba - Milra)',
+          excepcion_paroxtona: 'Muchas formas verbales y sustantivos en constructo son paroxitonos (acento en penultima silaba - Milel)',
+          impacto: 'Cambiar la posicion del acento puede cambiar el significado morfologico. La Vav Consecutiva suele desplazar el acento a la ultima silaba.'
+        }
+      },
+      modulo_arameo_biblico: {
+        concepto: 'Partes de Daniel (2:4b-7:28) y Esdras (4:8-6:18, 7:12-26) estan en arameo biblico, no hebreo. Comparte alfabeto pero tiene diferencias morfologicas que producen falsos positivos en el parser hebreo.',
+        diferencias_criticas: [
+          {
+            categoria: 'Estado Determinado',
+            hebreo: 'Usa el articulo prefijado הַ para definir',
+            arameo: 'Usa el sufijo postpuesto אָ / אַ / יָא para definir',
+            riesgo_parser: 'La terminacion אָ en arameo no es estado constructo femenino hebreo. Es el equivalente a el/la (determinado).',
+            ejemplo: 'מַלְכָּא (El rey, determinado arameo) vs מַלְכַּת (Reina, constructo hebreo)'
+          },
+          {
+            categoria: 'Plural Masculino',
+            hebreo: 'Termina en ִים (-im)',
+            arameo: 'Termina en ִין (-in) en estado absoluto',
+            ejemplo: 'מַלְכִין (Reyes, arameo) ≠ paradigma hebreo'
+          },
+          {
+            categoria: 'Prefijos Verbales',
+            hebreo: 'Imperfecto 3ms: יִ- (Yod + Hireq)',
+            arameo: 'Imperfecto 3ms: יְ- (Yod + Sheva) o לְ- en algunos binyanim arameos',
+            binyanim_arameos: ['PEAL (= Qal)', 'PAEL (= Piel)', 'APHEL (= Hifil)', 'HITPEEL (= Hitpael)']
+          },
+          {
+            categoria: 'Pronombres',
+            diferencias: 'אֲנָה (Yo, arameo) vs אֲנִי (Yo, hebreo). הִמּוֹ (Ellos, arameo) vs הֵם (hebreo).'
+          }
+        ],
+        regla_diagnostico: 'Si el parser no resuelve una forma en los libros de Daniel o Esdras y la palabra termina en א o ין, intentar analisis arameo antes de marcar como desconocido.'
+      },
+      guia_diagnostico_v4_completa: {
+        paso_01: 'Verificar si el texto pertenece a una seccion aramea (Daniel 2:4b-7:28 o Esdras 4:8-6:18). Si es asi, aplicar modulo_arameo_biblico.',
+        paso_02: 'Identificar Dagesh: Es BeGaD KeFaT al inicio de silaba? -> Lene. Es otra consonante o el contexto indica duplicacion? -> Forte. El Forte indica asimilacion, articulo o binyan intensivo.',
+        paso_03: 'Separar prefijos BKL/Vav/Min/שׁ-relativo usando reglas_oro. Verificar Articulo Oculto (SINCOPE_ARTICULO).',
+        paso_04: 'Evaluar si la Vav es Conjuncion o Consecutiva (buscar Pathach+Dagesh Forte para confirmar inversion temporal).',
+        paso_05: 'Aislar sufijos. Si hay Yod antes del sufijo en sustantivo -> objeto plural poseido. Si el sufijo esta sobre un verbo -> objeto directo (modulo_sufijos_pronominales_sobre_verbos).',
+        paso_06: 'Analizar terminacion nominal: -at/-ei = Estado Constructo. Sufijo postpuesto -א = Determinado arameo.',
+        paso_07: 'Con la raiz aislada: verificar si es numeral (aplicar regla de genero invertido). Verificar si el adjetivo tiene articulo para decidir Atributivo vs Predicativo.',
+        paso_08: 'Si la forma no resuelve en ningun paradigma, verificar si existe una lectura Qere diferente a las consonantes Ketiv escritas.',
+        paso_09: 'Para la preposicion encontrada: si es inseparable (B/K/L/שׁ), verificar tabla BKL. Si es separable (אֶל/עַל/עִם/בֵּין/תַּחַת), buscar en modulo_preposiciones_separables_declinadas.',
+        paso_10: 'Verificar si la palabra esta en posicion de pausa (final de versiculo o bajo acento Atnaj). Si es asi, la vocal puede estar alargada respecto a la forma normal.'
       }
     }
   };
@@ -654,6 +776,245 @@
     return `${label}.C`;
   }
 
+  const MORPHEME_GLOSS_HINTS = {
+    CONJ: 'y',
+    PREP: 'prep',
+    ART: 'el/la',
+    REL: 'que',
+    INTJ: 'he aqui',
+    PART: 'part',
+    'PART.OBJ.DIR': '',
+    RBSC1: 'mi',
+    RBSC2: 'tu',
+    RBSF2: 'tu',
+    RBSM3: 'su',
+    RBSF3: 'su',
+    RBPM2: 'vuestro',
+    RBPF2: 'vuestra',
+    RBPM3: 'su',
+    RBPF3: 'su'
+  };
+
+  function firstHebrewLetter(word){
+    const match = String(word || '').match(/[\u05D0-\u05EA]/);
+    return match ? match[0] : '';
+  }
+
+  function niqqudClusterAfterFirst(word){
+    const match = String(word || '').match(/[\u05D0-\u05EA]([\u05B0-\u05C7]*)/);
+    return match ? match[1] : '';
+  }
+
+  function advancePastFirstCluster(word){
+    const match = String(word || '').match(/^([\u05D0-\u05EA][\u05B0-\u05C7]*)(.*)$/s);
+    return match ? match[2] : '';
+  }
+
+  function createMorpheme(surface, label, type, extra = {}){
+    return {
+      surface,
+      label,
+      type,
+      glossHint: MORPHEME_GLOSS_HINTS[label] ?? '',
+      ...extra
+    };
+  }
+
+  function analyzeVavPrefixSegment(word){
+    const normalized = normalizeHebrew(word, true);
+    if(firstHebrewLetter(normalized) !== 'ו') return null;
+    const niqqud = niqqudClusterAfterFirst(normalized);
+    const nextCluster = advancePastFirstCluster(normalized);
+    const nextNiqqud = niqqudClusterAfterFirst(nextCluster);
+    const nextLetter = firstHebrewLetter(nextCluster);
+    const nextHasDagesh = nextNiqqud.includes('\u05BC');
+
+    if(niqqud.includes('\u05B7') && nextHasDagesh){
+      return createMorpheme(normalized.slice(0, 1 + niqqud.length), 'CONJ', 'prefix', {
+        rule: 'FUTURO_A_PASADO',
+        subtype: 'VAV_CONSECUTIVA',
+        note: 'Vav consecutiva con Pathach + Dagesh Forte'
+      });
+    }
+    if(niqqud.includes('\u05B8') && nextLetter === 'א'){
+      return createMorpheme(normalized.slice(0, 1 + niqqud.length), 'CONJ', 'prefix', {
+        rule: 'FUTURO_A_PASADO',
+        subtype: 'VAV_CONSECUTIVA_ALEPH',
+        note: 'Vav consecutiva con compensacion ante Aleph'
+      });
+    }
+    if(niqqud.includes('\u05BC')){
+      return createMorpheme(normalized.slice(0, 1 + niqqud.length), 'CONJ', 'prefix', {
+        rule: 'VAV_CONJUNCION_SHURUQ',
+        subtype: 'VAV_CONJUNCION',
+        note: 'Vav con Shureq'
+      });
+    }
+    return createMorpheme(normalized.slice(0, 1 + niqqud.length), 'CONJ', 'prefix', {
+      rule: 'VAV_CONJUNCION',
+      subtype: 'VAV_CONJUNCION',
+      note: 'Vav conjuntiva'
+    });
+  }
+
+  function analyzeArticleSegment(word){
+    const normalized = normalizeHebrew(word, true);
+    const first = firstHebrewLetter(normalized);
+    const niqqud = niqqudClusterAfterFirst(normalized);
+    if(first !== 'ה') return null;
+    if(!(niqqud.includes('\u05B7') || niqqud.includes('\u05B8') || niqqud.includes('\u05B6'))){
+      return null;
+    }
+    return createMorpheme(normalized.slice(0, 1 + niqqud.length), 'ART', 'prefix', {
+      rule: 'ARTICULO_EXPLICITO'
+    });
+  }
+
+  function analyzeMinSegment(word){
+    const normalized = normalizeHebrew(word, true);
+    const first = firstHebrewLetter(normalized);
+    const niqqud = niqqudClusterAfterFirst(normalized);
+    if(first !== 'מ') return null;
+    if(!niqqud.includes('\u05B4') && !niqqud.includes('\u05B5')) return null;
+    const nextCluster = advancePastFirstCluster(normalized);
+    const nextLetter = firstHebrewLetter(nextCluster);
+    if(EXEGESIS_PROFILE.configuracion_fonetica.clases_letras.guturales.includes(nextLetter) || nextLetter === 'ר'){
+      return createMorpheme(normalized.slice(0, 1 + niqqud.length), 'PREP', 'prefix', {
+        rule: 'ALARGAMIENTO_COMPENSATORIO',
+        note: 'Prefijo Min con compensacion fonetica'
+      });
+    }
+    return createMorpheme(normalized.slice(0, 1 + niqqud.length), 'PREP', 'prefix', {
+      rule: 'ASIMILACION_FUERTE',
+      note: 'Prefijo Min'
+    });
+  }
+
+  function analyzeRelativePrefixSegment(word){
+    const normalized = normalizeHebrew(word, true);
+    const first = firstHebrewLetter(normalized);
+    if(first !== 'ש') return null;
+    const niqqud = niqqudClusterAfterFirst(normalized);
+    if(!(niqqud.includes('\u05B0') || niqqud.includes('\u05B4') || niqqud.includes('\u05B6'))){
+      return null;
+    }
+    return createMorpheme(normalized.slice(0, 1 + niqqud.length), 'REL', 'prefix', {
+      rule: 'PARTICULA_RELATIVA_PREFIJADA'
+    });
+  }
+
+  function analyzeBklPrefixSegment(word){
+    const normalized = normalizeHebrew(word, true);
+    const first = firstHebrewLetter(normalized);
+    if(!['ב', 'כ', 'ל'].includes(first)) return null;
+    const niqqud = niqqudClusterAfterFirst(normalized);
+    if(!(niqqud.includes('\u05B0') || niqqud.includes('\u05B4') || niqqud.includes('\u05B6') || niqqud.includes('\u05B7') || niqqud.includes('\u05B8'))){
+      return null;
+    }
+    const nextCluster = advancePastFirstCluster(normalized);
+    const nextLetter = firstHebrewLetter(nextCluster);
+    const nextNiqqud = niqqudClusterAfterFirst(nextCluster);
+    const hasArticleSignal = (niqqud.includes('\u05B7') || niqqud.includes('\u05B8')) && nextNiqqud.includes('\u05BC');
+    const hasChatef = ['\u05B1', '\u05B2', '\u05B3'].some((mark) => nextNiqqud.includes(mark));
+    const startsWithSheva = nextNiqqud.includes('\u05B0');
+    let rule = 'ESTANDAR';
+    if(hasArticleSignal){
+      rule = 'SINCOPE_ARTICULO';
+    }else if(hasChatef){
+      rule = 'REGLA_CHATEF';
+    }else if(startsWithSheva){
+      rule = nextLetter === 'י' ? 'REGLA_YOD_QUIESCENTE' : 'REGLA_DOS_SHEVAS';
+    }
+    return createMorpheme(normalized.slice(0, 1 + niqqud.length), 'PREP', 'prefix', {
+      rule,
+      hasHiddenArticle: hasArticleSignal
+    });
+  }
+
+  function analyzePrefixLayer(form){
+    let remainder = normalizeHebrew(form, true);
+    const morphemes = [];
+    let keepScanning = true;
+
+    while(keepScanning && remainder){
+      keepScanning = false;
+      const detector = analyzeVavPrefixSegment(remainder)
+        || analyzeArticleSegment(remainder)
+        || analyzeMinSegment(remainder)
+        || analyzeBklPrefixSegment(remainder)
+        || analyzeRelativePrefixSegment(remainder);
+
+      if(detector){
+        morphemes.push(detector);
+        remainder = remainder.slice(detector.surface.length);
+        keepScanning = true;
+      }
+    }
+
+    return { morphemes, remainder };
+  }
+
+  function analyzeSuffixLayer(form){
+    const suffixResult = detectSuffixSegment(form);
+    if(!suffixResult.suffix){
+      return { base: suffixResult.base, suffixes: [] };
+    }
+    return {
+      base: suffixResult.base,
+      suffixes: [createMorpheme(suffixResult.suffix.form, suffixResult.suffix.label, 'suffix', {
+        rule: 'SUFIJO_PRONOMINAL'
+      })]
+    };
+  }
+
+  function analyzeWordLayers(form, baseLabel = '', options = {}){
+    const normalized = normalizeHebrew(form, true);
+    const prefixLayer = analyzePrefixLayer(normalized);
+    const suffixLayer = analyzeSuffixLayer(prefixLayer.remainder);
+    const forcedBaseLabel = forceConstructState(baseLabel, {
+      ...options,
+      hasPronominalSuffix: suffixLayer.suffixes.length > 0
+    });
+
+    const morphemes = [
+      ...prefixLayer.morphemes,
+      createMorpheme(suffixLayer.base, forcedBaseLabel || baseLabel || '', 'base', {
+        rule: 'BASE'
+      }),
+      ...suffixLayer.suffixes
+    ].filter((item) => item.surface);
+
+    return {
+      original: normalized,
+      morphemes,
+      base: suffixLayer.base,
+      baseLabel: forcedBaseLabel || baseLabel || '',
+      hasConstructBase: /\.C(?:$|\.)/.test(forcedBaseLabel || ''),
+      hasPronominalSuffix: suffixLayer.suffixes.length > 0
+    };
+  }
+
+  function buildSpanishInterlinearPlan(form, baseLabel = '', baseGloss = '', options = {}){
+    const analysis = analyzeWordLayers(form, baseLabel, options);
+    const morphemes = analysis.morphemes.map((morpheme) => ({
+      ...morpheme,
+      gloss: morpheme.type === 'base'
+        ? String(baseGloss || '').trim()
+        : morpheme.glossHint
+    }));
+    return {
+      ...analysis,
+      morphemes
+    };
+  }
+
+  function createInterlinearLayer1Adapter(){
+    return {
+      analyzeWordLayers,
+      buildSpanishInterlinearPlan
+    };
+  }
+
   function splitAffixes(form, baseLabel = '', options = {}){
     const prefixResult = detectPrefixSegments(form);
     const suffixResult = detectSuffixSegment(prefixResult.remainder);
@@ -701,6 +1062,11 @@
     detectSuffixSegment,
     forceConstructState,
     splitAffixes,
+    analyzePrefixLayer,
+    analyzeSuffixLayer,
+    analyzeWordLayers,
+    buildSpanishInterlinearPlan,
+    createInterlinearLayer1Adapter,
     explainRuleSet
   };
 })(typeof window !== 'undefined' ? window : globalThis);
