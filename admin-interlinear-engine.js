@@ -77,6 +77,30 @@
     };
   }
 
+  function hasUsefulLexicalContent(text){
+    const value = normalizeSpanishSourceText(text).toLowerCase();
+    if(!value) return false;
+    if(/^(el|la|los|las|un|una|unos|unas)\s+de$/i.test(value)) return false;
+    if(/^(de|del|de la|de los|de las)$/i.test(value)) return false;
+    return true;
+  }
+
+  function isDefectiveConstructGloss(text){
+    const value = normalizeSpanishSourceText(text).toLowerCase();
+    return /^(el|la|los|las)\s+de$/i.test(value) || /^(de|del|de la|de los|de las)$/i.test(value);
+  }
+
+  function canonicalFunctionGloss(baseMorph, token){
+    const upperMorph = String(baseMorph || '').trim().toUpperCase();
+    if(upperMorph === 'PART.OBJ.DIR') return '';
+    if(upperMorph === 'CONJ') return 'y';
+    if(upperMorph === 'REL') return 'que';
+    if(upperMorph === 'PREP'){
+      return resolveSurfacePrepositionGloss(token);
+    }
+    return '';
+  }
+
   function getLexiconEntriesByStrong(strong){
     const key = normalizeStrong(strong);
     if(!key) return [];
@@ -86,6 +110,39 @@
       return lexicon.byStrong.get(key) || [];
     }
     return lexicon.byStrong[key] || [];
+  }
+
+  function resolveConstructHeadLexeme(entry){
+    const items = getLexiconEntriesByStrong(entry?.token?.strongs);
+    for(const item of items){
+      const candidates = [];
+      const add = (value) => {
+        const normalized = normalizeLexicalGlossCandidate(value);
+        if(normalized.gloss && hasUsefulLexicalContent(normalized.gloss)){
+          candidates.push(normalized.gloss);
+        }
+      };
+      add(item?.glosa);
+      (Array.isArray(item?.glosas) ? item.glosas : []).forEach(add);
+      const chosen = candidates
+        .map((candidate, index) => {
+          let score = 0;
+          const lower = candidate.toLowerCase();
+          const words = lower.split(/\s+/).filter(Boolean);
+          if(words.length === 1) score += 6;
+          if(words.length === 2) score += 2;
+          if(!/\bde\b/.test(lower) && !/\b(delante|ante|contra|hacia|antes|sobre|debajo|frente)\b/.test(lower)) score += 4;
+          if(!startsWithDeterminer(candidate)) score += 2;
+          if(/\b(faz|rostro|cara|frente|presencia|superficie|medio|reuni[oó]n|esp[ií]ritu|palabra|hijo|nombre)\b/i.test(lower)) score += 6;
+          if(/\b(vosotros|ellos|ellas|m[ií]|ti|nosotros|su|sus|tu)\b/.test(lower)) score -= 6;
+          if(/\bde\b/.test(lower)) score -= 3;
+          if(/\b(delante|ante|contra|hacia|antes|sobre|debajo|frente a)\b/.test(lower)) score -= 4;
+          return { candidate, score, index };
+        })
+        .sort((left, right) => right.score - left.score || left.index - right.index)[0]?.candidate;
+      if(chosen) return normalizeSpanishPhrase(chosen);
+    }
+    return '';
   }
 
   function chooseLexicalGlossFromEntry(entry, token, baseMorph){
@@ -104,6 +161,7 @@
       let score = 0;
       const lower = candidate.toLowerCase();
       const normalized = normalizeLexicalGlossCandidate(candidate);
+      if(!normalized.gloss) score -= 10;
       if(classifySourceGlossPart(candidate) === 'lex') score += 4;
       if(normalized.articleHint) score += 2;
       if(/^(la|el)\s+.+\s+de$/i.test(candidate)) score += 4;
@@ -117,7 +175,8 @@
       return { candidate, score, index, normalized };
     }).sort((left, right) => right.score - left.score || left.index - right.index);
 
-    return scored[0]?.normalized || { gloss: '', articleHint: '' };
+    const winner = scored.find((item) => item.normalized?.gloss) || scored[0];
+    return winner?.normalized || { gloss: '', articleHint: '' };
   }
 
   function resolveLexicalFallback(token, baseMorph, sourceGloss){
@@ -125,18 +184,26 @@
     const currentClass = classifySourceGlossPart(current);
     const upperMorph = String(baseMorph || '').trim().toUpperCase();
     const strong = normalizeStrong(token?.strongs || '');
-    if(upperMorph === 'PART.OBJ.DIR'){
-      return { gloss: '', articleHint: '' };
+    const entries = getLexiconEntriesByStrong(token?.strongs);
+    const lexiconResolved = entries
+      .map((entry) => chooseLexicalGlossFromEntry(entry, token, baseMorph))
+      .find((resolved) => resolved?.gloss) || { gloss: '', articleHint: '' };
+    const canonical = canonicalFunctionGloss(baseMorph, token);
+
+    if(canonical || upperMorph === 'PART.OBJ.DIR'){
+      return {
+        gloss: canonical,
+        articleHint: lexiconResolved.articleHint || ''
+      };
     }
-    if(upperMorph === 'PREP'){
-      const surfaceGloss = resolveSurfacePrepositionGloss(token);
-      if(surfaceGloss) return { gloss: surfaceGloss, articleHint: '' };
-    }
-    if(current && currentClass === 'lex') {
-      return { gloss: current, articleHint: '' };
+    if(current && currentClass === 'lex' && !(extractMorphFeatures(upperMorph).isConstruct && isDefectiveConstructGloss(current))) {
+      return {
+        gloss: current,
+        articleHint: lexiconResolved.articleHint || ''
+      };
     }
     if(current && /^VERBO(?:\.|$)/.test(upperMorph) && currentClass !== 'func'){
-      return { gloss: current, articleHint: '' };
+      return { gloss: current, articleHint: lexiconResolved.articleHint || '' };
     }
     if(strong === 'H1961'){
       if(/JUSS|YUSIV|JUSS/.test(upperMorph)) return { gloss: 'sea', articleHint: '' };
@@ -145,12 +212,8 @@
     if(strong === 'H259' && /^NUM\.CARD/.test(upperMorph)){
       return { gloss: 'uno', articleHint: '' };
     }
-    const entries = getLexiconEntriesByStrong(token?.strongs);
-    for(const entry of entries){
-      const resolved = chooseLexicalGlossFromEntry(entry, token, baseMorph);
-      if(resolved.gloss){
-        return resolved;
-      }
+    if(lexiconResolved.gloss){
+      return lexiconResolved;
     }
     return { gloss: current, articleHint: '' };
   }
@@ -325,6 +388,7 @@
     if(plain === 'על') return 'sobre';
     if(plain === 'אל') return 'hacia';
     if(plain === 'עם') return 'con';
+    if(plain === 'תחת') return 'debajo de';
     if(plain === 'מן' || plain === 'מ') return 'de';
     if(plain === 'ל') return 'a';
     if(plain === 'ב') return 'en';
@@ -398,6 +462,11 @@
   }
 
   function resolveStandaloneArticleForEntry(entry, features){
+    const gloss = normalizeSpanishSourceText(entry?.baseGloss || entry?.tokenGloss || '').toLowerCase();
+    if(/(cion|sion|ción|sión|dad|tud|umbre|ie|ez|a)$/.test(gloss) && !/(dia|mapa|planeta|tema|poema|problema)$/.test(gloss)){
+      if(features.isPlural || features.isDual) return 'las';
+      return 'la';
+    }
     const hint = String(entry?.spanishArticleHint || '').trim().toLowerCase();
     if(['el', 'la', 'los', 'las'].includes(hint)) return hint;
     return resolveStandaloneArticle(features);
@@ -416,16 +485,31 @@
     return String(text || '')
       .replace(/\s+/g, ' ')
       .replace(/\bde el\b/gi, 'del')
+      .replace(/\ba el\b/gi, 'al')
       .replace(/\bhe aqui que\b/gi, 'he aqui')
       .replace(/\bque que\b/gi, 'que')
       .replace(/\by y\b/gi, 'y')
       .replace(/\bno no\b/gi, 'no')
       .replace(/\bdiciendo decir\b/gi, 'diciendo')
       .replace(/\bdecir diciendo\b/gi, 'diciendo')
-      .replace(/\bque (?=era|es|fue|estaba|estaban|sera|seran\b)/gi, '')
       .replace(/\s+,/g, ',')
       .replace(/\s+:/g, ':')
       .trim();
+  }
+
+  function capitalizeSpanishLabel(text){
+    const value = normalizeSpanishPhrase(text);
+    if(!value) return '';
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  function normalizeDayOrdinalPhrase(text){
+    const value = normalizeSpanishPhrase(text);
+    if(/^día uno$/i.test(value)) return 'primer día';
+    if(/^día primero$/i.test(value)) return 'primer día';
+    if(/^día segundo$/i.test(value)) return 'segundo día';
+    if(/^día tercero$/i.test(value)) return 'tercer día';
+    return value;
   }
 
   function buildConstructPhrase(headGloss, dependentGloss){
@@ -598,9 +682,14 @@
       const dependentFeatures = extractMorphFeatures(dependentEntry?.baseMorph || dependentEntry?.layer?.baseLabel || '');
       const dependentGloss = String(dependentEntry?.tokenGloss || dependentEntry?.baseGloss || '').trim();
       const articleSourceGloss = tail.articleIndex >= 0 ? getEntryGloss(updated[tail.articleIndex]) : '';
+      const lexicalHead = resolveConstructHeadLexeme(entry);
+      const currentHead = tokenGloss.replace(/\bde$/i, '').trim();
+      const rawHeadGloss = currentHead && !isDefectiveConstructGloss(tokenGloss) && hasUsefulLexicalContent(currentHead)
+        ? currentHead
+        : (lexicalHead || currentHead);
       const headPhrase = entry?.spanishArticleHint && !startsWithDeterminer(tokenGloss)
-        ? `${entry.spanishArticleHint} ${tokenGloss}`.trim()
-        : tokenGloss;
+        ? `${entry.spanishArticleHint} ${rawHeadGloss}`.trim()
+        : rawHeadGloss;
       const bridgeGloss = tail.viaArticle && tail.articleIndex >= 0
         ? toDependentArticleGloss(articleSourceGloss, dependentEntry, dependentFeatures)
         : '';
@@ -615,7 +704,7 @@
 
       updated[index] = {
         ...entry,
-        tokenGloss: tail.viaArticle ? tokenGloss : (/\bde$/i.test(tokenGloss) ? tokenGloss : `${tokenGloss} de`),
+        tokenGloss: tail.viaArticle ? rawHeadGloss : (/\bde$/i.test(rawHeadGloss) ? rawHeadGloss : `${rawHeadGloss} de`),
         phraseGloss,
         semanticRole: 'construct-head',
         constructTargetIndex: tail.index,
@@ -678,6 +767,14 @@
         continue;
       }
       if(index > 1 && isArticleOnlyToken(items[index - 1]) && isPrepositionEntry(items[index - 2])){
+        continue;
+      }
+      if(
+        index > 1 &&
+        items[index - 2]?.semanticRole === 'construct-head' &&
+        items[index - 2]?.constructTargetIndex === index &&
+        isArticleOnlyToken(items[index - 1])
+      ){
         continue;
       }
       if(index > 0 && isClauseParticleEntry(items[index - 1])){
@@ -995,7 +1092,7 @@
         const next = items[j];
         const features = extractMorphFeatures(next?.baseMorph || next?.layer?.baseLabel || '');
         if(features.isNominal || features.isProper){
-          nameGloss = getNominalPhraseAt(items, j) || getEntryGloss(next);
+          nameGloss = capitalizeSpanishLabel(getNominalPhraseAt(items, j) || getEntryGloss(next));
           break;
         }
         if(features.isVerbal || isPrepositionEntry(next)) break;
@@ -1010,7 +1107,7 @@
         const next = items[j];
         const features = extractMorphFeatures(next?.baseMorph || next?.layer?.baseLabel || '');
         if(features.isNominal || features.isProper){
-          const nameGloss = getNominalPhraseAt(items, j) || getEntryGloss(next);
+          const nameGloss = capitalizeSpanishLabel(getNominalPhraseAt(items, j) || getEntryGloss(next));
           if(nameGloss){
             return normalizeSpanishPhrase(`${preVerbObject} ${nameGloss}`);
           }
@@ -1144,7 +1241,9 @@
       (/^NUM\.(CARD|ORD)/.test(labels[2]) || /^ADJ/.test(labels[2])) &&
       /^(SUBS|ADJ|NPROP)/.test(labels[1])
     ){
-      return normalizeSpanishPhrase(`${pieces[0]}, ${pieces[1]} ${pieces[2]}`);
+      return normalizeDayOrdinalPhrase(`${pieces[1]} ${pieces[2]}`) === `${pieces[1]} ${pieces[2]}`
+        ? normalizeSpanishPhrase(`${pieces[0]}, ${pieces[1]} ${pieces[2]}`)
+        : normalizeSpanishPhrase(`${pieces[0]}, ${normalizeDayOrdinalPhrase(`${pieces[1]} ${pieces[2]}`)}`);
     }
     const last = pieces[pieces.length - 1];
     const head = pieces.slice(0, -1).join(' ');
@@ -1302,7 +1401,12 @@
         if(narrativeComplement){
           const narrativeParts = [];
           if(leadingConjunction?.gloss) narrativeParts.push(leadingConjunction.gloss);
-          narrativeParts.push(verbGloss);
+          const existentialVerb = /^(luz|expansi[oó]n|tinieblas|as[ií])$/i.test(narrativeComplement)
+            ? (String(narrativeComplement).toLowerCase() === 'así' ? verbGloss : 'hubo')
+            : /^(tarde|mañana|primer d[ií]a|segundo d[ií]a|tercer d[ií]a)/i.test(narrativeComplement)
+              ? verbGloss
+              : verbGloss;
+          narrativeParts.push(existentialVerb);
           narrativeParts.push(narrativeComplement);
           updated[index] = {
             ...entry,
@@ -1453,6 +1557,61 @@
             ...entry,
             phraseGloss: normalizeSpanishPhrase(pieces.join(' '))
           };
+        }
+      }
+
+      if(strong === 'H7200'){
+        const subject = findSubjectBeforeVerb(updated, index) || findSubjectAfterVerb(updated, index);
+        const lead = findLeadingClauseConjunction(updated, index, subject?.index ?? -1);
+        const objectPhrases = collectDirectObjectPhrasesAfterVerb(updated, index);
+        const objectPhrase = objectPhrases[0] || '';
+        const kiIndex = updated.findIndex((candidate, candidateIndex) => (
+          candidateIndex > index &&
+          normalizeStrong(candidate?.token?.strongs || '') === 'H3588'
+        ));
+        if(objectPhrase && kiIndex > index){
+          for(let j = kiIndex + 1; j < updated.length; j += 1){
+            const next = updated[j];
+            const features = extractMorphFeatures(next?.baseMorph || next?.layer?.baseLabel || '');
+            if(features.isVerbal || isPrepositionEntry(next)) break;
+            if(/^(ADJ|SUBS)(?:\.|$)/.test(String(next?.baseMorph || '').trim().toUpperCase())){
+              const predicate = getNominalPhraseAt(updated, j) || getEntryGloss(next);
+              if(predicate){
+                const pieces = [];
+                if(lead?.gloss) pieces.push(lead.gloss);
+                if(subject?.gloss) pieces.push(subject.gloss);
+                pieces.push(String(entry.tokenGloss || '').trim());
+                pieces.push(`que ${objectPhrase} era ${predicate}`);
+                updated[index] = {
+                  ...entry,
+                  phraseGloss: normalizeSpanishPhrase(pieces.join(' '))
+                };
+              }
+              break;
+            }
+          }
+        }
+        if(!objectPhrase && kiIndex > index){
+          for(let j = kiIndex + 1; j < updated.length; j += 1){
+            const next = updated[j];
+            const features = extractMorphFeatures(next?.baseMorph || next?.layer?.baseLabel || '');
+            if(features.isVerbal || isPrepositionEntry(next)) break;
+            if(/^(ADJ|SUBS)(?:\.|$)/.test(String(next?.baseMorph || '').trim().toUpperCase())){
+              const predicate = getNominalPhraseAt(updated, j) || getEntryGloss(next);
+              if(predicate){
+                const pieces = [];
+                if(lead?.gloss) pieces.push(lead.gloss);
+                if(subject?.gloss) pieces.push(subject.gloss);
+                pieces.push(String(entry.tokenGloss || '').trim());
+                pieces.push(`que era ${predicate}`);
+                updated[index] = {
+                  ...entry,
+                  phraseGloss: normalizeSpanishPhrase(pieces.join(' '))
+                };
+              }
+              break;
+            }
+          }
         }
       }
     });
