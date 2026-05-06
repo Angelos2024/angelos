@@ -995,6 +995,16 @@
     return false;
   }
 
+  function shouldAnalyzeSuffixes(baseLabel = '', options = {}){
+    if(options.enableSuffixAnalysis === true) return true;
+    if(options.enableSuffixAnalysis === false) return false;
+    const label = String(baseLabel || '').trim().toUpperCase();
+    if(!label) return false;
+    if(/^(SUBS|ADJ|NPROP)(?:\.|$)/.test(label)) return true;
+    if(/PRS\./.test(label) || /\.PRS(?:$|\.)/.test(label)) return true;
+    return false;
+  }
+
   function analyzeSuffixLayer(form){
     const suffixResult = detectSuffixSegment(form);
     if(!suffixResult.suffix){
@@ -1013,7 +1023,9 @@
     const prefixLayer = shouldAnalyzePrefixes(baseLabel, options)
       ? analyzePrefixLayer(normalized)
       : { morphemes: [], remainder: normalized };
-    const suffixLayer = analyzeSuffixLayer(prefixLayer.remainder);
+    const suffixLayer = shouldAnalyzeSuffixes(baseLabel, options)
+      ? analyzeSuffixLayer(prefixLayer.remainder)
+      : { base: prefixLayer.remainder, suffixes: [] };
     const forcedBaseLabel = forceConstructState(baseLabel, {
       ...options,
       hasPronominalSuffix: suffixLayer.suffixes.length > 0

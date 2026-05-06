@@ -618,6 +618,10 @@
     setBadge('', '');
     if(els.mount) els.mount.innerHTML = '<div class="text-muted">Cargando morfologia...</div>';
 
+    if(!window.AdminHebrewLexicon){
+      window.AdminHebrewLexicon = await getHebrewMorphIndex().catch(() => null);
+    }
+
     const interlinearBook = await getInterlinearBook(state.slug);
     const chapterTotal = await getChapterCount(state.slug);
     if(state.chapter > chapterTotal) state.chapter = chapterTotal;

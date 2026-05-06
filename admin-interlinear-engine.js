@@ -21,6 +21,7 @@
       .replace(/[‹›►]/g, ' ')
       .replace(/[→←]/g, ' ')
       .replace(/\s+/g, ' ')
+      .replace(/[,:;]+$/g, '')
       .trim();
   }
 
@@ -54,6 +55,100 @@
     if(isSpanishFunctionGloss(text)) return 'func';
     if(text.split(/\s+/).length > 2) return 'editorial';
     return 'lex';
+  }
+
+  function normalizeLexicalGlossCandidate(text){
+    let candidate = normalizeSpanishSourceText(text);
+    let articleHint = '';
+    const match = candidate.match(/^(el|la|los|las|un|una|unos|unas)\s+(.+)$/i);
+    if(match){
+      articleHint = match[1].toLowerCase();
+      candidate = match[2].trim();
+    }
+    candidate = candidate
+      .replace(/\bde$/i, '')
+      .replace(/\.$/, '')
+      .replace(/,$/, '')
+      .trim();
+    return {
+      gloss: candidate,
+      articleHint
+    };
+  }
+
+  function getLexiconEntriesByStrong(strong){
+    const key = normalizeStrong(strong);
+    if(!key) return [];
+    const lexicon = global.AdminHebrewLexicon || null;
+    if(!lexicon?.byStrong) return [];
+    if(typeof lexicon.byStrong.get === 'function'){
+      return lexicon.byStrong.get(key) || [];
+    }
+    return lexicon.byStrong[key] || [];
+  }
+
+  function chooseLexicalGlossFromEntry(entry, token, baseMorph){
+    const candidates = [];
+    const add = (value) => {
+      const raw = normalizeSpanishSourceText(value);
+      if(raw) candidates.push(raw);
+    };
+
+    add(entry?.glosa);
+    (Array.isArray(entry?.glosas) ? entry.glosas : []).forEach(add);
+
+    const upperMorph = String(baseMorph || '').trim().toUpperCase();
+    const normalizedForm = normalizeHebrew(token?.orig || '', false);
+    const scored = candidates.map((candidate, index) => {
+      let score = 0;
+      const lower = candidate.toLowerCase();
+      const normalized = normalizeLexicalGlossCandidate(candidate);
+      if(classifySourceGlossPart(candidate) === 'lex') score += 4;
+      if(normalized.articleHint) score += 2;
+      if(/^(la|el)\s+.+\s+de$/i.test(candidate)) score += 4;
+      if(/\bde$/i.test(candidate)) score += /\.C(?:$|\.)/.test(upperMorph) ? 4 : -1;
+      if(/\bde\b/i.test(candidate) && /\.A(?:$|\.)/.test(upperMorph)) score -= 1;
+      if(/^(antes|delante|ahora|entonces|porque|si|que)$/i.test(lower)) score -= 3;
+      if(/\?$/.test(candidate) || /[¿!]/.test(candidate)) score -= 2;
+      if(upperMorph.startsWith('SUBS') && /\b(faz|rostro|rostros|esp[ií]ritu|agua|aguas|abismo|profundidad|cielo|cielos|tierra)\b/i.test(lower)) score += 3;
+      if(upperMorph.startsWith('VERBO') && classifySourceGlossPart(candidate) === 'lex') score += 2;
+      if(normalizedForm && Array.isArray(entry?.formas) && entry.formas.some((form) => normalizeHebrew(form, false) === normalizedForm)) score += 2;
+      return { candidate, score, index, normalized };
+    }).sort((left, right) => right.score - left.score || left.index - right.index);
+
+    return scored[0]?.normalized || { gloss: '', articleHint: '' };
+  }
+
+  function resolveLexicalFallback(token, baseMorph, sourceGloss){
+    const current = normalizeSpanishSourceText(sourceGloss);
+    const currentClass = classifySourceGlossPart(current);
+    const upperMorph = String(baseMorph || '').trim().toUpperCase();
+    const strong = normalizeStrong(token?.strongs || '');
+    if(upperMorph === 'PART.OBJ.DIR'){
+      return { gloss: '', articleHint: '' };
+    }
+    if(upperMorph === 'PREP'){
+      const surfaceGloss = resolveSurfacePrepositionGloss(token);
+      if(surfaceGloss) return { gloss: surfaceGloss, articleHint: '' };
+    }
+    if(current && currentClass === 'lex') {
+      return { gloss: current, articleHint: '' };
+    }
+    if(current && /^VERBO(?:\.|$)/.test(upperMorph) && currentClass !== 'func'){
+      return { gloss: current, articleHint: '' };
+    }
+    if(strong === 'H1961'){
+      if(/JUSS|YUSIV|JUSS/.test(upperMorph)) return { gloss: 'sea', articleHint: '' };
+      return { gloss: 'fue', articleHint: '' };
+    }
+    const entries = getLexiconEntriesByStrong(token?.strongs);
+    for(const entry of entries){
+      const resolved = chooseLexicalGlossFromEntry(entry, token, baseMorph);
+      if(resolved.gloss){
+        return resolved;
+      }
+    }
+    return { gloss: current, articleHint: '' };
   }
 
   function resolveTokenSourceGloss(token){
@@ -210,9 +305,34 @@
     return '';
   }
 
+  function resolveSourceMorphFallback(token){
+    const raw = String(token?.morphs || '').trim();
+    if(!raw) return '';
+    if(raw === 'XD') return 'ART';
+    if(raw === 'PA') return 'PART.OBJ.DIR';
+    if(raw === 'CC' || raw === 'Cc') return 'CONJ';
+    if(/^P[BLKM]?$/i.test(raw)) return 'PREP';
+    return raw;
+  }
+
+  function resolveSurfacePrepositionGloss(token){
+    const plain = normalizeHebrew(token?.orig || '', false);
+    if(plain === 'בין') return 'entre';
+    if(plain === 'על') return 'sobre';
+    if(plain === 'אל') return 'hacia';
+    if(plain === 'עם') return 'con';
+    if(plain === 'מן' || plain === 'מ') return 'de';
+    if(plain === 'ל') return 'a';
+    if(plain === 'ב') return 'en';
+    if(plain === 'כ') return 'como';
+    return '';
+  }
+
   function buildSpanishLayerForToken(token, context = {}){
-    const baseMorph = getOshbMorphAt(context.oshbVerseNode, token, context.posIndex);
-    const baseGloss = resolveTokenSourceGloss(token);
+    const baseMorph = getOshbMorphAt(context.oshbVerseNode, token, context.posIndex) || resolveSourceMorphFallback(token);
+    const sourceGloss = resolveTokenSourceGloss(token);
+    const lexical = resolveLexicalFallback(token, baseMorph, sourceGloss);
+    const baseGloss = lexical.gloss || sourceGloss;
     const layer = Rules?.buildSpanishInterlinearPlan
       ? Rules.buildSpanishInterlinearPlan(token?.orig || '', baseMorph, baseGloss, {
           strong: normalizeStrong(token?.strongs)
@@ -234,6 +354,7 @@
       token,
       baseMorph,
       baseGloss,
+      spanishArticleHint: lexical.articleHint || '',
       layer,
       tokenGloss
     };
@@ -272,6 +393,21 @@
     return features.isFeminine ? 'la' : 'el';
   }
 
+  function resolveStandaloneArticleForEntry(entry, features){
+    const hint = String(entry?.spanishArticleHint || '').trim().toLowerCase();
+    if(['el', 'la', 'los', 'las'].includes(hint)) return hint;
+    return resolveStandaloneArticle(features);
+  }
+
+  function resolveDependentArticleForEntry(entry, features){
+    const article = resolveStandaloneArticleForEntry(entry, features);
+    if(article === 'el') return 'del';
+    if(article === 'la') return 'de la';
+    if(article === 'los') return 'de los';
+    if(article === 'las') return 'de las';
+    return resolveDependentArticle(features);
+  }
+
   function normalizeSpanishPhrase(text){
     return String(text || '')
       .replace(/\s+/g, ' ')
@@ -306,6 +442,19 @@
     return String(entry?.phraseGloss || entry?.tokenGloss || entry?.baseGloss || '').trim();
   }
 
+  function isNameLikeGloss(text){
+    return /^[A-ZÁÉÍÓÚÑ][^\s,.;:!?]+$/.test(String(text || '').trim());
+  }
+
+  function toDependentArticleGloss(articleGloss, entry, features){
+    const text = String(articleGloss || '').trim().toLowerCase();
+    if(text === 'el') return 'del';
+    if(text === 'la') return 'de la';
+    if(text === 'los') return 'de los';
+    if(text === 'las') return 'de las';
+    return resolveDependentArticleForEntry(entry, features);
+  }
+
   function getNominalPhraseAt(items, index){
     const entry = items[index];
     if(!entry) return '';
@@ -313,7 +462,7 @@
     if(!gloss) return '';
     const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
     if(index > 0 && isArticleOnlyToken(items[index - 1]) && !features.isProper && !startsWithDeterminer(gloss)){
-      gloss = `${getEntryGloss(items[index - 1]) || resolveStandaloneArticle(features)} ${gloss}`.trim();
+      gloss = `${getEntryGloss(items[index - 1]) || resolveStandaloneArticleForEntry(entry, features)} ${gloss}`.trim();
     }
     return normalizeSpanishPhrase(gloss);
   }
@@ -372,6 +521,7 @@
       'si',
       'porque',
       'que',
+      'ciertamente',
       'antes',
       'antes que',
       'cuando',
@@ -443,12 +593,21 @@
       const dependentEntry = updated[tail.index];
       const dependentFeatures = extractMorphFeatures(dependentEntry?.baseMorph || dependentEntry?.layer?.baseLabel || '');
       const dependentGloss = String(dependentEntry?.tokenGloss || dependentEntry?.baseGloss || '').trim();
+      const articleSourceGloss = tail.articleIndex >= 0 ? getEntryGloss(updated[tail.articleIndex]) : '';
+      const headPhrase = entry?.spanishArticleHint && !startsWithDeterminer(tokenGloss)
+        ? `${entry.spanishArticleHint} ${tokenGloss}`.trim()
+        : tokenGloss;
       const bridgeGloss = tail.viaArticle && tail.articleIndex >= 0
-        ? resolveDependentArticle(dependentFeatures)
+        ? toDependentArticleGloss(articleSourceGloss, dependentEntry, dependentFeatures)
         : '';
+      const dependentPhrase = tail.viaArticle
+        ? `${bridgeGloss} ${dependentGloss}`.trim()
+        : dependentFeatures.isProper || isNameLikeGloss(dependentGloss) || startsWithDeterminer(dependentGloss)
+          ? dependentGloss
+          : `${resolveDependentArticleForEntry(dependentEntry, dependentFeatures)} ${dependentGloss}`.trim();
       const phraseGloss = tail.viaArticle
-        ? buildConstructPhrase(tokenGloss, `${bridgeGloss} ${dependentGloss}`.trim())
-        : buildConstructPhrase(tokenGloss, dependentGloss);
+        ? buildConstructPhrase(headPhrase, dependentPhrase)
+        : buildConstructPhrase(headPhrase, dependentPhrase);
 
       updated[index] = {
         ...entry,
@@ -462,7 +621,7 @@
       if(tail.viaArticle && tail.articleIndex >= 0 && updated[tail.articleIndex]){
         updated[tail.articleIndex] = {
           ...updated[tail.articleIndex],
-          tokenGloss: resolveDependentArticle(dependentFeatures),
+          tokenGloss: bridgeGloss,
           semanticRole: 'construct-bridge-article',
           constructHeadIndex: index,
           constructTargetIndex: tail.index
@@ -502,10 +661,22 @@
     for(let index = verbIndex - 1; index >= 0; index -= 1){
       const entry = items[index];
       const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(isConjunctionEntry(entry)){
+        return null;
+      }
       if(isDirectObjectMarker(entry) || isArticleOnlyToken(entry) || isPrepositionEntry(entry)){
         continue;
       }
+      if(index > 0 && items[index - 1]?.semanticRole === 'construct-head' && items[index - 1]?.constructTargetIndex === index){
+        continue;
+      }
       if(index > 0 && isPrepositionEntry(items[index - 1])){
+        continue;
+      }
+      if(index > 1 && isArticleOnlyToken(items[index - 1]) && isPrepositionEntry(items[index - 2])){
+        continue;
+      }
+      if(index > 0 && isClauseParticleEntry(items[index - 1])){
         continue;
       }
       if(features.isNominal || features.isProper){
@@ -657,7 +828,7 @@
       if(features.isNominal || features.isProper){
         let gloss = getNominalPhraseAt(items, index);
         if(!gloss && articleIndex >= 0 && !features.isProper){
-          gloss = `${getEntryGloss(items[articleIndex]) || resolveStandaloneArticle(features)} ${getEntryGloss(entry)}`.trim();
+          gloss = `${getEntryGloss(items[articleIndex]) || resolveStandaloneArticleForEntry(entry, features)} ${getEntryGloss(entry)}`.trim();
         }
         if(gloss && (sawObjectMarker || phrases.length > 0)){
           phrases.push(pendingConjunction ? `${pendingConjunction} ${gloss}` : gloss);
@@ -754,6 +925,96 @@
       }
     }
     return phrases;
+  }
+
+  function stripLeadingConjunction(text){
+    return normalizeSpanishPhrase(String(text || '').replace(/^(y|e)\s+/i, ''));
+  }
+
+  function findSpeechClauseAfter(items, verbIndex){
+    for(let index = verbIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(features.isVerbal && (features.isVolitive || features.isFinite || features.isParticiple)){
+        return { index, gloss: getEntryGloss(entry) };
+      }
+    }
+    return null;
+  }
+
+  function collectBetweenPair(items, startIndex){
+    const first = items[startIndex];
+    if(!first || String(first?.tokenGloss || '').trim().toLowerCase() !== 'entre') return null;
+    const firstTarget = findPhraseTargetAfter(items, startIndex);
+    if(!firstTarget) return null;
+    const firstGloss = getNominalPhraseAt(items, firstTarget.index);
+    if(!firstGloss) return null;
+    for(let index = firstTarget.index + 1; index < items.length; index += 1){
+      const entry = items[index];
+      if(isConjunctionEntry(entry)) continue;
+      if(isPrepositionEntry(entry) && String(entry?.tokenGloss || '').trim().toLowerCase() === 'entre'){
+        const secondTarget = findPhraseTargetAfter(items, index);
+        const secondGloss = secondTarget ? getNominalPhraseAt(items, secondTarget.index) : '';
+        if(secondGloss){
+          return {
+            startIndex,
+            secondIndex: index,
+            phrase: normalizeSpanishPhrase(`entre ${firstGloss} y ${secondGloss}`)
+          };
+        }
+      }
+      if(extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '').isVerbal) break;
+    }
+    return null;
+  }
+
+  function collectNamingPhrase(items, verbIndex){
+    const strong = normalizeStrong(items[verbIndex]?.token?.strongs || '');
+    if(strong !== 'H7121') return null;
+    let preVerbObject = null;
+    for(let index = verbIndex - 1; index >= 0; index -= 1){
+      const entry = items[index];
+      if(isConjunctionEntry(entry)) break;
+      if(isPrepositionEntry(entry) && String(entry?.tokenGloss || '').trim().toLowerCase() === 'a'){
+        preVerbObject = getEntryGloss(entry);
+        break;
+      }
+    }
+    for(let index = verbIndex + 1; index < items.length; index += 1){
+      const entry = items[index];
+      if(!isPrepositionEntry(entry) || String(entry?.tokenGloss || '').trim().toLowerCase() !== 'a') continue;
+      const target = findPhraseTargetAfter(items, index);
+      if(!target) return null;
+      const objectGloss = getEntryGloss(entry);
+      let nameGloss = '';
+      for(let j = target.index + 1; j < items.length; j += 1){
+        const next = items[j];
+        const features = extractMorphFeatures(next?.baseMorph || next?.layer?.baseLabel || '');
+        if(features.isNominal || features.isProper){
+          nameGloss = getNominalPhraseAt(items, j) || getEntryGloss(next);
+          break;
+        }
+        if(features.isVerbal || isPrepositionEntry(next)) break;
+      }
+      if(objectGloss && nameGloss){
+        return normalizeSpanishPhrase(`${objectGloss} ${nameGloss}`);
+      }
+      return objectGloss || '';
+    }
+    if(preVerbObject){
+      for(let j = verbIndex + 1; j < items.length; j += 1){
+        const next = items[j];
+        const features = extractMorphFeatures(next?.baseMorph || next?.layer?.baseLabel || '');
+        if(features.isNominal || features.isProper){
+          const nameGloss = getNominalPhraseAt(items, j) || getEntryGloss(next);
+          if(nameGloss){
+            return normalizeSpanishPhrase(`${preVerbObject} ${nameGloss}`);
+          }
+        }
+        if(features.isVerbal || isPrepositionEntry(next)) break;
+      }
+    }
+    return null;
   }
 
   function collectClauseOpeners(items, boundaryIndex, excludedIndex){
@@ -941,7 +1202,8 @@
       }
 
       if(target.articleIndex >= 0 && !targetFeatures.isProper && !startsWithDeterminer(targetGloss)){
-        targetGloss = `${resolveStandaloneArticle(targetFeatures)} ${targetGloss}`.trim();
+        const articleSourceGloss = getEntryGloss(updated[target.articleIndex]);
+        targetGloss = `${articleSourceGloss || resolveStandaloneArticleForEntry(targetEntry, targetFeatures)} ${targetGloss}`.trim();
       }
 
       updated[index] = {
@@ -965,7 +1227,9 @@
       const verbGloss = String(entry?.tokenGloss || '').trim();
       if(!verbGloss) return;
 
-      const { subject, directObject } = determineVerbArguments(updated, index);
+      const detected = determineVerbArguments(updated, index);
+      const subject = features.isVolitive ? null : detected.subject;
+      const directObject = detected.directObject;
       const prepStartIndex = directObject?.index ?? index;
       const objectPhrases = collectDirectObjectPhrasesAfterVerb(updated, index);
       const predicateComplements = !directObject && isCopularVerb(entry)
@@ -978,8 +1242,8 @@
       const speechFormula = collectSpeechFormulaAfterVerb(updated, index);
 
       const parts = [];
-      if(leadingConjunction?.gloss) parts.push(leadingConjunction.gloss);
-      if(clauseOpeners.length) parts.push(...clauseOpeners);
+      if(!features.isVolitive && leadingConjunction?.gloss) parts.push(leadingConjunction.gloss);
+      if(!features.isVolitive && clauseOpeners.length) parts.push(...clauseOpeners);
       if(subject?.gloss) parts.push(subject.gloss);
       if(negations.length) parts.push(...negations);
       parts.push(verbGloss);
@@ -1011,6 +1275,124 @@
     return updated;
   }
 
+  function applyParticipleClauseSemantics(items){
+    const updated = items.map((entry) => ({ ...entry }));
+
+    updated.forEach((entry, index) => {
+      const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
+      if(!features.isVerbal || !features.isParticiple) return;
+
+      const verbGloss = String(entry?.tokenGloss || '').trim();
+      if(!verbGloss) return;
+
+      const subject = findSubjectBeforeVerb(updated, index) || findSubjectAfterVerb(updated, index);
+      const complements = collectTrailingPrepositionPhrases(updated, index);
+      const parts = [];
+      if(subject?.gloss) parts.push(subject.gloss);
+      parts.push(verbGloss);
+      if(complements.length) parts.push(...complements);
+
+      const clauseGloss = normalizeSpanishPhrase(parts.join(' '));
+      if(!clauseGloss) return;
+
+      updated[index] = {
+        ...entry,
+        phraseGloss: clauseGloss,
+        semanticRole: 'participle-clause',
+        clauseSubjectIndex: subject?.index ?? -1
+      };
+    });
+
+    return updated;
+  }
+
+  function applySpecialClauseSemantics(items){
+    const updated = items.map((entry) => ({ ...entry }));
+
+    updated.forEach((entry, index) => {
+      const strong = normalizeStrong(entry?.token?.strongs || '');
+      const phrase = getEntryGloss(entry);
+      if(!phrase) return;
+
+      if(strong === 'H559'){
+        const speech = findSpeechClauseAfter(updated, index);
+        if(speech?.gloss){
+          updated[index] = {
+            ...entry,
+            phraseGloss: normalizeSpanishPhrase(`${phrase}: ${stripLeadingConjunction(speech.gloss)}`)
+          };
+          return;
+        }
+      }
+
+      if(strong === 'H914'){
+        for(let j = index + 1; j < updated.length; j += 1){
+          const between = collectBetweenPair(updated, j);
+          if(between){
+            const subject = findSubjectBeforeVerb(updated, index) || findSubjectAfterVerb(updated, index);
+            const lead = findLeadingClauseConjunction(updated, index, subject?.index ?? -1);
+            const parts = [];
+            if(lead?.gloss) parts.push(lead.gloss);
+            if(subject?.gloss) parts.push(subject.gloss);
+            parts.push(String(entry.tokenGloss || '').trim());
+            parts.push(between.phrase);
+            updated[index] = {
+              ...entry,
+              phraseGloss: normalizeSpanishPhrase(parts.join(' '))
+            };
+            if(updated[between.startIndex]){
+              updated[between.startIndex] = {
+                ...updated[between.startIndex],
+                phraseGloss: between.phrase
+              };
+            }
+            if(updated[between.secondIndex]){
+              updated[between.secondIndex] = {
+                ...updated[between.secondIndex],
+                phraseGloss: ''
+              };
+            }
+            break;
+          }
+        }
+      }
+
+      const between = collectBetweenPair(updated, index);
+      if(between){
+        updated[index] = {
+          ...entry,
+          phraseGloss: between.phrase
+        };
+        if(updated[between.secondIndex]){
+          updated[between.secondIndex] = {
+            ...updated[between.secondIndex],
+            phraseGloss: ''
+          };
+        }
+        return;
+      }
+
+      if(strong === 'H7121'){
+        const naming = collectNamingPhrase(updated, index);
+        if(naming){
+          const subject = findSubjectBeforeVerb(updated, index);
+          const lead = findLeadingClauseConjunction(updated, index, subject?.index ?? -1);
+          const pieces = [];
+          if(lead?.gloss) pieces.push(lead.gloss);
+          if(subject?.gloss) pieces.push(subject.gloss);
+          pieces.push(String(entry.tokenGloss || '').trim());
+          pieces.push(naming);
+          updated[index] = {
+            ...entry,
+            phraseGloss: normalizeSpanishPhrase(pieces.join(' '))
+          };
+        }
+      }
+    });
+
+    return updated;
+  }
+
   function buildAdminVersePlan(verseNode, oshbVerseNode){
     const tokens = getAdminVerseTokens(verseNode);
     const baseItems = tokens.map((token, posIndex) => buildSpanishLayerForToken(token, {
@@ -1020,7 +1402,9 @@
     const constructItems = applyConstructSemantics(baseItems);
     const phraseItems = applySyntacticPhraseSemantics(constructItems);
     const clauseItems = applyClauseSemantics(phraseItems);
-    const items = applyNominalPredicateSemantics(clauseItems);
+    const participleItems = applyParticipleClauseSemantics(clauseItems);
+    const specialItems = applySpecialClauseSemantics(participleItems);
+    const items = applyNominalPredicateSemantics(specialItems);
 
     return {
       tokenCount: items.length,
