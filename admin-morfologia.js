@@ -588,6 +588,7 @@
         <div class="admin-morph-segment admin-morph-segment-${escapeHtml(morpheme.type || 'base')}">
           <div class="admin-morph-segment-hebrew">${escapeHtml(morpheme.surface || '')}</div>
           <div class="admin-morph-segment-label">${escapeHtml(morpheme.label || '-')}</div>
+          <div class="admin-morph-segment-gloss">${escapeHtml(morpheme.gloss || '')}</div>
         </div>
       `).join('');
       return `

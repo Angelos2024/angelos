@@ -795,6 +795,37 @@
     RBPF3: 'su'
   };
 
+  function resolveMorphemeSpanishGloss(morpheme, baseGloss = ''){
+    const label = String(morpheme?.label || '').trim().toUpperCase();
+    const surface = normalizeHebrew(morpheme?.surface || '', true);
+
+    if(morpheme?.type === 'base'){
+      return String(baseGloss || '').trim();
+    }
+
+    if(label === 'CONJ') return 'y';
+    if(label === 'ART') return 'el/la';
+    if(label === 'REL') return 'que';
+    if(label === 'INTJ') return 'he aqui';
+    if(label === 'PART.OBJ.DIR') return '';
+
+    if(label === 'PREP'){
+      if(/^ב/.test(surface)) return 'en';
+      if(/^ל/.test(surface)) return 'a';
+      if(/^מ/.test(surface)) return 'de';
+      if(/^כ/.test(surface)) return 'como';
+      return 'prep';
+    }
+
+    if(label === 'RBSC1') return 'mi';
+    if(label === 'RBSC2' || label === 'RBSF2') return 'tu';
+    if(label === 'RBSM3' || label === 'RBSF3' || label === 'RBPM3' || label === 'RBPF3') return 'su';
+    if(label === 'RBPM2') return 'vuestro';
+    if(label === 'RBPF2') return 'vuestra';
+
+    return morpheme?.glossHint ?? MORPHEME_GLOSS_HINTS[label] ?? '';
+  }
+
   function firstHebrewLetter(word){
     const match = String(word || '').match(/[\u05D0-\u05EA]/);
     return match ? match[0] : '';
@@ -998,9 +1029,7 @@
     const analysis = analyzeWordLayers(form, baseLabel, options);
     const morphemes = analysis.morphemes.map((morpheme) => ({
       ...morpheme,
-      gloss: morpheme.type === 'base'
-        ? String(baseGloss || '').trim()
-        : morpheme.glossHint
+      gloss: resolveMorphemeSpanishGloss(morpheme, baseGloss)
     }));
     return {
       ...analysis,

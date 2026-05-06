@@ -79,6 +79,15 @@
   white-space:nowrap;
 }
 
+.admin-morph-segment-gloss{
+  direction:ltr;
+  text-align:center;
+  font-size:.62rem;
+  line-height:1.2;
+  color:#7a685c;
+  white-space:nowrap;
+}
+
 .admin-morph-empty{
   padding:.8rem .9rem;
   border:1px dashed rgba(75,39,67,.18);
@@ -94,5 +103,9 @@
 
   .admin-morph-segment-label{
     font-size:.58rem;
+  }
+
+  .admin-morph-segment-gloss{
+    font-size:.56rem;
   }
 }
