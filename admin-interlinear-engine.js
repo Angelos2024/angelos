@@ -42,6 +42,14 @@
     return value.charAt(0).toLowerCase() + value.slice(1);
   }
 
+  function toSpanishGerund(text){
+    const value = normalizeSpanishSourceText(text).toLowerCase();
+    if(!/^[a-záéíóúñ]+$/i.test(value)) return '';
+    if(/ar$/.test(value)) return `${value.slice(0, -2)}ando`;
+    if(/(er|ir)$/.test(value)) return `${value.slice(0, -2)}iendo`;
+    return '';
+  }
+
   function splitSpanishSourceParts(value){
     if(Array.isArray(value)){
       return value.flatMap((item) => splitSpanishSourceParts(item));
@@ -63,6 +71,21 @@
 
   function isSpanishAuxiliaryGloss(text){
     return /^(es|era|eran|fue|fueron|esta|estan|estaba|estaban|sera|seran|seria|serian|habia|habian|ha|han|habra|habran|haya|hayan|soy|eres|somos|son|fui|fueramos)$/i.test(String(text || '').trim());
+  }
+
+  function looksLikeFiniteSpanishVerb(text){
+    const value = normalizeSpanishSourceText(text).toLowerCase();
+    if(!value || /\s/.test(value)) return false;
+    if(/(ar|er|ir|ando|iendo)$/.test(value)) return false;
+    return /(o|a|e|as|es|an|en|aba|aban|ia|ian|ó|aron|io|ieron|se|ra|rá)$/.test(value);
+  }
+
+  function finiteSpanishToPresentLike(text){
+    const value = normalizeSpanishSourceText(text).toLowerCase();
+    if(/es$/.test(value)) return `${value.slice(0, -2)}as`;
+    if(/en$/.test(value)) return `${value.slice(0, -2)}an`;
+    if(/e$/.test(value)) return `${value.slice(0, -1)}a`;
+    return value;
   }
 
   function classifySourceGlossPart(part){
@@ -204,10 +227,11 @@
     return winner?.normalized || { gloss: '', articleHint: '' };
   }
 
-  function resolveLexicalFallback(token, baseMorph, sourceGloss){
+  function resolveLexicalFallback(token, baseMorph, sourceGloss, context = {}){
     const current = normalizeSpanishLexicalCase(sourceGloss, baseMorph);
     const currentClass = classifySourceGlossPart(current);
     const upperMorph = String(baseMorph || '').trim().toUpperCase();
+    const features = extractMorphFeatures(upperMorph);
     const strong = normalizeStrong(token?.strongs || '');
     const entries = getLexiconEntriesByStrong(token?.strongs);
     const lexiconResolved = entries
@@ -221,6 +245,25 @@
         articleHint: lexiconResolved.articleHint || ''
       };
     }
+    if(features.isParticiple && context.previousIsHayahImperfect){
+      const gerund = toSpanishGerund(lexiconResolved.gloss || current);
+      if(gerund){
+        return { gloss: gerund, articleHint: lexiconResolved.articleHint || '' };
+      }
+      if(lexiconResolved.gloss){
+        return { gloss: lexiconResolved.gloss, articleHint: lexiconResolved.articleHint || '' };
+      }
+    }
+    if(features.isParticiple && looksLikeFiniteSpanishVerb(current)){
+      const gerund = toSpanishGerund(lexiconResolved.gloss || current);
+      if(gerund){
+        return { gloss: gerund, articleHint: lexiconResolved.articleHint || '' };
+      }
+      if(lexiconResolved.gloss){
+        return { gloss: lexiconResolved.gloss, articleHint: lexiconResolved.articleHint || '' };
+      }
+      return { gloss: finiteSpanishToPresentLike(current), articleHint: '' };
+    }
     if(current && currentClass === 'lex' && !(extractMorphFeatures(upperMorph).isConstruct && isDefectiveConstructGloss(current))) {
       return {
         gloss: current,
@@ -232,6 +275,9 @@
     }
     if(strong === 'H1961'){
       if(/JUSS|YUSIV|JUSS/.test(upperMorph)) return { gloss: 'sea', articleHint: '' };
+    if((/IMPF|YIQTOL/.test(upperMorph) && context.nextIsParticiple) || normalizeHebrew(token?.orig || '', false) === 'יהי'){
+        return { gloss: 'sea', articleHint: '' };
+      }
       return { gloss: 'fue', articleHint: '' };
     }
     if(strong === 'H3426'){
@@ -333,6 +379,11 @@
     }));
   }
 
+  function isHebrewSuffixFragment(value){
+    const text = String(value || '').trim();
+    return /^[\u05B0-\u05C7]+[ויוךםןה]+$/.test(text);
+  }
+
   function tokensFromFormsMorphs(verseNode){
     const forms = Array.isArray(verseNode?.forms) ? verseNode.forms : [];
     const morphs = Array.isArray(verseNode?.morphs) ? verseNode.morphs : [];
@@ -379,6 +430,22 @@
         const nextGloss = String(token?.es || '').trim();
         if(nextGloss && !String(previous?.es || '').trim()){
           previous.es = nextGloss;
+        }
+        return;
+      }
+      if(isHebrewSuffixFragment(orig) && merged.length){
+        const previous = merged[merged.length - 1];
+        previous.orig = `${previous.orig || ''}${orig}`;
+        const nextMorph = String(token?.morphs || '').trim();
+        const prevMorph = String(previous?.morphs || '').trim();
+        if(nextMorph){
+          previous.morphs = prevMorph && nextMorph ? `${prevMorph}+${nextMorph}` : (prevMorph || nextMorph);
+        }
+        const nextGloss = String(token?.es || '').trim();
+        if(nextGloss){
+          previous.es = previous.es
+            ? [previous.es, nextGloss].flat().join(' ').trim()
+            : nextGloss;
         }
         return;
       }
@@ -447,14 +514,21 @@
 
   function buildConstructContext(tokens, oshbVerseNode, posIndex){
     const nextToken = tokens[posIndex + 1] || null;
+    const previousToken = tokens[posIndex - 1] || null;
     if(!nextToken){
       return {
         nextStrong: '',
         followedByNominal: false,
-        nextIsDefinedOrDivine: false
+        nextIsDefinedOrDivine: false,
+        nextIsParticiple: false,
+        previousIsHayahImperfect: false
       };
     }
     const nextMorph = getOshbMorphAt(oshbVerseNode, nextToken, posIndex + 1) || resolveSourceMorphFallback(nextToken);
+    const prevMorph = previousToken
+      ? (getOshbMorphAt(oshbVerseNode, previousToken, posIndex - 1) || resolveSourceMorphFallback(previousToken))
+      : '';
+    const prevStrong = normalizeStrong(previousToken?.strongs || '');
     const nextStrong = normalizeStrong(nextToken?.strongs || '');
     const followedByNominal = isNominalLikeMorph(nextMorph);
     const nextIsDefinedOrDivine = followedByNominal && (
@@ -465,7 +539,15 @@
     return {
       nextStrong,
       followedByNominal,
-      nextIsDefinedOrDivine
+      nextIsDefinedOrDivine,
+      nextIsParticiple: extractMorphFeatures(nextMorph).isParticiple,
+      previousIsHayahImperfect: (
+        prevStrong === 'H1961' &&
+        (
+          /IMPF|YIQTOL|JUSS|YUSIV/.test(String(prevMorph || '').trim().toUpperCase()) ||
+          normalizeHebrew(previousToken?.orig || '', false) === 'יהי'
+        )
+      )
     };
   }
 
@@ -486,7 +568,7 @@
   function buildSpanishLayerForToken(token, context = {}){
     const baseMorph = getOshbMorphAt(context.oshbVerseNode, token, context.posIndex) || resolveSourceMorphFallback(token);
     const sourceGloss = resolveTokenSourceGloss(token);
-    const lexical = resolveLexicalFallback(token, baseMorph, sourceGloss);
+    const lexical = resolveLexicalFallback(token, baseMorph, sourceGloss, context);
     const baseGloss = lexical.gloss || sourceGloss;
     const layer = Rules?.buildSpanishInterlinearPlan
       ? Rules.buildSpanishInterlinearPlan(token?.orig || '', baseMorph, baseGloss, {
@@ -1830,7 +1912,8 @@
             if(betweenIndex > index){
               const between = collectBetweenPair(updated, betweenIndex);
               if(between?.phrase){
-                nextPhrase = normalizeSpanishPhrase(`separe ${between.phrase}`);
+                const participleLead = String(next?.tokenGloss || '').trim() || stripLeadingConjunction(next?.phraseGloss || getEntryGloss(next) || '');
+                nextPhrase = normalizeSpanishPhrase(`${participleLead} ${between.phrase}`);
               }
             }
           }

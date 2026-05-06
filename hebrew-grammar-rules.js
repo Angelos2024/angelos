@@ -1065,7 +1065,11 @@
     if(options.enableSuffixAnalysis === false) return false;
     const label = String(baseLabel || '').trim().toUpperCase();
     if(!label) return false;
-    if(/^(SUBS|ADJ|NPROP)(?:\.|$)/.test(label)) return true;
+    if(/^(SUBS|ADJ|NPROP)(?:\.|$)/.test(label)){
+      if(/PRS\./.test(label) || /\.PRS(?:$|\.)/.test(label)) return true;
+      if(/\.C(?:$|\.)/.test(label)) return true;
+      return false;
+    }
     if(/PRS\./.test(label) || /\.PRS(?:$|\.)/.test(label)) return true;
     return false;
   }
