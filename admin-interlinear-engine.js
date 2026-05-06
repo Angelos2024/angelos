@@ -15,6 +15,68 @@
     return text;
   }
 
+  function normalizeSpanishSourceText(value){
+    return String(value || '')
+      .replace(/[«»*]/g, ' ')
+      .replace(/[‹›►]/g, ' ')
+      .replace(/[→←]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function splitSpanishSourceParts(value){
+    if(Array.isArray(value)){
+      return value.flatMap((item) => splitSpanishSourceParts(item));
+    }
+    const text = normalizeSpanishSourceText(value);
+    return text ? [text] : [];
+  }
+
+  function compactSpanishSourceParts(parts){
+    return parts
+      .map((part) => normalizeSpanishSourceText(part))
+      .filter(Boolean)
+      .filter((part, index, array) => array.indexOf(part) === index);
+  }
+
+  function resolveTokenSourceGloss(token){
+    const esParts = compactSpanishSourceParts(splitSpanishSourceParts(token?.es));
+    const addedParts = compactSpanishSourceParts(splitSpanishSourceParts(token?.added));
+
+    if(esParts.length === 1){
+      return esParts[0];
+    }
+
+    if(esParts.length > 1){
+      const first = esParts[0];
+      const second = esParts[1] || '';
+      const joined = normalizeSpanishSourceText(esParts.join(' '));
+
+      if(/^(y|e|o|u|ni|mas|pero|sino|entonces|pues)$/i.test(first)){
+        return first;
+      }
+      if(/^(el|la|los|las|un|una|unos|unas|mi|mis|tu|tus|su|sus|nuestro|nuestra|vuestro|vuestra)$/i.test(second)){
+        return first;
+      }
+      if(/^(que|si|porque|cuando|donde|antes|antes que|para|como)$/i.test(first)){
+        return first;
+      }
+      if(/^(es|era|eran|fue|fueron|esta|estan|estaba|estaban|sera|seran|habia|habían)$/i.test(second)){
+        return first;
+      }
+      if(/^(he|ha|han|habia|habían|voy|vaya|os|me|se|le|les)$/i.test(first)){
+        return second || first;
+      }
+      return joined;
+    }
+
+    if(addedParts.length){
+      return normalizeSpanishSourceText(addedParts.join(' '));
+    }
+
+    return '';
+  }
+
   function flattenMorphValues(value){
     if(Array.isArray(value)){
       return value.flatMap((item) => flattenMorphValues(item)).filter(Boolean);
@@ -118,7 +180,7 @@
 
   function buildSpanishLayerForToken(token, context = {}){
     const baseMorph = getOshbMorphAt(context.oshbVerseNode, token, context.posIndex);
-    const baseGloss = String(token?.es || '').trim();
+    const baseGloss = resolveTokenSourceGloss(token);
     const layer = Rules?.buildSpanishInterlinearPlan
       ? Rules.buildSpanishInterlinearPlan(token?.orig || '', baseMorph, baseGloss, {
           strong: normalizeStrong(token?.strongs)
