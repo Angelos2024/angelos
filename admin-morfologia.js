@@ -273,8 +273,22 @@
     }));
   }
 
+  function tokensFromFormsMorphs(verseNode){
+    const forms = Array.isArray(verseNode?.forms) ? verseNode.forms : [];
+    const morphs = Array.isArray(verseNode?.morphs) ? verseNode.morphs : [];
+    if(!forms.length) return [];
+
+    return forms.map((orig, index) => ({
+      orig,
+      morphs: morphs[index] || '',
+      num: String(index + 1)
+    }));
+  }
+
   function getDisplayTokens(verseNode){
-    const sourceTokens = Array.isArray(verseNode?.tokens) ? verseNode.tokens : [];
+    const sourceTokens = Array.isArray(verseNode?.tokens) && verseNode.tokens.length
+      ? verseNode.tokens
+      : tokensFromFormsMorphs(verseNode);
     return sourceTokens
       .flatMap((token, index) => flattenTokenForDisplay(token).map((part, partIndex) => ({
         ...part,
@@ -622,10 +636,14 @@
     }catch(_error){
       oshbVerseNode = null;
     }
-    const rows = await Promise.all(tokens.map(async (token) => {
+    const rows = await Promise.all(tokens.map(async (token, posIndex) => {
+      const parsedNum = Number(token?.num);
+      const tokenIndex = Number.isInteger(parsedNum) && parsedNum >= 1
+        ? parsedNum - 1
+        : posIndex;
       const morphLabel = await resolveMorphLabel(token, {
         oshbVerseNode,
-        tokenIndex: Math.max(Number(token?.num || 0) - 1, 0)
+        tokenIndex
       });
       return `
         <div class="admin-morph-token" data-num="${escapeHtml(token.num || '')}">
@@ -671,7 +689,7 @@
     const cards = [];
     for(const verseNumber of verseNumbers){
       const verseNode = interlinearVerses[verseNumber];
-      tokenCount += Array.isArray(verseNode?.tokens) ? verseNode.tokens.length : 0;
+      tokenCount += getDisplayTokens(verseNode).length;
       cards.push(await buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode));
     }
 
