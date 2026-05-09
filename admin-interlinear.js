@@ -192,10 +192,6 @@
     return hebrewDictionaryPromise;
   }
 
-  async function getHebrewTheologicalDictionary(){
-    return loadJson('./dic/hebrewdic.json').catch(() => []);
-  }
-
   function getEntryPrintedMorph(entry){
     const candidates = [
       entry?.morfologia_impresa,
@@ -246,17 +242,11 @@
   async function getHebrewMorphIndex(){
     if(!hebrewMorphIndexPromise){
       hebrewMorphIndexPromise = (async () => {
-        const [raw, theologicalRaw] = await Promise.all([
-          getHebrewDictionary(),
-          getHebrewTheologicalDictionary()
-        ]);
+        const raw = await getHebrewDictionary();
         const entries = Array.isArray(raw) ? raw : (raw?.items || raw?.entries || []);
-        const theologicalEntries = (Array.isArray(theologicalRaw) ? theologicalRaw : [])
-          .filter((entry) => Number(String(entry?.id || '').match(/\d+/)?.[0] || 0) <= 4687);
         const pointed = new Map();
         const plain = new Map();
         const byStrong = new Map();
-        const theologicalByLemma = new Map();
 
         const register = (map, key, payload) => {
           if(!key) return;
@@ -292,23 +282,7 @@
           });
         });
 
-        theologicalEntries.forEach((entry) => {
-          const gloss = String(entry?.gloss_es || entry?.translation || '').replace(/\s+/g, ' ').trim();
-          const lemmaValues = [
-            entry?.lemma,
-            entry?.headword_line,
-            entry?.hebrew,
-            entry?.lemma_original,
-            ...(Array.isArray(entry?.headword_tokens) ? entry.headword_tokens : [])
-          ];
-          if(!gloss || !lemmaValues.some(Boolean)) return;
-          lemmaValues.forEach((lemma) => {
-            register(theologicalByLemma, normalizeHebrew(lemma, false), entry);
-            register(theologicalByLemma, normalizeHebrew(lemma, true), entry);
-          });
-        });
-
-        return { pointed, plain, byStrong, theologicalByLemma };
+        return { pointed, plain, byStrong };
       })().catch((error) => {
         hebrewMorphIndexPromise = null;
         throw error;

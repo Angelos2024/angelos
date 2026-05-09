@@ -171,58 +171,6 @@
     return lexicon.byStrong[key] || [];
   }
 
-  function getTheologicalEntriesByLemma(lemma){
-    const keyPlain = normalizeHebrew(lemma, false);
-    const keyPointed = normalizeHebrew(lemma, true);
-    if(!keyPlain && !keyPointed) return [];
-    const lexicon = global.AdminHebrewLexicon || null;
-    const index = lexicon?.theologicalByLemma;
-    if(!index) return [];
-    const read = (key) => {
-      if(!key) return [];
-      if(typeof index.get === 'function') return index.get(key) || [];
-      return index[key] || [];
-    };
-    const exactPointed = read(keyPointed);
-    const lemmaHasPoints = /[\u0591-\u05C7]/.test(String(lemma || ''));
-    const source = exactPointed.length ? exactPointed : (lemmaHasPoints ? [] : read(keyPlain));
-    const merged = [];
-    const seen = new Set();
-    source.forEach((entry) => {
-      const id = String(entry?.id || `${entry?.lemma || ''}|${entry?.gloss_es || ''}`);
-      if(seen.has(id)) return;
-      seen.add(id);
-      merged.push(entry);
-    });
-    return merged;
-  }
-
-  function getTheologicalEntriesForToken(token){
-    const strongEntries = getLexiconEntriesByStrong(token?.strongs);
-    const strongCandidates = strongEntries.flatMap((entry) => {
-      const pointedLemma = entry?.strong_detail?.lemma;
-      if(pointedLemma) return [pointedLemma];
-      return [
-        entry?.hebreo,
-        entry?.lemma,
-        entry?.forma,
-        ...(Array.isArray(entry?.hebreos) ? entry.hebreos : [])
-      ];
-    });
-    const candidates = (strongEntries.length ? strongCandidates : [token?.orig]).filter(Boolean);
-    const entries = [];
-    const seen = new Set();
-    candidates.forEach((candidate) => {
-      getTheologicalEntriesByLemma(candidate).forEach((entry) => {
-        const id = String(entry?.id || `${entry?.lemma || ''}|${entry?.gloss_es || ''}`);
-        if(seen.has(id)) return;
-        seen.add(id);
-        entries.push(entry);
-      });
-    });
-    return entries;
-  }
-
   function lexiconStrongLooksProperName(strong){
     return getLexiconEntriesByStrong(strong).some((entry) => {
       const morphs = flattenMorphValues(entry?.morfs || entry?.morfologia || entry?.morphs);
@@ -452,13 +400,6 @@
     if(features.isVerbal && lexiconStrongLooksProperName(strong)){
       lexiconResolved = { gloss: '', articleHint: '' };
     }
-    const theologicalResolved = getTheologicalEntriesForToken(token)
-      .map((entry) => chooseTheologicalGlossFromEntry(entry, token, baseMorph))
-      .find((resolved) => resolved?.gloss) || { gloss: '', articleHint: '' };
-    if(features.isVerbal && lexiconStrongLooksProperName(strong)){
-      theologicalResolved.gloss = '';
-      theologicalResolved.articleHint = '';
-    }
     const theologicalPolicyResolved = resolveTheologicalDictionaryGloss(token, baseMorph, current, lexiconResolved, context);
     const canonical = canonicalFunctionGloss(baseMorph, token);
 
@@ -468,7 +409,7 @@
     if(canonical || upperMorph === 'PART.OBJ.DIR'){
       return {
         gloss: canonical,
-        articleHint: lexiconResolved.articleHint || theologicalResolved.articleHint || ''
+        articleHint: lexiconResolved.articleHint || ''
       };
     }
     if(theologicalPolicyResolved?.gloss){
@@ -483,47 +424,41 @@
         return { gloss: normalizeSpanishPhrase(`mi ${possessive[1]}`), articleHint: lexiconResolved.articleHint || '' };
       }
     }
-    if(theologicalResolved.gloss){
-      return theologicalResolved;
-    }
     if(features.isParticiple && context.previousIsHayahImperfect){
-      const gerund = toSpanishGerund(lexiconResolved.gloss || theologicalResolved.gloss || current);
+      const gerund = toSpanishGerund(lexiconResolved.gloss || current);
       if(gerund){
         return { gloss: gerund, articleHint: lexiconResolved.articleHint || '' };
       }
-      if(lexiconResolved.gloss || theologicalResolved.gloss){
-        return lexiconResolved.gloss ? lexiconResolved : theologicalResolved;
+      if(lexiconResolved.gloss){
+        return lexiconResolved;
       }
     }
     if(features.isParticiple && looksLikeFiniteSpanishVerb(current)){
-      const gerund = toSpanishGerund(lexiconResolved.gloss || theologicalResolved.gloss || current);
+      const gerund = toSpanishGerund(lexiconResolved.gloss || current);
       if(gerund){
         return { gloss: gerund, articleHint: lexiconResolved.articleHint || '' };
       }
-      if(lexiconResolved.gloss || theologicalResolved.gloss){
-        return lexiconResolved.gloss ? lexiconResolved : theologicalResolved;
+      if(lexiconResolved.gloss){
+        return lexiconResolved;
       }
       return { gloss: finiteSpanishToPresentLike(current), articleHint: '' };
     }
     if(features.isVerbal && current && currentClass === 'lex' && !looksLikeFiniteSpanishVerb(current)){
-      if(lexiconResolved.gloss || theologicalResolved.gloss){
-        return lexiconResolved.gloss ? lexiconResolved : theologicalResolved;
+      if(lexiconResolved.gloss){
+        return lexiconResolved;
       }
       if(looksLikeSpanishProperNameGloss(sourceGloss)){
         return { gloss: '', articleHint: '' };
       }
     }
-    if(isLowConfidenceSourceGloss(current) && theologicalResolved.gloss){
-      return theologicalResolved;
-    }
     if(current && currentClass === 'lex' && !(extractMorphFeatures(upperMorph).isConstruct && isDefectiveConstructGloss(current))) {
       return {
         gloss: current,
-        articleHint: lexiconResolved.articleHint || theologicalResolved.articleHint || ''
+        articleHint: lexiconResolved.articleHint || ''
       };
     }
     if(current && /^VERBO(?:\.|$)/.test(upperMorph) && currentClass !== 'func'){
-      return { gloss: current, articleHint: lexiconResolved.articleHint || theologicalResolved.articleHint || '' };
+      return { gloss: current, articleHint: lexiconResolved.articleHint || '' };
     }
     if(strong === 'H1961'){
       if(/JUSS|YUSIV|JUSS/.test(upperMorph)) return { gloss: 'sea', articleHint: '' };
@@ -543,9 +478,6 @@
     }
     if(lexiconResolved.gloss){
       return lexiconResolved;
-    }
-    if(theologicalResolved.gloss){
-      return theologicalResolved;
     }
     return { gloss: current, articleHint: '' };
   }
