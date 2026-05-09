@@ -27,7 +27,8 @@
       .replace(/[‹›►]/g, ' ')
       .replace(/[→←]/g, ' ')
       .replace(/\s+/g, ' ')
-      .replace(/[,:;.]+$/g, '')
+      .replace(/[,:;.?¿]+$/g, '')
+      .replace(/^¿+/g, '')
       .trim();
   }
 
@@ -141,6 +142,7 @@
 
   function canonicalFunctionGloss(baseMorph, token){
     const upperMorph = String(baseMorph || '').trim().toUpperCase();
+    if(upperMorph === 'INTERROG' || upperMorph === 'PART.INTERR') return resolveInterrogativeGloss(token);
     if(upperMorph === 'PART.OBJ.DIR') return '';
     if(upperMorph === 'CONJ') return 'y';
     if(upperMorph === 'REL') return 'que';
@@ -148,6 +150,14 @@
       return resolveSurfacePrepositionGloss(token);
     }
     return '';
+  }
+
+  function resolveInterrogativeGloss(token){
+    const source = normalizeSpanishSourceText(splitSpanishSourceParts(token?.es)[0] || '');
+    if(source) return `¿${source}`;
+    const plain = normalizeHebrew(token?.orig || '', false);
+    if(plain === 'מה') return '¿qué';
+    return '¿';
   }
 
   function getLexiconEntriesByStrong(strong){
@@ -633,6 +643,10 @@
   }
 
   function resolveSurfacePrepositionGloss(token){
+    const source = normalizeSpanishSourceText(splitSpanishSourceParts(token?.es)[0] || '').toLowerCase();
+    if(/^(a|ante|bajo|con|contra|de|desde|en|entre|hacia|para|por|segun|según|sobre|tras)$/.test(source)){
+      return source;
+    }
     const plain = normalizeHebrew(token?.orig || '', false);
     if(plain === 'בין') return 'entre';
     if(plain === 'על') return 'sobre';
@@ -774,6 +788,8 @@
   function normalizeSpanishPhrase(text){
     return String(text || '')
       .replace(/\s+/g, ' ')
+      .replace(/\s+\?/g, '?')
+      .replace(/¿\s+/g, '¿')
       .replace(/\bde el\b/gi, 'del')
       .replace(/\ba el\b/gi, 'al')
       .replace(/\blo lo\b/gi, 'lo')
@@ -789,6 +805,74 @@
       .replace(/\s+,/g, ',')
       .replace(/\s+:/g, ':')
       .trim();
+  }
+
+  function stripQuestionPunctuation(text){
+    return normalizeSpanishPhrase(String(text || '').replace(/[¿?]/g, ' '));
+  }
+
+  function ensureQuestionPunctuation(text){
+    const value = stripQuestionPunctuation(text);
+    return value ? `¿${value}?` : '';
+  }
+
+  function isInterrogativeEntry(entry){
+    const morph = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
+    const raw = String(entry?.token?.morphs || '').trim().toUpperCase();
+    return morph === 'INTERROG' || morph === 'PART.INTERR' || /^AI/.test(raw);
+  }
+
+  function applyInterrogativePunctuation(items){
+    const updated = items.map((entry) => {
+      const tokenGloss = String(entry?.tokenGloss || '').trim();
+      const baseGloss = String(entry?.baseGloss || '').trim();
+      if(isInterrogativeEntry(entry)){
+        return {
+          ...entry,
+          baseGloss: baseGloss || '¿',
+          tokenGloss: tokenGloss || baseGloss || '¿'
+        };
+      }
+      return {
+        ...entry,
+        baseGloss: stripQuestionPunctuation(baseGloss),
+        tokenGloss: stripQuestionPunctuation(tokenGloss)
+      };
+    });
+
+    updated.forEach((entry, index) => {
+      if(!isInterrogativeEntry(entry)) return;
+      const interrogative = stripQuestionPunctuation(entry.tokenGloss || entry.baseGloss || '');
+      const nextEntry = updated[index + 1];
+      const nextPhrase = String(nextEntry?.phraseGloss || '').trim();
+      if(nextPhrase && isPrepositionEntry(nextEntry)){
+        for(let k = index + 2; k < updated.length; k += 1){
+          if(isInterrogativeEntry(updated[k])) break;
+          if(isArticleOnlyToken(updated[k]) || isPrepositionEntry(updated[k])) continue;
+          if(k <= index + 3 && extractMorphFeatures(updated[k]?.baseMorph || updated[k]?.layer?.baseLabel || '').isNominal) continue;
+          const candidateGloss = stripQuestionPunctuation(updated[k]?.tokenGloss || updated[k]?.baseGloss || '');
+          if(!candidateGloss) continue;
+          updated[k] = {
+            ...updated[k],
+            phraseGloss: ensureQuestionPunctuation(`${candidateGloss} ${stripQuestionPunctuation(nextPhrase)}`)
+          };
+          return;
+        }
+      }
+      for(let j = index + 1; j < updated.length; j += 1){
+        if(j !== index + 1 && isInterrogativeEntry(updated[j])) break;
+        const phrase = String(updated[j]?.phraseGloss || '').trim();
+        if(!phrase) continue;
+        const question = [interrogative, stripQuestionPunctuation(phrase)].filter(Boolean).join(' ');
+        updated[j] = {
+          ...updated[j],
+          phraseGloss: ensureQuestionPunctuation(question)
+        };
+        break;
+      }
+    });
+
+    return updated;
   }
 
   function capitalizeSpanishLabel(text){
@@ -2175,7 +2259,8 @@
     const clauseItems = applyClauseSemantics(phraseItems);
     const participleItems = applyParticipleClauseSemantics(clauseItems);
     const specialItems = applySpecialClauseSemantics(participleItems);
-    const items = applyNominalPredicateSemantics(specialItems);
+    const predicateItems = applyNominalPredicateSemantics(specialItems);
+    const items = applyInterrogativePunctuation(predicateItems);
 
     return {
       tokenCount: items.length,
