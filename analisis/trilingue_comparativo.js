@@ -722,9 +722,11 @@ const firstPartTokenCount = normalizeFuzzy(firstPart).split(/\s+/).filter(Boolea
  */
 async function renderResults(items, rawQuery = '') {
     // Usamos la función de buscador2.js para procesar las glosas si vienen del hebreo
-    const baseDisplayItems = typeof buildDisplayResults === 'function'
+    const incomingItems = Array.isArray(items) ? items : [];
+    const shouldComposeHebrewGlosses = incomingItems.some(item => item && !item._lxxOnly && !item._rkntOnly);
+    const baseDisplayItems = shouldComposeHebrewGlosses && typeof buildDisplayResults === 'function'
         ? buildDisplayResults(items, rawQuery)
-        : items;
+        : incomingItems;
     const displayItems = await rehydrateHebrewTrilingualRows(baseDisplayItems);
     
 
@@ -752,7 +754,7 @@ async function renderResults(items, rawQuery = '') {
         .map(entry => entry.item);
 
 const limitedItems = prioritizedItems.slice(0, 4).map(item => {
-        const rkantMatches = getRkantMatchesForEntry(item);
+        const rkantMatches = item?._lxxOnly ? [] : getRkantMatchesForEntry(item);
         const ntGreekVariants = uniqueByKey(rkantMatches.map(m => m.gr).filter(Boolean), x => normalizeGreekComparable(x));
         const ntSpanishVariants = uniqueByKey(rkantMatches.map(m => m.es).filter(Boolean), x => normalizeSpanishComparable(x));
         const ntHebrewVariants = uniqueByKey(rkantMatches.map(m => m.he).filter(Boolean), x => normalizeHebrewComparable(x));
@@ -776,7 +778,7 @@ const limitedItems = prioritizedItems.slice(0, 4).map(item => {
         const griegoNt = e.gr_nt || e.equivalencia_griega_nt || e.greek_nt || '';
         return `
         <tr>
-            <td class="he">${escapeHtml(e.he)}</td>
+            <td class="he">${escapeHtml(e.he || '—')}</td>
             <td class="gr" data-gr-source="lxx" style="font-family: 'Times New Roman', serif; font-size: 1.2rem; color: #1e3a8a;">
                             ${escapeHtml(griego)}
             </td>
@@ -892,6 +894,48 @@ const LXX_TEXT_FALLBACK_FILES = [
 
 const LXX_TEXT_FALLBACK_CACHE = new Map();
 const LXX_TEXT_SEARCH_CACHE = new Map();
+const LXX_BOOK_TO_TRILINGUE_FILE = {
+    Gen: '01genesis.json',
+    Exod: '02Éxodo.json',
+    Lev: '03Levítico.json',
+    Num: '04Números.json',
+    Deut: '05Deuteronomio.json',
+    Josh: '06Josué.json',
+    Judg: '07Jueces.json',
+    Ruth: '08Rut.json',
+    '1Sam': '09Samuel1.json',
+    '2Sam': '10Samuel2.json',
+    '1Kgs': '11Reyes1.json',
+    '2Kgs': '12Reyes2.json',
+    '1Chr': '13Crónicas1.json',
+    '2Chr': '14Crónicas2.json',
+    Ezra: '15Esdras.json',
+    Neh: '16Nehemías.json',
+    Esth: '17Ester.json',
+    Job: '18Job.json',
+    Ps: '19Salmos.json',
+    Prov: '20Proverbios.json',
+    Eccl: '21Eclesiastes.json',
+    Song: '22Cantares.json',
+    Isa: '23Isaías.json',
+    Jer: '24Jeremías.json',
+    Lam: '25Lamentaciones.json',
+    Ezek: '26Ezequiel.json',
+    Dan: '27Daniel.json',
+    Hos: '28Oseas.json',
+    Joel: '29Joel.json',
+    Amos: '30Amós.json',
+    Obad: '31Abdías.json',
+    Jonah: '32Jonás.json',
+    Mic: '33Miqueas.json',
+    Nah: '34Nahúm.json',
+    Hab: '35Habacuc.json',
+    Zeph: '36Sofonías.json',
+    Hag: '37Hageo.json',
+    Zech: '38zacarias.json',
+    Mal: '39malaquias.json'
+};
+const TRILINGUE_BOOK_GREEK_BACKFILL_CACHE = new Map();
 
 function buildGreekComparableVariants(word) {
     const value = normalizeGreekComparable(word);
@@ -939,6 +983,52 @@ function formatLxxFallbackRef(book, chapter, verse) {
     return `${String(book || '').replace(/_/g, ' ')} ${chapter}:${verse}`;
 }
 
+async function findTrilingualAtRowByBookAndGreek(book, rawQuery) {
+    const file = LXX_BOOK_TO_TRILINGUE_FILE[String(book || '').trim()];
+    const variants = buildGreekComparableVariants(rawQuery);
+    if (!file || !variants.length) return null;
+
+    const cacheKey = `${file}|${variants.join('|')}`;
+    if (TRILINGUE_BOOK_GREEK_BACKFILL_CACHE.has(cacheKey)) {
+        return TRILINGUE_BOOK_GREEK_BACKFILL_CACHE.get(cacheKey);
+    }
+
+    const variantSet = new Set(variants);
+    let found = null;
+    try {
+        const rows = await loadTrilingueAtFallbackFile(file);
+        const candidates = (Array.isArray(rows) ? rows : []).filter(row => {
+            const greek = row?.equivalencia_griega || row?.gr || row?.greek || '';
+            return tokenizeGreekComparable(greek).some(token => variantSet.has(normalizeGreekComparable(token)));
+        });
+        candidates.sort((a, b) => {
+            const ag = String(a?.equivalencia_griega || a?.gr || a?.greek || '');
+            const bg = String(b?.equivalencia_griega || b?.gr || b?.greek || '');
+            const aExact = variantSet.has(normalizeGreekComparable(ag)) ? 0 : 1;
+            const bExact = variantSet.has(normalizeGreekComparable(bg)) ? 0 : 1;
+            if (aExact !== bExact) return aExact - bExact;
+            const aTokens = tokenizeGreekComparable(ag).length || 999;
+            const bTokens = tokenizeGreekComparable(bg).length || 999;
+            if (aTokens !== bTokens) return aTokens - bTokens;
+            return ag.length - bg.length;
+        });
+        const row = candidates[0] || null;
+        if (row) {
+            found = {
+                he: String(row?.texto_hebreo || row?.he || '').trim(),
+                gr: String(row?.equivalencia_griega || row?.gr || row?.greek || '').trim(),
+                es: String(row?.equivalencia_espanol || row?.equivalencia_español || row?.es || '').trim(),
+                candidatos: Array.isArray(row?.candidatos) ? row.candidatos : [],
+                _trilingueBookFile: file
+            };
+        }
+    } catch (_) {
+        found = null;
+    }
+    TRILINGUE_BOOK_GREEK_BACKFILL_CACHE.set(cacheKey, found);
+    return found;
+}
+
 async function searchLxxGreekFallback(rawQuery, maxResults = 4) {
     const variants = buildGreekComparableVariants(rawQuery);
     const cacheKey = variants.join('|');
@@ -963,14 +1053,18 @@ async function searchLxxGreekFallback(rawQuery, maxResults = 4) {
                         });
                         if (!hit) continue;
                         const verseText = tokenList.map(token => token?.w || '').filter(Boolean).join(' ').trim();
+                        const lxxRef = formatLxxFallbackRef(book, chapter, verse);
+                        const trilingualRow = await findTrilingualAtRowByBookAndGreek(book, rawQuery);
                         matches.push({
-                            he: '',
-                            gr: verseText || rawQuery,
+                            he: trilingualRow?.he || '',
+                            gr: trilingualRow?.gr || rawQuery,
                             gr_nt: '',
-                            es: `LXX ${formatLxxFallbackRef(book, chapter, verse)}`,
-                            candidatos: [],
-                            _lxxOnly: true,
-                            _lxxRef: formatLxxFallbackRef(book, chapter, verse)
+                            es: trilingualRow?.es || `LXX ${lxxRef}`,
+                            candidatos: trilingualRow?.candidatos || [],
+                            _lxxOnly: !trilingualRow,
+                            _lxxText: verseText,
+                            _lxxRef: lxxRef,
+                            _trilingueBookFile: trilingualRow?._trilingueBookFile || ''
                         });
                         if (matches.length >= maxResults) break outer;
                     }
@@ -1053,6 +1147,7 @@ async function rehydrateHebrewTrilingualRows(items) {
     const list = Array.isArray(items) ? items : [];
     const tasks = list.map(async item => {
         if (!item) return item;
+        if (item._trilingueBookFile) return item;
         const hebrew = String(item.he || item.hebrew || item.texto_hebreo || '').trim();
         if (!hebrew) return item;
         const fallback = await findLxxByHebrewFallback(hebrew);
@@ -1710,12 +1805,28 @@ const fallbackEricOnly = async (message, fallbackEntry = null, fallbackTableValu
 
     const primary = Array.isArray(items) && items.length ? items[0] : null;
     if (!primary) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="2" class="muted">Sin equivalencias triling&uuml;es precisas para comparar.</td>
+          </tr>
+        `;
+        return;
  await fallbackEricOnly('Sin candidato principal para comparar en el corpus trilingüe. Se muestra coincidencia directa por consulta.', null, rawQuery);
-          return;
     }
 
-    const hebrewCandidate = String(primary.he || primary.hebrew || primary.palabra || '').trim();
+    const hebrewCandidate = String(primary.he || primary.hebrew || primary.palabra || '').trim().replace(/^(—|-|â€”|&mdash;)$/, '');
     if (!hebrewCandidate) {
+        const greekOnly = primary?._lxxOnly || /[\u0370-\u03ff\u1f00-\u1fff]/.test(String(primary?.gr || primary?.equivalencia_griega || primary?.greek || rawQuery || ''));
+        if (greekOnly) {
+            const greekHtml = await renderGreekComparisonCell(primary, rawQuery);
+            tbody.innerHTML = `
+              <tr>
+                <td>${greekHtml}</td>
+                <td><div class="comparison-pre comparison-pre--hebrew">Sin equivalente hebreo/RKANT confirmado para esta coincidencia textual.</div></td>
+              </tr>
+            `;
+            return;
+        }
 await fallbackEricOnly('La primera fila no contiene hebreo utilizable para el comparador principal. Se muestra coincidencia directa por consulta.', primary, primary?.gr || primary?.equivalencia_griega || primary?.greek || primary?.texto_hebreo || rawQuery);
                 return;
     }
