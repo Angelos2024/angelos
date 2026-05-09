@@ -192,6 +192,10 @@
     return hebrewDictionaryPromise;
   }
 
+  async function getHebrewTheologicalDictionary(){
+    return loadJson('./dic/hebrewdic.json').catch(() => []);
+  }
+
   function getEntryPrintedMorph(entry){
     const candidates = [
       entry?.morfologia_impresa,
@@ -242,11 +246,17 @@
   async function getHebrewMorphIndex(){
     if(!hebrewMorphIndexPromise){
       hebrewMorphIndexPromise = (async () => {
-        const raw = await getHebrewDictionary();
+        const [raw, theologicalRaw] = await Promise.all([
+          getHebrewDictionary(),
+          getHebrewTheologicalDictionary()
+        ]);
         const entries = Array.isArray(raw) ? raw : (raw?.items || raw?.entries || []);
+        const theologicalEntries = (Array.isArray(theologicalRaw) ? theologicalRaw : [])
+          .filter((entry) => Number(String(entry?.id || '').match(/\d+/)?.[0] || 0) <= 4687);
         const pointed = new Map();
         const plain = new Map();
         const byStrong = new Map();
+        const theologicalByLemma = new Map();
 
         const register = (map, key, payload) => {
           if(!key) return;
@@ -282,7 +292,21 @@
           });
         });
 
-        return { pointed, plain, byStrong };
+        theologicalEntries.forEach((entry) => {
+          const gloss = String(entry?.gloss_es || '').replace(/\s+/g, ' ').trim();
+          const lemmaValues = [
+            entry?.lemma,
+            entry?.headword_line,
+            ...(Array.isArray(entry?.headword_tokens) ? entry.headword_tokens : [])
+          ];
+          if(!gloss || !lemmaValues.some(Boolean)) return;
+          lemmaValues.forEach((lemma) => {
+            register(theologicalByLemma, normalizeHebrew(lemma, false), entry);
+            register(theologicalByLemma, normalizeHebrew(lemma, true), entry);
+          });
+        });
+
+        return { pointed, plain, byStrong, theologicalByLemma };
       })().catch((error) => {
         hebrewMorphIndexPromise = null;
         throw error;

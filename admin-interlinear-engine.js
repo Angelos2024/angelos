@@ -171,6 +171,52 @@
     return lexicon.byStrong[key] || [];
   }
 
+  function getTheologicalEntriesByLemma(lemma){
+    const keyPlain = normalizeHebrew(lemma, false);
+    const keyPointed = normalizeHebrew(lemma, true);
+    if(!keyPlain && !keyPointed) return [];
+    const lexicon = global.AdminHebrewLexicon || null;
+    const index = lexicon?.theologicalByLemma;
+    if(!index) return [];
+    const read = (key) => {
+      if(!key) return [];
+      if(typeof index.get === 'function') return index.get(key) || [];
+      return index[key] || [];
+    };
+    const merged = [];
+    const seen = new Set();
+    [...read(keyPlain), ...read(keyPointed)].forEach((entry) => {
+      const id = String(entry?.id || `${entry?.lemma || ''}|${entry?.gloss_es || ''}`);
+      if(seen.has(id)) return;
+      seen.add(id);
+      merged.push(entry);
+    });
+    return merged;
+  }
+
+  function getTheologicalEntriesForToken(token){
+    const candidates = [
+      token?.orig,
+      ...getLexiconEntriesByStrong(token?.strongs).flatMap((entry) => [
+        entry?.strong_detail?.lemma,
+        entry?.hebreo,
+        entry?.lemma,
+        ...(Array.isArray(entry?.hebreos) ? entry.hebreos : [])
+      ])
+    ].filter(Boolean);
+    const entries = [];
+    const seen = new Set();
+    candidates.forEach((candidate) => {
+      getTheologicalEntriesByLemma(candidate).forEach((entry) => {
+        const id = String(entry?.id || `${entry?.lemma || ''}|${entry?.gloss_es || ''}`);
+        if(seen.has(id)) return;
+        seen.add(id);
+        entries.push(entry);
+      });
+    });
+    return entries;
+  }
+
   function lexiconStrongLooksProperName(strong){
     return getLexiconEntriesByStrong(strong).some((entry) => {
       const morphs = flattenMorphValues(entry?.morfs || entry?.morfologia || entry?.morphs);
@@ -232,11 +278,13 @@
     (Array.isArray(entry?.glosas) ? entry.glosas : []).forEach(add);
 
     const upperMorph = String(baseMorph || '').trim().toUpperCase();
+    const strong = normalizeStrong(entry?.strong || entry?.strongs || token?.strongs || '');
     const normalizedForm = normalizeHebrew(token?.orig || '', false);
     const scored = candidates.map((candidate, index) => {
       let score = 0;
       const lower = candidate.toLowerCase();
       const normalized = normalizeLexicalGlossCandidate(candidate);
+      if(isForbiddenTheologicalGloss(strong, candidate)) score -= 100;
       if(!normalized.gloss) score -= 10;
       if(classifySourceGlossPart(candidate) === 'lex') score += 4;
       if(normalized.articleHint) score += 2;
@@ -255,6 +303,135 @@
     return winner?.normalized || { gloss: '', articleHint: '' };
   }
 
+  function normalizeTheologicalGlossCandidate(value){
+    const text = normalizeSpanishSourceText(value)
+      .replace(/\([^)]*\)/g, ' ')
+      .replace(/\b(Q|Nif|Pi|Hi|Hif|Pual|Hit|Qal|NIFAL|PIEL|HIFIL)\b\.?/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if(!text) return { gloss: '', articleHint: '' };
+    const primary = text
+      .split(/\s*(?:[.;/]| — | - )\s*/)[0]
+      .split(/\s*,\s*/)[0]
+      .trim();
+    return normalizeLexicalGlossCandidate(primary || text);
+  }
+
+  function chooseTheologicalGlossFromEntry(entry, token, baseMorph){
+    const candidates = [
+      entry?.gloss_es,
+      String(entry?.text || '').split(/[.;]/)[0]
+    ].filter(Boolean);
+    const upperMorph = String(baseMorph || '').trim().toUpperCase();
+    const scored = candidates.map((candidate, index) => {
+      const normalized = normalizeTheologicalGlossCandidate(candidate);
+      const gloss = normalized.gloss || '';
+      const lower = gloss.toLowerCase();
+      let score = 0;
+      if(!gloss) score -= 20;
+      if(classifySourceGlossPart(gloss) === 'lex') score += 5;
+      if(/^NPROP|^NP/.test(upperMorph) && !looksLikeSpanishProperNameGloss(gloss)) score -= 8;
+      if(/^V/.test(upperMorph) && /(ar|er|ir|se)$/.test(lower)) score += 4;
+      if(/^NC|^SUBS/.test(upperMorph) && !/(ar|er|ir|se)$/.test(lower)) score += 3;
+      if(/\b(ver|véase|nota|tabla|forma|morfema|preformante|prost[eé]tica)\b/i.test(lower)) score -= 10;
+      if(/\b(de|a|en|con|por|para|que|si|y|o)\b/i.test(lower) && lower.split(/\s+/).length === 1) score -= 6;
+      return { normalized, score, index };
+    }).sort((left, right) => right.score - left.score || left.index - right.index);
+    const winner = scored.find((item) => item.normalized?.gloss && item.score > -5);
+    return winner?.normalized || { gloss: '', articleHint: '' };
+  }
+
+  function isForbiddenTheologicalGloss(strong, gloss){
+    const key = normalizeStrong(strong);
+    const text = normalizeSpanishSourceText(gloss).toLowerCase();
+    if(key === 'H5315' && /\balmas?\b/i.test(text)) return true;
+    return false;
+  }
+
+  function isLowConfidenceSourceGloss(gloss){
+    const text = normalizeSpanishSourceText(gloss);
+    if(!text) return true;
+    if(/[?Â¿!]/.test(String(gloss || ''))) return true;
+    if(/\b(alamas|alam|almaa|esepcificamente)\b/i.test(text)) return true;
+    if(/^s\/t$/i.test(text)) return true;
+    return false;
+  }
+
+  function resolvePossessivePhraseFromMorph(upperMorph, singular, plural, baseIsPlural = false){
+    const noun = baseIsPlural ? plural : singular;
+    if(/\bRBSC1\b|\bPRS\.P1\.COMMON\.SG\b/.test(upperMorph)) return `mi ${noun}`;
+    if(/\bRBPC1\b|\bPRS\.P1\.COMMON\.PL\b/.test(upperMorph)) return `${baseIsPlural ? 'nuestras' : 'nuestra'} ${noun}`;
+    if(/\bRBSF2\b|\bRBSM2\b|\bRBSC2\b|\bPRS\.P2\.(?:M|F)\.SG\b/.test(upperMorph)) return `tu ${noun}`;
+    if(/\bRBPM2\b|\bRBPF2\b|\bPRS\.P2\.(?:M|F)\.PL\b/.test(upperMorph)) return `${baseIsPlural ? 'vuestras' : 'vuestra'} ${noun}`;
+    if(/\bRBSM3\b|\bRBSF3\b|\bPRS\.P3\.(?:M|F)\.SG\b/.test(upperMorph)) return `su ${noun}`;
+    if(/\bRBPM3\b|\bRBPF3\b|\bPRS\.P3\.(?:M|F)\.PL\b/.test(upperMorph)) return `${baseIsPlural ? 'sus' : 'su'} ${noun}`;
+    return '';
+  }
+
+  function resolveNefeshContextualGloss(token, baseMorph, current, context = {}){
+    const upperMorph = String(baseMorph || token?.morphs || '').trim().toUpperCase();
+    const features = extractMorphFeatures(upperMorph);
+    const lower = normalizeSpanishSourceText(current).toLowerCase();
+    const plural = features.isPlural || features.isDual || /(?:^|[+.])(?:RBPM|RBPF|PRS\.P\d\.[^.]+\.PL)(?:$|[+.])/.test(upperMorph);
+    const construct = features.isConstruct || /\.C(?:$|\.)/.test(upperMorph) || /\bde$/i.test(lower);
+    const possessive = resolvePossessivePhraseFromMorph(upperMorph, 'vida', 'vidas', features.isPlural || features.isDual);
+    const tokenPlain = normalizeHebrew(token?.orig || '', false);
+    const isNefeshSurface = /^\u05E0\u05E4\u05E9/.test(tokenPlain);
+
+    if(tokenPlain && !isNefeshSurface && !/\balmas?\b/i.test(lower)){
+      if(tokenPlain === '\u05D7\u05D9\u05D4') return { gloss: 'viviente', articleHint: '' };
+      if(lower) return { gloss: normalizeSpanishLexicalCase(current, baseMorph), articleHint: '' };
+    }
+
+    if(/^(yo|tu|tú|mi|mí|si mismo|sí mismo|a si mismo|a sí mismo)$/i.test(lower)){
+      return { gloss: normalizeSpanishLexicalCase(current, baseMorph), articleHint: '' };
+    }
+    if(/\b(cuello|pescuezo)\b/i.test(lower)) return { gloss: 'pescuezo', articleHint: '' };
+    if(/\bgarganta\b/i.test(lower)) return { gloss: 'garganta', articleHint: '' };
+    if(/\b(aliento|respiraci[oÃ³]n)\b/i.test(lower)) return { gloss: 'aliento', articleHint: '' };
+    if(/\b(cad[aÃ¡]ver|muerto|muerta|muerte)\b/i.test(lower)){
+      return { gloss: plural ? 'personas muertas' : 'persona muerta', articleHint: '' };
+    }
+    if(/\b(apetito|antojo|deseo|anhelo|voluntad|quer[iÃí]amos|queremos)\b/i.test(lower)){
+      return { gloss: /\bvoluntad\b/i.test(lower) ? 'voluntad' : 'apetito', articleHint: '' };
+    }
+    if(/\b(animal|criatura|viviente)\b/i.test(lower)){
+      return { gloss: plural ? 'seres vivientes' : 'ser viviente', articleHint: '' };
+    }
+    if(/\b(persona|personas|gente|individuo|cualquiera|alguno|alguien|hombre)\b/i.test(lower)){
+      return { gloss: plural ? 'personas' : 'persona', articleHint: '' };
+    }
+    if(possessive) return { gloss: possessive, articleHint: '' };
+    if(/\b(vida|vidas|vivir)\b/i.test(lower)){
+      if(possessive) return { gloss: possessive, articleHint: '' };
+      return { gloss: plural ? 'vidas' : 'vida', articleHint: '' };
+    }
+    if(/\balmas?\b/i.test(lower)){
+      if(possessive) return { gloss: possessive, articleHint: '' };
+      if(construct) return { gloss: plural ? 'vidas de' : 'vida de', articleHint: '' };
+      return { gloss: plural ? 'personas' : 'vida', articleHint: '' };
+    }
+    if(construct) return { gloss: plural ? 'vidas de' : 'vida de', articleHint: '' };
+    if(context?.nextIsDefinedOrDivine) return { gloss: 'vida de', articleHint: '' };
+    return { gloss: plural ? 'personas' : 'vida', articleHint: '' };
+  }
+
+  function resolveTheologicalDictionaryGloss(token, baseMorph, current, lexiconResolved, context = {}){
+    const strong = normalizeStrong(token?.strongs || '');
+    if(strong === 'H5315'){
+      return resolveNefeshContextualGloss(token, baseMorph, current, context);
+    }
+    if(isForbiddenTheologicalGloss(strong, current)){
+      return lexiconResolved?.gloss && !isForbiddenTheologicalGloss(strong, lexiconResolved.gloss)
+        ? lexiconResolved
+        : { gloss: '', articleHint: '' };
+    }
+    if(lexiconResolved?.gloss && isLowConfidenceSourceGloss(current)){
+      return lexiconResolved;
+    }
+    return null;
+  }
+
   function resolveLexicalFallback(token, baseMorph, sourceGloss, context = {}){
     const current = normalizeSpanishLexicalCase(sourceGloss, baseMorph);
     const currentClass = classifySourceGlossPart(current);
@@ -262,16 +439,29 @@
     const features = extractMorphFeatures(upperMorph);
     const strong = normalizeStrong(token?.strongs || '');
     const entries = getLexiconEntriesByStrong(token?.strongs);
-    const lexiconResolved = entries
+    let lexiconResolved = entries
       .map((entry) => chooseLexicalGlossFromEntry(entry, token, baseMorph))
       .find((resolved) => resolved?.gloss) || { gloss: '', articleHint: '' };
+    if(features.isVerbal && lexiconStrongLooksProperName(strong)){
+      lexiconResolved = { gloss: '', articleHint: '' };
+    }
+    const theologicalResolved = getTheologicalEntriesForToken(token)
+      .map((entry) => chooseTheologicalGlossFromEntry(entry, token, baseMorph))
+      .find((resolved) => resolved?.gloss) || { gloss: '', articleHint: '' };
+    const theologicalPolicyResolved = resolveTheologicalDictionaryGloss(token, baseMorph, current, lexiconResolved, context);
     const canonical = canonicalFunctionGloss(baseMorph, token);
 
+    if(upperMorph === 'ART'){
+      return { gloss: '', articleHint: '' };
+    }
     if(canonical || upperMorph === 'PART.OBJ.DIR'){
       return {
         gloss: canonical,
-        articleHint: lexiconResolved.articleHint || ''
+        articleHint: lexiconResolved.articleHint || theologicalResolved.articleHint || ''
       };
+    }
+    if(theologicalPolicyResolved?.gloss){
+      return theologicalPolicyResolved;
     }
     if(normalizeHebrew(token?.orig || '', false) === 'לי' && /(?:^|[+.])(?:PL|PREP)(?:$|[+.])/.test(upperMorph)){
       return { gloss: 'me', articleHint: '' };
@@ -283,40 +473,43 @@
       }
     }
     if(features.isParticiple && context.previousIsHayahImperfect){
-      const gerund = toSpanishGerund(lexiconResolved.gloss || current);
+      const gerund = toSpanishGerund(lexiconResolved.gloss || theologicalResolved.gloss || current);
       if(gerund){
         return { gloss: gerund, articleHint: lexiconResolved.articleHint || '' };
       }
-      if(lexiconResolved.gloss){
-        return { gloss: lexiconResolved.gloss, articleHint: lexiconResolved.articleHint || '' };
+      if(lexiconResolved.gloss || theologicalResolved.gloss){
+        return lexiconResolved.gloss ? lexiconResolved : theologicalResolved;
       }
     }
     if(features.isParticiple && looksLikeFiniteSpanishVerb(current)){
-      const gerund = toSpanishGerund(lexiconResolved.gloss || current);
+      const gerund = toSpanishGerund(lexiconResolved.gloss || theologicalResolved.gloss || current);
       if(gerund){
         return { gloss: gerund, articleHint: lexiconResolved.articleHint || '' };
       }
-      if(lexiconResolved.gloss){
-        return { gloss: lexiconResolved.gloss, articleHint: lexiconResolved.articleHint || '' };
+      if(lexiconResolved.gloss || theologicalResolved.gloss){
+        return lexiconResolved.gloss ? lexiconResolved : theologicalResolved;
       }
       return { gloss: finiteSpanishToPresentLike(current), articleHint: '' };
     }
     if(features.isVerbal && current && currentClass === 'lex' && !looksLikeFiniteSpanishVerb(current)){
-      if(lexiconResolved.gloss){
-        return lexiconResolved;
+      if(lexiconResolved.gloss || theologicalResolved.gloss){
+        return lexiconResolved.gloss ? lexiconResolved : theologicalResolved;
       }
       if(looksLikeSpanishProperNameGloss(sourceGloss)){
         return { gloss: '', articleHint: '' };
       }
     }
+    if(isLowConfidenceSourceGloss(current) && theologicalResolved.gloss){
+      return theologicalResolved;
+    }
     if(current && currentClass === 'lex' && !(extractMorphFeatures(upperMorph).isConstruct && isDefectiveConstructGloss(current))) {
       return {
         gloss: current,
-        articleHint: lexiconResolved.articleHint || ''
+        articleHint: lexiconResolved.articleHint || theologicalResolved.articleHint || ''
       };
     }
     if(current && /^VERBO(?:\.|$)/.test(upperMorph) && currentClass !== 'func'){
-      return { gloss: current, articleHint: lexiconResolved.articleHint || '' };
+      return { gloss: current, articleHint: lexiconResolved.articleHint || theologicalResolved.articleHint || '' };
     }
     if(strong === 'H1961'){
       if(/JUSS|YUSIV|JUSS/.test(upperMorph)) return { gloss: 'sea', articleHint: '' };
@@ -336,6 +529,9 @@
     }
     if(lexiconResolved.gloss){
       return lexiconResolved;
+    }
+    if(theologicalResolved.gloss){
+      return theologicalResolved;
     }
     return { gloss: current, articleHint: '' };
   }
@@ -872,6 +1068,8 @@
     const isShortAdjective = /^A[MF]?[SP][A-Z]*$/.test(upper);
     const isShortOrdinal = /^O[MF]?[SP][A-Z]*$/.test(upper);
     const isSourceNominal = /^N[CP]/.test(upper);
+    const isSourceNominalPlural = /^NC[A-Z]{0,2}P[MF]/.test(upper);
+    const isSourceNominalDual = /^NC[A-Z]{0,2}D[MF]/.test(upper);
     const isCardinal = /^NUM\.CARD(?:\.|$)/.test(upper) || /^C[MF]?[SP][A-Z]*$/.test(upper);
     return {
       isConstruct: /\.C(?:$|\.)/.test(upper),
@@ -882,8 +1080,8 @@
       isParticiple,
       isCardinal,
       isAdjective: /^ADJ(?:\.|$)/.test(upper) || /^GENT(?:\.|$)/.test(upper) || isShortAdjective || isShortOrdinal,
-      isPlural: /\.PL(?:$|\.)/.test(upper) || /^A[MF]?P/.test(upper) || /^O[MF]?P/.test(upper) || /^NC.*P/.test(upper),
-      isDual: /\.DU(?:$|\.)/.test(upper) || /^NC.*D/.test(upper),
+      isPlural: /\.PL(?:$|\.)/.test(upper) || /^A[MF]?P/.test(upper) || /^O[MF]?P/.test(upper) || isSourceNominalPlural,
+      isDual: /\.DU(?:$|\.)/.test(upper) || isSourceNominalDual,
       isFeminine: /\.F(?:$|\.)/.test(upper) || /^AF/.test(upper) || /^OF/.test(upper) || /^NC.*F/.test(upper),
       isInfinitive: /INFC|INFA|INFINIT|---C$/.test(upper),
       isImperative: /IMPV|IMPERAT/.test(upper),
