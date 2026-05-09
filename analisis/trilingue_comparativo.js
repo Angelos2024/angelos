@@ -723,16 +723,20 @@ const firstPartTokenCount = normalizeFuzzy(firstPart).split(/\s+/).filter(Boolea
 async function renderResults(items, rawQuery = '') {
     // Usamos la función de buscador2.js para procesar las glosas si vienen del hebreo
     const incomingItems = Array.isArray(items) ? items : [];
-    const shouldComposeHebrewGlosses = incomingItems.some(item => item && !item._lxxOnly && !item._rkntOnly);
+    const validComparativeItems = incomingItems.filter(item => {
+        const hebrew = String(item?.he || item?.hebrew || item?.texto_hebreo || item?.palabra || '').trim();
+        return !!hebrew && !/^(—|-|â€”|&mdash;)$/.test(hebrew);
+    });
+    const shouldComposeHebrewGlosses = validComparativeItems.some(item => item && !item._rkntOnly);
     const baseDisplayItems = shouldComposeHebrewGlosses && typeof buildDisplayResults === 'function'
-        ? buildDisplayResults(items, rawQuery)
-        : incomingItems;
+        ? buildDisplayResults(validComparativeItems, rawQuery)
+        : validComparativeItems;
     const displayItems = await rehydrateHebrewTrilingualRows(baseDisplayItems);
     
 
     if (!displayItems || !displayItems.length) {
         if (resultsTbodyEl) {
-            resultsTbodyEl.innerHTML = '<tr><td colspan="4" class="muted">Sin resultados precisos para esta entrada.</td></tr>';
+            resultsTbodyEl.innerHTML = '<tr><td colspan="4" class="muted">Sin correspondencia triling&uuml;e con hebreo para esta entrada.</td></tr>';
                     }
         await updateDictionaryComparison([], rawQuery);
         notifyRenderedResults([], rawQuery);
@@ -1055,13 +1059,14 @@ async function searchLxxGreekFallback(rawQuery, maxResults = 4) {
                         const verseText = tokenList.map(token => token?.w || '').filter(Boolean).join(' ').trim();
                         const lxxRef = formatLxxFallbackRef(book, chapter, verse);
                         const trilingualRow = await findTrilingualAtRowByBookAndGreek(book, rawQuery);
+                        if (!trilingualRow?.he) continue;
                         matches.push({
                             he: trilingualRow?.he || '',
                             gr: trilingualRow?.gr || rawQuery,
                             gr_nt: '',
                             es: trilingualRow?.es || `LXX ${lxxRef}`,
                             candidatos: trilingualRow?.candidatos || [],
-                            _lxxOnly: !trilingualRow,
+                            _lxxOnly: false,
                             _lxxText: verseText,
                             _lxxRef: lxxRef,
                             _trilingueBookFile: trilingualRow?._trilingueBookFile || ''
@@ -1816,19 +1821,12 @@ const fallbackEricOnly = async (message, fallbackEntry = null, fallbackTableValu
 
     const hebrewCandidate = String(primary.he || primary.hebrew || primary.palabra || '').trim().replace(/^(—|-|â€”|&mdash;)$/, '');
     if (!hebrewCandidate) {
-        const greekOnly = primary?._lxxOnly || /[\u0370-\u03ff\u1f00-\u1fff]/.test(String(primary?.gr || primary?.equivalencia_griega || primary?.greek || rawQuery || ''));
-        if (greekOnly) {
-            const greekHtml = await renderGreekComparisonCell(primary, rawQuery);
-            tbody.innerHTML = `
-              <tr>
-                <td>${greekHtml}</td>
-                <td><div class="comparison-pre comparison-pre--hebrew">Sin equivalente hebreo/RKANT confirmado para esta coincidencia textual.</div></td>
-              </tr>
-            `;
-            return;
-        }
-await fallbackEricOnly('La primera fila no contiene hebreo utilizable para el comparador principal. Se muestra coincidencia directa por consulta.', primary, primary?.gr || primary?.equivalencia_griega || primary?.greek || primary?.texto_hebreo || rawQuery);
-                return;
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="2" class="muted">Error de correspondencia: la fila no contiene hebreo base, por lo que no se compara como resultado triling&uuml;e.</td>
+          </tr>
+        `;
+        return;
     }
 
     tbody.innerHTML = '<tr><td colspan="2" class="muted">Consultando diccionarios…</td></tr>';

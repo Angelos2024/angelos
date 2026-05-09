@@ -80,6 +80,11 @@
     return /(o|a|e|as|es|an|en|aba|aban|ia|ian|ó|aron|io|ieron|se|ra|rá)$/.test(value);
   }
 
+  function looksLikeSpanishProperNameGloss(text){
+    const value = normalizeSpanishSourceText(text);
+    return /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+$/.test(value);
+  }
+
   function finiteSpanishToPresentLike(text){
     const value = normalizeSpanishSourceText(text).toLowerCase();
     if(/es$/.test(value)) return `${value.slice(0, -2)}as`;
@@ -154,6 +159,19 @@
       return lexicon.byStrong.get(key) || [];
     }
     return lexicon.byStrong[key] || [];
+  }
+
+  function lexiconStrongLooksProperName(strong){
+    return getLexiconEntriesByStrong(strong).some((entry) => {
+      const morphs = flattenMorphValues(entry?.morfs || entry?.morfologia || entry?.morphs);
+      if(morphs.some((morph) => /^(NPROP|NMPR)(?:\.|$)/i.test(String(morph || '').trim()))) return true;
+      const definition = normalizeSpanishSourceText([
+        entry?.strong_detail?.definicion,
+        entry?.strong_detail?.def_rv,
+        entry?.strong_detail?.subtitle
+      ].filter(Boolean).join(' '));
+      return /\bnombre\b/i.test(definition);
+    });
   }
 
   function resolveConstructHeadLexeme(entry){
@@ -264,6 +282,14 @@
       }
       return { gloss: finiteSpanishToPresentLike(current), articleHint: '' };
     }
+    if(features.isVerbal && current && currentClass === 'lex' && !looksLikeFiniteSpanishVerb(current)){
+      if(lexiconResolved.gloss){
+        return lexiconResolved;
+      }
+      if(looksLikeSpanishProperNameGloss(sourceGloss)){
+        return { gloss: '', articleHint: '' };
+      }
+    }
     if(current && currentClass === 'lex' && !(extractMorphFeatures(upperMorph).isConstruct && isDefectiveConstructGloss(current))) {
       return {
         gloss: current,
@@ -326,7 +352,7 @@
       if(/^(he|ha|han|habia|habían|voy|vaya|os|me|se|le|les)$/i.test(first)){
         return second || first;
       }
-      if(/^VERBO(?:\.|$)/.test(morph) && lexicalParts.length){
+      if((/^VERBO(?:\.|$)/.test(morph) || /^V[A-Z]/.test(morph)) && lexicalParts.length){
         return lexicalParts[0];
       }
       if(/^(SUBS|ADJ|NPROP)(?:\.|$)/.test(morph) && lexicalParts.length){
@@ -523,6 +549,7 @@
       return 'PRON.OBJ';
     }
     if(raw === 'XD') return 'ART';
+    if(/^AI/i.test(raw)) return 'INTERROG';
     if(raw === 'PA') return 'PART.OBJ.DIR';
     if(raw === 'CC' || raw === 'Cc') return 'CONJ';
     if(/^P[BLKM]?$/i.test(raw)) return 'PREP';
@@ -539,11 +566,35 @@
     return morph === 'XD' || /\bXD\b/.test(morph) || normalizeHebrew(token?.orig || '', true).startsWith('ה');
   }
 
+  function isDefiniteArticleToken(token, baseMorph = ''){
+    const morph = String(token?.morphs || '').trim().toUpperCase();
+    const label = String(baseMorph || '').trim().toUpperCase();
+    if(morph === 'XD' || /\bXD\b/.test(morph)) return true;
+    if(/^AI/.test(morph)) return false;
+    if(normalizeHebrew(token?.orig || '', true).includes('\u05B2')) return false;
+    return label === 'ART';
+  }
+
+  function resolveEmptyArticleGloss(token, baseMorph, context = {}){
+    if(!isDefiniteArticleToken(token, baseMorph)) return '';
+    const labels = [context.nextMorph, context.nextSourceMorph].filter(Boolean);
+    for(const label of labels){
+      const features = extractMorphFeatures(label);
+      if(features.isCardinal) return features.isFeminine ? 'las' : 'los';
+      if(features.isNominal || features.isAdjective || features.isProper || features.isParticiple || features.isPronoun || features.isVerbal){
+        return resolveStandaloneArticle(features);
+      }
+    }
+    return '';
+  }
+
   function buildConstructContext(tokens, oshbVerseNode, posIndex){
     const nextToken = tokens[posIndex + 1] || null;
     const previousToken = tokens[posIndex - 1] || null;
     if(!nextToken){
       return {
+        nextMorph: '',
+        nextSourceMorph: '',
         nextStrong: '',
         followedByNominal: false,
         nextIsDefinedOrDivine: false,
@@ -552,6 +603,7 @@
       };
     }
     const nextMorph = getOshbMorphAt(oshbVerseNode, nextToken, posIndex + 1) || resolveSourceMorphFallback(nextToken);
+    const nextSourceMorph = resolveSourceMorphFallback(nextToken);
     const prevMorph = previousToken
       ? (getOshbMorphAt(oshbVerseNode, previousToken, posIndex - 1) || resolveSourceMorphFallback(previousToken))
       : '';
@@ -564,6 +616,8 @@
       /^NPROP(?:\.|$)/.test(String(nextMorph || '').trim().toUpperCase())
     );
     return {
+      nextMorph,
+      nextSourceMorph,
       nextStrong,
       followedByNominal,
       nextIsDefinedOrDivine,
@@ -593,10 +647,15 @@
   }
 
   function buildSpanishLayerForToken(token, context = {}){
-    const baseMorph = getOshbMorphAt(context.oshbVerseNode, token, context.posIndex) || resolveSourceMorphFallback(token);
+    const sourceMorphFallback = resolveSourceMorphFallback(token);
+    const oshbMorph = getOshbMorphAt(context.oshbVerseNode, token, context.posIndex);
     const sourceGloss = resolveTokenSourceGloss(token);
+    let baseMorph = sourceMorphFallback === 'INTERROG' ? sourceMorphFallback : (oshbMorph || sourceMorphFallback);
+    if(!/^NPROP(?:\.|$)/.test(String(baseMorph || '').trim().toUpperCase()) && looksLikeSpanishProperNameGloss(sourceGloss) && lexiconStrongLooksProperName(token?.strongs)){
+      baseMorph = 'NPROP';
+    }
     const lexical = resolveLexicalFallback(token, baseMorph, sourceGloss, context);
-    const baseGloss = lexical.gloss || sourceGloss;
+    const baseGloss = lexical.gloss || sourceGloss || resolveEmptyArticleGloss(token, baseMorph, context);
     const layer = Rules?.buildSpanishInterlinearPlan
       ? Rules.buildSpanishInterlinearPlan(token?.orig || '', baseMorph, baseGloss, {
           strong: normalizeStrong(token?.strongs),
@@ -630,16 +689,22 @@
   function extractMorphFeatures(label){
     const upper = String(label || '').trim().toUpperCase();
     const isParticiple = /PTCA|PTCP|PTC|(?:^|\.)(AP|AV)(?:$|[A-Z.])/.test(upper);
+    const isShortAdjective = /^A[MF]?[SP][A-Z]*$/.test(upper);
+    const isShortOrdinal = /^O[MF]?[SP][A-Z]*$/.test(upper);
+    const isSourceNominal = /^N[CP]/.test(upper);
+    const isCardinal = /^NUM\.CARD(?:\.|$)/.test(upper) || /^C[MF]?[SP][A-Z]*$/.test(upper);
     return {
       isConstruct: /\.C(?:$|\.)/.test(upper),
-      isNominal: /^(SUBS|ADJ|NPROP)(?:\.|$)/.test(upper),
-      isProper: /^NPROP(?:\.|$)/.test(upper),
-      isVerbal: /^VERBO(?:\.|$)/.test(upper),
+      isNominal: /^(SUBS|ADJ|NPROP)(?:\.|$)/.test(upper) || isSourceNominal,
+      isProper: /^NPROP(?:\.|$)/.test(upper) || /^NMPR(?:\.|$)/.test(upper) || /^NP/.test(upper),
+      isPronoun: /^PRON(?:\.|$)/.test(upper),
+      isVerbal: /^VERBO(?:\.|$)/.test(upper) || /^V/.test(upper),
       isParticiple,
-      isAdjective: /^ADJ(?:\.|$)/.test(upper),
-      isPlural: /\.PL(?:$|\.)/.test(upper),
-      isDual: /\.DU(?:$|\.)/.test(upper),
-      isFeminine: /\.F(?:$|\.)/.test(upper),
+      isCardinal,
+      isAdjective: /^ADJ(?:\.|$)/.test(upper) || /^GENT(?:\.|$)/.test(upper) || isShortAdjective || isShortOrdinal,
+      isPlural: /\.PL(?:$|\.)/.test(upper) || /^A[MF]?P/.test(upper) || /^O[MF]?P/.test(upper) || /^NC.*P/.test(upper),
+      isDual: /\.DU(?:$|\.)/.test(upper) || /^NC.*D/.test(upper),
+      isFeminine: /\.F(?:$|\.)/.test(upper) || /^AF/.test(upper) || /^OF/.test(upper) || /^NC.*F/.test(upper),
       isInfinitive: /INFC|INFA|INFINIT|---C$/.test(upper),
       isImperative: /IMPV|IMPERAT/.test(upper),
       isVolitive: /COHORT|YUSIV|JUSS/.test(upper),
