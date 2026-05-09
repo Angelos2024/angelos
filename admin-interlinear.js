@@ -293,10 +293,12 @@
         });
 
         theologicalEntries.forEach((entry) => {
-          const gloss = String(entry?.gloss_es || '').replace(/\s+/g, ' ').trim();
+          const gloss = String(entry?.gloss_es || entry?.translation || '').replace(/\s+/g, ' ').trim();
           const lemmaValues = [
             entry?.lemma,
             entry?.headword_line,
+            entry?.hebrew,
+            entry?.lemma_original,
             ...(Array.isArray(entry?.headword_tokens) ? entry.headword_tokens : [])
           ];
           if(!gloss || !lemmaValues.some(Boolean)) return;

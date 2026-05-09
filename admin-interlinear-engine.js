@@ -183,9 +183,12 @@
       if(typeof index.get === 'function') return index.get(key) || [];
       return index[key] || [];
     };
+    const exactPointed = read(keyPointed);
+    const lemmaHasPoints = /[\u0591-\u05C7]/.test(String(lemma || ''));
+    const source = exactPointed.length ? exactPointed : (lemmaHasPoints ? [] : read(keyPlain));
     const merged = [];
     const seen = new Set();
-    [...read(keyPlain), ...read(keyPointed)].forEach((entry) => {
+    source.forEach((entry) => {
       const id = String(entry?.id || `${entry?.lemma || ''}|${entry?.gloss_es || ''}`);
       if(seen.has(id)) return;
       seen.add(id);
@@ -195,15 +198,18 @@
   }
 
   function getTheologicalEntriesForToken(token){
-    const candidates = [
-      token?.orig,
-      ...getLexiconEntriesByStrong(token?.strongs).flatMap((entry) => [
-        entry?.strong_detail?.lemma,
+    const strongEntries = getLexiconEntriesByStrong(token?.strongs);
+    const strongCandidates = strongEntries.flatMap((entry) => {
+      const pointedLemma = entry?.strong_detail?.lemma;
+      if(pointedLemma) return [pointedLemma];
+      return [
         entry?.hebreo,
         entry?.lemma,
+        entry?.forma,
         ...(Array.isArray(entry?.hebreos) ? entry.hebreos : [])
-      ])
-    ].filter(Boolean);
+      ];
+    });
+    const candidates = (strongEntries.length ? strongCandidates : [token?.orig]).filter(Boolean);
     const entries = [];
     const seen = new Set();
     candidates.forEach((candidate) => {
@@ -320,6 +326,7 @@
   function chooseTheologicalGlossFromEntry(entry, token, baseMorph){
     const candidates = [
       entry?.gloss_es,
+      entry?.translation,
       String(entry?.text || '').split(/[.;]/)[0]
     ].filter(Boolean);
     const upperMorph = String(baseMorph || '').trim().toUpperCase();
@@ -448,6 +455,10 @@
     const theologicalResolved = getTheologicalEntriesForToken(token)
       .map((entry) => chooseTheologicalGlossFromEntry(entry, token, baseMorph))
       .find((resolved) => resolved?.gloss) || { gloss: '', articleHint: '' };
+    if(features.isVerbal && lexiconStrongLooksProperName(strong)){
+      theologicalResolved.gloss = '';
+      theologicalResolved.articleHint = '';
+    }
     const theologicalPolicyResolved = resolveTheologicalDictionaryGloss(token, baseMorph, current, lexiconResolved, context);
     const canonical = canonicalFunctionGloss(baseMorph, token);
 
@@ -471,6 +482,9 @@
       if(possessive?.[1]){
         return { gloss: normalizeSpanishPhrase(`mi ${possessive[1]}`), articleHint: lexiconResolved.articleHint || '' };
       }
+    }
+    if(theologicalResolved.gloss){
+      return theologicalResolved;
     }
     if(features.isParticiple && context.previousIsHayahImperfect){
       const gerund = toSpanishGerund(lexiconResolved.gloss || theologicalResolved.gloss || current);
