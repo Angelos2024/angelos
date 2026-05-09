@@ -273,6 +273,15 @@
         articleHint: lexiconResolved.articleHint || ''
       };
     }
+    if(normalizeHebrew(token?.orig || '', false) === 'לי' && /(?:^|[+.])(?:PL|PREP)(?:$|[+.])/.test(upperMorph)){
+      return { gloss: 'me', articleHint: '' };
+    }
+    if(/\+RBS?C?1|\+PRS\.P1\.COMMON\.SG/.test(upperMorph)){
+      const possessive = current.match(/^(.+?)\s*,?\s+mi$/i);
+      if(possessive?.[1]){
+        return { gloss: normalizeSpanishPhrase(`mi ${possessive[1]}`), articleHint: lexiconResolved.articleHint || '' };
+      }
+    }
     if(features.isParticiple && context.previousIsHayahImperfect){
       const gerund = toSpanishGerund(lexiconResolved.gloss || current);
       if(gerund){
@@ -660,6 +669,159 @@
     return '';
   }
 
+  function firstHebrewCluster(value){
+    const match = String(value || '').match(/^([\u05D0-\u05EA][\u05B0-\u05C7]*)(.*)$/u);
+    return match ? { first: match[1], rest: match[2] } : null;
+  }
+
+  function splitFinalKafSuffix(value){
+    const match = String(value || '').match(/^(.*?)(\u05DA[\u05B0-\u05C7]*)$/u);
+    return match ? { base: match[1], suffix: match[2] } : { base: value, suffix: '' };
+  }
+
+  function sourceMorphParts(value){
+    return String(value || '')
+      .split(/[+,]/)
+      .map((part) => part.trim().toUpperCase())
+      .filter(Boolean);
+  }
+
+  function resolvePrefixedPrepositionGloss(prefixSurface, morphParts){
+    const surface = normalizeHebrew(prefixSurface, false);
+    if(morphParts.some((part) => part === 'PS' || part === 'PO')) return 'por';
+    if(surface === '\u05D1') return 'en';
+    if(surface === '\u05DB') return 'como';
+    if(surface === '\u05DC') return 'a';
+    if(surface === '\u05DE') return 'de';
+    return 'prep';
+  }
+
+  function resolveObjectPronounGlossFromSuffix(label){
+    const upper = String(label || '').trim().toUpperCase();
+    if(upper === 'RBSC1' || upper === 'RBPC1') return 'mí';
+    if(upper === 'RBSC2' || upper === 'RBSF2' || upper === 'RBSM2') return 'ti';
+    if(upper === 'RBSM3') return 'él';
+    if(upper === 'RBSF3') return 'ella';
+    if(upper === 'RBPM2') return 'vosotros';
+    if(upper === 'RBPF2') return 'vosotras';
+    if(upper === 'RBPM3') return 'ellos';
+    if(upper === 'RBPF3') return 'ellas';
+    return '';
+  }
+
+  function resolvePossessiveSuffixGloss(label){
+    const upper = String(label || '').trim().toUpperCase();
+    if(upper === 'RBSC1') return 'mi';
+    if(upper === 'RBPC1') return 'mis';
+    if(upper === 'RBSC2' || upper === 'RBSF2' || upper === 'RBSM2') return 'tu';
+    if(upper === 'RBSM3' || upper === 'RBSF3' || upper === 'RBPM3' || upper === 'RBPF3') return 'su';
+    if(upper === 'RBPM2') return 'vuestro';
+    if(upper === 'RBPF2') return 'vuestra';
+    return '';
+  }
+
+  function resolveHiddenArticleGloss(baseLabel){
+    const features = extractMorphFeatures(baseLabel || '');
+    return resolveStandaloneArticle(features);
+  }
+
+  function buildPrefixedPrepositionCompoundLayer(token, baseMorph, baseGloss){
+    const morph = String(baseMorph || token?.morphs || '').trim().toUpperCase();
+    const rawMorph = String(token?.morphs || '').trim().toUpperCase();
+    const morphParts = sourceMorphParts(rawMorph || morph);
+    const prepPart = morphParts.find((part) => /^(PB|PK|PL|PM|PS|PO)$/.test(part));
+    if(!prepPart) return null;
+    const isCompositePrepositionMorph = /[+,]/.test(rawMorph) || /^(PS|PO)$/.test(prepPart);
+    if(!isCompositePrepositionMorph) return null;
+    const surface = String(token?.orig || '').trim();
+    if(normalizeHebrew(surface, false) === '\u05DC\u05D9' && normalizeSpanishSourceText(baseGloss).toLowerCase() === 'me'){
+      return null;
+    }
+    const split = firstHebrewCluster(surface);
+    if(!split || !/^[\u05D1\u05DB\u05DC\u05DE]/u.test(normalizeHebrew(split.first, false))) return null;
+    const restSurface = split.rest || '';
+    const detectedSuffixPart = morphParts.find(isPronominalSuffixMorph);
+    const suffixLayer = Rules?.detectSuffixSegment
+      ? Rules.detectSuffixSegment(restSurface, baseMorph)
+      : splitFinalKafSuffix(restSurface);
+    let suffix = suffixLayer?.suffix
+      ? { surface: suffixLayer.suffix.form, label: suffixLayer.suffix.label }
+      : (suffixLayer?.suffix === null ? null : { surface: suffixLayer?.suffix || '', label: '' });
+    let baseSurface = suffixLayer?.base ?? restSurface;
+    if(!suffix?.surface && detectedSuffixPart && /^[\u05D5\u05D9\u05DA\u05DB\u05DD\u05DF\u05E0\u05D4\u05B0-\u05C7]+$/u.test(restSurface)){
+      suffix = { surface: restSurface, label: detectedSuffixPart };
+      baseSurface = '';
+    }
+    const hasHiddenArticle = morphParts.includes('XD');
+    const hasLexicalBase = Boolean(baseSurface && /[\u05D0-\u05EA]/u.test(baseSurface));
+    if(!hasLexicalBase && !suffix?.surface && !hasHiddenArticle && !/^(PS|PO)$/.test(prepPart)) return null;
+    const prepGloss = resolvePrefixedPrepositionGloss(split.first, morphParts);
+    const causalBase = /^(PS|PO)$/.test(prepPart);
+    const baseLabel = causalBase ? 'SUBS.M.SG.C' : (hasHiddenArticle ? 'SUBS.M.SG' : (baseMorph || ''));
+    const normalizedBaseGloss = causalBase ? 'causa' : normalizeSpanishLexicalCase(baseGloss, baseLabel);
+    const morphemes = [
+      {
+        surface: split.first,
+        label: 'PREP',
+        type: 'prefix',
+        glossHint: 'prep',
+        rule: 'BKL_PREFIX',
+        gloss: prepGloss
+      }
+    ];
+    if(hasHiddenArticle){
+      morphemes.push({
+        surface: '',
+        label: 'ART',
+        type: 'prefix',
+        glossHint: 'articulo oculto',
+        rule: 'SINCOPE_ARTICULO',
+        gloss: resolveHiddenArticleGloss(baseLabel)
+      });
+    }
+    if(hasLexicalBase){
+      morphemes.push({
+        surface: baseSurface,
+        label: baseLabel,
+        type: 'base',
+        glossHint: '',
+        rule: 'BASE',
+        gloss: normalizedBaseGloss
+      });
+    }
+    if(suffix?.surface){
+      morphemes.push({
+        surface: suffix.surface,
+        label: suffix.label || morphParts.find(isPronominalSuffixMorph) || '',
+        type: 'suffix',
+        glossHint: '',
+        rule: 'SUFIJO_PRONOMINAL',
+        gloss: resolvePossessiveSuffixGloss(suffix.label)
+      });
+    }
+    const suffixGloss = resolveObjectPronounGlossFromSuffix(suffix?.label || morphParts.find(isPronominalSuffixMorph));
+    let tokenGloss = '';
+    if(causalBase && suffixGloss){
+      tokenGloss = `${prepGloss} causa de ${suffixGloss}`;
+    }else if(causalBase){
+      tokenGloss = `${prepGloss} causa`;
+    }else if(!hasLexicalBase && suffixGloss){
+      tokenGloss = `${prepGloss} ${suffixGloss}`;
+    }else if(hasHiddenArticle && !hasLexicalBase){
+      tokenGloss = `${prepGloss} ${resolveHiddenArticleGloss(baseLabel)}`;
+    }
+    return {
+      original: surface,
+      morphemes,
+      base: baseSurface || restSurface,
+      baseLabel,
+      hasConstructBase: /\.C(?:$|\.)/.test(baseLabel),
+      hasPronominalSuffix: Boolean(suffix?.surface),
+      tokenGloss,
+      baseGloss: normalizedBaseGloss || baseGloss || ''
+    };
+  }
+
   function buildSpanishLayerForToken(token, context = {}){
     const sourceMorphFallback = resolveSourceMorphFallback(token);
     const oshbMorph = getOshbMorphAt(context.oshbVerseNode, token, context.posIndex);
@@ -669,8 +831,12 @@
       baseMorph = 'NPROP';
     }
     const lexical = resolveLexicalFallback(token, baseMorph, sourceGloss, context);
-    const baseGloss = lexical.gloss || sourceGloss || resolveEmptyArticleGloss(token, baseMorph, context);
-    const layer = Rules?.buildSpanishInterlinearPlan
+    let baseGloss = lexical.gloss || sourceGloss || resolveEmptyArticleGloss(token, baseMorph, context);
+    if(normalizeStrong(token?.strongs || '') === 'H3190' && /^(?:VERBO(?:\.|$)|V)/.test(String(baseMorph || '').trim().toUpperCase())){
+      baseGloss = 'vaya bien';
+    }
+    const compoundLayer = buildPrefixedPrepositionCompoundLayer(token, baseMorph, baseGloss);
+    const layer = compoundLayer || (Rules?.buildSpanishInterlinearPlan
       ? Rules.buildSpanishInterlinearPlan(token?.orig || '', baseMorph, baseGloss, {
           strong: normalizeStrong(token?.strongs),
           nextStrong: context.nextStrong || '',
@@ -685,9 +851,9 @@
             type: 'base',
             gloss: baseGloss
           }]
-        };
+        });
     const tokenGloss = Rules?.composeSpanishTokenGloss
-      ? Rules.composeSpanishTokenGloss(layer)
+      ? (compoundLayer?.tokenGloss || Rules.composeSpanishTokenGloss(layer))
       : baseGloss;
 
     return {
@@ -1034,6 +1200,7 @@
     const gloss = getEntryGloss(entry).toLowerCase();
     const morph = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
     const strong = normalizeStrong(entry?.token?.strongs || '');
+    if(morph === 'PART.EXH' || strong === 'H4994') return false;
     if(strong === 'H3588') return true;
     if(['CK', 'CI', 'AYT', 'AM', 'INTJ', 'AQB', 'AJ', 'AGT', 'ANT'].includes(morph)){
       return true;
@@ -1314,7 +1481,10 @@
       if(isConjunctionEntry(entry)){
         return null;
       }
-      if(isDirectObjectMarker(entry) || isArticleOnlyToken(entry) || isPrepositionEntry(entry)){
+      if(isPrepositionEntry(entry)){
+        return null;
+      }
+      if(isDirectObjectMarker(entry) || isArticleOnlyToken(entry)){
         continue;
       }
       if(index > 0 && items[index - 1]?.semanticRole === 'construct-head' && items[index - 1]?.constructTargetIndex === index){
@@ -1941,13 +2111,19 @@
       const features = extractMorphFeatures(entry?.baseMorph || entry?.layer?.baseLabel || '');
       if(!features.isVerbal || !features.isFinite) return;
 
-      const verbGloss = String(entry?.tokenGloss || '').trim();
+      let verbGloss = String(entry?.tokenGloss || '').trim();
       if(!verbGloss) return;
 
       const detected = determineVerbArguments(updated, index);
       let subject = features.isVolitive ? null : detected.subject;
       let directObject = detected.directObject;
       const strong = normalizeStrong(entry?.token?.strongs || '');
+      if(strong === 'H3190'){
+        const nextGloss = String(updated[index + 1]?.tokenGloss || updated[index + 1]?.baseGloss || '').trim().toLowerCase();
+        if(nextGloss === 'me' && !/^me\b/i.test(verbGloss)){
+          verbGloss = `me ${verbGloss}`;
+        }
+      }
       const isNarrativeHayah = strong === 'H1961' && !findSubjectBeforeVerb(updated, index);
       if(isNarrativeHayah){
         subject = null;
@@ -1958,7 +2134,7 @@
       const predicateComplements = !directObject && isCopularVerb(entry)
         ? collectPredicateComplementsAfterVerb(updated, index)
         : [];
-      const complements = collectTrailingPrepositionPhrases(updated, prepStartIndex);
+      const complements = (features.isVolitive || features.isImperative) ? [] : collectTrailingPrepositionPhrases(updated, prepStartIndex);
       const leadingConjunction = findLeadingClauseConjunction(updated, index, subject?.index ?? -1);
       const clauseOpeners = collectClauseOpeners(updated, subject?.index >= 0 ? subject.index : index, subject?.index ?? -1);
       const negations = collectPreVerbNegations(updated, index, subject?.index ?? -1);
