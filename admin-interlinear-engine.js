@@ -7,6 +7,9 @@
     capitalizeAssignedNames: true
   };
 
+  /** Cuando el JSON solo tiene יהוה sin nikkud, mostrar esta forma (lectura tipo Hashem). Si la fuente trae otra vocalización, prevalece. */
+  const DEFAULT_POINTED_YHWH = '\u05D9\u05B0\u05D4\u05B8\u05D5\u05B8\u05D4\u05B8'.normalize('NFC');
+
   function normalizeHebrew(value, preservePoints = true){
     return Rules?.normalizeHebrew
       ? Rules.normalizeHebrew(value, preservePoints)
@@ -468,6 +471,9 @@
             surface = oshbSurface;
           }
         }
+      }
+      if(!hebrewHasNikkud(surface) && normalizeHebrew(surface, false) === 'יהוה'){
+        surface = DEFAULT_POINTED_YHWH;
       }
       rawOccurrence += 1;
 
