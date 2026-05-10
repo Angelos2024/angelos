@@ -7,8 +7,24 @@
     capitalizeAssignedNames: true
   };
 
-  /** Cuando el JSON solo tiene יהוה sin nikkud, mostrar esta forma (lectura tipo Hashem). Si la fuente trae otra vocalización, prevalece. */
-  const DEFAULT_POINTED_YHWH = '\u05D9\u05B0\u05D4\u05B8\u05D5\u05B8\u05D4\u05B8'.normalize('NFC');
+  /**
+   * Forma por defecto tipo lectura Hashem: יְהוָה (sin qamats en la he final; el error יְהָוָהָ
+   * con ָ extra rompe tipografía y lectura).
+   */
+  const DEFAULT_POINTED_YHWH = '\u05D9\u05B0\u05D4\u05B8\u05D5\u05B8\u05D4'.normalize('NFC');
+
+  /** Corrige יְהָוָהָ u otras variantes con qamats indebido en la he final del tetragrámaton. */
+  function repairYhwhMispointing(surface){
+    if(normalizeHebrew(surface, false) !== 'יהוה') return surface;
+    let s = String(surface || '').normalize('NFC');
+    if(s === '\u05D9\u05B0\u05D4\u05B8\u05D5\u05B8\u05D4\u05B8'.normalize('NFC')){
+      return DEFAULT_POINTED_YHWH;
+    }
+    if(/\u05D5\u05B8\u05D4\u05B8$/u.test(s)){
+      s = s.replace(/\u05D5\u05B8\u05D4\u05B8$/u, '\u05D5\u05B8\u05D4');
+    }
+    return s;
+  }
 
   /**
    * Strong Hxxxx opcional: fuerza participio si la etiqueta falla; deny tiene prioridad sobre allow.
@@ -494,6 +510,7 @@
       if(!hebrewHasNikkud(surface) && normalizeHebrew(surface, false) === 'יהוה'){
         surface = DEFAULT_POINTED_YHWH;
       }
+      surface = repairYhwhMispointing(surface);
       rawOccurrence += 1;
 
       if(surface !== token.orig){
