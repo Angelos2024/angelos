@@ -387,12 +387,109 @@
     return null;
   }
 
+  function hebrewHasNikkud(text){
+    return /[\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/.test(String(text || ''));
+  }
+
+  function normalizeDivinePointedCore(text){
+    return String(text || '')
+      .normalize('NFC')
+      .replace(/[\u0591-\u05AF]/g, '')
+      .replace(/[^\u05D0-\u05EA\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]/g, '')
+      .trim();
+  }
+
+  function stripInseparablePrefixBeforeYhwh(pointed){
+    return String(pointed || '').replace(/^[\u05D1\u05DB\u05DC\u05DE\u05E9\u05D5\u05D4][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/, '');
+  }
+
+  /**
+   * Lectura sustitutiva en español según vocalización del tetragrámaton:
+   * יְהוִ… + hiriq bajo vav → Elohim; holam (וָֹ / ֹ) → Adonai; יְהוָה (qatsof sin holam distintivo) → Hashem; resto → Hashem.
+   */
+  function resolveYhwhSpanishReading(pointedSurface){
+    const core = stripInseparablePrefixBeforeYhwh(normalizeDivinePointedCore(pointedSurface));
+    const plain = normalizeHebrew(core, false);
+    if(plain !== 'יהוה') return '';
+
+    const clusters = core.match(/[\u05D0-\u05EA][\u05B0-\u05BC\u05C1-\u05C2\u05C4-\u05C7]*/g) || [];
+    const vavCluster = clusters[2] || '';
+    const lastCluster = clusters[3] || '';
+    const hasHolam = /\u05B9|\u05BA/.test(vavCluster) || /\u05B9|\u05BA/.test(lastCluster);
+
+    if(vavCluster.includes('\u05B4')) return 'Elohim';
+    if(hasHolam) return 'Adonai';
+    if(vavCluster.includes('\u05B8')) return 'Hashem';
+    return 'Hashem';
+  }
+
+  function appendSpanishReadingPreservingPunctuation(reading, sourcePhrase){
+    const { punct } = stripSpanishTrailingClausePunct(sourcePhrase);
+    const core = String(reading || '').trim();
+    return punct ? `${core}${punct}` : core;
+  }
+
+  function extractYhwhSurfacesFromVerseRaw(raw){
+    const text = String(raw || '');
+    const out = [];
+    const pattern = /<l>([^<]*)<\/l>\s*<n>\d+<\/n>\s*<s>H3068<\/s>/g;
+    let match;
+    while((match = pattern.exec(text)) !== null){
+      out.push(String(match[1] || '').trim());
+    }
+    return out;
+  }
+
+  function resolveOshbYhwhSurface(token, posIndex, oshbVerseNode){
+    const forms = Array.isArray(oshbVerseNode?.forms) ? oshbVerseNode.forms : [];
+    if(!forms.length) return '';
+    const rawNum = Number(token?.num);
+    const idx = Number.isInteger(rawNum) && rawNum >= 1 ? rawNum - 1 : posIndex;
+    const form = forms[idx];
+    if(!form) return '';
+    if(normalizeHebrew(form, false) !== 'יהוה') return '';
+    return normalizeHebrew(form, true);
+  }
+
+  function enrichYhwhTokensWithPointing(tokens, verseRaw, oshbVerseNode){
+    const fromRaw = extractYhwhSurfacesFromVerseRaw(verseRaw);
+    let rawOccurrence = 0;
+    return tokens.map((token, posIndex) => {
+      if(normalizeStrong(token?.strongs || '') !== 'H3068') return token;
+
+      let surface = String(token?.orig || '').trim();
+      if(!hebrewHasNikkud(surface)){
+        const rawCandidate = fromRaw[rawOccurrence];
+        if(rawCandidate && hebrewHasNikkud(rawCandidate)){
+          surface = normalizeHebrew(rawCandidate, true);
+        }else{
+          const oshbSurface = resolveOshbYhwhSurface(token, posIndex, oshbVerseNode);
+          if(oshbSurface && hebrewHasNikkud(oshbSurface)){
+            surface = oshbSurface;
+          }
+        }
+      }
+      rawOccurrence += 1;
+
+      if(surface !== token.orig){
+        return { ...token, orig: surface };
+      }
+      return token;
+    });
+  }
+
   function resolveLexicalFallback(token, baseMorph, sourceGloss, context = {}){
     const current = normalizeSpanishLexicalCase(sourceGloss, baseMorph);
     const currentClass = classifySourceGlossPart(current);
     const upperMorph = String(baseMorph || '').trim().toUpperCase();
     const features = extractMorphFeatures(upperMorph);
     const strong = normalizeStrong(token?.strongs || '');
+    if(strong === 'H3068'){
+      const reading = resolveYhwhSpanishReading(token?.orig || '');
+      const glossBase = reading || 'Hashem';
+      const punctSource = resolveTokenSourceGloss(token) || sourceGloss || '';
+      return { gloss: appendSpanishReadingPreservingPunctuation(glossBase, punctSource), articleHint: '' };
+    }
     const entries = getLexiconEntriesByStrong(token?.strongs);
     let lexiconResolved = entries
       .map((entry) => chooseLexicalGlossFromEntry(entry, token, baseMorph))
@@ -545,6 +642,36 @@
       .filter((item) => item && item !== ',');
   }
 
+  function normalizeTokenEsField(value){
+    if(Array.isArray(value)){
+      return value.flatMap((part) => String(part || '').trim()).filter(Boolean).join(' ');
+    }
+    return String(value || '').trim();
+  }
+
+  function stripSpanishTrailingClausePunct(text){
+    const s = String(text || '').trim();
+    const match = s.match(/^([\s\S]*?)([,:;.!?¡¿]+)$/);
+    return match
+      ? { core: match[1].trim(), punct: match[2] }
+      : { core: s, punct: '' };
+  }
+
+  /**
+   * Sufijos hebreos van tras la palabra hospedante; en español posesivos y clíticos suelen ir delante
+   * (p. ej. דְּלָתֶיךָ → «tus puertas,» no «puertas, tus»).
+   */
+  function mergeSpanishHostAndSuffixGloss(hostEs, suffixEs){
+    const host = normalizeTokenEsField(hostEs);
+    const suf = normalizeTokenEsField(suffixEs);
+    if(!host) return suf;
+    if(!suf) return host;
+    const h = stripSpanishTrailingClausePunct(host);
+    const s = stripSpanishTrailingClausePunct(suf);
+    const phrase = `${s.core} ${h.core}`.trim().replace(/\s+/g, ' ');
+    return `${phrase}${h.punct}${s.punct}`.trim();
+  }
+
   function expandCompositeToken(token){
     const origParts = Array.isArray(token?.orig) ? token.orig : [token?.orig];
     if(origParts.length <= 1){
@@ -633,11 +760,9 @@
         if(nextMorph){
           previous.morphs = prevMorph && nextMorph ? `${prevMorph}+${nextMorph}` : (prevMorph || nextMorph);
         }
-        const nextGloss = String(token?.es || '').trim();
+        const nextGloss = normalizeTokenEsField(token?.es);
         if(nextGloss){
-          previous.es = previous.es
-            ? [previous.es, nextGloss].flat().join(' ').trim()
-            : nextGloss;
+          previous.es = mergeSpanishHostAndSuffixGloss(previous.es, nextGloss);
         }
         return;
       }
@@ -649,11 +774,9 @@
         if(nextMorph){
           previous.morphs = prevMorph && nextMorph ? `${prevMorph}+${nextMorph}` : (prevMorph || nextMorph);
         }
-        const nextGloss = String(token?.es || '').trim();
+        const nextGloss = normalizeTokenEsField(token?.es);
         if(nextGloss){
-          previous.es = previous.es
-            ? [previous.es, nextGloss].flat().join(' ').trim()
-            : nextGloss;
+          previous.es = mergeSpanishHostAndSuffixGloss(previous.es, nextGloss);
         }
         return;
       }
@@ -2567,7 +2690,8 @@
   }
 
   function buildAdminVersePlan(verseNode, oshbVerseNode){
-    const tokens = getAdminVerseTokens(verseNode);
+    const merged = getAdminVerseTokens(verseNode);
+    const tokens = enrichYhwhTokensWithPointing(merged, verseNode?.raw || '', oshbVerseNode);
     const baseItems = tokens.map((token, posIndex) => buildSpanishLayerForToken(token, {
       oshbVerseNode,
       posIndex,
@@ -2594,6 +2718,9 @@
     getAdminVerseTokens,
     getOshbMorphAt,
     buildSpanishLayerForToken,
-    buildAdminVersePlan
+    buildAdminVersePlan,
+    enrichYhwhTokensWithPointing,
+    resolveYhwhSpanishReading,
+    hebrewHasNikkud
   };
 })(typeof window !== 'undefined' ? window : globalThis);
