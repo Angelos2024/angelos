@@ -10,6 +10,25 @@
   /** Cuando el JSON solo tiene יהוה sin nikkud, mostrar esta forma (lectura tipo Hashem). Si la fuente trae otra vocalización, prevalece. */
   const DEFAULT_POINTED_YHWH = '\u05D9\u05B0\u05D4\u05B8\u05D5\u05B8\u05D4\u05B8'.normalize('NFC');
 
+  /**
+   * Strong Hxxxx opcional: fuerza participio si la etiqueta falla; deny tiene prioridad sobre allow.
+   */
+  const PARTICIPLE_LEXICON_ALLOW_STRONG = new Set([
+    /* 'H3335' — יָצַר / יֹצֵר (ejemplo; descomenta si calibras contra corpus) */
+  ]);
+
+  const PARTICIPLE_LEXICON_DENY_STRONG = new Set([
+    /* colisiones raras etiqueta PTCP errónea */
+  ]);
+
+  function participleMorphTagLooksFiniteVerbVerbose(raw){
+    const u = String(raw || '').toUpperCase();
+    if(!/\bVERBO\./.test(u)) return false;
+    return /\b(PERF|IMPF|WAYY|INFC|INFA|JUSS|IMPV|COHORT|WAYYIQTOL)\b/.test(u)
+      || /\.SEQ\.PERF\b/.test(u)
+      || /\.SEQ\.IMPF\b/.test(u);
+  }
+
   function normalizeHebrew(value, preservePoints = true){
     return Rules?.normalizeHebrew
       ? Rules.normalizeHebrew(value, preservePoints)
@@ -1727,15 +1746,41 @@
     return `${core} de${punct}`;
   }
 
-  /** Participio en etiquetas OSBH/WLC: Vp… (VpAmSM3) o Vq… (VQAPSM-N «formador», Zac 12:1). */
-  function morphLooksLikeOshbActiveParticiple(morph){
-    const u = String(morph || '').trim().toUpperCase();
-    return /^V[PQ][A-Z]/.test(u);
+  /**
+   * Participio: etiquetas OSBH largas (VERBO.*.PTCP|PTCA), compactas WLC (Vp/Vq…),
+   * o lexicón Strong. Se excluyen verbos finitos por etiqueta explícita.
+   */
+  function morphLooksLikeOshbActiveParticiple(morph, token){
+    const strong = normalizeStrong(token?.strongs || '');
+    if(strong && PARTICIPLE_LEXICON_DENY_STRONG.has(strong)) return false;
+    if(strong && PARTICIPLE_LEXICON_ALLOW_STRONG.has(strong)) return true;
+
+    const raw = String(morph || '').trim();
+    const upper = raw.toUpperCase();
+
+    if(participleMorphTagLooksFiniteVerbVerbose(raw)) return false;
+
+    if(/\bVERBO\.[A-Z.]+\.(PTCP|PTCA)\b/i.test(raw)) return true;
+
+    const c = upper.replace(/[^A-Z0-9]/g, '');
+    if(/^(PTCA|PTCP|PTCS)/.test(c)) return true;
+
+    if(/^VP|^VQ/.test(c)){
+      return participleMatchesSyntaxMorphRule(morph);
+    }
+
+    const features = extractMorphFeatures(upper);
+    return Boolean(features.isVerbal && features.isParticiple);
   }
 
   function participleMatchesSyntaxMorphRule(morph){
-    const raw = String(morph || '').trim().toUpperCase();
-    const c = raw.replace(/[^A-Z0-9]/g, '');
+    const raw = String(morph || '').trim();
+    if(/\bVERBO\.[A-Z.]+\.(PTCP|PTCA)\b/i.test(raw)){
+      return true;
+    }
+
+    const upper = raw.toUpperCase();
+    const c = upper.replace(/[^A-Z0-9]/g, '');
 
     if(/^VP/.test(c)){
       if(/PM\d|MPL|PMP\d/.test(c)) return false;
@@ -1774,7 +1819,9 @@
     updated.forEach((entry, index) => {
       const morph = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim();
       const features = extractMorphFeatures(morph);
-      const isPart = (features.isVerbal && features.isParticiple) || morphLooksLikeOshbActiveParticiple(morph);
+      const tokenRef = entry?.token || {};
+      const isPart = morphLooksLikeOshbActiveParticiple(morph, tokenRef)
+        || (features.isVerbal && features.isParticiple);
       if(!isPart) return;
 
       const surface = String(entry?.token?.orig || '').trim();
@@ -2862,6 +2909,10 @@
     buildAdminVersePlan,
     enrichYhwhTokensWithPointing,
     resolveYhwhSpanishReading,
-    hebrewHasNikkud
+    hebrewHasNikkud,
+    PARTICIPLE_LEXICON_ALLOW_STRONG,
+    PARTICIPLE_LEXICON_DENY_STRONG,
+    morphLooksLikeOshbActiveParticiple,
+    participleMorphTagLooksFiniteVerbVerbose
   };
 })(typeof window !== 'undefined' ? window : globalThis);
