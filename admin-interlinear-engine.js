@@ -1675,6 +1675,140 @@
     return updated;
   }
 
+  /**
+   * LOGIC UNIT: HEBREW_PARTICIPLE_CONSTRUCT — preposición genitiva "de" tras participio en estado constructo
+   * Combina morfología de sufijo y sintaxis (palabra siguiente).
+   */
+  function hebrewSurfaceEndsConstructPluralEI(surface){
+    const n = normalizeHebrew(String(surface || ''), true).normalize('NFC');
+    return /\u05B5\u05D9$/.test(n);
+  }
+
+  function hebrewSurfaceEndsFemSingConstructAt(surface){
+    const n = normalizeHebrew(String(surface || ''), true).normalize('NFC');
+    return /\u05B7\u05EA$|\u05B6\u05EA$/.test(n);
+  }
+
+  function participleHasDefiniteArticlePrefix(entry, surface){
+    if(hasArticleMorpheme(entry)) return true;
+    let s = normalizeHebrew(String(surface || ''), true).normalize('NFC');
+    s = s.replace(/^[\u05D5\u05BC\u05B0-\u05BD]+/u, '');
+    return /^[\u05D4][\u05B8\u05B7\u05B2\u05B3\u05B1\u05B4]/.test(s);
+  }
+
+  function wordStartsWithInseparableHebrewPrep(surface){
+    let s = normalizeHebrew(String(surface || ''), true).normalize('NFC');
+    s = s.replace(/^[\u05D5\u05BC\u05B0-\u05BD]+/u, '');
+    return /^[\u05D1\u05DB\u05DC\u05DE][\u05B0-\u05BD\u05BF\u05C1-\u05C7]/.test(s);
+  }
+
+  function isDemonstrativeToken(entry){
+    const strong = normalizeStrong(entry?.token?.strongs || '');
+    if(/^(H2088|H1975|H1976|H428)$/.test(strong)) return true;
+    const morph = String(entry?.baseMorph || entry?.layer?.baseLabel || '').toUpperCase();
+    return /\b(DEMO|DEM)\b/.test(morph);
+  }
+
+  function glossAlreadyHasGenitiveDe(text){
+    const g = String(text || '').trim();
+    if(!g) return false;
+    if(/\sde\s/i.test(g)) return true;
+    if(/\bde\s+(?:el|la|los|las|los|mi|mis|tu|tus|su|sus|él|ella|ellos|ellas|esto|esta)\b/i.test(g)) return true;
+    return false;
+  }
+
+  function appendGenitiveDeBeforeClausePunct(gloss){
+    let g = String(gloss || '').trim();
+    if(!g) return g;
+    const stripped = stripSpanishTrailingClausePunct(g);
+    let core = stripped.core.trim();
+    const punct = stripped.punct || '';
+    if(/\bde$/i.test(core)) return g;
+    return `${core} de${punct}`;
+  }
+
+  /** Participio en etiquetas OSBH/WLC: Vp… (VpAmSM3) o Vq… (VQAPSM-N «formador», Zac 12:1). */
+  function morphLooksLikeOshbActiveParticiple(morph){
+    const u = String(morph || '').trim().toUpperCase();
+    return /^V[PQ][A-Z]/.test(u);
+  }
+
+  function participleMatchesSyntaxMorphRule(morph){
+    const raw = String(morph || '').trim().toUpperCase();
+    const c = raw.replace(/[^A-Z0-9]/g, '');
+
+    if(/^VP/.test(c)){
+      if(/PM\d|MPL|PMP\d/.test(c)) return false;
+      if(/SM\d|SMS/.test(c)) return true;
+      if(/PF\d|PFP/.test(c)) return true;
+    }
+    if(/^VQ/.test(c)){
+      if(/PM\d|MPL|PMP\d/.test(c)) return false;
+      if(/PSM|SMN/.test(c)) return true;
+      if(/PF\d|PFP/.test(c)) return true;
+    }
+    if(/^(PTCA|PTCP|PTCS)/.test(c)) return true;
+
+    return false;
+  }
+
+  function findNextNominalHeadForParticipleConstruct(items, startIndex){
+    for(let j = startIndex + 1; j < items.length; j += 1){
+      const e = items[j];
+      if(isDirectObjectMarker(e)) continue;
+      if(isArticleOnlyToken(e)) continue;
+      if(isConjunctionEntry(e)) continue;
+      if(isClauseParticleEntry(e)) continue;
+      if(isPrepositionEntry(e)) return null;
+      const f = extractMorphFeatures(e?.baseMorph || e?.layer?.baseLabel || '');
+      if(f.isNominal || f.isProper) return j;
+      if(isDemonstrativeToken(e)) return j;
+      if(f.isVerbal && !f.isParticiple) return null;
+      return null;
+    }
+    return null;
+  }
+
+  function applyParticipleConstructGenitive(items){
+    const updated = items.map((e) => ({ ...e }));
+    updated.forEach((entry, index) => {
+      const morph = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim();
+      const features = extractMorphFeatures(morph);
+      const isPart = (features.isVerbal && features.isParticiple) || morphLooksLikeOshbActiveParticiple(morph);
+      if(!isPart) return;
+
+      const surface = String(entry?.token?.orig || '').trim();
+      if(!surface) return;
+
+      if(participleHasDefiniteArticlePrefix(entry, surface)) return;
+
+      const rule01 = hebrewSurfaceEndsConstructPluralEI(surface) || hebrewSurfaceEndsFemSingConstructAt(surface);
+      const rule03 = participleMatchesSyntaxMorphRule(morph);
+      const rule02 = Boolean(entry?.layer?.hasPronominalSuffix);
+
+      if(!rule01 && !rule03 && !rule02) return;
+
+      if(rule01 || rule03){
+        const nextIdx = findNextNominalHeadForParticipleConstruct(updated, index);
+        if(nextIdx == null) return;
+        const nextSurface = String(updated[nextIdx]?.token?.orig || '').trim();
+        if(nextSurface && wordStartsWithInseparableHebrewPrep(nextSurface)) return;
+      }
+
+      const tokenGloss = String(entry?.tokenGloss || '').trim();
+      const baseGloss = String(entry?.baseGloss || '').trim();
+      if(glossAlreadyHasGenitiveDe(tokenGloss)) return;
+
+      updated[index] = {
+        ...entry,
+        tokenGloss: appendGenitiveDeBeforeClausePunct(tokenGloss),
+        baseGloss: appendGenitiveDeBeforeClausePunct(baseGloss || tokenGloss),
+        semanticRole: entry.semanticRole || 'participle-construct-genitive'
+      };
+    });
+    return updated;
+  }
+
   function findPhraseTargetAfter(items, startIndex){
     let articleIndex = -1;
     for(let index = startIndex + 1; index < items.length; index += 1){
@@ -2705,7 +2839,8 @@
     }));
     const kiItems = applyKiParticleSemantics(baseItems);
     const constructItems = applyConstructSemantics(kiItems);
-    const phraseItems = applySyntacticPhraseSemantics(constructItems);
+    const participleConstructItems = applyParticipleConstructGenitive(constructItems);
+    const phraseItems = applySyntacticPhraseSemantics(participleConstructItems);
     const clauseItems = applyClauseSemantics(phraseItems);
     const participleItems = applyParticipleClauseSemantics(clauseItems);
     const specialItems = applySpecialClauseSemantics(participleItems);
