@@ -4,6 +4,24 @@
   const ADMIN_PASSWORD_HASH = '9ece8d19ac8b4bb531ad35e6e6ef440e9e4815868d0f8912585b97f0e6dc2d8c';
   const LAB_MODE_LABEL = 'Morfologia AT';
 
+  // Tanda 1: versionado de datos + ajustes de carga.
+  // Cambia DATA_VERSION cuando se actualicen los JSON fuente para invalidar caches.
+  const DATA_VERSION = '2026-05-14';
+  const RENDER_BATCH_SIZE = 6;
+  const IDB_NAME = 'angelos-admin-cache';
+  const IDB_STORE = 'json-blobs';
+  const IDB_VERSION = 1;
+  const NORMALIZE_CACHE_LIMIT = 50000;
+
+  // Tanda 2: índices precompilados (genéralos con scripts/build-bible-indices.js).
+  const MANIFEST_PATH = './IdiomaORIGEN/manifest.json';
+  const MORPH_INDEX_PATH = './IdiomaORIGEN/morph-index.min.json';
+
+  let renderToken = 0;
+  let chapterListSlug = null;
+  let idbPromise = null;
+  let manifestPromise = null;
+
   const OT_BOOKS = [
     ['genesis', 'Genesis', '01_Génesis.json'],
     ['exodo', 'Exodo', '02_Éxodo.json'],
@@ -51,6 +69,9 @@
   const chapterCountCache = new Map();
   const interlinearCache = new Map();
   const oshbMorphCache = new Map();
+  // Tanda 3: caches por capítulo (clave "slug:N"). Liviano y separado del libro completo.
+  const interlinearChapterCache = new Map();
+  const oshbChapterCache = new Map();
   let hebrewDictionaryPromise = null;
   let hebrewMorphIndexPromise = null;
 
@@ -103,8 +124,16 @@
       .replace(/"/g, '&quot;');
   }
 
+  const normalizeHebrewCachePointed = new Map();
+  const normalizeHebrewCachePlain = new Map();
+
   function normalizeHebrew(value, preservePoints = false){
-    let clean = String(value || '')
+    const key = String(value || '');
+    if(!key) return '';
+    const cache = preservePoints ? normalizeHebrewCachePointed : normalizeHebrewCachePlain;
+    const hit = cache.get(key);
+    if(hit !== undefined) return hit;
+    let clean = key
       .replace(/[\u200c-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, '')
       .replace(/[\u0591-\u05AF]/g, '')
       .replace(/[\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4]/g, '')
@@ -112,6 +141,8 @@
     if(!preservePoints){
       clean = clean.replace(/[\u05B0-\u05BC\u05BD\u05BF\u05C1-\u05C2\u05C7]/g, '');
     }
+    if(cache.size >= NORMALIZE_CACHE_LIMIT) cache.clear();
+    cache.set(key, clean);
     return clean;
   }
 
@@ -160,10 +191,64 @@
     return true;
   }
 
+  function openIdb(){
+    if(idbPromise) return idbPromise;
+    idbPromise = new Promise((resolve, reject) => {
+      if(typeof indexedDB === 'undefined'){ reject(new Error('IndexedDB no disponible')); return; }
+      let req;
+      try { req = indexedDB.open(IDB_NAME, IDB_VERSION); }
+      catch(error){ reject(error); return; }
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if(!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE);
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+      req.onblocked = () => reject(new Error('IndexedDB bloqueada'));
+    }).catch((error) => { idbPromise = null; throw error; });
+    return idbPromise;
+  }
+
+  async function idbGet(key){
+    try {
+      const db = await openIdb();
+      return await new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE, 'readonly');
+        const req = tx.objectStore(IDB_STORE).get(key);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => reject(req.error);
+      });
+    } catch(_error){
+      return null;
+    }
+  }
+
+  async function idbPut(key, payload){
+    try {
+      const db = await openIdb();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        const req = tx.objectStore(IDB_STORE).put(payload, key);
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      });
+    } catch(_error){
+      // Sin persistencia: continuamos con el cache en memoria.
+    }
+  }
+
   async function loadJson(path){
-    const response = await fetch(path, { cache: 'no-store' });
+    const cacheKey = `${DATA_VERSION}::${path}`;
+    const cached = await idbGet(cacheKey);
+    if(cached && cached.version === DATA_VERSION && cached.data !== undefined){
+      return cached.data;
+    }
+    const url = path.includes('?') ? path : `${path}?v=${encodeURIComponent(DATA_VERSION)}`;
+    const response = await fetch(url, { cache: 'default' });
     if(!response.ok) throw new Error(`No se pudo cargar ${path} (HTTP ${response.status})`);
-    return response.json();
+    const data = await response.json();
+    idbPut(cacheKey, { version: DATA_VERSION, data, ts: Date.now() });
+    return data;
   }
 
   async function getInterlinearBook(slug){
@@ -187,8 +272,110 @@
     return oshbMorphCache.get(slug);
   }
 
+  function getBookManifestInfo(manifest, slug){
+    return manifest && manifest.books ? manifest.books[slug] : null;
+  }
+
+  function buildChapterUrl(scope, baseName, chapter){
+    const safeBase = encodeURIComponent(baseName);
+    return `./IdiomaORIGEN/${scope}/chapters/${safeBase}/${chapter}.json`;
+  }
+
+  async function getInterlinearChapter(slug, chapter){
+    const cacheKey = `${slug}:${chapter}`;
+    if(interlinearChapterCache.has(cacheKey)) return interlinearChapterCache.get(cacheKey);
+
+    const book = BOOK_MAP.get(slug);
+    if(!book) throw new Error('Libro no soportado en el laboratorio hebreo.');
+
+    const manifest = await getManifest().catch(() => null);
+    const info = getBookManifestInfo(manifest, slug);
+    const baseName = (info && info.base) || book.file.replace(/\.json$/i, '');
+
+    if(info && info.hasInterlinearChapters){
+      const url = buildChapterUrl('interlineal', baseName, chapter);
+      const promise = loadJson(url).catch(async (error) => {
+        interlinearChapterCache.delete(cacheKey);
+        // Fallback: extraer del libro entero.
+        const full = await getInterlinearBook(slug);
+        const node = full?.chapters?.[String(chapter)] || null;
+        if(!node) throw error;
+        return node;
+      });
+      interlinearChapterCache.set(cacheKey, promise);
+      return promise;
+    }
+
+    // Sin chapter files: derivamos del libro completo (compatibilidad legada).
+    const full = await getInterlinearBook(slug);
+    const node = full?.chapters?.[String(chapter)] || null;
+    interlinearChapterCache.set(cacheKey, Promise.resolve(node));
+    return node;
+  }
+
+  async function getOshbMorphChapter(slug, chapter){
+    const cacheKey = `${slug}:${chapter}`;
+    if(oshbChapterCache.has(cacheKey)) return oshbChapterCache.get(cacheKey);
+
+    const book = BOOK_MAP.get(slug);
+    if(!book){
+      oshbChapterCache.set(cacheKey, Promise.resolve(null));
+      return null;
+    }
+
+    const manifest = await getManifest().catch(() => null);
+    const info = getBookManifestInfo(manifest, slug);
+    const baseName = (info && info.base) || book.file.replace(/\.json$/i, '');
+
+    if(info && info.hasOshbChapters){
+      const url = buildChapterUrl('oshb-morph', baseName, chapter);
+      const promise = loadJson(url).catch(async () => {
+        oshbChapterCache.delete(cacheKey);
+        const full = await getOshbMorphBook(slug).catch(() => null);
+        return full?.chapters?.[String(chapter)] || null;
+      });
+      oshbChapterCache.set(cacheKey, promise);
+      return promise;
+    }
+
+    // Sin OSHB atomizado: el libro completo (puede ser pequeño o estar vacío).
+    const full = await getOshbMorphBook(slug).catch(() => null);
+    const node = full?.chapters?.[String(chapter)] || null;
+    oshbChapterCache.set(cacheKey, Promise.resolve(node));
+    return node;
+  }
+
+  async function getManifest(){
+    if(manifestPromise) return manifestPromise;
+    manifestPromise = loadJson(MANIFEST_PATH).then((manifest) => {
+      if(manifest && manifest.books && typeof manifest.books === 'object'){
+        for(const [slug, info] of Object.entries(manifest.books)){
+          if(info && Number.isInteger(info.chapters) && info.chapters > 0){
+            chapterCountCache.set(slug, info.chapters);
+          }
+        }
+      }
+      return manifest;
+    }).catch((error) => {
+      // Sin manifest seguimos con la ruta antigua (descarga libro completo).
+      manifestPromise = null;
+      throw error;
+    });
+    return manifestPromise;
+  }
+
   async function getChapterCount(slug){
     if(chapterCountCache.has(slug)) return chapterCountCache.get(slug);
+    try {
+      const manifest = await getManifest();
+      const fromManifest = manifest?.books?.[slug]?.chapters;
+      if(Number.isInteger(fromManifest) && fromManifest > 0){
+        chapterCountCache.set(slug, fromManifest);
+        return fromManifest;
+      }
+    } catch(_error){
+      // Caemos al fallback de descargar el libro entero.
+    }
     const book = await getInterlinearBook(slug);
     const count = Object.keys(book?.chapters || {}).length;
     chapterCountCache.set(slug, count);
@@ -278,9 +465,41 @@
     return '';
   }
 
+  function hydrateMorphIndexFromPrecomputed(precomputed){
+    if(!precomputed || typeof precomputed !== 'object') return null;
+    const sourcePointed = precomputed.byPointed || precomputed.pointed;
+    const sourcePlain = precomputed.byPlain || precomputed.plain;
+    const sourceStrong = precomputed.byStrong;
+    if(!sourcePointed || !sourcePlain || !sourceStrong) return null;
+    const toMap = (obj) => {
+      const result = new Map();
+      if(!obj) return result;
+      for(const key of Object.keys(obj)){
+        const value = obj[key];
+        if(Array.isArray(value)) result.set(key, value);
+      }
+      return result;
+    };
+    return {
+      pointed: toMap(sourcePointed),
+      plain: toMap(sourcePlain),
+      byStrong: toMap(sourceStrong)
+    };
+  }
+
   async function getHebrewMorphIndex(){
     if(!hebrewMorphIndexPromise){
       hebrewMorphIndexPromise = (async () => {
+        // Ruta rápida: morph-index.min.json generado por scripts/build-bible-indices.js
+        try {
+          const precomputed = await loadJson(MORPH_INDEX_PATH);
+          const hydrated = hydrateMorphIndexFromPrecomputed(precomputed);
+          if(hydrated) return hydrated;
+        } catch(_error){
+          // Sin morph-index precomputado: caemos al reindexado legado.
+        }
+
+        // Fallback: reconstruir el índice desde el diccionario unificado.
         const raw = await getHebrewDictionary();
         const entries = Array.isArray(raw) ? raw : (raw?.items || raw?.entries || []);
         const pointed = new Map();
@@ -515,18 +734,42 @@
     const book = BOOK_MAP.get(slug);
     if(els.chapterTitle) els.chapterTitle.textContent = `${book?.label || ''} · capitulos`;
     if(!els.chapterList) return;
-    els.chapterList.innerHTML = '';
-    for(let i = 1; i <= total; i += 1){
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = `chapter-chip${i === state.chapter && slug === state.slug ? ' is-active' : ''}`;
-      button.textContent = String(i);
-      button.addEventListener('click', async () => {
-        closeBookMenu();
-        await navigateTo(slug, i);
-      });
-      els.chapterList.appendChild(button);
+
+    if(chapterListSlug !== slug){
+      chapterListSlug = slug;
+      const fragment = document.createDocumentFragment();
+      for(let i = 1; i <= total; i += 1){
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'chapter-chip';
+        button.dataset.chapter = String(i);
+        button.textContent = String(i);
+        fragment.appendChild(button);
+      }
+      els.chapterList.innerHTML = '';
+      els.chapterList.appendChild(fragment);
     }
+
+    const activeIndex = (slug === state.slug) ? state.chapter : -1;
+    els.chapterList.querySelectorAll('.chapter-chip').forEach((btn) => {
+      const idx = Number(btn.dataset.chapter);
+      btn.classList.toggle('is-active', idx === activeIndex);
+    });
+  }
+
+  function bindChapterListDelegation(){
+    if(!els.chapterList || els.chapterList.dataset.delegated === '1') return;
+    els.chapterList.dataset.delegated = '1';
+    els.chapterList.addEventListener('click', async (event) => {
+      const button = event.target.closest('.chapter-chip');
+      if(!button || !els.chapterList.contains(button)) return;
+      const idx = Number(button.dataset.chapter);
+      if(!Number.isInteger(idx) || idx < 1) return;
+      const slug = chapterListSlug || state.slug;
+      closeBookMenu();
+      try { await navigateTo(slug, idx); }
+      catch(error){ handleError(error); }
+    });
   }
 
   function openBookMenu(){
@@ -719,10 +962,10 @@
     return merged;
   }
 
-  async function buildVerseCardHtml(verseNumber, verseNode, oshbVerseNode = null){
-    const versePlan = AdminEngine?.buildAdminVersePlan
+  async function buildVerseCardHtml(verseNumber, verseNode, oshbVerseNode = null, precomputedPlan = null){
+    const versePlan = precomputedPlan || (AdminEngine?.buildAdminVersePlan
       ? AdminEngine.buildAdminVersePlan(verseNode, oshbVerseNode)
-      : { items: [] };
+      : { items: [] });
     const rawRows = await Promise.all(versePlan.items.map(async (entry, posIndex) => {
       const token = entry.token || {};
       const parsedNum = Number(token?.num);
@@ -774,20 +1017,104 @@
     `;
   }
 
+  function paintCardsInBatches(mount, cards, isAlive){
+    mount.innerHTML = '';
+    return new Promise((resolve) => {
+      let cursor = 0;
+      const scheduler = window.requestAnimationFrame
+        ? (cb) => window.requestAnimationFrame(cb)
+        : (cb) => setTimeout(cb, 16);
+      const step = () => {
+        if(typeof isAlive === 'function' && !isAlive()){ resolve(); return; }
+        const end = Math.min(cursor + RENDER_BATCH_SIZE, cards.length);
+        if(end > cursor){
+          const tmp = document.createElement('div');
+          tmp.innerHTML = cards.slice(cursor, end).join('');
+          const fragment = document.createDocumentFragment();
+          while(tmp.firstChild) fragment.appendChild(tmp.firstChild);
+          mount.appendChild(fragment);
+        }
+        cursor = end;
+        if(cursor >= cards.length){ resolve(); return; }
+        scheduler(step);
+      };
+      scheduler(step);
+    });
+  }
+
+  function schedulePrefetch(slug, chapter, chapterTotal){
+    if(!Array.isArray(OT_BOOKS) || !OT_BOOKS.length) return;
+
+    const sameBookChapters = [];
+    if(Number.isInteger(chapter)){
+      if(chapter + 1 <= chapterTotal) sameBookChapters.push(chapter + 1);
+      if(chapter - 1 >= 1) sameBookChapters.push(chapter - 1);
+    }
+
+    const adjacentBooks = [];
+    const currentIndex = OT_BOOKS.findIndex(([entrySlug]) => entrySlug === slug);
+    if(currentIndex >= 0){
+      if(chapter >= chapterTotal && currentIndex + 1 < OT_BOOKS.length){
+        adjacentBooks.push(OT_BOOKS[currentIndex + 1][0]);
+      }
+      if(chapter <= 1 && currentIndex > 0){
+        adjacentBooks.push(OT_BOOKS[currentIndex - 1][0]);
+      }
+    }
+
+    if(!sameBookChapters.length && !adjacentBooks.length) return;
+
+    const run = () => {
+      // Capítulos vecinos del mismo libro (Tanda 3): pequeños y baratos.
+      sameBookChapters.forEach((targetChapter) => {
+        getInterlinearChapter(slug, targetChapter).catch(() => {});
+        getOshbMorphChapter(slug, targetChapter).catch(() => {});
+      });
+      // Libro vecino: pre-caliente del capítulo 1 si el manifest lo permite.
+      adjacentBooks.forEach((targetSlug) => {
+        getInterlinearChapter(targetSlug, 1).catch(() => {
+          // Si el chapter file no está disponible para ese libro, caemos al libro completo.
+          getInterlinearBook(targetSlug).catch(() => {});
+        });
+      });
+    };
+
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 800));
+    idle(run);
+  }
+
   async function renderEditor(){
+    const token = ++renderToken;
+    const isAlive = () => token === renderToken;
+
     setBadge('', '');
     if(els.mount) els.mount.innerHTML = '<div class="text-muted">Cargando morfologia...</div>';
 
     if(!window.AdminHebrewLexicon){
       window.AdminHebrewLexicon = await getHebrewMorphIndex().catch(() => null);
+      if(!isAlive()) return;
     }
 
-    const interlinearBook = await getInterlinearBook(state.slug);
-    const chapterTotal = await getChapterCount(state.slug);
-    if(state.chapter > chapterTotal) state.chapter = chapterTotal;
-    const oshbBook = await getOshbMorphBook(state.slug).catch(() => null);
+    // Resolvemos el total de capítulos vía manifest (sin descargar libro entero).
+    const manifest = await getManifest().catch(() => null);
+    if(!isAlive()) return;
+    const bookInfo = getBookManifestInfo(manifest, state.slug);
+    let chapterTotal = bookInfo && Number.isInteger(bookInfo.chapters) && bookInfo.chapters > 0
+      ? bookInfo.chapters
+      : await getChapterCount(state.slug).catch(() => 0);
+    if(!isAlive()) return;
+    if(chapterTotal > 0 && state.chapter > chapterTotal) state.chapter = chapterTotal;
 
-    const interlinearVerses = getInterlinearVerses(interlinearBook, state.chapter);
+    // Tanda 3: traemos solo el capítulo en juego (interlineal + OSHB) en paralelo.
+    const [interlinearChapter, oshbChapter] = await Promise.all([
+      getInterlinearChapter(state.slug, state.chapter),
+      getOshbMorphChapter(state.slug, state.chapter).catch(() => null)
+    ]);
+    if(!isAlive()) return;
+
+    const interlinearVerses = interlinearChapter && typeof interlinearChapter === 'object'
+      ? interlinearChapter
+      : {};
     const verseNumbers = Object.keys(interlinearVerses).sort((a, b) => Number(a) - Number(b));
     if(!verseNumbers.length){
       if(els.mount) els.mount.innerHTML = '<div class="admin-empty-state">No se encontro texto hebreo para este capitulo.</div>';
@@ -797,19 +1124,30 @@
       return;
     }
 
-    let tokenCount = 0;
-    const cards = [];
-    for(const verseNumber of verseNumbers){
-      const verseNode = interlinearVerses[verseNumber];
-      const oshbVerseNode = oshbBook?.chapters?.[String(state.chapter)]?.[verseNumber] || null;
-      const versePlan = AdminEngine?.buildAdminVersePlan
-        ? AdminEngine.buildAdminVersePlan(verseNode, oshbVerseNode)
-        : { tokenCount: 0 };
-      tokenCount += versePlan.tokenCount || 0;
-      cards.push(await buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode, oshbVerseNode));
-    }
+    // Si no obtuvimos chapterTotal del manifest, usamos lo que hay localmente.
+    if(!chapterTotal) chapterTotal = Math.max(state.chapter, 1);
 
-    if(els.mount) els.mount.innerHTML = cards.join('');
+    const versePlans = verseNumbers.map((verseNumber) => {
+      const verseNode = interlinearVerses[verseNumber];
+      const oshbVerseNode = oshbChapter && typeof oshbChapter === 'object'
+        ? (oshbChapter[verseNumber] || null)
+        : null;
+      const plan = AdminEngine?.buildAdminVersePlan
+        ? AdminEngine.buildAdminVersePlan(verseNode, oshbVerseNode)
+        : { items: [], tokenCount: 0 };
+      return { verseNumber, verseNode, oshbVerseNode, plan };
+    });
+
+    const tokenCount = versePlans.reduce((acc, item) => acc + (item.plan.tokenCount || 0), 0);
+
+    const cards = await Promise.all(versePlans.map(({ verseNumber, verseNode, oshbVerseNode, plan }) =>
+      buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode, oshbVerseNode, plan)
+    ));
+    if(!isAlive()) return;
+
+    if(els.mount) await paintCardsInBatches(els.mount, cards, isAlive);
+    if(!isAlive()) return;
+
     if(els.title) els.title.textContent = `Laboratorio morfologico · ${state.label} ${state.chapter}`;
     if(els.meta) els.meta.textContent = `${state.label} ${state.chapter}`;
     if(els.panelTitle) els.panelTitle.textContent = `${state.label} ${state.chapter}`;
@@ -819,7 +1157,9 @@
     updateDraftStateLabel();
     renderBookLists(state.slug);
     await renderChapterList(state.slug);
+    if(!isAlive()) return;
     updateChapterButtons(chapterTotal);
+    schedulePrefetch(state.slug, state.chapter, chapterTotal);
   }
 
   function updateChapterButtons(total){
@@ -929,6 +1269,7 @@
 
     setupThemeMenu();
     setupBookMenu();
+    bindChapterListDelegation();
     bindEvents();
     try{
       await renderEditor();
