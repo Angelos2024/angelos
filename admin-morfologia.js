@@ -1044,20 +1044,14 @@
     const lxxVN = Layer.targetLxxVerseFromShiftTable(slug, chapterNum, hv, shiftCfg);
     const tokens = lxxBundle.verses[String(lxxVN)];
     if(!Array.isArray(tokens) || !tokens.length) return '';
-    const cells = tokens.map((token) => {
-      const surface = String(token?.w || '');
-      const morphRaw = String(token?.morph || '');
-      const morphDec = Layer.decodeMorphAbbrev(morphRaw);
-      const lemma = String(token?.lemma || '');
-      const morphDisplay = morphDec && morphDec !== morphRaw ? `${morphRaw} — ${morphDec}` : morphRaw;
-      return `
-        <div class="admin-lxx-token">
-          <div class="admin-lxx-surface">${escapeHtml(surface)}</div>
-          <div class="admin-lxx-morph">${escapeHtml(morphDisplay)}</div>
-          <div class="admin-lxx-lemma">${escapeHtml(lemma)}</div>
-        </div>
-      `;
-    }).join('');
+
+    /** Solo forma superficial (w); sin morfología ni lema — flujo léxico del verso. */
+    const flow = tokens
+      .map((token) => String(token?.w || '').trim())
+      .filter(Boolean)
+      .map((surface) => `<span class="admin-lxx-word">${escapeHtml(surface)}</span>`)
+      .join('');
+
     const shifted = Number(lxxVN) !== hv;
     const headMeta = shifted
       ? `<span class="admin-lxx-shift-hint">Masora v${hv}→LXX v${lxxVN}</span>`
@@ -1069,7 +1063,9 @@
           <span class="admin-lxx-ref">${escapeHtml(String(lxxBundle.edition || ''))} ${escapeHtml(String(chapterNum))}:${escapeHtml(String(lxxVN))}</span>
           ${headMeta}
         </div>
-        <div class="admin-lxx-strip">${cells}</div>
+        <div class="admin-lxx-strip admin-lxx-strip-flow">
+          <p class="admin-lxx-verse-flow">${flow}</p>
+        </div>
       </div>
     `;
   }
