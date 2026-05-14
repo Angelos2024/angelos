@@ -582,10 +582,41 @@
     return /^INTJ\./i.test(fallbackMorph) ? 'INTJ' : fallbackMorph;
   }
 
+  // El corpus usa case-sensitive en la LETRA DE FORMA verbal:
+  //   's' (lower) PERF qatal     vs  'S' (upper) — no usado
+  //   'm' (lower) WAYYIQT        vs  'M' (upper) IMPF yiqtol futuro
+  //   'f' (lower) SEQ.PERF weqatal vs 'F' (upper) — IMPF (alias OSHB)
+  //   'C' (upper) COHORT          vs  'c' (lower) — no usado
+  //   'J' (upper) JUSS jussive
+  //   'I' (upper) IMPV imperativo
+  //   'T' (upper) INFC infinitivo construct
+  //   'p'/'v' (lower) PTCA participio activo (los del corpus usan guiones, no entran al regex simple)
+  // El resto de los segmentos (stem, número, género, persona) sí son case-insensitive.
+  const VERBAL_FORM_MAP = {
+    s: 'PERF',
+    m: 'WAYYIQT',
+    f: 'SEQ.PERF',
+    p: 'PTCA',
+    v: 'PTCA',
+    t: 'PTCP',
+    r: 'PTCP',
+    S: 'PERF',
+    M: 'IMPF',
+    F: 'IMPF',
+    C: 'COHORT',
+    J: 'JUSS',
+    I: 'IMPV',
+    T: 'INFC',
+    A: 'INFA',
+    P: 'PTCA',
+    R: 'PTCP'
+  };
+
   function decodeHebrewMorphCode(rawCode){
-    const code = String(rawCode || '').trim().toUpperCase();
+    const code = String(rawCode || '').trim();
     if(!code) return '';
-    if(/^INTJ\./.test(code)) return 'INTJ';
+    const upper = code.toUpperCase();
+    if(/^INTJ\./.test(upper)) return 'INTJ';
     if(code.includes('.')) return code;
 
     const exact = {
@@ -614,7 +645,7 @@
       XR: 'REL',
       XT: 'PART'
     };
-    if(exact[code]) return exact[code];
+    if(exact[upper]) return exact[upper];
 
     const stemMap = {
       Q: 'QAL',
@@ -625,16 +656,6 @@
       V: 'HOF',
       O: 'POLEL',
       M: 'POAL'
-    };
-    const verbalFormMap = {
-      S: 'PERF',
-      F: 'IMPF',
-      M: 'WAYQ',
-      J: 'JUSS',
-      I: 'IMPV',
-      T: 'INFC',
-      P: 'PTCA',
-      R: 'PTCP'
     };
     const numberMap = {
       S: 'SG',
@@ -648,17 +669,19 @@
       U: 'U'
     };
 
-    const simpleVerb = code.match(/^V([A-Z])A([A-Z])([SPD])([MFCU])([123])$/);
+    // OJO: el match preserva el case de la 4ª letra (forma verbal) — ahí está la distinción m/M, s/f, etc.
+    const simpleVerb = code.match(/^V([A-Za-z])A([A-Za-z])([SPDspd])([MFCUmfcu])([123])$/);
     if(simpleVerb){
       const [, stemCode, formCode, numberCode, genderCode, personCode] = simpleVerb;
-      const stem = stemMap[stemCode] || stemCode;
-      const form = verbalFormMap[formCode] || formCode;
-      const number = numberMap[numberCode] || numberCode;
-      const gender = genderMap[genderCode] || genderCode;
+      const stemKey = stemCode.toUpperCase();
+      const stem = stemMap[stemKey] || stemKey;
+      const form = VERBAL_FORM_MAP[formCode] || VERBAL_FORM_MAP[formCode.toUpperCase()] || formCode.toUpperCase();
+      const number = numberMap[numberCode.toUpperCase()] || numberCode.toUpperCase();
+      const gender = genderMap[genderCode.toUpperCase()] || genderCode.toUpperCase();
       return `VERBO.${stem}.${form}.P${personCode}.${gender}.${number}`;
     }
 
-    return code;
+    return upper;
   }
 
   async function resolveMorphLabel(token, context = {}){

@@ -40,7 +40,8 @@
   function participleMorphTagLooksFiniteVerbVerbose(raw){
     const u = String(raw || '').toUpperCase();
     if(!/\bVERBO\./.test(u)) return false;
-    return /\b(PERF|IMPF|WAYY|INFC|INFA|JUSS|IMPV|COHORT|WAYYIQTOL)\b/.test(u)
+    // Acepta tanto WAYY (legado) como WAYYIQT/WAYYIQTOL (forma OSHB y la que ahora genera decodeHebrewMorphCode).
+    return /\b(PERF|IMPF|WAYY(?:IQT(?:OL)?)?|INFC|INFA|JUSS|IMPV|COHORT)\b/.test(u)
       || /\.SEQ\.PERF\b/.test(u)
       || /\.SEQ\.IMPF\b/.test(u);
   }
