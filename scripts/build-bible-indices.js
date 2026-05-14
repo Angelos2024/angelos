@@ -18,6 +18,10 @@
  *     uno a uno cuando el manifest los anuncia, evitando descargar
  *     libros completos.
  *
+ *   Otro script paralelo fragmenta los libros griegos Rahlfs (admin LXX):
+ *     node scripts/atomize-lxx-chapters.js
+ *     Salida -> LXX/chapters/<Edition>/<N>.json (ver archivo para opciones).
+ *
  * Uso:
  *   node scripts/build-bible-indices.js
  *   DATA_VERSION=2026-05-14 node scripts/build-bible-indices.js

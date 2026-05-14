@@ -6,7 +6,7 @@
 
   // Tanda 1: versionado de datos + ajustes de carga.
   // Cambia DATA_VERSION cuando se actualicen los JSON fuente para invalidar caches.
-  const DATA_VERSION = '2026-05-14';
+  const DATA_VERSION = '2026-05-16';
   const RENDER_BATCH_SIZE = 6;
   const IDB_NAME = 'angelos-admin-cache';
   const IDB_STORE = 'json-blobs';
@@ -16,11 +16,16 @@
   // Tanda 2: índices precompilados (genéralos con scripts/build-bible-indices.js).
   const MANIFEST_PATH = './IdiomaORIGEN/manifest.json';
   const MORPH_INDEX_PATH = './IdiomaORIGEN/morph-index.min.json';
+  const LXX_SHIFT_PATH = './IdiomaORIGEN/lxx-mt-verse-shift.min.json';
+  /** Fragmentos opcionales: generados por `node scripts/atomize-lxx-chapters.js` */
+  const LXX_ATOMIZED_DIR = './LXX/chapters';
 
   let renderToken = 0;
   let chapterListSlug = null;
   let idbPromise = null;
   let manifestPromise = null;
+  let lxxShiftPromise = null;
+  const otLxxChapterCache = new Map();
 
   const OT_BOOKS = [
     ['genesis', 'Genesis', '01_Génesis.json'],
@@ -380,6 +385,51 @@
     const count = Object.keys(book?.chapters || {}).length;
     chapterCountCache.set(slug, count);
     return count;
+  }
+
+  async function getLxxShiftConfig(){
+    if(lxxShiftPromise) return lxxShiftPromise;
+    lxxShiftPromise = loadJson(LXX_SHIFT_PATH)
+      .then((raw) => (raw && typeof raw === 'object' ? raw : { chapters: {} }))
+      .catch(() => ({ chapters: {} }));
+    return lxxShiftPromise;
+  }
+
+  async function getOtLxxChapterBundle(slug, chapterNum){
+    const Layer = window.AdminOtLxxLayer;
+    const key = `${DATA_VERSION}::lxx::${slug}::${chapterNum}`;
+    if(otLxxChapterCache.has(key)) return otLxxChapterCache.get(key);
+    if(!Layer){
+      const empty = Promise.resolve(null);
+      otLxxChapterCache.set(key, empty);
+      return empty;
+    }
+    const picked = Layer.pickEdition(slug);
+    if(!picked){
+      const empty = Promise.resolve(null);
+      otLxxChapterCache.set(key, empty);
+      return empty;
+    }
+    const atomizedUrl = `${LXX_ATOMIZED_DIR}/${picked.code}/${chapterNum}.json`;
+    const fallbackUrl = `./LXX/${picked.file}`;
+
+    const promise = loadJson(atomizedUrl)
+      .then((chunk) => {
+        const versesFromChunk = chunk?.verses;
+        const ec = chunk?.edition ? String(chunk.edition) : picked.code;
+        if(versesFromChunk && typeof versesFromChunk === 'object' && Object.keys(versesFromChunk).length){
+          return { edition: ec, verses: versesFromChunk, source: 'atom' };
+        }
+        return Promise.reject(new Error('LXX atomizado incompleto'));
+      })
+      .catch(() => loadJson(fallbackUrl).then((data) => {
+        const verses = data?.text?.[picked.code]?.[String(chapterNum)];
+        if(!verses || typeof verses !== 'object') return null;
+        return { edition: picked.code, verses, source: 'whole' };
+      }))
+      .catch(() => null);
+    otLxxChapterCache.set(key, promise);
+    return promise;
   }
 
   async function getHebrewDictionary(){
@@ -985,7 +1035,46 @@
     return merged;
   }
 
-  async function buildVerseCardHtml(verseNumber, verseNode, oshbVerseNode = null, precomputedPlan = null){
+  function buildLxxVerseStripHtml(lxxBundle, shiftCfg, slug, chapterNum, verseRefCompound){
+    const Layer = window.AdminOtLxxLayer;
+    if(!lxxBundle?.verses || !Layer) return '';
+    const verseStr = String(verseRefCompound || '').split(':')[1] || '';
+    const hv = Number(verseStr);
+    if(!Number.isFinite(hv) || hv < 1) return '';
+    const lxxVN = Layer.targetLxxVerseFromShiftTable(slug, chapterNum, hv, shiftCfg);
+    const tokens = lxxBundle.verses[String(lxxVN)];
+    if(!Array.isArray(tokens) || !tokens.length) return '';
+    const cells = tokens.map((token) => {
+      const surface = String(token?.w || '');
+      const morphRaw = String(token?.morph || '');
+      const morphDec = Layer.decodeMorphAbbrev(morphRaw);
+      const lemma = String(token?.lemma || '');
+      const morphDisplay = morphDec && morphDec !== morphRaw ? `${morphRaw} — ${morphDec}` : morphRaw;
+      return `
+        <div class="admin-lxx-token">
+          <div class="admin-lxx-surface">${escapeHtml(surface)}</div>
+          <div class="admin-lxx-morph">${escapeHtml(morphDisplay)}</div>
+          <div class="admin-lxx-lemma">${escapeHtml(lemma)}</div>
+        </div>
+      `;
+    }).join('');
+    const shifted = Number(lxxVN) !== hv;
+    const headMeta = shifted
+      ? `<span class="admin-lxx-shift-hint">Masora v${hv}→LXX v${lxxVN}</span>`
+      : '';
+    return `
+      <div class="admin-lxx-pane" dir="ltr" lang="el">
+        <div class="admin-lxx-head">
+          <strong class="admin-lxx-title">LXX (Rahlfs)</strong>
+          <span class="admin-lxx-ref">${escapeHtml(String(lxxBundle.edition || ''))} ${escapeHtml(String(chapterNum))}:${escapeHtml(String(lxxVN))}</span>
+          ${headMeta}
+        </div>
+        <div class="admin-lxx-strip">${cells}</div>
+      </div>
+    `;
+  }
+
+  async function buildVerseCardHtml(verseNumber, verseNode, oshbVerseNode = null, precomputedPlan = null, lxxCtx = null){
     const versePlan = precomputedPlan || (AdminEngine?.buildAdminVersePlan
       ? AdminEngine.buildAdminVersePlan(verseNode, oshbVerseNode)
       : { items: [] });
@@ -1011,6 +1100,9 @@
       const maqafByOshb = appendVisibleMaqafFromOshb(token, tokenIndex, oshbVerseNode, maqafByToken);
       return { token, morphemes: maqafByOshb };
     }));
+    const lxxHtml = lxxCtx
+      ? buildLxxVerseStripHtml(lxxCtx.bundle, lxxCtx.shiftCfg, lxxCtx.slug, lxxCtx.chapterNum, verseNumber)
+      : '';
     const rows = mergeDisplayMorphemes(rawRows).map(({ token, morphemes }) => {
       const morphemeHtml = morphemes.map((morpheme) => `
         <div class="admin-morph-segment admin-morph-segment-${escapeHtml(morpheme.type || 'base')}">
@@ -1035,6 +1127,7 @@
         </div>
         <div class="admin-morph-card-body">
           <div class="admin-morph-token-strip">${rows.join('') || '<div class="admin-morph-empty">No hay tokens hebreos en este versiculo.</div>'}</div>
+          ${lxxHtml}
         </div>
       </article>
     `;
@@ -1092,6 +1185,7 @@
       sameBookChapters.forEach((targetChapter) => {
         getInterlinearChapter(slug, targetChapter).catch(() => {});
         getOshbMorphChapter(slug, targetChapter).catch(() => {});
+        getOtLxxChapterBundle(slug, targetChapter).catch(() => {});
       });
       // Libro vecino: pre-caliente del capítulo 1 si el manifest lo permite.
       adjacentBooks.forEach((targetSlug) => {
@@ -1128,10 +1222,12 @@
     if(!isAlive()) return;
     if(chapterTotal > 0 && state.chapter > chapterTotal) state.chapter = chapterTotal;
 
-    // Tanda 3: traemos solo el capítulo en juego (interlineal + OSHB) en paralelo.
-    const [interlinearChapter, oshbChapter] = await Promise.all([
+    // Tanda 3: traemos solo el capítulo en juego (interlineal + OSHB + versículos LXX del capitulo).
+    const [interlinearChapter, oshbChapter, lxxBundle, shiftCfg] = await Promise.all([
       getInterlinearChapter(state.slug, state.chapter),
-      getOshbMorphChapter(state.slug, state.chapter).catch(() => null)
+      getOshbMorphChapter(state.slug, state.chapter).catch(() => null),
+      getOtLxxChapterBundle(state.slug, state.chapter).catch(() => null),
+      getLxxShiftConfig().catch(() => ({ chapters: {} }))
     ]);
     if(!isAlive()) return;
 
@@ -1163,8 +1259,12 @@
 
     const tokenCount = versePlans.reduce((acc, item) => acc + (item.plan.tokenCount || 0), 0);
 
+    const lxxCtx = lxxBundle
+      ? { bundle: lxxBundle, shiftCfg, slug: state.slug, chapterNum: state.chapter }
+      : null;
+
     const cards = await Promise.all(versePlans.map(({ verseNumber, verseNode, oshbVerseNode, plan }) =>
-      buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode, oshbVerseNode, plan)
+      buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode, oshbVerseNode, plan, lxxCtx)
     ));
     if(!isAlive()) return;
 
