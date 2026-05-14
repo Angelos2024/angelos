@@ -1035,41 +1035,6 @@
     return merged;
   }
 
-  function buildLxxVerseStripHtml(lxxBundle, shiftCfg, slug, chapterNum, verseRefCompound){
-    const Layer = window.AdminOtLxxLayer;
-    if(!lxxBundle?.verses || !Layer) return '';
-    const verseStr = String(verseRefCompound || '').split(':')[1] || '';
-    const hv = Number(verseStr);
-    if(!Number.isFinite(hv) || hv < 1) return '';
-    const lxxVN = Layer.targetLxxVerseFromShiftTable(slug, chapterNum, hv, shiftCfg);
-    const tokens = lxxBundle.verses[String(lxxVN)];
-    if(!Array.isArray(tokens) || !tokens.length) return '';
-
-    /** Solo forma superficial (w); sin morfología ni lema — flujo léxico del verso. */
-    const flow = tokens
-      .map((token) => String(token?.w || '').trim())
-      .filter(Boolean)
-      .map((surface) => `<span class="admin-lxx-word">${escapeHtml(surface)}</span>`)
-      .join('');
-
-    const shifted = Number(lxxVN) !== hv;
-    const headMeta = shifted
-      ? `<span class="admin-lxx-shift-hint">Masora v${hv}→LXX v${lxxVN}</span>`
-      : '';
-    return `
-      <div class="admin-lxx-pane" dir="ltr" lang="el">
-        <div class="admin-lxx-head">
-          <strong class="admin-lxx-title">LXX (Rahlfs)</strong>
-          <span class="admin-lxx-ref">${escapeHtml(String(lxxBundle.edition || ''))} ${escapeHtml(String(chapterNum))}:${escapeHtml(String(lxxVN))}</span>
-          ${headMeta}
-        </div>
-        <div class="admin-lxx-strip admin-lxx-strip-flow">
-          <p class="admin-lxx-verse-flow">${flow}</p>
-        </div>
-      </div>
-    `;
-  }
-
   async function buildVerseCardHtml(verseNumber, verseNode, oshbVerseNode = null, precomputedPlan = null, lxxCtx = null){
     const versePlan = precomputedPlan || (AdminEngine?.buildAdminVersePlan
       ? AdminEngine.buildAdminVersePlan(verseNode, oshbVerseNode)
@@ -1096,17 +1061,65 @@
       const maqafByOshb = appendVisibleMaqafFromOshb(token, tokenIndex, oshbVerseNode, maqafByToken);
       return { token, morphemes: maqafByOshb };
     }));
-    const lxxHtml = lxxCtx
-      ? buildLxxVerseStripHtml(lxxCtx.bundle, lxxCtx.shiftCfg, lxxCtx.slug, lxxCtx.chapterNum, verseNumber)
-      : '';
-    const rows = mergeDisplayMorphemes(rawRows).map(({ token, morphemes }) => {
-      const morphemeHtml = morphemes.map((morpheme) => `
+    const mergedRows = mergeDisplayMorphemes(rawRows);
+
+    let lxxChipHtml = '';
+    let alignedGreekByColumn = null;
+    const Align = window.AdminLxxAlign;
+    const LxxLayer = window.AdminOtLxxLayer;
+    if(lxxCtx?.bundle?.verses && LxxLayer && Align){
+      await Align.ensureMaps(loadJson).catch(() => {});
+      const verseStr = String(verseNumber || '').split(':')[1] || '';
+      const hv = Number(verseStr);
+      if(Number.isFinite(hv) && hv >= 1){
+        const lxxVN = LxxLayer.targetLxxVerseFromShiftTable(
+          lxxCtx.slug,
+          lxxCtx.chapterNum,
+          hv,
+          lxxCtx.shiftCfg
+        );
+        const gTok = lxxCtx.bundle.verses[String(lxxVN)];
+        if(Array.isArray(gTok) && gTok.length){
+          const columns = [];
+          mergedRows.forEach(({ morphemes }) => {
+            (morphemes || []).forEach((m) => {
+              columns.push({
+                gloss: String(m.gloss || ''),
+                label: String(m.label || ''),
+                hebrew: String(m.surface || '')
+              });
+            });
+          });
+          alignedGreekByColumn = Align.pairColumnsToGreek(columns, gTok);
+          const shifted = Number(lxxVN) !== hv;
+          const shiftNote = shifted
+            ? ` · Masora v${hv}→LXX v${lxxVN}`
+            : '';
+          lxxChipHtml = `<div class="admin-lxx-verse-chip" dir="ltr" lang="el">LXX (${escapeHtml(String(lxxCtx.bundle.edition || ''))}) ${escapeHtml(String(lxxCtx.chapterNum))}:${escapeHtml(String(lxxVN))}${shiftNote}</div>`;
+        }
+      }
+    }
+
+    let greekCol = 0;
+    const rows = mergedRows.map(({ token, morphemes }) => {
+      const morphemeHtml = morphemes.map((morpheme) => {
+        let greekLine = '';
+        if(alignedGreekByColumn){
+          const surf = String(alignedGreekByColumn[greekCol] || '').trim();
+          greekCol += 1;
+          if(surf){
+            greekLine = `<div class="admin-morph-segment-lxx">${escapeHtml(surf)}</div>`;
+          }
+        }
+        return `
         <div class="admin-morph-segment admin-morph-segment-${escapeHtml(morpheme.type || 'base')}">
           <div class="admin-morph-segment-hebrew">${escapeHtml(morpheme.surface || '')}</div>
           <div class="admin-morph-segment-label">${escapeHtml(morpheme.label || '-')}</div>
           <div class="admin-morph-segment-gloss">${escapeHtml(morpheme.gloss || '')}</div>
+          ${greekLine}
         </div>
-      `).join('');
+      `;
+      }).join('');
       return `
         <div class="admin-morph-token" data-num="${escapeHtml(token.num || '')}">
           <div class="admin-morph-token-strip-inner">${morphemeHtml}</div>
@@ -1122,8 +1135,8 @@
           </div>
         </div>
         <div class="admin-morph-card-body">
+          ${lxxChipHtml}
           <div class="admin-morph-token-strip">${rows.join('') || '<div class="admin-morph-empty">No hay tokens hebreos en este versiculo.</div>'}</div>
-          ${lxxHtml}
         </div>
       </article>
     `;

@@ -88,6 +88,25 @@
   white-space:nowrap;
 }
 
+.admin-morph-segment-lxx{
+  direction:ltr;
+  text-align:center;
+  font-family:'Times New Roman','SBL Greek',serif;
+  font-size:.58rem;
+  line-height:1.22;
+  color:#234a8a;
+  max-width:12ch;
+  overflow-wrap:anywhere;
+}
+
+.admin-lxx-verse-chip{
+  margin:0 0 .45rem;
+  font-size:.69rem;
+  line-height:1.3;
+  color:#395a93;
+  letter-spacing:.015em;
+}
+
 .admin-morph-empty{
   padding:.8rem .9rem;
   border:1px dashed rgba(75,39,67,.18);
