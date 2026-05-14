@@ -8,18 +8,26 @@
   };
 
   /**
-   * Forma por defecto tipo lectura Hashem: יְהוָה (sin qamats en la he final; el error יְהָוָהָ
-   * con ָ extra rompe tipografía y lectura).
+   * Forma por defecto tipo lectura Hashem: יְהוָה (sin qamats en la he inicial, sin qamats en la
+   * he final). Las variantes יְהָוָהָ / יְהָוָה llevan qamats indebidos que rompen tipografía y
+   * lectura.
+   * Composición correcta: yod+shewa, he, vav+qamats, he.
    */
-  const DEFAULT_POINTED_YHWH = '\u05D9\u05B0\u05D4\u05B8\u05D5\u05B8\u05D4'.normalize('NFC');
+  const DEFAULT_POINTED_YHWH = '\u05D9\u05B0\u05D4\u05D5\u05B8\u05D4'.normalize('NFC');
 
-  /** Corrige יְהָוָהָ u otras variantes con qamats indebido en la he final del tetragrámaton. */
+  /** Corrige יְהָוָהָ / יְהָוָה y otras variantes con qamats indebido en el tetragrámaton. */
   function repairYhwhMispointing(surface){
     if(normalizeHebrew(surface, false) !== 'יהוה') return surface;
     let s = String(surface || '').normalize('NFC');
+    // Variante "extra-qamats" total: יְהָוָהָ (cuatro qamats) → forma canónica.
     if(s === '\u05D9\u05B0\u05D4\u05B8\u05D5\u05B8\u05D4\u05B8'.normalize('NFC')){
       return DEFAULT_POINTED_YHWH;
     }
+    // Quita el qamats indebido tras la he inicial: יְהָוָה → יְהוָה
+    if(/^\u05D9\u05B0\u05D4\u05B8/u.test(s)){
+      s = s.replace(/^\u05D9\u05B0\u05D4\u05B8/u, '\u05D9\u05B0\u05D4');
+    }
+    // Quita el qamats indebido en la he final: ...וָהָ → ...וָה
     if(/\u05D5\u05B8\u05D4\u05B8$/u.test(s)){
       s = s.replace(/\u05D5\u05B8\u05D4\u05B8$/u, '\u05D5\u05B8\u05D4');
     }
@@ -627,8 +635,27 @@
     const addedParts = compactSpanishSourceParts(splitSpanishSourceParts(token?.added));
     const morph = String(token?.morphs || '').trim().toUpperCase();
 
+    // Cuando el corpus marca un complemento con flecha (`→`/`←`), el `added` representa una
+    // palabra que pertenece al fluir del verso pero no al token mismo (p. ej. paz "→me"
+    // antes del cohortativo). Si lo descartáramos, el laboratorio pierde el "me" / "haces"
+    // / "el" y la lectura queda incompleta. Lo dejamos visible entre paréntesis.
+    const appendAdded = (mainGloss) => {
+      if(!addedParts.length) return mainGloss;
+      const addedText = normalizeSpanishSourceText(addedParts.join(' '));
+      if(!addedText) return mainGloss;
+      const main = normalizeSpanishSourceText(mainGloss);
+      if(!main) return addedText;
+      // Evita duplicar si el añadido ya estaba presente en el gloss principal.
+      const mainTokens = new Set(main.toLowerCase().split(/\s+/).filter(Boolean));
+      const newAdded = addedText
+        .split(/\s+/)
+        .filter((token) => token && !mainTokens.has(token.toLowerCase()));
+      if(!newAdded.length) return main;
+      return `${main} (${newAdded.join(' ')})`;
+    };
+
     if(esParts.length === 1){
-      return esParts[0];
+      return appendAdded(esParts[0]);
     }
 
     if(esParts.length > 1){
@@ -639,33 +666,33 @@
       const functionalParts = esParts.filter((part) => classifySourceGlossPart(part) !== 'lex');
 
       if(/^(y|e|o|u|ni|mas|pero|sino|entonces|pues)$/i.test(first)){
-        return first;
+        return appendAdded(first);
       }
       if(/^(el|la|los|las|un|una|unos|unas|mi|mis|tu|tus|su|sus|nuestro|nuestra|vuestro|vuestra)$/i.test(second)){
-        return first;
+        return appendAdded(first);
       }
       if(/^(que|si|porque|cuando|donde|antes|antes que|para|como)$/i.test(first)){
-        return first;
+        return appendAdded(first);
       }
       if(/^(es|era|eran|fue|fueron|esta|estan|estaba|estaban|sera|seran|habia|habían)$/i.test(second)){
-        return first;
+        return appendAdded(first);
       }
       if(/^(he|ha|han|habia|habían|voy|vaya|os|me|se|le|les)$/i.test(first)){
-        return second || first;
+        return appendAdded(second || first);
       }
       if((/^VERBO(?:\.|$)/.test(morph) || /^V[A-Z]/.test(morph)) && lexicalParts.length){
-        return lexicalParts[0];
+        return appendAdded(lexicalParts[0]);
       }
       if(/^(SUBS|ADJ|NPROP)(?:\.|$)/.test(morph) && lexicalParts.length){
-        return lexicalParts[0];
+        return appendAdded(lexicalParts[0]);
       }
       if(functionalParts.length && lexicalParts.length === 1){
-        return lexicalParts[0];
+        return appendAdded(lexicalParts[0]);
       }
       if(lexicalParts.length > 1){
-        return lexicalParts.sort((left, right) => right.length - left.length)[0];
+        return appendAdded(lexicalParts.sort((left, right) => right.length - left.length)[0]);
       }
-      return joined;
+      return appendAdded(joined);
     }
 
     if(addedParts.length){
@@ -725,13 +752,26 @@
     const numParts = Array.isArray(token?.num) ? token.num : [token?.num];
     const strongParts = Array.isArray(token?.strongs) ? token.strongs : [token?.strongs];
 
+    // Si `es` es un string (caso de los grupos `‹…›` del corpus), asígnalo al morfema
+    // léxicamente principal: el primero que NO sea preposición/conjunción/artículo/etc.
+    // Antes lo asignábamos siempre al índice 0, lo que dejaba al sustantivo sin glosa
+    // (p. ej. [לָ, בֶטַח] con es="confiado" perdía "confiado" en בֶטַח).
+    let lexicalIndex = -1;
+    if(!Array.isArray(token?.es) && token?.es){
+      const isFunctionalMorph = (m) => /^(PB|PM|PL|PA|PD|PK|PT|PU|PR|CC|CS|CO|CK|XD|XC|XN|XP|XR|XT|TD|TI|TN|TP|TR|RD|RI|RP|RR|AA|AC|AV|AB|AI|AQ|AN|Cc)$/.test(String(m || '').trim());
+      lexicalIndex = morphParts.findIndex((m) => !isFunctionalMorph(m));
+      if(lexicalIndex < 0) lexicalIndex = 0;
+    }
+
     return origParts.map((origPart, index) => ({
       orig: origPart,
       morphs: morphParts[index] || '',
       num: numParts[index] || String(index + 1),
       strongs: strongParts.length === origParts.length ? strongParts[index] : (strongParts[0] || ''),
-      es: Array.isArray(token?.es) ? token.es[index] || '' : (index === 0 ? token?.es : ''),
-      added: Array.isArray(token?.added) ? token.added[index] || '' : '',
+      es: Array.isArray(token?.es)
+        ? token.es[index] || ''
+        : (index === lexicalIndex ? token?.es : ''),
+      added: Array.isArray(token?.added) ? token.added[index] || '' : (index === lexicalIndex ? token?.added : ''),
       marks: Array.isArray(token?.marks) ? token.marks[index] || '' : ''
     }));
   }
@@ -778,6 +818,15 @@
       })
       .map(({ __order, ...token }) => token);
 
+    const mergeAddedField = (previous, token) => {
+      const nextAdded = normalizeTokenEsField(token?.added);
+      if(!nextAdded) return;
+      const prevAdded = normalizeTokenEsField(previous?.added);
+      previous.added = prevAdded
+        ? (prevAdded.split(/\s+/).includes(nextAdded) ? prevAdded : `${prevAdded} ${nextAdded}`)
+        : nextAdded;
+    };
+
     const merged = [];
     expanded.forEach((token) => {
       const orig = String(token?.orig || '').trim();
@@ -793,6 +842,7 @@
         if(nextGloss && !String(previous?.es || '').trim()){
           previous.es = nextGloss;
         }
+        mergeAddedField(previous, token);
         return;
       }
       if(isHebrewSuffixFragment(orig) && merged.length){
@@ -807,6 +857,7 @@
         if(nextGloss){
           previous.es = mergeSpanishHostAndSuffixGloss(previous.es, nextGloss);
         }
+        mergeAddedField(previous, token);
         return;
       }
       if(isPronominalSuffixMorph(token?.morphs) && merged.length){
@@ -821,6 +872,7 @@
         if(nextGloss){
           previous.es = mergeSpanishHostAndSuffixGloss(previous.es, nextGloss);
         }
+        mergeAddedField(previous, token);
         return;
       }
       merged.push({ ...token });
