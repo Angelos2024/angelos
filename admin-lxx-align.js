@@ -1,6 +1,7 @@
 /**
- * Alineacion heuristica español (gloss capa lab) ⇄ texto LXX (orden del verso griego).
- * DP + puente lexical + etiquetas tipo PREP/P, RA, CONJ/C.
+ * Alineacion español (gloss laboratorio) ⇄ tokens LXX del verso (orden griego).
+ * Reordena por DP monotona; solo rellena griego cuando la pareja supera reglas de certificacion.
+ * (Sin tabla de alineacion verso-a-verso no existe certeza semantica perfecta — aqui evitamos falsas asignaciones.)
  */
 (function(global){
   'use strict';
@@ -77,8 +78,77 @@
       if(gm === 'C') b = Math.max(b, 76);
     }
     if(/^AND|^XN|^TN|NEG/.test(lab) && /^[Dd]$/i.test(gm)) b = Math.max(b, 58);
+    if(/^ART|^XD|^DET/i.test(lab) && /^ra\./i.test(gm)) b = Math.max(b, 72);
 
     return b;
+  }
+
+  function hebrewPrepLabel(lab){
+    return /^PB|^PM|^PL|^PU|^PP|^PX|^Pf|^Prep/i.test(lab) || lab.includes('PREP') || lab === 'P';
+  }
+
+  function weakExactHit(esH, g1, g2, weakBag){
+    if(!weakBag || typeof weakBag.has !== 'function' || esH.length < 4 || !weakBag.has(esH)){
+      return false;
+    }
+    for(const gv of weakBag.get(esH)){
+      const ng = normGr(gv);
+      if(ng && (ng === g1 || ng === g2)) return true;
+    }
+    return false;
+  }
+
+  /**
+   * Devuelve true solo si hay evidencia combinada (puente lexical fuerte o coincidencia debil+morfologia).
+   */
+  function isCertifiedPair(col, gt, weakBag){
+    const glossHead = esHeadWord(col.gloss);
+    const morph = String(gt?.morph || '').trim();
+    const lab = String(col.label || '').toUpperCase().replace(/\s+/g, '');
+    const g1 = normGr(gt?.w);
+    const g2 = normGr(gt?.lemma);
+
+    const br = bridgeScore(glossHead, g1, g2, morph);
+    const morphB = morphAgreementBonus(col.label, morph);
+    const weak = weakExactHit(glossHead, g1, g2, weakBag);
+
+    if(br >= 88) return true;
+
+    if(/^(el|los|las|la|un|una)$/.test(glossHead) && /^ra\./i.test(morph)) return true;
+
+    if(/^ART|^XD|^DET/i.test(lab) && /^ra\./i.test(morph) && morphB >= 72) return true;
+
+    if(morph === 'C' && (/^CC|^C$|^XC|^CO/.test(lab) || lab.includes('CONJ')) && morphB >= 74){
+      return true;
+    }
+
+    if(['yo', 'me', 'mi', 'mis', 'nos', 'nosotros'].includes(glossHead)){
+      return br >= 75 && /^rp/i.test(morph);
+    }
+    if(['tu', 'te', 'tus', 'ti'].includes(glossHead)){
+      return br >= 75 && /^rp/i.test(morph);
+    }
+
+    if(morph === 'P' && hebrewPrepLabel(lab)){
+      if(glossHead && br >= 55 && morphB >= 72) return true;
+      if(br >= 70 && morphB >= 72) return true;
+      return false;
+    }
+
+    if(br >= 80 && (/^xn|^tn|neg/i.test(lab) || glossHead === 'no')) return true;
+
+    if(weak && morphB >= 58) return true;
+    if(weak && br >= 68 && morphB >= 48) return true;
+
+    const risky = ['que', 'para', 'por', 'con', 'a', 'al', 'de', 'del', 'des'].includes(glossHead);
+    if(risky){
+      return br >= 85 || (br >= 72 && morphB >= 62) || weak;
+    }
+
+    if(br >= 82 && morphB >= 58) return true;
+    if(br >= 72 && morphB >= 68) return true;
+
+    return false;
   }
 
   function columnSkipPenalty(col){
@@ -160,7 +230,6 @@
     if(!n || !m) return out;
 
     const dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(NEG));
-    /** bt[r][s] como llegamos al estado (r,s): padre anterior (pi,pj) antes del paso. */
     const bt = Array.from({ length: n + 1 }, () => Array(m + 1).fill(null));
 
     dp[0][0] = 0;
@@ -194,20 +263,32 @@
     let j = m;
     if(dp[i][j] <= NEG / 5){ return out; }
 
+    const matches = [];
+
     while(i > 0 || j > 0){
       const node = bt[i][j];
       if(!node) break;
       const { pi, pj, move } = node;
 
       if(move === 'M'){
-        const colIdx = pi;
-        const gIdx = pj;
-        if(colIdx >= 0 && colIdx < n){ out[colIdx] = String(gTok[gIdx]?.w || '').trim(); }
+        matches.push({ pi, pj });
+        if(pi >= 0 && pi < n){ out[pi] = String(gTok[pj]?.w || '').trim(); }
       }
       if(pi <= 0 && pj <= 0) break;
       i = pi;
       j = pj;
     }
+
+    const usedG = new Set();
+    matches.forEach(({ pi, pj }) => {
+      if(!out[pi]) return;
+      if(!isCertifiedPair(cols[pi], gTok[pj], weakBag)){
+        out[pi] = '';
+        return;
+      }
+      if(usedG.has(pj)){ out[pi] = ''; }
+      else{ usedG.add(pj); }
+    });
 
     return out;
   }
@@ -222,4 +303,3 @@
     normalizeEsHead: esHeadWord
   };
 })(typeof window !== 'undefined' ? window : globalThis);
-

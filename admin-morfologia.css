@@ -48,7 +48,11 @@
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:.18rem;
+  gap:.22rem;
+  /** Español (gloss) y griego (LXX) al mismo tamaño; hebreo un escalón mayor */
+  --morph-lang-size:1.08rem;
+  --morph-hebrew-size:calc(var(--morph-lang-size) * 1.062);
+  --morph-label-size:calc(var(--morph-lang-size) * 0.94);
 }
 
 .admin-morph-segment-prefix .admin-morph-segment-label{
@@ -62,8 +66,8 @@
 .admin-morph-segment-hebrew{
   direction:rtl;
   text-align:center;
-  font-size:1.34rem;
-  line-height:1.35;
+  font-size:var(--morph-hebrew-size);
+  line-height:1.32;
   color:#24181a;
   font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;
 }
@@ -71,38 +75,41 @@
 .admin-morph-segment-label{
   direction:ltr;
   text-align:center;
-  font-size:.64rem;
-  line-height:1.25;
+  font-size:var(--morph-label-size);
+  line-height:1.28;
   color:#d6943a;
   font-weight:700;
   letter-spacing:.01em;
-  white-space:nowrap;
+  white-space:normal;
+  max-width:16ch;
 }
 
 .admin-morph-segment-gloss{
   direction:ltr;
   text-align:center;
-  font-size:.62rem;
-  line-height:1.2;
+  font-size:var(--morph-lang-size);
+  line-height:1.28;
   color:#7a685c;
-  white-space:nowrap;
+  white-space:normal;
+  max-width:18ch;
+  overflow-wrap:anywhere;
 }
 
 .admin-morph-segment-lxx{
   direction:ltr;
   text-align:center;
   font-family:'Times New Roman','SBL Greek',serif;
-  font-size:.58rem;
-  line-height:1.22;
+  font-size:var(--morph-lang-size);
+  line-height:1.28;
   color:#234a8a;
-  max-width:12ch;
+  max-width:18ch;
   overflow-wrap:anywhere;
 }
 
 .admin-lxx-verse-chip{
   margin:0 0 .45rem;
-  font-size:.69rem;
-  line-height:1.3;
+  font-size:.82rem;
+  line-height:1.35;
   color:#395a93;
   letter-spacing:.015em;
 }
@@ -181,16 +188,8 @@
 }
 
 @media (max-width: 900px){
-  .admin-morph-segment-hebrew{
-    font-size:1.16rem;
-  }
-
-  .admin-morph-segment-label{
-    font-size:.58rem;
-  }
-
-  .admin-morph-segment-gloss{
-    font-size:.56rem;
+  .admin-morph-segment{
+    --morph-lang-size:1rem;
   }
 
   .admin-lxx-verse-flow{
