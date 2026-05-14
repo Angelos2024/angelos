@@ -74,19 +74,39 @@ const plain = (s) => String(s || '')
 const findByPlain = (target) => plan.items.find((e) => plain(e?.token?.orig || '') === target);
 const findByPlainSuffix = (target) => plan.items.find((e) => plain(e?.token?.orig || '').endsWith(target));
 
+// Filosofía: el laboratorio muestra lo que el hebreo dice, sin agregar palabras del traductor.
+// Las palabras con flecha → en `added` (p. ej. "me", "haces", "Ten", "principal", "Cuando estaba")
+// son interpolaciones castellanas y NO deben aparecer en la glosa de los morfemas.
+
 const shalom = findByPlain('שלום');
 const shalomGloss = renderedGlossOf(shalom);
 checks.push({
-  name: '`שָׁלֹום` muestra "paz" e incluye "(me)" del added',
-  ok: /paz/i.test(shalomGloss) && /\bme\b/.test(shalomGloss),
+  name: '`שָׁלֹום` muestra "paz" SIN inyectar el "me" del traductor',
+  ok: /paz/i.test(shalomGloss) && !/\bme\b/.test(shalomGloss) && !/\(/.test(shalomGloss),
   detail: `gloss = "${shalomGloss}"`
+});
+
+const eshkebah = findByPlain('אשכבה');
+const eshkebahGloss = renderedGlossOf(eshkebah);
+checks.push({
+  name: '`אֶשְׁכְּבָה` muestra "acostaré" tal cual',
+  ok: /acostaré/i.test(eshkebahGloss),
+  detail: `gloss = "${eshkebahGloss}"`
+});
+
+const ishan = findByPlain('אישן');
+const ishanGloss = renderedGlossOf(ishan);
+checks.push({
+  name: '`אִישָׁן` muestra "dormiré"',
+  ok: /dormiré/i.test(ishanGloss),
+  detail: `gloss = "${ishanGloss}"`
 });
 
 const toshib = findByPlainSuffix('תושיבני');
 const toshibGloss = renderedGlossOf(toshib);
 checks.push({
-  name: '`תֹּושִׁיבֵנִי` incluye "haces" del added (sufijo ֵנִי)',
-  ok: /\bhaces\b/i.test(toshibGloss),
+  name: '`תֹּושִׁיבֵנִי` muestra "me vivir" (sufijo + verbo base) sin agregar "haces"',
+  ok: /\bme\b/i.test(toshibGloss) && /\bvivir\b/i.test(toshibGloss) && !/\bhaces\b/i.test(toshibGloss),
   detail: `gloss = "${toshibGloss}"`
 });
 
