@@ -22,10 +22,16 @@
  *     node scripts/atomize-lxx-chapters.js
  *     Salida -> LXX/chapters/<Edition>/<N>.json (ver archivo para opciones).
  *
+ *   Cobertura pistas MT⇄LXX (CATSS / lxx-mt-word-hints):
+ *     node scripts/build-lxx-mt-hints-index.js
+ *     Salida -> IdiomaORIGEN/lxx-mt-hints-index.min.json
+ *     (tambien se invoca al final de este script salvo SKIP_HINTS_INDEX=1)
+ *
  * Uso:
  *   node scripts/build-bible-indices.js
  *   DATA_VERSION=2026-05-14 node scripts/build-bible-indices.js
  *   SKIP_CHAPTERS=1 node scripts/build-bible-indices.js    # solo manifest + morph-index
+ *   SKIP_HINTS_INDEX=1 node scripts/build-bible-indices.js # omite lxx-mt-hints-index.min.json
  *
  * Si el diccionario fuente no existe, sólo se genera el manifest y se
  * informa por consola. admin-morfologia.js cae en su ruta legada en ese
@@ -36,6 +42,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { buildLxxMtHintsIndex } = require('./build-lxx-mt-hints-index.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const INTERLINEAL_DIR = path.join(ROOT, 'IdiomaORIGEN', 'interlineal');
@@ -377,6 +384,22 @@ function main(){
     console.log(`  ✓ ${path.relative(ROOT, MORPH_INDEX_PATH)} (${formatBytes(morphBytes)}; ${morphIndex.counts.byStrong} strongs, ${morphIndex.counts.pointed} formas con niqud, ${morphIndex.counts.plain} formas sin niqud).`);
   } else {
     console.log('  – morph-index omitido (falta diccionario fuente).');
+  }
+
+  if(process.env.SKIP_HINTS_INDEX !== '1'){
+    try{
+      console.log('• Generando lxx-mt-hints-index...');
+      const hintsResult = buildLxxMtHintsIndex({ manifest, root: ROOT });
+      const cov = hintsResult.payload.summary.coverageChapterPct;
+      console.log(`  ✓ ${path.relative(ROOT, hintsResult.outPath)} (${formatBytes(hintsResult.byteLength)}; cobertura cap. ${cov}%).`);
+      if(hintsResult.payload.booksWithGaps.length){
+        console.log(`  · ${hintsResult.payload.booksWithGaps.length} libro(s) con capítulos sin archivo de pistas (ver booksWithGaps en JSON).`);
+      }
+    }catch(error){
+      console.warn(`  ! lxx-mt-hints-index omitido: ${error.message}`);
+    }
+  } else {
+    console.log('  – lxx-mt-hints-index omitido (SKIP_HINTS_INDEX=1).');
   }
 
   console.log('Listo.');

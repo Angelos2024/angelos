@@ -14,9 +14,11 @@
   const NORMALIZE_CACHE_LIMIT = 50000;
 
   // Tanda 2: índices precompilados (genéralos con scripts/build-bible-indices.js).
+  //   manifest.json, morph-index.min.json, lxx-mt-hints-index.min.json (cobertura pistas LXX).
   const MANIFEST_PATH = './IdiomaORIGEN/manifest.json';
   const MORPH_INDEX_PATH = './IdiomaORIGEN/morph-index.min.json';
   const LXX_SHIFT_PATH = './IdiomaORIGEN/lxx-mt-verse-shift.min.json';
+  const HINTS_INDEX_PATH = './IdiomaORIGEN/lxx-mt-hints-index.min.json';
   /** Pistas editoriales MT⇄token LXX: capitulos opcionales en IdiomaORIGEN/lxx-mt-word-hints/chapters/<slug>/<n>.json */
   const lxxWordHintsChapterUrl = (slug, chapter) =>
     `./IdiomaORIGEN/lxx-mt-word-hints/chapters/${slug}/${chapter}.json`;
@@ -27,6 +29,7 @@
   let chapterListSlug = null;
   let idbPromise = null;
   let manifestPromise = null;
+  let hintsIndexPromise = null;
   let lxxShiftPromise = null;
   const otLxxChapterCache = new Map();
 
@@ -352,6 +355,14 @@
     const node = full?.chapters?.[String(chapter)] || null;
     oshbChapterCache.set(cacheKey, Promise.resolve(node));
     return node;
+  }
+
+  async function getLxxMtHintsIndex(){
+    if(hintsIndexPromise) return hintsIndexPromise;
+    hintsIndexPromise = loadJson(HINTS_INDEX_PATH)
+      .then((raw) => (raw && raw.schema === 'lxx-mt-hints-index-v1' ? raw : null))
+      .catch(() => null);
+    return hintsIndexPromise;
   }
 
   async function getManifest(){
@@ -1261,6 +1272,7 @@
     // Resolvemos el total de capítulos vía manifest (sin descargar libro entero).
     const manifest = await getManifest().catch(() => null);
     if(!isAlive()) return;
+    void getLxxMtHintsIndex().catch(() => null); // índice de cobertura CATSS/hints (opcional; una sola petición)
     const bookInfo = getBookManifestInfo(manifest, state.slug);
     let chapterTotal = bookInfo && Number.isInteger(bookInfo.chapters) && bookInfo.chapters > 0
       ? bookInfo.chapters
