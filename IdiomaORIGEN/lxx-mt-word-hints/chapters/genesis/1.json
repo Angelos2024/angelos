@@ -11,7 +11,8 @@
         "lxxIdx": 0,
         "surface": "ἐν",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "Alineación editorial Gn 1:1 / Rahlf: prep. ἐν con בְּ."
       },
       {
         "tokenNum": "2",
@@ -29,34 +30,35 @@
         "surface": "ἐποίησεν",
         "strong": "H1254",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "4",
         "morphemeIdx": 0,
-        "lxxIdx": 4,
-        "surface": "θεὸς",
+        "lxxIdx": 3,
+        "surface": "ὁ θεὸς",
         "strong": "H430",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+        "source": "manual",
+        "catssNote": "Artículo ὁ + θεός en un solo chip (índice base lxxIdx=3)."
       },
       {
         "tokenNum": "5",
         "morphemeIdx": 0,
         "lxxIdx": 5,
-        "surface": "τὸν",
+        "surface": "—",
         "strong": "H853",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "אֵת: marca de objeto; sin lexema griego aparte (el acusativo sigue en τὸν οὐρανὸν)."
       },
       {
         "tokenNum": "6",
         "morphemeIdx": 0,
-        "lxxIdx": 6,
-        "surface": "οὐρανὸν",
+        "lxxIdx": 5,
+        "surface": "τὸν",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "7",
@@ -65,7 +67,7 @@
         "surface": "οὐρανὸν",
         "strong": "H8064",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "8",
@@ -73,16 +75,18 @@
         "lxxIdx": 7,
         "surface": "καὶ",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "וְ ↔ καὶ (no repetir καὶ en אֵת)."
       },
       {
         "tokenNum": "9",
         "morphemeIdx": 0,
-        "lxxIdx": 7,
-        "surface": "καὶ",
+        "lxxIdx": 8,
+        "surface": "—",
         "strong": "H853",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "אֵת segunda: sin lexema; acusativo en τὴν γῆν."
       },
       {
         "tokenNum": "10",
@@ -90,8 +94,7 @@
         "lxxIdx": 8,
         "surface": "τὴν",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 2×he/3×gr: morfema artículo (ה) ↔ 2º token griego."
+        "source": "manual"
       },
       {
         "tokenNum": "11",
@@ -100,8 +103,7 @@
         "surface": "γῆν",
         "strong": "H776",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 2×he/3×gr: morfema lexical ↔ 3er token griego."
+        "source": "manual"
       }
     ],
     "2": [
