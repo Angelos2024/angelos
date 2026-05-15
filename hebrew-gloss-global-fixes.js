@@ -1,7 +1,7 @@
 /**
- * Correcciones globales hebreo→español para el interlineal.
- * Evita que tokens léxicos queden con una glosa que sólo es artículo u objeto directo
- * cuando el sentido exige el sustantivo (p. ej. פְּנֵי en constructo = «faz», no «la»).
+ * Correcciones globales hebreo→español para el interlineal (todos los libros).
+ * Se aplican en runtime al mostrar glosas; no sustituyen editar datos fuente cuando haga falta,
+ * pero evitan errores sistemáticos repetidos (fórmula tarde/mañana, ו como «Y», artículo colado, פְּנֵי).
  */
 (function(global){
   'use strict';
@@ -27,6 +27,121 @@
     return Array.isArray(m) ? m.join(' ').trim().toUpperCase() : String(m || '').trim().toUpperCase();
   }
 
+  /** ו / waw como conjunción (etiquetas CC / Cc del corpus). */
+  function isHebrewWawConjunctionToken(token){
+    const m = String(token?.morphs || '').trim();
+    return /^(CC|CS|Cc|Cs)$/i.test(m);
+  }
+
+  function fixConjWawSpanishLowercase(token){
+    if(!isHebrewWawConjunctionToken(token)) return token;
+    const es = token.es;
+    const yre = /^Y$/i;
+    if(typeof es === 'string' && yre.test(es.trim())){
+      return { ...token, es: 'y' };
+    }
+    if(Array.isArray(es) && es.length && yre.test(String(es[0] || '').trim())){
+      return { ...token, es: ['y', ...es.slice(1)] };
+    }
+    return token;
+  }
+
+  function isSpanishDeterminerOnly(text){
+    const t = String(text || '')
+      .replace(/[←→]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/[,:;.!?¿]+$/g, '')
+      .trim()
+      .toLowerCase();
+    if(!t) return false;
+    return /^(el|la|los|las|lo|un|una|unos|unas|del|al)$/.test(t);
+  }
+
+  /** Sólo artículo colado tras «mañana» en fórmula יֹום בֹּקֶר (H1242). */
+  function fixH1242BoqerStripSpuriousEl(token){
+    if(normalizeStrong(token.strongs) !== 'H1242') return token;
+    if(!Array.isArray(token.es) || token.es.length < 2) return token;
+    const a = String(token.es[0] || '').trim();
+    const b = String(token.es[1] || '').trim();
+    if(!/^mañana/i.test(a)) return token;
+    if(!/^el$/i.test(b.replace(/[,:;.!?¿]+$/g, '').trim())) return token;
+    return { ...token, es: a };
+  }
+
+  function isH1961JussiveMorph(token){
+    const cmp = morphUpper(token).replace(/\s+/g, '');
+    if(/\bJUSS\b/.test(String(token?.label || '').toUpperCase())) return true;
+    if(/V[HQN]AJ/i.test(cmp)) return true;
+    return false;
+  }
+
+  function isH1961WayyiqtolMorph(token){
+    const cmp = morphUpper(token).replace(/\s+/g, '');
+    if(/\bWAYYIQT\b/.test(String(token?.label || '').toUpperCase())) return true;
+    return /V[HQN]AM/i.test(cmp);
+  }
+
+  function fixH1961WayyiqtolSeaToFueSpanish(gloss, token){
+    if(!token || typeof token !== 'object') return gloss;
+    if(normalizeStrong(token.strongs) !== 'H1961') return gloss;
+    if(!isH1961WayyiqtolMorph(token) || isH1961JussiveMorph(token)) return gloss;
+    const g = String(gloss ?? '').trim();
+    if(!/^sea$/i.test(g)) return gloss;
+    return 'fue';
+  }
+
+  /**
+   * יְהִי wayyiqtol: quitar «la»/«el» colgados, «sea»→«fue», glosa sólo artículo → «fue» en la fórmula.
+   */
+  function fixH1961WayyiqtolEveningMorningSpanish(token){
+    if(!token || typeof token !== 'object') return token;
+    if(normalizeStrong(token.strongs) !== 'H1961') return token;
+    if(!isH1961WayyiqtolMorph(token) || isH1961JussiveMorph(token)) return token;
+
+    let t = { ...token };
+    let changed = false;
+    let es = t.es;
+
+    if(Array.isArray(es)){
+      const rest = es.slice(1);
+      if(rest.length && rest.every((p) => isSpanishDeterminerOnly(p))){
+        es = [es[0]];
+        changed = true;
+      }
+      let first = fixH1961WayyiqtolSeaToFueSpanish(String(es[0] ?? '').trim(), t);
+      if(first !== String(es[0] ?? '').trim()){
+        es = [first, ...es.slice(1)];
+        changed = true;
+      }
+      if(es.length === 1){
+        const sole = String(es[0] || '').trim().replace(/[,:;.!?¿]+$/g, '').trim();
+        if(/^(la|el)$/i.test(sole)){
+          es = 'fue';
+          changed = true;
+        }
+      }
+    }else{
+      let g = String(es ?? '').trim();
+      const bare = g.replace(/[,:;.!?¿]+$/g, '').trim();
+      if(/^sea$/i.test(bare)){
+        es = 'fue';
+        changed = true;
+      }else if(/^(la|el)$/i.test(bare)){
+        es = 'fue';
+        changed = true;
+      }
+    }
+
+    if(!changed) return token;
+    t = { ...t, es };
+    if(t.notrans != null && String(t.notrans).trim()){
+      const { notrans, ...rest } = t;
+      t = rest;
+    }
+    return t;
+  }
+
   /**
    * Constructo sustantivo en etiquetas tipo OSHB/corpus: «…C» segmentado, PMC (pl. m. cons.),
    * o la forma aparente פְּנֵי (sin mater lectionis: פני).
@@ -38,18 +153,6 @@
     if(/\.C(?:$|\.)/.test(m)) return true;
     if(/PMC/i.test(m.replace(/\s+/g, ''))) return true;
     return false;
-  }
-
-  function isSpanishDeterminerOnly(text){
-    const t = String(text || '')
-      .replace(/[←→]/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .replace(/[,:;.!?¿]+$/g, '')
-      .trim()
-      .toLowerCase();
-    if(!t) return true;
-    return /^(el|la|los|las|lo|un|una|unos|unas|del|al)$/.test(t);
   }
 
   /**
@@ -69,26 +172,41 @@
   }
 
   /**
-   * Ajusta el campo `es` del token (string o array) si aplica la regla anterior.
+   * Ajusta el campo `es` del token (string o array) aplicando reglas globales en cadena.
    */
   function patchTokenEsForGlobalFixes(token){
     if(!token || typeof token !== 'object') return token;
-    const es0 = Array.isArray(token.es) ? token.es[0] : token.es;
-    const fixed = fixH6440ConstructPeneSpanish(es0, token);
-    const prev = String(es0 ?? '').trim();
-    if(!fixed || fixed === prev) return token;
-    if(Array.isArray(token.es)){
-      return { ...token, es: [fixed, ...token.es.slice(1)] };
+
+    let t = fixConjWawSpanishLowercase({ ...token });
+    t = fixH1242BoqerStripSpuriousEl(t);
+    t = fixH1961WayyiqtolEveningMorningSpanish(t);
+
+    const es0 = Array.isArray(t.es) ? t.es[0] : t.es;
+    const prev0 = String(es0 ?? '').trim();
+    const next0 = fixH6440ConstructPeneSpanish(es0, t);
+    if(next0 && next0 !== prev0){
+      if(Array.isArray(t.es)){
+        t = { ...t, es: [next0, ...t.es.slice(1)] };
+      }else{
+        t = { ...t, es: next0 };
+      }
     }
-    return { ...token, es: fixed };
+
+    return t;
   }
 
   global.HebrewGlossGlobalFixes = {
     normalizeStrong,
     hebrewPlainLetters,
+    morphUpper,
+    isHebrewWawConjunctionToken,
     isLikelyNominalConstructForPene,
     isSpanishDeterminerOnly,
     fixH6440ConstructPeneSpanish,
+    fixH1961WayyiqtolSeaToFueSpanish,
+    fixConjWawSpanishLowercase,
+    fixH1242BoqerStripSpuriousEl,
+    fixH1961WayyiqtolEveningMorningSpanish,
     patchTokenEsForGlobalFixes
   };
 })(typeof window !== 'undefined' ? window : globalThis);

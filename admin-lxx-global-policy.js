@@ -8,7 +8,10 @@
  * No sustituye pistas por versículo salvo saneamiento posterior; reduce errores sistemáticos (hebreo en griego,
  * artículo con el mismo lexema que el sustantivo siguiente, duplicados seguros tipo ἐπάνω).
  * Tras la reubicación de artículos: reglas léxicas MT↔LXX (H8432 + בְּ ~ ἐν μέσῳ; H1961 jussivo mal
- * etiquetado como conjunción cuando el LXX lleva imperativo aor. pas./pres. medio V.APD/V.PAD).
+ * etiquetado como conjunción cuando el LXX lleva imperativo aor. pas./pres. medio V.APD/V.PAD;
+ * H1961 wayyiqtol (VqAm…): καί en el casillero del verbo → ἐγένετο donde el LXX tiene γίγνομαι V.AMI);
+ * H1242 בֹּקֶר: rellenar πρωί desde el verso LXX si la casilla está vacía/Hebreo/καί;
+ * ordinales de día (H8145, H7992, …): tomar δευτέρα/τρίτη/… del verso cuando la casilla griega está rota.
  */
 (function(global){
   'use strict';
@@ -35,7 +38,13 @@
     /** תוֹךְ (H8432) tras בְּ~ἐν: tomar el segundo miembro de ἔν μέσῳ / ἐν μέσον del verso LXX */
     fixGlobalH8432EnMeso: true,
     /** יְהִי juss. (H1961 + etiqueta JUSS): no mostrar καί si el verso tiene V.APD/V.PAD (γενηθήτω, ἔστω…) */
-    fixGlobalH1961JussiveKai: true
+    fixGlobalH1961JussiveKai: true,
+    /** יְהִי wayyiqtol (H1961 + VqAm…): καί en el verbo → ἐγένετο (γίγνομαι V.AMI en el verso LXX) */
+    fixGlobalH1961WayyiqtolKai: true,
+    /** בֹּקֶר (H1242): superficie griega vacía/hebreo/conjunción → πρωί del verso LXX */
+    fixGlobalH1242Proi: true,
+    /** יוֹם + ordinal escolar (2.º–6.º día): casillero griego roto → forma ordinal del texto LXX del verso */
+    fixGlobalOrdinalDayFromLxx: true
   };
 
   let policyCache = null;
@@ -185,6 +194,14 @@
     return false;
   }
 
+  function isHebrewWayyiqtolVerbColumn(col){
+    const lab = String(col?.label || '');
+    const compact = lab.toUpperCase().replace(/\./g, '');
+    if(/\bWAYYIQT\b/.test(lab.toUpperCase())) return true;
+    if(/V[HQN]AM/i.test(compact)) return true;
+    return false;
+  }
+
   function tierAllowsGlobalOverride(tier){
     const t = String(tier || '').toLowerCase().trim();
     if(t === 'firm') return false;
@@ -216,6 +233,102 @@
       }
     }
     return q;
+  }
+
+  function buildLxxGinomaiEgenetoQueue(gTokens){
+    const q = [];
+    if(!Array.isArray(gTokens)) return q;
+    for(const gt of gTokens){
+      if(!gt || !gt.w) continue;
+      const lem = normGrPlain(gt.lemma || '');
+      if(lem !== 'γιγνομαι') continue;
+      const m = String(gt.morph || '').trim();
+      if(/^V\.AMI/.test(m)){
+        q.push(String(gt.w).trim());
+      }
+    }
+    return q;
+  }
+
+  function greekSurfaceNeedsLxxLexicalFill(surf, conjWl){
+    const s = String(surf || '').trim();
+    if(!s || s === '—') return true;
+    if(containsHebrew(s)) return true;
+    if(isConjunctionGreek(s, conjWl)) return true;
+    return false;
+  }
+
+  function buildLxxProoiSurfaceQueue(gTokens){
+    const q = [];
+    if(!Array.isArray(gTokens)) return q;
+    for(const gt of gTokens){
+      if(!gt?.w) continue;
+      if(normGrPlain(gt.w) === 'πρωι'){
+        q.push(String(gt.w).trim());
+      }
+    }
+    return q;
+  }
+
+  const ORDINAL_DAY_STRONG_TO_GREEK_PREFIX = {
+    H8145: 'δευτερ',
+    H7992: 'τριτ',
+    H7243: 'τεταρτ',
+    H2549: 'πεμπτ',
+    H8345: 'εκτ'
+  };
+
+  function ordinalDaySurfaceFromLxx(strong, gTokens){
+    const H = normalizeStrongLocal(strong);
+    const pref = ORDINAL_DAY_STRONG_TO_GREEK_PREFIX[H];
+    if(!pref || !Array.isArray(gTokens)) return '';
+    for(const gt of gTokens){
+      if(!gt?.w) continue;
+      const wN = normGrPlain(gt.w);
+      const lN = normGrPlain(gt.lemma || '');
+      if(wN.startsWith(pref) || lN.startsWith(pref)){
+        return String(gt.w).trim();
+      }
+    }
+    return '';
+  }
+
+  function fixGlobalH1242Proi(columns, surfaces, tiers, gTokens, pol){
+    if(pol.fixGlobalH1242Proi === false) return;
+    if(!Array.isArray(gTokens) || !gTokens.length) return;
+    const queue = buildLxxProoiSurfaceQueue(gTokens);
+    if(!queue.length) return;
+    let qi = 0;
+    const conjWl = pol.dedupeConjunctiveGreekWhitelist || DEFAULT_POLICY.dedupeConjunctiveGreekWhitelist;
+    const n = columns.length;
+    for(let i = 0; i < n; i += 1){
+      if(normalizeStrongLocal(columns[i]?.strongs) !== 'H1242') continue;
+      if(!tierAllowsGlobalOverride(tiers[i])) continue;
+      const surf = String(surfaces[i] || '').trim();
+      if(!greekSurfaceNeedsLxxLexicalFill(surf, conjWl)) continue;
+      if(qi >= queue.length) continue;
+      surfaces[i] = queue[qi];
+      qi += 1;
+      tiers[i] = tiers[i] || 'hint';
+    }
+  }
+
+  function fixGlobalOrdinalDayFromLxx(columns, surfaces, tiers, gTokens, pol){
+    if(pol.fixGlobalOrdinalDayFromLxx === false) return;
+    if(!Array.isArray(gTokens) || !gTokens.length) return;
+    const conjWl = pol.dedupeConjunctiveGreekWhitelist || DEFAULT_POLICY.dedupeConjunctiveGreekWhitelist;
+    const n = columns.length;
+    for(let i = 0; i < n; i += 1){
+      const H = normalizeStrongLocal(columns[i]?.strongs);
+      if(!ORDINAL_DAY_STRONG_TO_GREEK_PREFIX[H]) continue;
+      if(!tierAllowsGlobalOverride(tiers[i])) continue;
+      const surf = String(surfaces[i] || '').trim();
+      if(!greekSurfaceNeedsLxxLexicalFill(surf, conjWl)) continue;
+      const cand = ordinalDaySurfaceFromLxx(H, gTokens);
+      if(!cand) continue;
+      surfaces[i] = cand;
+      tiers[i] = tiers[i] || 'hint';
+    }
   }
 
   function fixGlobalH8432EnMeso(columns, surfaces, tiers, gTokens, pol){
@@ -252,6 +365,29 @@
       if(normalizeStrongLocal(columns[i]?.strongs) !== 'H1961') continue;
       if(isHebrewConjunctionColumn(columns[i])) continue;
       if(!isHebrewJussiveVerbColumn(columns[i])) continue;
+      if(!tierAllowsGlobalOverride(tiers[i])) continue;
+      const surf = String(surfaces[i] || '').trim();
+      if(!isConjunctionGreek(surf, conjWl)) continue;
+      if(qi >= queue.length) break;
+      surfaces[i] = queue[qi];
+      qi += 1;
+      tiers[i] = tiers[i] || 'hint';
+    }
+  }
+
+  function fixGlobalH1961WayyiqtolKai(columns, surfaces, tiers, gTokens, pol){
+    if(pol.fixGlobalH1961WayyiqtolKai === false) return;
+    if(!Array.isArray(gTokens) || !gTokens.length) return;
+    const queue = buildLxxGinomaiEgenetoQueue(gTokens);
+    if(!queue.length) return;
+    let qi = 0;
+    const conjWl = pol.dedupeConjunctiveGreekWhitelist || DEFAULT_POLICY.dedupeConjunctiveGreekWhitelist;
+    const n = columns.length;
+    for(let i = 0; i < n; i += 1){
+      if(normalizeStrongLocal(columns[i]?.strongs) !== 'H1961') continue;
+      if(isHebrewConjunctionColumn(columns[i])) continue;
+      if(!isHebrewWayyiqtolVerbColumn(columns[i])) continue;
+      if(isHebrewJussiveVerbColumn(columns[i])) continue;
       if(!tierAllowsGlobalOverride(tiers[i])) continue;
       const surf = String(surfaces[i] || '').trim();
       if(!isConjunctionGreek(surf, conjWl)) continue;
@@ -325,6 +461,9 @@
     if(Array.isArray(gTokens) && gTokens.length){
       fixGlobalH8432EnMeso(columns, surfaces, tiers, gTokens, pol);
       fixGlobalH1961JussiveKai(columns, surfaces, tiers, gTokens, pol);
+      fixGlobalH1961WayyiqtolKai(columns, surfaces, tiers, gTokens, pol);
+      fixGlobalH1242Proi(columns, surfaces, tiers, gTokens, pol);
+      fixGlobalOrdinalDayFromLxx(columns, surfaces, tiers, gTokens, pol);
     }
   }
 

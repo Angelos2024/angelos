@@ -1,6 +1,6 @@
 {
-  "_doc": "Política global post-alineación MT↔LXX para el panel admin (después de AdminLxxAlign, lxx-mt-word-hints y AutoStrong). Incluye realinear artículos griegos sueltos (τὴν, τόν…) al renglón del artículo hebreo (הַ/הָ) cuando el DP los dejó en conjunción o אֵת por orden de palabra LXX. Reglas léxicas: H8432+בְּ~ἐν→μέσῳ; H1961 jussivo no como καί cuando el verso LXX tiene V.APD/V.PAD.",
-  "_versionNote": 3,
+  "_doc": "Política global MT↔LXX (admin): artículos sueltos; H8432+ἐν→μέσῳ; H1961 juss./wayyiqtol+καί; H1242→πρωί desde el verso; ordinales de día H8145… desde el LXX cuando la casilla está vacía/hebreo/conjunción.",
+  "_versionNote": 6,
   "version": 2,
   "stripHebrewFromGreek": true,
   "stripHebrewMarksTier": "hint",
@@ -37,5 +37,8 @@
   "relocateStrayGreekArticlePasses": 2,
   "fillKaiForEmptyHebrewConjunction": true,
   "fixGlobalH8432EnMeso": true,
-  "fixGlobalH1961JussiveKai": true
+  "fixGlobalH1961JussiveKai": true,
+  "fixGlobalH1961WayyiqtolKai": true,
+  "fixGlobalH1242Proi": true,
+  "fixGlobalOrdinalDayFromLxx": true
 }
