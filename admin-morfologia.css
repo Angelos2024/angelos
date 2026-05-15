@@ -106,28 +106,24 @@
   overflow-wrap:anywhere;
 }
 
-.admin-morph-segment-lxx-soft{
-  font-style:italic;
-  color:#3d5d9e;
-  opacity:0.9;
-  text-decoration:underline dotted rgba(35,74,138,0.4);
-  text-decoration-thickness:1px;
-  text-underline-offset:2px;
-}
-
-.admin-morph-segment-lxx-hint{
+/**
+ * soft / hint / auto: misma familia, tamaño, color y peso que la base.
+ * El tipo de alineación solo se indica en el atributo `title` del nodo (laboratorio).
+ */
+.admin-morph-segment-lxx.admin-morph-segment-lxx-soft,
+.admin-morph-segment-lxx.admin-morph-segment-lxx-hint,
+.admin-morph-segment-lxx.admin-morph-segment-lxx-auto{
+  font-family:'Times New Roman','SBL Greek',serif;
+  font-size:var(--morph-lang-size);
+  line-height:1.28;
+  color:#234a8a;
+  font-weight:400;
   font-style:normal;
-  color:#1c4d6e;
-  font-weight:600;
-  text-decoration:underline solid rgba(28,77,110,0.35);
-  text-decoration-thickness:1.5px;
-  text-underline-offset:3px;
-}
-
-.admin-morph-segment-lxx-auto{
-  font-style:normal;
-  color:#2a6f5e;
-  border-bottom:1px dashed rgba(42,111,94,0.45);
+  opacity:1;
+  text-decoration:none;
+  text-decoration-thickness:unset;
+  text-underline-offset:unset;
+  border-bottom:none;
 }
 
 .admin-lxx-verse-chip{
