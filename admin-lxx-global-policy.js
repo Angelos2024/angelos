@@ -11,7 +11,8 @@
  * etiquetado como conjunción cuando el LXX lleva imperativo aor. pas./pres. medio V.APD/V.PAD;
  * H1961 wayyiqtol (VqAm…): καί en el casillero del verbo → ἐγένετο donde el LXX tiene γίγνομαι V.AMI);
  * H1242 בֹּקֶר: rellenar πρωί desde el verso LXX si la casilla está vacía/Hebreo/καί;
- * ordinales de día (H8145, H7992, …): tomar δευτέρα/τρίτη/… del verso cuando la casilla griega está rota.
+ * ordinales de día (H8145, H7992, …): tomar δευτέρα/τρίτη/… del verso cuando la casilla griega está rota;
+ * H8478 מִתַּחַת: casillas PM+תַּחַת con ἀνὰ/ἐπάνω/Hebreo por desplazamiento → ὑποκάτω del verso + — en la 2.ª parte.
  */
 (function(global){
   'use strict';
@@ -44,7 +45,9 @@
     /** בֹּקֶר (H1242): superficie griega vacía/hebreo/conjunción → πρωί del verso LXX */
     fixGlobalH1242Proi: true,
     /** יוֹם + ordinal escolar (2.º–6.º día): casillero griego roto → forma ordinal del texto LXX del verso */
-    fixGlobalOrdinalDayFromLxx: true
+    fixGlobalOrdinalDayFromLxx: true,
+    /** תַּחַת / מִתַּחַת (H8478): corregir desalineación (ἀνὰ, ἐπάνω) → ὑποκάτω del verso; pareja PM+PT → 2.ª celda — */
+    fixGlobalH8478Hypokato: true
   };
 
   let policyCache = null;
@@ -248,6 +251,78 @@
       }
     }
     return q;
+  }
+
+  function buildLxxHypokatoQueue(gTokens){
+    const q = [];
+    if(!Array.isArray(gTokens)) return q;
+    for(const gt of gTokens){
+      if(!gt?.w) continue;
+      if(normGrPlain(gt.w) === 'υποκατω'){
+        q.push(String(gt.w).trim());
+      }
+    }
+    return q;
+  }
+
+  function greekSurfaceNeedsHypokatoFix(surf, conjWl){
+    const s = String(surf || '').trim();
+    if(!s || s === '—') return true;
+    if(containsHebrew(s)) return true;
+    if(isConjunctionGreek(s, conjWl)) return true;
+    const n = normGrPlain(s);
+    if(n === 'ανα' || n === 'επανω') return true;
+    return false;
+  }
+
+  function fixGlobalH8478Hypokato(columns, surfaces, tiers, gTokens, pol){
+    if(pol.fixGlobalH8478Hypokato === false) return;
+    if(!Array.isArray(gTokens) || !gTokens.length) return;
+    const queue = buildLxxHypokatoQueue(gTokens);
+    if(!queue.length) return;
+    const conjWl = pol.dedupeConjunctiveGreekWhitelist || DEFAULT_POLICY.dedupeConjunctiveGreekWhitelist;
+    const n = columns.length;
+    const paired = new Set();
+    let qi = 0;
+
+    for(let i = 0; i < n - 1; i += 1){
+      const a = columns[i];
+      const b = columns[i + 1];
+      if(normalizeStrongLocal(a?.strongs) !== 'H8478' || normalizeStrongLocal(b?.strongs) !== 'H8478') continue;
+      if(String(a?.tokenNum || '') !== String(b?.tokenNum || '')) continue;
+      const labA = String(a?.label || '');
+      const labB = String(b?.label || '').toUpperCase();
+      if(!/\bPM\b/i.test(labA) || !/\bPT\b/.test(labB)) continue;
+      if(!tierAllowsGlobalOverride(tiers[i]) || !tierAllowsGlobalOverride(tiers[i + 1])) continue;
+
+      const s0 = String(surfaces[i] || '').trim();
+      const n0 = normGrPlain(s0);
+      if(n0 !== 'υποκατω'){
+        if(qi < queue.length && (greekSurfaceNeedsHypokatoFix(s0, conjWl) || n0 === 'ανα' || n0 === 'επανω')){
+          surfaces[i] = queue[qi];
+          qi += 1;
+          tiers[i] = tiers[i] || 'hint';
+        }
+      }
+      surfaces[i + 1] = '—';
+      tiers[i + 1] = tiers[i + 1] || 'hint';
+
+      paired.add(i);
+      paired.add(i + 1);
+      i += 1;
+    }
+
+    for(let i = 0; i < n; i += 1){
+      if(paired.has(i)) continue;
+      if(normalizeStrongLocal(columns[i]?.strongs) !== 'H8478') continue;
+      if(!tierAllowsGlobalOverride(tiers[i])) continue;
+      const s = String(surfaces[i] || '').trim();
+      if(!greekSurfaceNeedsHypokatoFix(s, conjWl)) continue;
+      if(qi >= queue.length) continue;
+      surfaces[i] = queue[qi];
+      qi += 1;
+      tiers[i] = tiers[i] || 'hint';
+    }
   }
 
   function greekSurfaceNeedsLxxLexicalFill(surf, conjWl){
@@ -462,6 +537,7 @@
       fixGlobalH8432EnMeso(columns, surfaces, tiers, gTokens, pol);
       fixGlobalH1961JussiveKai(columns, surfaces, tiers, gTokens, pol);
       fixGlobalH1961WayyiqtolKai(columns, surfaces, tiers, gTokens, pol);
+      fixGlobalH8478Hypokato(columns, surfaces, tiers, gTokens, pol);
       fixGlobalH1242Proi(columns, surfaces, tiers, gTokens, pol);
       fixGlobalOrdinalDayFromLxx(columns, surfaces, tiers, gTokens, pol);
     }

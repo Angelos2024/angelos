@@ -1,6 +1,6 @@
 {
-  "_doc": "Política global MT↔LXX (admin): artículos sueltos; H8432+ἐν→μέσῳ; H1961 juss./wayyiqtol+καί; H1242→πρωί desde el verso; ordinales de día H8145… desde el LXX cuando la casilla está vacía/hebreo/conjunción.",
-  "_versionNote": 6,
+  "_doc": "Política global MT↔LXX (admin): artículos sueltos; H8432+ἐν→μέσῳ; H1961 juss./wayyiqtol+καί; H8478 מִתַּחַת→ὑποκάτω (no ἀνὰ/ἐπάνω desplazados); H1242→πρωί; ordinales de día desde el LXX.",
+  "_versionNote": 7,
   "version": 2,
   "stripHebrewFromGreek": true,
   "stripHebrewMarksTier": "hint",
@@ -39,6 +39,7 @@
   "fixGlobalH8432EnMeso": true,
   "fixGlobalH1961JussiveKai": true,
   "fixGlobalH1961WayyiqtolKai": true,
+  "fixGlobalH8478Hypokato": true,
   "fixGlobalH1242Proi": true,
   "fixGlobalOrdinalDayFromLxx": true
 }
