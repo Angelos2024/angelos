@@ -1126,6 +1126,12 @@
             await window.AdminLxxAutoStrong.ensureMap(loadJson).catch(() => {});
             window.AdminLxxAutoStrong.fillVerifiedByStrong(columns, lxxSurfaces, lxxTiers, gTok);
           }
+          if(window.AdminLxxGlobalPolicy){
+            const pol = await window.AdminLxxGlobalPolicy.ensurePolicy(loadJson).catch(() => (
+              window.AdminLxxGlobalPolicy.getDefaultPolicy()
+            ));
+            window.AdminLxxGlobalPolicy.apply(columns, lxxSurfaces, lxxTiers, gTok, pol);
+          }
           const shifted = Number(lxxVN) !== hv;
           const shiftNote = shifted
             ? ` · Masora v${hv}→LXX v${lxxVN}`
