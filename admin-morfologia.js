@@ -1110,6 +1110,10 @@
           if(verseHints.length && window.AdminLxxWordHints){
             window.AdminLxxWordHints.applyHintsToAlignment(columns, lxxSurfaces, lxxTiers, gTok, verseHints);
           }
+          if(window.AdminLxxAutoStrong){
+            await window.AdminLxxAutoStrong.ensureMap(loadJson).catch(() => {});
+            window.AdminLxxAutoStrong.fillVerifiedByStrong(columns, lxxSurfaces, lxxTiers, gTok);
+          }
           const shifted = Number(lxxVN) !== hv;
           const shiftNote = shifted
             ? ` · Masora v${hv}→LXX v${lxxVN}`
@@ -1136,6 +1140,9 @@
             }else if(tier === 'hint'){
               lxxClass += ' admin-morph-segment-lxx-hint';
               lxxTitle = ' title="Alineacion editorial (modulo lxx-mt-word-hints)"';
+            }else if(tier === 'auto'){
+              lxxClass += ' admin-morph-segment-lxx-auto';
+              lxxTitle = ' title="Concordancia Strong↔griego (equivalencias_trilingue); revisar si el sentido diverge"';
             }
             greekLine = `<div class="${lxxClass}"${lxxTitle}>${escapeHtml(surf)}</div>`;
           }
