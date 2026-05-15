@@ -1,0 +1,173 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (20.Psalms.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "salmos",
+  "chapter": 116,
+  "verses": {
+    "1": [
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "κύριον",
+        "strong": "H3068",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "2": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "ὅτι",
+        "strong": "H3588",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "20.Psalms.par",
+    "interlinear": "116.json",
+    "lxx": "116.json",
+    "report": {
+      "matchedPairs": 2,
+      "totalPairs": 12,
+      "skipped": [
+        {
+          "ref": "Ps 116:1",
+          "he": ")HBTY",
+          "gr": "H)GA/PHSA",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 116:1",
+          "he": "KY",
+          "gr": "O(/TI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 116:1",
+          "he": "Y$M(",
+          "gr": "EI)SAKOU/SETAI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 116:1",
+          "he": ")T QWL/Y",
+          "gr": "TH=S FWNH=S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 116:1",
+          "he": "TXNWN/Y",
+          "gr": "TH=S DEH/SEW/S MOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 116:2",
+          "he": "H+H",
+          "gr": "E)/KLINEN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 116:2",
+          "he": ")ZN/W",
+          "gr": "TO\\ OU)=S AU)TOU=",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 116:2",
+          "he": "L/Y",
+          "gr": "E)MOI/",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 116:2",
+          "he": "W/B/YM/Y",
+          "gr": "KAI\\ E)N TAI=S H(ME/RAIS MOU",
+          "reason": "conteo CATSS (1 he / 5 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 116:2",
+          "he": ")QR)",
+          "gr": "E)PIKALE/SOMAI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 116:3",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:4",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:5",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:6",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:7",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:8",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:9",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:10",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:11",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:12",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:13",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:14",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:15",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:16",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:17",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:18",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 116:19",
+          "reason": "sin tokens LXX"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}

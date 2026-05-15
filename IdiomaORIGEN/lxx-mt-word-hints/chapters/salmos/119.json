@@ -1,0 +1,950 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (20.Psalms.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "salmos",
+  "chapter": 119,
+  "verses": {
+    "4": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "σὺν",
+        "strong": "H859",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "20.Psalms.par",
+    "interlinear": "119.json",
+    "lxx": "119.json",
+    "report": {
+      "matchedPairs": 1,
+      "totalPairs": 41,
+      "skipped": [
+        {
+          "ref": "Ps 119:1",
+          "he": ")$RY",
+          "gr": "MAKA/RIOI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:1",
+          "he": "TMYMY",
+          "gr": "OI( A)/MWMOI",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 119:1",
+          "he": "DRK",
+          "gr": "O(DW=|",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:1",
+          "he": "H/HLKYM",
+          "gr": "OI( POREUO/MENOI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:1",
+          "he": "B/TWRT",
+          "gr": "E)N NO/MW|",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:1",
+          "he": "YHWH",
+          "gr": "KURI/OU",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:2",
+          "he": ")$RY",
+          "gr": "MAKA/RIOI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:2",
+          "he": "NCRY",
+          "gr": "OI( E)CEREUNW=NTES",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 119:2",
+          "he": "(DT/YW",
+          "gr": "TA\\ MARTU/RIA AU)TOU=",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 119:2",
+          "he": "B/KL",
+          "gr": "E)N O(/LH|",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:2",
+          "he": "LB",
+          "gr": "KARDI/A|",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:2",
+          "he": "YDR$W/HW",
+          "gr": "E)KZHTH/SOUSIN AU)TO/N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:3",
+          "he": ")P ^ =L)",
+          "gr": "OU)",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ps 119:3",
+          "he": "^ L) =)P",
+          "gr": "GA\\R",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ps 119:3",
+          "he": "P(LW",
+          "gr": "OI( E)RGAZO/MENOI",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Ps 119:3",
+          "he": "(WLH",
+          "gr": "TH\\N A)NOMI/AN",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Ps 119:3",
+          "he": "B/DRK/YW",
+          "gr": "E)N TAI=S O(DOI=S AU)TOU=",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Ps 119:3",
+          "he": "HLKW",
+          "gr": "E)POREU/QHSAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 119:4",
+          "he": "CWYTH",
+          "gr": "E)NETEI/LW",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:4",
+          "he": "PQD/YK",
+          "gr": "TA\\S E)NTOLA/S SOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 119:4",
+          "he": "L/$MR",
+          "gr": "FULA/CASQAI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:4",
+          "he": "M)D",
+          "gr": "SFO/DRA",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:5",
+          "he": ")XL/Y",
+          "gr": "O)/FELON",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:5",
+          "he": "YKNW",
+          "gr": "KATEUQUNQEI/HSAN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:5",
+          "he": "DRK/Y",
+          "gr": "AI( O(DOI/ MOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 119:5",
+          "he": "L/$MR",
+          "gr": "TOU= FULA/CASQAI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:5",
+          "he": "XQ/YK",
+          "gr": "TA\\ DIKAIW/MATA/ SOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 119:6",
+          "he": ")Z",
+          "gr": "TO/TE",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:6",
+          "he": "L)",
+          "gr": "OU) MH\\",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 119:6",
+          "he": ")BW$",
+          "gr": "E)PAISXUNQW=",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:6",
+          "he": "B/HBY+/Y",
+          "gr": "E)N TW=| ME ^ E)PIBLE/PEIN",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 119:6",
+          "he": ")L",
+          "gr": "E)PI\\",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:6",
+          "he": "KL",
+          "gr": "PA/SAS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:6",
+          "he": "MCWT/YK",
+          "gr": "TA\\S E)NTOLA/S SOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 119:7",
+          "he": ")WD/K",
+          "gr": "E)COMOLOGH/SOMAI/ SOI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:7",
+          "he": "B/Y$R",
+          "gr": "E)N EU)QU/THTI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:7",
+          "he": "LBB",
+          "gr": "KARDI/AS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 119:7",
+          "he": "B/LMD/Y",
+          "gr": "E)N TW=| MEMAQHKE/NAI ME",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 119:7",
+          "he": "M$P+Y",
+          "gr": "TA\\ KRI/MATA",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 119:7",
+          "he": "CDQ/K",
+          "gr": "TH=S DIKAIOSU/NHS SOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 119:8",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:9",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:10",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:11",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:12",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:13",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:14",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:15",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:16",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:17",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:18",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:19",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:20",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:21",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:22",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:23",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:24",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:25",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:26",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:27",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:28",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:29",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:30",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:31",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:32",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:33",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:34",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:35",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:36",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:37",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:38",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:39",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:40",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:41",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:42",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:43",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:44",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:45",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:46",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:47",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:48",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:49",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:50",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:51",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:52",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:53",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:54",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:55",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:56",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:57",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:58",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:59",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:60",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:61",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:62",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:63",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:64",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:65",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:66",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:67",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:68",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:69",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:70",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:71",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:72",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:73",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:74",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:75",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:76",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:77",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:78",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:79",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:80",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:81",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:82",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:83",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:84",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:85",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:86",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:87",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:88",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:89",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:90",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:91",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:92",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:93",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:94",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:95",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:96",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:97",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:98",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:99",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:100",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:101",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:102",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:103",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:104",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:105",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:106",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:107",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:108",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:109",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:110",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:111",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:112",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:113",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:114",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:115",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:116",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:117",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:118",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:119",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:120",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:121",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:122",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:123",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:124",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:125",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:126",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:127",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:128",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:129",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:130",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:131",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:132",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:133",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:134",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:135",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:136",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:137",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:138",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:139",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:140",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:141",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:142",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:143",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:144",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:145",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:146",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:147",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:148",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:149",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:150",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:151",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:152",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:153",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:154",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:155",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:156",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:157",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:158",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:159",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:160",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:161",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:162",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:163",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:164",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:165",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:166",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:167",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:168",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:169",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:170",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:171",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:172",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:173",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:174",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:175",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 119:176",
+          "reason": "sin tokens LXX"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}

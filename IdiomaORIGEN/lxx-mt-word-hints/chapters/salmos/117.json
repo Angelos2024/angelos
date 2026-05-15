@@ -1,0 +1,118 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (20.Psalms.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "salmos",
+  "chapter": 117,
+  "verses": {
+    "2": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "ὅτι",
+        "strong": "H3588",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "20.Psalms.par",
+    "interlinear": "117.json",
+    "lxx": "117.json",
+    "report": {
+      "matchedPairs": 1,
+      "totalPairs": 15,
+      "skipped": [
+        {
+          "ref": "Ps 117:1",
+          "he": "HLLW",
+          "gr": "AI)NEI=TE",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 117:1",
+          "he": ")T YHWH",
+          "gr": "TO\\N KU/RION",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 117:1",
+          "he": "KL",
+          "gr": "PA/NTA",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 117:1",
+          "he": "GWYM",
+          "gr": "TA\\ E)/QNH",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 117:1",
+          "he": "$BXW/HW",
+          "gr": "E)PAINE/SATE AU)TO/N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 117:1",
+          "he": "KL",
+          "gr": "PA/NTES",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 117:1",
+          "he": "H/)MYM",
+          "gr": "OI( LAOI/",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 117:2",
+          "he": "GBR",
+          "gr": "E)KRATAIW/QH",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 117:2",
+          "he": "(L/YNW ^ =XSD/W",
+          "gr": "TO\\ E)/LEOS AU)TOU=",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 117:2",
+          "he": "^ XSD/W =(L/YNW",
+          "gr": "E)F' H(MA=S",
+          "reason": "conteo CATSS (3 he / 2 gr)"
+        },
+        {
+          "ref": "Ps 117:2",
+          "he": "W/)MT",
+          "gr": "KAI\\ H( A)LH/QEIA",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 117:2",
+          "he": "YHWH",
+          "gr": "TOU= KURI/OU",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 117:2",
+          "he": "L/(WLM",
+          "gr": "EI)S TO\\N AI)W=NA",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 117:2",
+          "he": "HLLW YH",
+          "gr": "ALLHLOUIA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}

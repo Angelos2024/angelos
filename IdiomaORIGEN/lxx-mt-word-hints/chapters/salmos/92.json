@@ -1,0 +1,240 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (20.Psalms.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "salmos",
+  "chapter": 92,
+  "verses": {
+    "1": [
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "ᾠδῆς",
+        "strong": "H7892",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "20.Psalms.par",
+    "interlinear": "92.json",
+    "lxx": "92.json",
+    "report": {
+      "matchedPairs": 1,
+      "totalPairs": 28,
+      "skipped": [
+        {
+          "ref": "Ps 92:1",
+          "he": "MZMWR",
+          "gr": "YALMO\\S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 92:1",
+          "he": "L/YWM",
+          "gr": "EI)S TH\\N H(ME/RAN",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 92:1",
+          "he": "H/$BT",
+          "gr": "TOU= SABBA/TOU",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 92:2",
+          "he": "+WB",
+          "gr": "A)GAQO\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:2",
+          "he": "L/HDWT",
+          "gr": "TO\\ E)COMOLOGEI=SQAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:2",
+          "he": "L/YHWH",
+          "gr": "TW=| KURI/W|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:2",
+          "he": "W/L/ZMR",
+          "gr": "KAI\\ YA/LLEIN",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Ps 92:2",
+          "he": "L/$M/K",
+          "gr": "TW=| O)NO/MATI/ SOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:2",
+          "he": "(LYWN",
+          "gr": "U(/YISTE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:3",
+          "he": "L/HGYD",
+          "gr": "TOU= A)NAGGE/LLEIN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 92:3",
+          "he": "B/BQR",
+          "gr": "TO\\ PRWI\\",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 92:3",
+          "he": "XSD/K",
+          "gr": "TO\\ E)/LEO/S SOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 92:3",
+          "he": "W/)MWNT/K",
+          "gr": "KAI\\ TH\\N A)LH/QEIA/N SOU",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 92:3",
+          "he": "B/LYLWT =%p",
+          "gr": "KATA\\ NU/KTA",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 92:4",
+          "he": "(LY",
+          "gr": "E)N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:4",
+          "he": "(&WR",
+          "gr": "DEKAXO/RDW|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:4",
+          "he": "W/(LY NBL",
+          "gr": "YALTHRI/W|",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ps 92:4",
+          "he": "(LY",
+          "gr": "MET'",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:4",
+          "he": "HGYWN",
+          "gr": "W)|DH=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:4",
+          "he": "B/KNWR",
+          "gr": "E)N KIQA/RA|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:5",
+          "he": "KY",
+          "gr": "O(/TI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:5",
+          "he": "&MXT/NY",
+          "gr": "EU)/FRANA/S ME",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:5",
+          "he": "YHWH",
+          "gr": "KU/RIE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:5",
+          "he": "B/P(L/K",
+          "gr": "E)N TW=| POIH/MATI/ SOU",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Ps 92:5",
+          "he": "B/M(&Y",
+          "gr": "KAI\\ E)N TOI=S E)/RGOIS",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Ps 92:5",
+          "he": "YD/YK",
+          "gr": "TW=N XEIRW=N SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Ps 92:5",
+          "he": ")RNN",
+          "gr": "A)GALLIA/SOMAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 92:6",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 92:7",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 92:8",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 92:9",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 92:10",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 92:11",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 92:12",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 92:13",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 92:14",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 92:15",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 92:16",
+          "reason": "sin tokens LXX"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}

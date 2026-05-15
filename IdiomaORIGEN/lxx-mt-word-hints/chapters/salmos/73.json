@@ -1,0 +1,1011 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (20.Psalms.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "salmos",
+  "chapter": 73,
+  "verses": {
+    "1": [
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "τῷ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "Ασαφ",
+        "strong": "H623",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "3": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "ὁ",
+        "strong": "H3588",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "4": [
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "οὐκ",
+        "strong": "H369",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "11": [
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "τὴν",
+        "strong": "H410",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "12": [
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "ὁ",
+        "strong": "H428",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "16": [
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "ἐστιν",
+        "strong": "H1931",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "17": [
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "σὺ",
+        "strong": "H995",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "23": [
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "παντὸς",
+        "strong": "H8548",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "20.Psalms.par",
+    "interlinear": "73.json",
+    "lxx": "73.json",
+    "report": {
+      "matchedPairs": 8,
+      "totalPairs": 153,
+      "skipped": [
+        {
+          "ref": "Ps 73:1",
+          "he": "MZMWR",
+          "gr": "YALMO\\S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:1",
+          "he": ")K",
+          "gr": "W(S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:1",
+          "he": "+WB",
+          "gr": "A)GAQO\\S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:1",
+          "he": "L/Y&R)L",
+          "gr": "TW=| ISRAHL",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:1",
+          "he": ")LHYM",
+          "gr": "O( QEO/S",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Ps 73:1",
+          "he": "L/BRY",
+          "gr": "TOI=S EU)QE/SI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:1",
+          "he": "LBB",
+          "gr": "TH=| KARDI/A|",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Ps 73:2",
+          "he": "W/)NY",
+          "gr": "E)MOU= ^ DE\\",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:2",
+          "he": "K/M(+",
+          "gr": "PARA\\ MIKRO\\N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:2",
+          "he": "N+WY",
+          "gr": "E)SALEU/QHSAN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:2",
+          "he": "RGL/Y",
+          "gr": "OI( PO/DES",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:2",
+          "he": "K/)YN",
+          "gr": "PAR' O)LI/GON",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:2",
+          "he": "$PKH",
+          "gr": "E)CEXU/QH",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:2",
+          "he": ")$R/Y",
+          "gr": "TA\\ DIABH/MATA/ MOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:3",
+          "he": "QN)TY",
+          "gr": "E)ZH/LWSA",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:3",
+          "he": "B/HWLLYM",
+          "gr": "E)PI\\ TOI=S A)NO/MOIS",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:3",
+          "he": "$LWM",
+          "gr": "EI)RH/NHN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:3",
+          "he": "R$(YM",
+          "gr": "A(MARTWLW=N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:3",
+          "he": ")R)H",
+          "gr": "QEWRW=N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:4",
+          "he": "KY",
+          "gr": "O(/TI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:4",
+          "he": "XRCBWT =??",
+          "gr": "A)NA/NEUSIS",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ps 73:4",
+          "he": "L/MWT/M",
+          "gr": "TW=| QANA/TW| AU)TW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:4",
+          "he": "W/BRY)",
+          "gr": "KAI\\ STERE/WMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:4",
+          "he": ")WL/M =??",
+          "gr": "E)N TH=| MA/STIGI AU)TW=N",
+          "reason": "conteo CATSS (2 he / 4 gr)"
+        },
+        {
+          "ref": "Ps 73:5",
+          "he": "B/(ML",
+          "gr": "E)N KO/POIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:5",
+          "he": ")NW$",
+          "gr": "A)NQRW/PWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:5",
+          "he": ")YN/MW",
+          "gr": "OU)K EI)SI\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:5",
+          "he": "W/(M",
+          "gr": "KAI\\ META\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:5",
+          "he": ")DM",
+          "gr": "A)NQRW/PWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:5",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:5",
+          "he": "YNG(W",
+          "gr": "MASTIGWQH/SONTAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:6",
+          "he": "L/KN",
+          "gr": "DIA\\ TOU=TO",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:6",
+          "he": "(NQT/MW",
+          "gr": "E)KRA/THSEN AU)TOU\\S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:6",
+          "he": "G)WH",
+          "gr": "H( U(PERHFANI/A",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 73:6",
+          "he": "Y(+P",
+          "gr": "PERIEBA/LONTO",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:6",
+          "he": "$YT =??",
+          "gr": "A)DIKI/AN",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ps 73:6",
+          "he": "XMS",
+          "gr": "KAI\\ A)SE/BEIAN",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Ps 73:6",
+          "he": "L/MW",
+          "gr": "AU)TW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:7",
+          "he": "YC)",
+          "gr": "E)CELEU/SETAI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:7",
+          "he": "M/XLB =%p+",
+          "gr": "W(S E)K STE/ATOS",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Ps 73:7",
+          "he": "(YN/MW =@(WN",
+          "gr": "H( A)DIKI/A AU)TW=N",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Ps 73:7",
+          "he": "(BRW",
+          "gr": "DIH/LQOSAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:7",
+          "he": "M&KYWT =%p",
+          "gr": "EI)S DIA/QESIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:7",
+          "he": "LBB",
+          "gr": "KARDI/AS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:8",
+          "he": "YMYQW",
+          "gr": "DIENOH/QHSAN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:8",
+          "he": "W/YDBRW",
+          "gr": "KAI\\ E)LA/LHSAN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:8",
+          "he": "B/R(",
+          "gr": "E)N PONHRI/A|",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:8",
+          "he": "($Q",
+          "gr": "A)DIKI/AN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:8",
+          "he": "M/MRWM",
+          "gr": "EI)S TO\\ U(/YOS",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:8",
+          "he": "YDBRW",
+          "gr": "E)LA/LHSAN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:9",
+          "he": "$TW",
+          "gr": "E)/QENTO",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:9",
+          "he": "B/$MYM",
+          "gr": "EI)S OU)RANO\\N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:9",
+          "he": "PY/HM",
+          "gr": "TO\\ STO/MA AU)TW=N",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:9",
+          "he": "W/L$WN/M",
+          "gr": "KAI\\ H( GLW=SSA AU)TW=N",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:9",
+          "he": "THLK",
+          "gr": "DIH=LQEN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:9",
+          "he": "B/)RC",
+          "gr": "E)PI\\ TH=S GH=S",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:10",
+          "he": "L/KN",
+          "gr": "DIA\\ TOU=TO",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:10",
+          "he": "Y$YB",
+          "gr": "E)PISTRE/YEI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:10",
+          "he": "(M/W",
+          "gr": "O( LAO/S MOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:10",
+          "he": "HLM",
+          "gr": "E)NTAU=QA",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:10",
+          "he": "W/MY =W/YMYM",
+          "gr": "KAI\\ H(ME/RAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:10",
+          "he": "ML)",
+          "gr": "PLH/REIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:10",
+          "he": "YMCW =@MC)",
+          "gr": "EU(REQH/SONTAI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ps 73:10",
+          "he": "L/MW",
+          "gr": "AU)TOI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:11",
+          "he": "W/)MRW",
+          "gr": "KAI\\ EI)=PAN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:11",
+          "he": ")YKH",
+          "gr": "PW=S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:11",
+          "he": "YD(",
+          "gr": "E)/GNW",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:11",
+          "he": "W/Y$",
+          "gr": "KAI\\ EI) E)/STIN",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:11",
+          "he": "D(H",
+          "gr": "GNW=SIS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:11",
+          "he": "B/(LYWN",
+          "gr": "E)N TW=| U(YI/STW|",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:12",
+          "he": "HNH",
+          "gr": "I)DOU\\",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:12",
+          "he": "R$(YM",
+          "gr": "A(MARTWLOI\\",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:12",
+          "he": "W/$LWY",
+          "gr": "KAI\\ EU)QHNOU=NTAI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:12",
+          "he": "(WLM",
+          "gr": "TO\\N AI)W=NA",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 73:12",
+          "he": "H&GW",
+          "gr": "KATE/SXON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:12",
+          "he": "XYL",
+          "gr": "PLOU/TOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:13",
+          "he": ")K",
+          "gr": "A)/RA",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:13",
+          "he": "RYQ",
+          "gr": "MATAI/WS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:13",
+          "he": "ZKYTY =@",
+          "gr": "E)DIKAI/WSA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ps 73:13",
+          "he": "LBB/Y",
+          "gr": "TH\\N KARDI/AN MOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Ps 73:13",
+          "he": "W/)RXC",
+          "gr": "KAI\\ E)NIYA/MHN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:13",
+          "he": "B/NQYWN",
+          "gr": "E)N A)QW/|OIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 73:13",
+          "he": "KP/Y",
+          "gr": "TA\\S XEI=RA/S MOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Ps 73:14",
+          "he": "W/)HY",
+          "gr": "KAI\\ E)GENO/MHN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:14",
+          "he": "NGW(",
+          "gr": "MEMASTIGWME/NOS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:14",
+          "he": "KL",
+          "gr": "O(/LHN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:14",
+          "he": "H/YWM",
+          "gr": "TH\\N H(ME/RAN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:14",
+          "he": "W/TWKXTY =W/TWKXT/Y =v",
+          "gr": "KAI\\ O( E)/LEGXO/S MOU",
+          "reason": "conteo CATSS (3 he / 4 gr)"
+        },
+        {
+          "ref": "Ps 73:14",
+          "he": "L/BQRYM",
+          "gr": "EI)S TA\\S PRWI/AS",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Ps 73:15",
+          "he": ")M",
+          "gr": "EI)",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:15",
+          "he": ")MRTY",
+          "gr": "E)/LEGON",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:15",
+          "he": ")SPRH",
+          "gr": "DIHGH/SOMAI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:15",
+          "he": "K/MW",
+          "gr": "OU(/TWS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:15",
+          "he": "HNH",
+          "gr": "I)DOU\\",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:15",
+          "he": "DWR",
+          "gr": "TH=| GENEA=|",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 73:15",
+          "he": "BN/YK",
+          "gr": "TW=N UI(W=N SOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:15",
+          "he": "BGDTY",
+          "gr": "H)SUNQE/THKA",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:16",
+          "he": "W/)X$BH",
+          "gr": "KAI\\ U(PE/LABON",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:16",
+          "he": "L/D(T",
+          "gr": "TOU= GNW=NAI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:16",
+          "he": "Z)T",
+          "gr": "TOU=TO",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:16",
+          "he": "(ML",
+          "gr": "KO/POS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:16",
+          "he": "B/(YN/Y",
+          "gr": "E)NANTI/ON MOU",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 73:17",
+          "he": "(D",
+          "gr": "E(/WS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:17",
+          "he": ")BW)",
+          "gr": "EI)SE/LQW",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:17",
+          "he": ")L",
+          "gr": "EI)S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:17",
+          "he": "MQD$Y",
+          "gr": "TO\\ A(GIASTH/RION",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 73:17",
+          "he": ")L",
+          "gr": "TOU= QEOU=",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Ps 73:17",
+          "he": "L/)XRYT/M",
+          "gr": "EI)S TA\\ E)/SXATA AU)TW=N",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:18",
+          "he": ")K",
+          "gr": "PLH\\N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:18",
+          "he": "B/XLQWT",
+          "gr": "DIA\\ TA\\S DOLIO/THTAS",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:18",
+          "he": "T$YT",
+          "gr": "E)/QOU",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:18",
+          "he": "L/MW",
+          "gr": "AU)TOI=S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:18",
+          "he": "HPLT/M",
+          "gr": "KATE/BALES AU)TOU\\S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:18",
+          "he": "L/M$W)WT =@N&)",
+          "gr": "E)N TW=| E)PARQH=NAI",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Ps 73:19",
+          "he": ")YK",
+          "gr": "PW=S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:19",
+          "he": "HYW",
+          "gr": "E)GE/NONTO",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:19",
+          "he": "L/$MH",
+          "gr": "EI)S E)RH/MWSIN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:19",
+          "he": "K/RG(",
+          "gr": "E)CA/PINA",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:19",
+          "he": "SPW",
+          "gr": "E)CE/LIPON",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:19",
+          "he": "TMW",
+          "gr": "A)PW/LONTO",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:19",
+          "he": "MN",
+          "gr": "DIA\\",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:19",
+          "he": "BLHWT",
+          "gr": "TH\\N A)NOMI/AN AU)TW=N",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:20",
+          "he": "K/XLWM",
+          "gr": "W(SEI\\ E)NU/PNION",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:20",
+          "he": "M/HQYC",
+          "gr": "E)CEGEIROME/NOU",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:20",
+          "he": ")DNY",
+          "gr": "KU/RIE",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:20",
+          "he": "B/(YR",
+          "gr": "E)N TH=| PO/LEI SOU",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:20",
+          "he": "CLM/M",
+          "gr": "TH\\N EI)KO/NA AU)TW=N",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:20",
+          "he": "TBZH",
+          "gr": "E)COUDENW/SEIS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:21",
+          "he": "KY",
+          "gr": "O(/TI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:21",
+          "he": "YTXMC",
+          "gr": "E)CEKAU/QH",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:21",
+          "he": "LBB/Y",
+          "gr": "H( KARDI/A MOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:21",
+          "he": "W/KLYWT/Y",
+          "gr": "KAI\\ OI( NEFROI/ MOU",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:21",
+          "he": ")$TWNN =@$NH",
+          "gr": "H)LLOIW/QHSAN",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ps 73:22",
+          "he": "W/)NY",
+          "gr": "KAI\\ E)GW\\",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:22",
+          "he": "B(R",
+          "gr": "E)COUDENWME/NOS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:22",
+          "he": "W/L)",
+          "gr": "KAI\\ OU)K",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:22",
+          "he": ")D(",
+          "gr": "E)/GNWN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:22",
+          "he": "BHMWT",
+          "gr": "KTHNW/DHS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:22",
+          "he": "HYYTY",
+          "gr": "E)GENO/MHN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:22",
+          "he": "(M/K",
+          "gr": "PARA\\ SOI/",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:23",
+          "he": "W/)NY",
+          "gr": "KAI\\ E)GW\\",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:23",
+          "he": "(M/K",
+          "gr": "META\\ SOU=",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:23",
+          "he": ")XZT",
+          "gr": "E)KRA/THSAS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:23",
+          "he": "B/YD",
+          "gr": "TH=S XEIRO\\S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 73:23",
+          "he": "YMYN/Y",
+          "gr": "TH=S DECIA=S MOU",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 73:24",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 73:25",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 73:26",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 73:27",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 73:28",
+          "reason": "sin tokens LXX"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}

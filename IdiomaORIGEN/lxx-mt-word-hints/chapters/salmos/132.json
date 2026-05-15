@@ -1,0 +1,239 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (20.Psalms.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "salmos",
+  "chapter": 132,
+  "verses": {
+    "1": [
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "τῶν",
+        "strong": "H4609",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἀναβαθμῶν",
+        "strong": "H4609",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "2": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "ὡς",
+        "strong": "H834",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "3": [
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "ἐπὶ",
+        "strong": "H5921",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "20.Psalms.par",
+    "interlinear": "132.json",
+    "lxx": "132.json",
+    "report": {
+      "matchedPairs": 3,
+      "totalPairs": 22,
+      "skipped": [
+        {
+          "ref": "Ps 132:1",
+          "he": "$YR",
+          "gr": "W)IDH\\",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:1",
+          "he": "ZKWR",
+          "gr": "MNH/SQHTI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:1",
+          "he": "YHWH",
+          "gr": "KU/RIE",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:1",
+          "he": "L/DWD",
+          "gr": "TOU= DAUID",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:1",
+          "he": ")T KL",
+          "gr": "KAI\\ PA/SHS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:1",
+          "he": "(NWT/W =v",
+          "gr": "TH=S PRAU/+THTOS AU)TOU=",
+          "reason": "conteo CATSS (2 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ps 132:2",
+          "he": "N$B(",
+          "gr": "W)/MOSEN",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:2",
+          "he": "L/YHWH",
+          "gr": "TW=| KURI/W|",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:2",
+          "he": "NDR",
+          "gr": "HU)/CATO",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:2",
+          "he": "L/)BYR",
+          "gr": "TW=| QEW=|",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:2",
+          "he": "Y(QB",
+          "gr": "IAKWB",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:3",
+          "he": ")M",
+          "gr": "EI)",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:3",
+          "he": ")B)",
+          "gr": "EI)SELEU/SOMAI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:3",
+          "he": "B/)HL",
+          "gr": "EI)S SKH/NWMA",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:3",
+          "he": "BYT/Y",
+          "gr": "OI)/KOU MOU",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:3",
+          "he": ")M",
+          "gr": "EI)",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:3",
+          "he": ")(LH",
+          "gr": "A)NABH/SOMAI",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ps 132:3",
+          "he": "(R&",
+          "gr": "KLI/NHS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 132:3",
+          "he": "YCW(/Y",
+          "gr": "STRWMNH=S MOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ps 132:4",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:5",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:6",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:7",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:8",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:9",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:10",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:11",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:12",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:13",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:14",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:15",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:16",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:17",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Ps 132:18",
+          "reason": "sin tokens LXX"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}
