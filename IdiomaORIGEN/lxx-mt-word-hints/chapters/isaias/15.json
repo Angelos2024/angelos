@@ -1,0 +1,748 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (40.Isaiah.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "isaias",
+  "chapter": 15,
+  "verses": {
+    "3": [
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "περιζώσασθε",
+        "strong": "H2296",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "4": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "ὅτι",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "κέκραγεν",
+        "strong": "H2199",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "Εσεβων",
+        "strong": "H2809",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "Ελεαλη",
+        "strong": "H500",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "ἕως",
+        "strong": "H5704",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "5": [
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "τῆς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Μωαβίτιδος",
+        "strong": "H4124",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "βοᾷ",
+        "strong": "H2199",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "ἕως",
+        "strong": "H5704",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "6": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "καὶ",
+        "strong": "H3588",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "7": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "μὴ",
+        "strong": "H5921",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "οὕτως",
+        "strong": "H3651",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 2×he/3×gr: morfema lexical ↔ 3er token griego."
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "μέλλει",
+        "strong": "H3502",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "40.Isaiah.par",
+    "interlinear": "15.json",
+    "lxx": "15.json",
+    "report": {
+      "matchedPairs": 11,
+      "totalPairs": 108,
+      "skipped": [
+        {
+          "ref": "Isa 15:1",
+          "he": "M&)",
+          "gr": "TO\\ R(H=MA",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "MW)B",
+          "gr": "TO\\ KATA\\ TH=S MWABI/TIDOS",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "B/LYL =v",
+          "gr": "NUKTO\\S",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "$DD",
+          "gr": "A)POLEI=TAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "(R",
+          "gr": "--- ?",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "MW)B",
+          "gr": "H( MWABI=TIS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "NDMH",
+          "gr": "--- ?",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "B/LYL =v",
+          "gr": "NUKTO\\S",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "$DD",
+          "gr": "A)POLEI=TAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "QYR",
+          "gr": "TO\\ TEI=XOS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "MW)B",
+          "gr": "TH=S MWABI/TIDOS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:1",
+          "he": "NDMH",
+          "gr": "--- ?",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "(LH =v",
+          "gr": "E)F' E(AUTOI=S",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "H/BYT =@?BT,$BT",
+          "gr": "A)POLEI=TAI GA\\R",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "W/DYBN",
+          "gr": "KAI\\ DHBWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "H/BMWT",
+          "gr": "OU(= O( BWMO\\S U(MW=N",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "L/BKY",
+          "gr": "KLAI/EIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "(L",
+          "gr": "E)PI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "NBW",
+          "gr": "NABAU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "MW)B",
+          "gr": "TH=S MWABI/TIDOS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "YYLYL",
+          "gr": "O)LOLU/ZETE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "B/KL =%p",
+          "gr": "E)PI\\ PA/SHS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "R)$/YW",
+          "gr": "KEFALH=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "QRXH",
+          "gr": "FALA/KRWMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "KL",
+          "gr": "PA/NTES",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "ZQN =?ZR(",
+          "gr": "BRAXI/ONES",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:2",
+          "he": "GRW(H =?GDW(H .rd <je48.25,3",
+          "gr": "KATATETMHME/NOI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:3",
+          "he": "B/XWCT/YW",
+          "gr": "E)N TAI=S PLATEI/AIS AU)TH=S",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Isa 15:3",
+          "he": "&Q",
+          "gr": "SA/KKOUS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:3",
+          "he": "(L",
+          "gr": "E)PI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:3",
+          "he": "GGWT/YH",
+          "gr": "TW=N DWMA/TWN AU)TH=S",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Isa 15:3",
+          "he": "W/B/RXBT/YH",
+          "gr": "KAI\\ E)N TAI=S R(U/MAIS AU)TH=S",
+          "reason": "conteo CATSS (1 he / 5 gr)"
+        },
+        {
+          "ref": "Isa 15:3",
+          "he": "KLH",
+          "gr": "PA/NTES",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:3",
+          "he": "YYLYL",
+          "gr": "O)LOLU/ZETE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:3",
+          "he": "YRD",
+          "gr": "---",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:3",
+          "he": "B/BKY",
+          "gr": "META\\ KLAUQMOU=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:4",
+          "he": "YHC =:YHCH",
+          "gr": "IASSA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:4",
+          "he": "N$M(",
+          "gr": "H)KOU/SQH",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:4",
+          "he": "QWL/M",
+          "gr": "H( FWNH\\ AU)TW=N",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Isa 15:4",
+          "he": "(L KN",
+          "gr": "DIA\\ TOU=TO",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:4",
+          "he": "XLCY =v",
+          "gr": "H( O)SFU\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:4",
+          "he": "MW)B",
+          "gr": "TH=S MWABI/TIDOS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:4",
+          "he": "YRY(W",
+          "gr": "BOA=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:4",
+          "he": "NP$/W",
+          "gr": "H( YUXH\\ AU)TH=S",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Isa 15:4",
+          "he": "YR(H =YD(H .rd",
+          "gr": "GNW/SETAI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "LB/Y",
+          "gr": "H( KARDI/A",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "BRYX/H",
+          "gr": "E)N AU)TH=|",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "C(R =:C(WR",
+          "gr": "SHGWR",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "(GLT",
+          "gr": "DA/MALIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "$L$YH",
+          "gr": "TRIETH/S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "KY",
+          "gr": "DE\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "M(LH",
+          "gr": "TH=S A)NABA/SEWS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "H/LWXYT",
+          "gr": "TH=S LOUIQ",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "B/BKY",
+          "gr": "PRO\\S SE\\ KLAI/ONTES",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "Y(LH",
+          "gr": "A)NABH/SONTAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "DRK",
+          "gr": "TH=| O(DW=|",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "XWRNYM",
+          "gr": "ARWNIIM",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "Z(QT =v",
+          "gr": "BOA=|",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "$BR",
+          "gr": "SU/NTRIMMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:5",
+          "he": "Y((RW",
+          "gr": "KAI\\ SEISMO/S",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:6",
+          "he": "MY",
+          "gr": "TO\\ U(/DWR",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:6",
+          "he": "NMRYM",
+          "gr": "TH=S NEMRIM",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:6",
+          "he": "M$MWT",
+          "gr": "E)/RHMON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:6",
+          "he": "YHYW",
+          "gr": "E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:6",
+          "he": "XCYR",
+          "gr": "O( XO/RTOS AU)TH=S",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Isa 15:6",
+          "he": "KLH",
+          "gr": "E)KLEI/YEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:6",
+          "he": "D$)",
+          "gr": "XO/RTOS GA\\R",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:6",
+          "he": "YRQ =v",
+          "gr": "XLWRO\\S",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:6",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:6",
+          "he": "HYH",
+          "gr": "E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:7",
+          "he": "(&H =@?Y$( =vs",
+          "gr": "SWQH=NAI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:7",
+          "he": "W/PQDT/M =v",
+          "gr": "E)PA/CW GA\\R",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:7",
+          "he": "(L",
+          "gr": "E)PI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:7",
+          "he": "NXL",
+          "gr": "TH\\N FA/RAGGA",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:7",
+          "he": "H/(RBYM",
+          "gr": "A)/RABAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:7",
+          "he": "Y&)W/M",
+          "gr": "KAI\\ LH/MYONTAI AU)TH/N",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Isa 15:8",
+          "he": "HQYPH",
+          "gr": "SUNH=YEN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:8",
+          "he": "H/Z(QH",
+          "gr": "H( BOH\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:8",
+          "he": ")T GBWL",
+          "gr": "TO\\ O(/RION",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:8",
+          "he": "MW)B",
+          "gr": "TH=S MWABI/TIDOS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:8",
+          "he": "(D )GLYM",
+          "gr": "TH=S AGALLIM",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:8",
+          "he": "YLLT/H",
+          "gr": "KAI\\ O)LOLUGMO\\S AU)TH=S",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Isa 15:8",
+          "he": "W/B)R",
+          "gr": "E(/WS TOU= FRE/ATOS",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Isa 15:8",
+          "he": ")YLYM",
+          "gr": "TOU= AILIM",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": "MY",
+          "gr": "TO\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": "DYMWN =:RYMWN .dr",
+          "gr": "TO\\ REMMWN",
+          "reason": "conteo CATSS (3 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": "ML)W",
+          "gr": "PLHSQH/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": "DM",
+          "gr": "AI(/MATOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": ")$YT",
+          "gr": "E)PA/CW",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": "(L",
+          "gr": "E)PI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": "DYMWN =:RYMWN .dr",
+          "gr": "REMMWN",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": "NWSPWT",
+          "gr": "KAI\\ A)RW=",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": "L/PLY+T",
+          "gr": "TO\\ SPE/RMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": "MW)B",
+          "gr": "MWAB",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": ")RYH =:)RY)L",
+          "gr": "KAI\\ ARIHL",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": "W/L/$)RYT",
+          "gr": "KAI\\ TO\\ KATA/LOIPON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Isa 15:9",
+          "he": ")DMH",
+          "gr": "ADAMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}

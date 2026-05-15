@@ -43,10 +43,13 @@ function parseParText(text, opts = {}){
 
   /** Incluye prefijos numericos y sufijos tipo K (p.ej. 1Sam/K) usados en algunos .par. */
   const verseHeader = /^(\S+)\s+(\d+):(\d+)\s*$/;
+  /** Algunos libros de un solo capitulo en CCAT omiten ":" (p.ej. "Obad 7" = cap.1 verso 7). */
+  const verseHeaderOneChapter = /^(\S+)\s+(\d+)\s*$/;
 
   for(const raw of lines){
     const line = raw;
-    const vm = verseHeader.exec(line.trim());
+    const trimmed = line.trim();
+    const vm = verseHeader.exec(trimmed);
     if(vm){
       book = vm[1];
       if(verses.length >= maxVerses){
@@ -57,6 +60,24 @@ function parseParText(text, opts = {}){
         chapter: Number(vm[2]),
         verse: Number(vm[3]),
         ref: `${vm[1]} ${vm[2]}:${vm[3]}`,
+        pairs: []
+      };
+      verses.push(current);
+      continue;
+    }
+
+    const vm1 = verseHeaderOneChapter.exec(trimmed);
+    if(vm1){
+      book = vm1[1];
+      if(verses.length >= maxVerses){
+        break;
+      }
+      const vNum = Number(vm1[2]);
+      current = {
+        book,
+        chapter: 1,
+        verse: vNum,
+        ref: `${vm1[1]} 1:${vNum}`,
         pairs: []
       };
       verses.push(current);
