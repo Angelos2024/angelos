@@ -7,6 +7,8 @@
  * hacia el siguiente casillero hebreo ART/XD vacío (orden de palabra LXX distinto; p. ej. «ha-árets» ↔ «τὴν γῆν»).
  * No sustituye pistas por versículo salvo saneamiento posterior; reduce errores sistemáticos (hebreo en griego,
  * artículo con el mismo lexema que el sustantivo siguiente, duplicados seguros tipo ἐπάνω).
+ * Tras la reubicación de artículos: reglas léxicas MT↔LXX (H8432 + בְּ ~ ἐν μέσῳ; H1961 jussivo mal
+ * etiquetado como conjunción cuando el LXX lleva imperativo aor. pas./pres. medio V.APD/V.PAD).
  */
 (function(global){
   'use strict';
@@ -29,7 +31,11 @@
     relocateStrayArticleLookahead: 6,
     relocateStrayGreekArticlePasses: 2,
     /** Tras mover el artículo, si el renglón hebreo era conjunción (CC) y quedó vacío, poner καὶ (caso típico ו) */
-    fillKaiForEmptyHebrewConjunction: true
+    fillKaiForEmptyHebrewConjunction: true,
+    /** תוֹךְ (H8432) tras בְּ~ἐν: tomar el segundo miembro de ἔν μέσῳ / ἐν μέσον del verso LXX */
+    fixGlobalH8432EnMeso: true,
+    /** יְהִי juss. (H1961 + etiqueta JUSS): no mostrar καί si el verso tiene V.APD/V.PAD (γενηθήτω, ἔστω…) */
+    fixGlobalH1961JussiveKai: true
   };
 
   let policyCache = null;
@@ -150,14 +156,120 @@
     return list.some((g) => String(g || '').trim().normalize('NFC') === cur);
   }
 
+  function normalizeStrongLocal(value){
+    const text = String(value || '').trim().toUpperCase();
+    if(!text) return '';
+    if(/^H\d+$/.test(text)) return text;
+    if(/^\d+$/.test(text)) return `H${text}`;
+    return text;
+  }
+
+  /** Igual que normGr en admin-lxx-align: comparar superficie griega sin acentos. */
+  function normGrPlain(s){
+    let t = String(s || '').normalize('NFD');
+    t = t.replace(/\u0390/g, '\u03B9\u0308').replace(/\u03B0/g, '\u03C5\u0308').replace(/\u0386/g, '\u03AC');
+    t = t.replace(/[\u0300-\u036f\u0342]/g, '');
+    return t.replace(/\u03C2/g, '\u03C3').toLowerCase().replace(/[^\u0370-\u03FF]/g, '');
+  }
+
+  function hebrewPrepLabel(lab){
+    const L = String(lab || '').toUpperCase().replace(/\s+/g, '');
+    return /^PB|^PM|^PL|^PU|^PP|^PX|^Pf|^Prep/i.test(L) || L.includes('PREP') || L === 'P';
+  }
+
+  function isHebrewJussiveVerbColumn(col){
+    const lab = String(col?.label || '');
+    const compact = lab.toUpperCase().replace(/\./g, '');
+    if(/\bJUSS\b/.test(lab.toUpperCase())) return true;
+    if(/V[HQN]AJ/i.test(compact)) return true;
+    return false;
+  }
+
+  function tierAllowsGlobalOverride(tier){
+    const t = String(tier || '').toLowerCase().trim();
+    if(t === 'firm') return false;
+    return true;
+  }
+
+  function buildEnMesoSecondWordQueue(gTokens){
+    const q = [];
+    if(!Array.isArray(gTokens)) return q;
+    for(let k = 0; k < gTokens.length - 1; k += 1){
+      const w0 = normGrPlain(gTokens[k]?.w);
+      const w1 = normGrPlain(gTokens[k + 1]?.w);
+      if(w0 === 'εν' && (w1 === 'μεσω' || w1 === 'μεσον')){
+        const surf = String(gTokens[k + 1]?.w || '').trim();
+        if(surf) q.push(surf);
+      }
+    }
+    return q;
+  }
+
+  function buildLxxJussiveVerbSurfaceQueue(gTokens){
+    const q = [];
+    if(!Array.isArray(gTokens)) return q;
+    for(const gt of gTokens){
+      if(!gt || !gt.w) continue;
+      const m = String(gt.morph || '').trim();
+      if(/^V\.(APD|PAD)/.test(m)){
+        q.push(String(gt.w).trim());
+      }
+    }
+    return q;
+  }
+
+  function fixGlobalH8432EnMeso(columns, surfaces, tiers, gTokens, pol){
+    if(pol.fixGlobalH8432EnMeso === false) return;
+    if(!Array.isArray(gTokens) || gTokens.length < 2) return;
+    const queue = buildEnMesoSecondWordQueue(gTokens);
+    let qi = 0;
+    const n = columns.length;
+    for(let i = 1; i < n; i += 1){
+      if(normalizeStrongLocal(columns[i]?.strongs) !== 'H8432') continue;
+      if(!hebrewPrepLabel(columns[i - 1]?.label)) continue;
+      if(normGrPlain(surfaces[i - 1]) !== 'εν') continue;
+      if(!tierAllowsGlobalOverride(tiers[i])) continue;
+      const surf = String(surfaces[i] || '').trim();
+      const sNorm = surf && surf !== '—' ? normGrPlain(surf) : '';
+      if(sNorm === 'μεσω' || sNorm === 'μεσον') continue;
+      if(qi >= queue.length) continue;
+      if(surf && surf !== '—' && !isConjunctionGreek(surf, pol.dedupeConjunctiveGreekWhitelist)) continue;
+      surfaces[i] = queue[qi];
+      qi += 1;
+      tiers[i] = tiers[i] || 'hint';
+    }
+  }
+
+  function fixGlobalH1961JussiveKai(columns, surfaces, tiers, gTokens, pol){
+    if(pol.fixGlobalH1961JussiveKai === false) return;
+    if(!Array.isArray(gTokens) || !gTokens.length) return;
+    const queue = buildLxxJussiveVerbSurfaceQueue(gTokens);
+    if(!queue.length) return;
+    let qi = 0;
+    const conjWl = pol.dedupeConjunctiveGreekWhitelist || DEFAULT_POLICY.dedupeConjunctiveGreekWhitelist;
+    const n = columns.length;
+    for(let i = 0; i < n; i += 1){
+      if(normalizeStrongLocal(columns[i]?.strongs) !== 'H1961') continue;
+      if(isHebrewConjunctionColumn(columns[i])) continue;
+      if(!isHebrewJussiveVerbColumn(columns[i])) continue;
+      if(!tierAllowsGlobalOverride(tiers[i])) continue;
+      const surf = String(surfaces[i] || '').trim();
+      if(!isConjunctionGreek(surf, conjWl)) continue;
+      if(qi >= queue.length) break;
+      surfaces[i] = queue[qi];
+      qi += 1;
+      tiers[i] = tiers[i] || 'hint';
+    }
+  }
+
   /**
    * @param {object[]} columns
    * @param {string[]} surfaces
    * @param {string[]} tiers
-   * @param {object[]} _gTokens Reservado para reglas futuras que necesiten índice LXX
+   * @param {object[]} gTokens Tokens LXX del verso ({ w, morph, lemma, … })
    * @param {object} policy
    */
-  function applyGlobalPolicy(columns, surfaces, tiers, _gTokens, policy){
+  function applyGlobalPolicy(columns, surfaces, tiers, gTokens, policy){
     if(!policy || !Array.isArray(columns) || !Array.isArray(surfaces) || !Array.isArray(tiers)){
       return;
     }
@@ -208,6 +320,11 @@
       for(let p = 0; p < passes; p += 1){
         relocateStrayGreekArticlesPass(columns, surfaces, tiers, pol);
       }
+    }
+
+    if(Array.isArray(gTokens) && gTokens.length){
+      fixGlobalH8432EnMeso(columns, surfaces, tiers, gTokens, pol);
+      fixGlobalH1961JussiveKai(columns, surfaces, tiers, gTokens, pol);
     }
   }
 
