@@ -7,6 +7,8 @@
  *   - Lineas con prefijo --+ : continuidad / aparato / remisiones (ver documentacion CATSS)
  *
  * Origen: https://ccat.sas.upenn.edu/gopher/text/religion/biblical/parallel/
+ * Descarga: preferir `curl.exe -sL <url> -o archivo.par` (los .par tienen TAB+newline);
+ * el gateway HTTP a veces devuelve una sola linea sin TAB y el parser no vera alineaciones.
  * Documentacion general: https://ccat.sas.upenn.edu/rak/catss.html
  *
  * IMPORTANTE: respeta la licencia y condiciones de uso de CCAT/CATSS al redistribuir datos.

@@ -298,12 +298,18 @@ function canonicalCatssGreekCell(grRaw){
 
 /** Aparato / etiquetas discourse en celda hebrea CATSS (no son consonantes de contraste local). */
 function normalizeCatssHebrewAlignCell(heRaw){
-  return String(heRaw || '')
+  let s = String(heRaw || '')
     .replace(/\{[^}]*\}/g, '')
     .replace(/<[^>]*>/g, '')
-    .replace(/=\{[^}]+\}/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+    .replace(/=\{[^}]+\}/g, ' ');
+  /** Marcador de columna aramea en paralelismos CCAT (p.ej. Ezr 5): `חגי ,,a`. */
+  s = s.replace(/\s*,,+[a-z]+/gi, '');
+  /** Variante **secundaria** tras lectura *primaria* (misma celda). */
+  s = s.replace(/\s*\*\*[^\s*]+/g, '');
+  /** Asterisco inicial de lectura preferida `*NBY)/H`. */
+  s = s.replace(/\*+/g, '');
+  s = s.replace(/\s+/g, ' ').trim();
+  return s;
 }
 
 function splitCatssGreek(grRaw){

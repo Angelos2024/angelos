@@ -6,7 +6,7 @@
 
   // Tanda 1: versionado de datos + ajustes de carga.
   // Cambia DATA_VERSION cuando se actualicen los JSON fuente para invalidar caches.
-  const DATA_VERSION = '2026-06-20';
+  const DATA_VERSION = '2026-06-21';
   const RENDER_BATCH_SIZE = 6;
   const IDB_NAME = 'angelos-admin-cache';
   const IDB_STORE = 'json-blobs';

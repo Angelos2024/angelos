@@ -164,7 +164,7 @@ function main(){
     const outJson = path.join(ROOT, 'IdiomaORIGEN', 'lxx-mt-word-hints', 'chapters', slug, `${ch}.json`);
 
     if(!fs.existsSync(lxxJson)){
-      console.error(`[skip cap ${ch}] no existe LXX: ${lxxJson}`);
+      console.error(`[skip cap ${ch}] no existe LXX: ${lxxJson} (cap.LXX ${lxxFileChapter} = CATSS ${ch} + offset ${lxxChapterOffsetN})`);
       fail += 1;
       continue;
     }

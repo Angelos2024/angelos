@@ -1,0 +1,4466 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (18.Ezra.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "ezra",
+  "chapter": 2,
+  "verses": {
+    "1": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "οὗτοι",
+        "strong": "H428",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "τῆς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "χώρας",
+        "strong": "H4082",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "οἱ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "ἀναβαίνοντες",
+        "strong": "H5927",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "αἰχμαλωσίας",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "αἰχμαλωσίας",
+        "strong": "H7628",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "τῆς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "ἀποικίας",
+        "strong": "H1473",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "ἧς",
+        "strong": "H834",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "ἀπῴκισεν",
+        "strong": "H1540",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 15,
+        "surface": "Ναβουχοδονοσορ",
+        "strong": "H5020",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "βασιλεὺς",
+        "strong": "H4428",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "Βαβυλῶνος",
+        "strong": "H894",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 0,
+        "lxxIdx": 18,
+        "surface": "εἰς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "18",
+        "morphemeIdx": 0,
+        "lxxIdx": 19,
+        "surface": "Βαβυλῶνα",
+        "strong": "H894",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "19",
+        "morphemeIdx": 0,
+        "lxxIdx": 20,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "20",
+        "morphemeIdx": 0,
+        "lxxIdx": 21,
+        "surface": "ἐπέστρεψαν",
+        "strong": "H7725",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "21",
+        "morphemeIdx": 0,
+        "lxxIdx": 22,
+        "surface": "εἰς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "22",
+        "morphemeIdx": 0,
+        "lxxIdx": 23,
+        "surface": "Ιερουσαλημ",
+        "strong": "H3389",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "23",
+        "morphemeIdx": 0,
+        "lxxIdx": 24,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "24",
+        "morphemeIdx": 0,
+        "lxxIdx": 25,
+        "surface": "Ιουδα",
+        "strong": "H3063",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "25",
+        "morphemeIdx": 0,
+        "lxxIdx": 26,
+        "surface": "ἀνὴρ",
+        "strong": "H376",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "2": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "οἳ",
+        "strong": "H834",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "ἦλθον",
+        "strong": "H935",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "μετὰ",
+        "strong": "H5973",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Ζοροβαβελ",
+        "strong": "H2216",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "Ἰησοῦς",
+        "strong": "H3442",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Νεεμιας",
+        "strong": "H5166",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "3": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Φορος",
+        "strong": "H6551",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "δισχίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "ἑκατὸν",
+        "strong": "H3967",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "ἑβδομήκοντα",
+        "strong": "H7657",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "δύο",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "δύο",
+        "strong": "H8147",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "4": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Σαφατια",
+        "strong": "H8203",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "5": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ηρα",
+        "strong": "H733",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "6": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "7": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Αιλαμ",
+        "strong": "H5867",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "χίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "διακόσιοι",
+        "strong": "H3967",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "πεντήκοντα",
+        "strong": "H2572",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "τέσσαρες",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "τέσσαρες",
+        "strong": "H702",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "8": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ζαθουα",
+        "strong": "H2240",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "9": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "10": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121,H1137",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "11": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Βαβι",
+        "strong": "H893",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "12": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ασγαδ",
+        "strong": "H5803",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "13": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Αδωνικαμ",
+        "strong": "H140",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "14": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Βαγοι",
+        "strong": "H902",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "δισχίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "πεντήκοντα",
+        "strong": "H2572",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "ἕξ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "ἕξ",
+        "strong": "H8337",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "15": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Αδιν",
+        "strong": "H5720",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "16": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ατηρ",
+        "strong": "H333",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "τῷ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Εζεκια",
+        "strong": "H2396",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "ἐνενήκοντα",
+        "strong": "H8673",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "ὀκτώ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "ὀκτώ",
+        "strong": "H8083",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "17": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "18": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ιωρα",
+        "strong": "H3139",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "19": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ασεμ",
+        "strong": "H2828",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "20": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Γαβερ",
+        "strong": "H1402",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἐνενήκοντα",
+        "strong": "H8673",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "πέντε",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "πέντε",
+        "strong": "H2568",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "21": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "22": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H582",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Νετωφα",
+        "strong": "H5199",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "πεντήκοντα",
+        "strong": "H2572",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "ἕξ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "ἕξ",
+        "strong": "H8337",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "23": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H376",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Αναθωθ",
+        "strong": "H6068",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "24": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ασμωθ",
+        "strong": "H5820",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "τεσσαράκοντα",
+        "strong": "H705",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "δύο",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "δύο",
+        "strong": "H8147",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "25": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "26": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Αραμα",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Αραμα",
+        "strong": "H7414",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Γαβαα",
+        "strong": "H1387",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "27": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "ἄνδρες",
+        "strong": "H376",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Μαχμας",
+        "strong": "H4363",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "28": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "ἄνδρες",
+        "strong": "H376",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "29": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ναβου",
+        "strong": "H5015",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "πεντήκοντα",
+        "strong": "H2572",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "δύο",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "δύο",
+        "strong": "H8147",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "30": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Μαγεβως",
+        "strong": "H4019",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἑκατὸν",
+        "strong": "H3967",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "πεντήκοντα",
+        "strong": "H2572",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "ἕξ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "ἕξ",
+        "strong": "H8337",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "31": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "χίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "διακόσιοι",
+        "strong": "H3967",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "πεντήκοντα",
+        "strong": "H2572",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "τέσσαρες",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "τέσσαρες",
+        "strong": "H702",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "32": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ηραμ",
+        "strong": "H2766",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "33": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Λοδ",
+        "strong": "H3850",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "34": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ιεριχω",
+        "strong": "H3405",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "35": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Σαναα",
+        "strong": "H5570",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "τρισχίλιοι",
+        "strong": "H7969",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "τρισχίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "36": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἱερεῖς",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἱερεῖς",
+        "strong": "H3548",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "37": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Εμμηρ",
+        "strong": "H564",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "χίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "πεντήκοντα",
+        "strong": "H2572",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "δύο",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "δύο",
+        "strong": "H8147",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "38": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Φασσουρ",
+        "strong": "H6583",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "χίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "διακόσιοι",
+        "strong": "H3967",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "τεσσαράκοντα",
+        "strong": "H705",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "ἑπτά",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "ἑπτά",
+        "strong": "H7651",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "39": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ηρεμ",
+        "strong": "H2766",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "χίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "40": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "Λευῖται",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "Λευῖται",
+        "strong": "H3881",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "Ἰησοῦ",
+        "strong": "H3442",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "Καδμιηλ",
+        "strong": "H6934",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "τοῖς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "υἱοῖς",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "Ωδουια",
+        "strong": "H1938",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "ἑβδομήκοντα",
+        "strong": "H7657",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "τέσσαρες",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "τέσσαρες",
+        "strong": "H702",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "41": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "οἱ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "ᾄδοντες",
+        "strong": "H7891",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Ασαφ",
+        "strong": "H623",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "42": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "τῶν",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "πυλωρῶν",
+        "strong": "H7778",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "Σαλουμ",
+        "strong": "H7967",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "Ατηρ",
+        "strong": "H333",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "Τελμων",
+        "strong": "H2929",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "Ακουβ",
+        "strong": "H6126",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "Ατιτα",
+        "strong": "H2410",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "43": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "οἱ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "ναθιναῖοι",
+        "strong": "H5411",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "44": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Κηραος",
+        "strong": "H7026",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "45": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Λαβανω",
+        "strong": "H3842",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Αγαβα",
+        "strong": "H2286",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "46": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Αγαβ",
+        "strong": "H2285",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Σαμαλαι",
+        "strong": "H8073",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Αναν",
+        "strong": "H2605",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "47": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Κεδελ",
+        "strong": "H1435",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Γαερ",
+        "strong": "H1515",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Ρεηα",
+        "strong": "H7211",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "48": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "49": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ουσα",
+        "strong": "H5798",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Φαση",
+        "strong": "H6454",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Βασι",
+        "strong": "H1153",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "50": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ασενα",
+        "strong": "H619",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Μαωνιμ",
+        "strong": "H4586",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Ναφισων",
+        "strong": "H5304",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "51": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Βακβουκ",
+        "strong": "H1227",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "52": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Βασαλωθ",
+        "strong": "H1213",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "53": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Βαρκους",
+        "strong": "H1302",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Σισαρα",
+        "strong": "H5516",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Θεμα",
+        "strong": "H8547",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "54": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "55": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Αβδησελμα",
+        "strong": "H5650",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Αβδησελμα",
+        "strong": "H8010",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Σατι",
+        "strong": "H5479",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Ασεφηραθ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Ασεφηραθ",
+        "strong": "H5618",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "56": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Ιεηλα",
+        "strong": "H3279",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Δαρκων",
+        "strong": "H1874",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Γεδηλ",
+        "strong": "H1435",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "57": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Σαφατια",
+        "strong": "H8203",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Ατιλ",
+        "strong": "H2411",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "58": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "πάντες",
+        "strong": "H3605",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "οἱ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ναθινιν",
+        "strong": "H5411",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Αβδησελμα",
+        "strong": "H5650",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Αβδησελμα",
+        "strong": "H8010",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "59": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "οὗτοι",
+        "strong": "H428",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "οἱ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "ἀναβάντες",
+        "strong": "H5927",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "60": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "Δαλαια",
+        "strong": "H1806",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "Τωβια",
+        "strong": "H2900",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "Νεκωδα",
+        "strong": "H5353",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "61": [
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "τῶν",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "ἱερέων",
+        "strong": "H3548",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "Χαβια",
+        "strong": "H2252",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "Ακους",
+        "strong": "H6976",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "υἱοὶ",
+        "strong": "H1121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "Βερζελλαι",
+        "strong": "H1271",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "ὃς",
+        "strong": "H834",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "ἔλαβεν",
+        "strong": "H3947",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "ἀπὸ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 15,
+        "surface": "θυγατέρων",
+        "strong": "H1323",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "Βερζελλαι",
+        "strong": "H1271",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "τοῦ",
+        "strong": "H1569",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "18",
+        "morphemeIdx": 0,
+        "lxxIdx": 18,
+        "surface": "Γαλααδίτου",
+        "strong": "H1569",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "19",
+        "morphemeIdx": 0,
+        "lxxIdx": 19,
+        "surface": "γυναῖκα",
+        "strong": "H802",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "20",
+        "morphemeIdx": 0,
+        "lxxIdx": 20,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "21",
+        "morphemeIdx": 0,
+        "lxxIdx": 21,
+        "surface": "ἐκλήθη",
+        "strong": "H7121",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "22",
+        "morphemeIdx": 0,
+        "lxxIdx": 22,
+        "surface": "ἐπὶ",
+        "strong": "H5921",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "23",
+        "morphemeIdx": 0,
+        "lxxIdx": 25,
+        "surface": "αὐτῶν",
+        "strong": "H8034",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      }
+    ],
+    "62": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "οὗτοι",
+        "strong": "H428",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "ἐζήτησαν",
+        "strong": "H1245",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "63": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "εἶπεν",
+        "strong": "H559",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "Αθερσαθα",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "Αθερσαθα",
+        "strong": "H8660",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "αὐτοῖς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 1,
+        "lxxIdx": 3,
+        "surface": "αὐτοῖς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "τοῦ",
+        "strong": "H834",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "μὴ",
+        "strong": "H3808",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "φαγεῖν",
+        "strong": "H398",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "ἁγίου",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "ἁγίου",
+        "strong": "H6944",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "τῶν",
+        "strong": "H6944",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "ἁγίων",
+        "strong": "H6944",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "ἕως",
+        "strong": "H5704",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "ἀναστῇ",
+        "strong": "H5975",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "ἱερεὺς",
+        "strong": "H3548",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 0,
+        "lxxIdx": 15,
+        "surface": "τοῖς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "18",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "φωτίζουσιν",
+        "strong": "H224",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "19",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "20",
+        "morphemeIdx": 0,
+        "lxxIdx": 18,
+        "surface": "τοῖς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "21",
+        "morphemeIdx": 0,
+        "lxxIdx": 19,
+        "surface": "τελείοις",
+        "strong": "H8550",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "64": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "δὲ",
+        "strong": "H3605",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἡ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "ἐκκλησία",
+        "strong": "H6951",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "ὡς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "εἷς",
+        "strong": "H259",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "τέσσαρες",
+        "strong": "H702",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "μυριάδες",
+        "strong": "H7239",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "δισχίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "65": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "χωρὶς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "χωρὶς",
+        "strong": "H905",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "οὗτοι",
+        "strong": "H428",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "ἑπτακισχίλιοι",
+        "strong": "H7651",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "ἑπτακισχίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "οὗτοι",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "οὗτοι",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 1,
+        "lxxIdx": 12,
+        "surface": "οὗτοι",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "19",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "ᾄδοντες",
+        "strong": "H7891",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "20",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "21",
+        "morphemeIdx": 0,
+        "lxxIdx": 15,
+        "surface": "ᾄδουσαι",
+        "strong": "H7891",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "22",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "διακόσιοι",
+        "strong": "H3967",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "66": [
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "διακόσιοι",
+        "strong": "H3967",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "τεσσαράκοντα",
+        "strong": "H705",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "πέντε",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "πέντε",
+        "strong": "H2568",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "67": [
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "αὐτῶν",
+        "strong": "H2543",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "ἑξακισχίλιοι",
+        "strong": "H8337",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "ἑξακισχίλιοι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "68": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "ἀπὸ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἀρχόντων",
+        "strong": "H7218",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "πατριῶν",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "πατριῶν",
+        "strong": "H1",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "εἰς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "οἶκον",
+        "strong": "H1004",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "κυρίου",
+        "strong": "H3068",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "τὸν",
+        "strong": "H834",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "ἐν",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "Ιερουσαλημ",
+        "strong": "H3389",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "ἡκουσιάσαντο",
+        "strong": "H5068",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 15,
+        "surface": "εἰς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "οἶκον",
+        "strong": "H1004",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "18",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "τοῦ",
+        "strong": "H430",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "19",
+        "morphemeIdx": 0,
+        "lxxIdx": 18,
+        "surface": "θεοῦ",
+        "strong": "H430",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "23",
+        "morphemeIdx": 0,
+        "lxxIdx": 22,
+        "surface": "ἐπὶ",
+        "strong": "H5921",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "24",
+        "morphemeIdx": 0,
+        "lxxIdx": 25,
+        "surface": "αὐτοῦ",
+        "strong": "H4349",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      }
+    ],
+    "69": [
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "ἔδωκαν",
+        "strong": "H5414",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "εἰς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "θησαυρὸν",
+        "strong": "H214",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "τοῦ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "ἔργου",
+        "strong": "H4399",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "χρυσίον",
+        "strong": "H2091",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "μναῖ",
+        "strong": "H1871",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "ἓξ",
+        "strong": "H8337",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "μυριάδες",
+        "strong": "H7239",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 15,
+        "surface": "χίλιαι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "ἀργύριον",
+        "strong": "H3701",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 0,
+        "lxxIdx": 18,
+        "surface": "μναῖ",
+        "strong": "H4488",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "18",
+        "morphemeIdx": 0,
+        "lxxIdx": 19,
+        "surface": "πεντακισχίλιαι",
+        "strong": "H2568",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "19",
+        "morphemeIdx": 0,
+        "lxxIdx": 19,
+        "surface": "πεντακισχίλιαι",
+        "strong": "H505",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "20",
+        "morphemeIdx": 0,
+        "lxxIdx": 20,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "21",
+        "morphemeIdx": 0,
+        "lxxIdx": 21,
+        "surface": "κοθωνοι",
+        "strong": "H3801",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "22",
+        "morphemeIdx": 0,
+        "lxxIdx": 23,
+        "surface": "ἱερέων",
+        "strong": "H3548",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "23",
+        "morphemeIdx": 0,
+        "lxxIdx": 24,
+        "surface": "ἑκατόν",
+        "strong": "H3967",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "70": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "ἐκάθισαν",
+        "strong": "H3427",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "οἱ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "ἱερεῖς",
+        "strong": "H3548",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "οἱ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "Λευῖται",
+        "strong": "H3881",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "ἀπὸ",
+        "strong": "H4480",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "τοῦ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "λαοῦ",
+        "strong": "H5971",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "οἱ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "ᾄδοντες",
+        "strong": "H7891",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 15,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "οἱ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "πυλωροὶ",
+        "strong": "H7778",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "18",
+        "morphemeIdx": 0,
+        "lxxIdx": 18,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "19",
+        "morphemeIdx": 0,
+        "lxxIdx": 19,
+        "surface": "οἱ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "20",
+        "morphemeIdx": 0,
+        "lxxIdx": 20,
+        "surface": "ναθινιμ",
+        "strong": "H5411",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "24",
+        "morphemeIdx": 0,
+        "lxxIdx": 24,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "25",
+        "morphemeIdx": 0,
+        "lxxIdx": 25,
+        "surface": "πᾶς",
+        "strong": "H3605",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "18.Ezra.par",
+    "interlinear": "2.json",
+    "lxx": "2.json",
+    "report": {
+      "matchedPairs": 291,
+      "totalPairs": 420,
+      "skipped": [
+        {
+          "ref": "Ezr 2:1",
+          "he": "L/(YR/W",
+          "gr": "EI)S PO/LIN AU)TOU=",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "&RYH",
+          "gr": "SARAIAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "R(LYH",
+          "gr": "REELIAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "MRDKY",
+          "gr": "MARDOXAIOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "BL$N",
+          "gr": "BALASAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "MSPR",
+          "gr": "MASFAR",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "BGWY",
+          "gr": "BAGOUI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "RXWM",
+          "gr": "REOUM",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "B(NH",
+          "gr": "BAANA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "MSPR ^ =)N$Y",
+          "gr": "A)NDRW=N",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "^ )N$Y =MSPR",
+          "gr": "A)RIQMO\\S",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:2",
+          "he": "Y&R)L",
+          "gr": "ISRAHL",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:4",
+          "he": "$L$ M)WT $B(YM W/$NYM",
+          "gr": "TRIAKO/SIOI E(BDOMH/KONTA DU/O",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:5",
+          "he": "$B( M)WT XM$H W/$B(YM",
+          "gr": "E(PTAKO/SIOI E(BDOMH/KONTA ^ PE/NTE",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:6",
+          "he": "PXT MW)B",
+          "gr": "FAAQMWAB",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:6",
+          "he": "L/BNY",
+          "gr": "TOI=S UI(OI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:6",
+          "he": "Y$W(",
+          "gr": "IHSOUE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:6",
+          "he": "YW)B",
+          "gr": "IWAB",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:6",
+          "he": ")LPYM",
+          "gr": "DISXI/LIOI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:6",
+          "he": "$MNH M)WT W/$NYM (&R",
+          "gr": "O)KTAKO/SIOI DE/KA DU/O",
+          "reason": "conteo CATSS (4 he / 3 gr)"
+        },
+        {
+          "ref": "Ezr 2:8",
+          "he": "T$( M)WT W/)RB(YM W/XM$H",
+          "gr": "E)NNAKO/SIOI TESSARA/KONTA PE/NTE",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:9",
+          "he": "ZKY =:ZKW .yw",
+          "gr": "ZAKXOU",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:9",
+          "he": "$B( M)WT W/$$YM",
+          "gr": "E(PTAKO/SIOI E(CH/KONTA",
+          "reason": "conteo CATSS (3 he / 2 gr)"
+        },
+        {
+          "ref": "Ezr 2:10",
+          "he": "BNY =:BNWY",
+          "gr": "BANOUI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:10",
+          "he": "$$ M)WT )RB(YM W/$NYM",
+          "gr": "E(CAKO/SIOI TESSARA/KONTA DU/O",
+          "reason": "conteo CATSS (4 he / 3 gr)"
+        },
+        {
+          "ref": "Ezr 2:11",
+          "he": "$$ M)WT (&RYM W/$L$H",
+          "gr": "E(CAKO/SIOI EI)/KOSI TREI=S",
+          "reason": "conteo CATSS (4 he / 3 gr)"
+        },
+        {
+          "ref": "Ezr 2:12",
+          "he": ")LP =+",
+          "gr": "TRISXI/LIOI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:12",
+          "he": "M)TYM (&RYM W/$NYM",
+          "gr": "DIAKO/SIOI EI)/KOSI DU/O",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:13",
+          "he": "$$ M)WT $$YM W/$$H",
+          "gr": "E(CAKO/SIOI E(CH/KONTA E(/C",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:15",
+          "he": ")RB( M)WT XM$YM W/)RB(H",
+          "gr": "TETRAKO/SIOI PENTH/KONTA TE/SSARES",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:17",
+          "he": "BCY =:BCW .yw",
+          "gr": "BASOU",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:17",
+          "he": "$L$ M)WT (&RYM W/$L$H",
+          "gr": "TRIAKO/SIOI EI)/KOSI TREI=S",
+          "reason": "conteo CATSS (4 he / 3 gr)"
+        },
+        {
+          "ref": "Ezr 2:18",
+          "he": "M)H W/$NYM (&R",
+          "gr": "E(KATO\\N DE/KA ^ DU/O",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:19",
+          "he": "M)TYM (&RYM W/$L$H",
+          "gr": "DIAKO/SIOI EI)/KOSI TREI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:21",
+          "he": "BYT LXM",
+          "gr": "BAIQLEEM",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:21",
+          "he": "M)H (&RYM W/$L$H",
+          "gr": "E(KATO\\N EI)/KOSI TREI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:23",
+          "he": "M)H (&RYM W/$MNH",
+          "gr": "E(KATO\\N EI)/KOSI O)KTW/",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:25",
+          "he": "QRYT (RYM",
+          "gr": "KARIAQIARIM",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:25",
+          "he": "KPYRH",
+          "gr": "KAFIRA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:25",
+          "he": "W/B)RWT",
+          "gr": "KAI\\ BHRWQ",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:25",
+          "he": "$B( M)WT W/)RB(YM W/$L$H",
+          "gr": "E(PTAKO/SIOI TESSARA/KONTA TREI=S",
+          "reason": "conteo CATSS (4 he / 3 gr)"
+        },
+        {
+          "ref": "Ezr 2:26",
+          "he": "$$ M)WT (&RYM W/)XD",
+          "gr": "E(CAKO/SIOI EI)/KOSI EI(=S",
+          "reason": "conteo CATSS (4 he / 3 gr)"
+        },
+        {
+          "ref": "Ezr 2:27",
+          "he": "M)H (&RYM W/$NYM",
+          "gr": "E(KATO\\N EI)/KOSI DU/O",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:28",
+          "he": "BYT )L",
+          "gr": "BAIQHL",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:28",
+          "he": "W/H/(Y",
+          "gr": "KAI\\ AIA",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Ezr 2:28",
+          "he": "M)TYM (&RYM W/$L$H",
+          "gr": "TETRAKO/SIOI EI)/KOSI TREI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:31",
+          "he": "(YLM )XR",
+          "gr": "HLAM AR",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ezr 2:32",
+          "he": "$L$ M)WT W/(&RYM",
+          "gr": "TRIAKO/SIOI EI)/KOSI",
+          "reason": "conteo CATSS (3 he / 2 gr)"
+        },
+        {
+          "ref": "Ezr 2:33",
+          "he": "XDYD =:XRWD .dr .yw",
+          "gr": "ARWQ",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:33",
+          "he": "W/)WNW",
+          "gr": "KAI\\ WNW",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:33",
+          "he": "$B( M)WT (&RYM W/XM$H",
+          "gr": "E(PTAKO/SIOI EI)/KOSI PE/NTE",
+          "reason": "conteo CATSS (4 he / 3 gr)"
+        },
+        {
+          "ref": "Ezr 2:34",
+          "he": "$L$ M)WT )RB(YM W/XM$H",
+          "gr": "TRIAKO/SIOI TESSARA/KONTA PE/NTE",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:35",
+          "he": "W/$$ M)WT W/$L$YM",
+          "gr": "E(CAKO/SIOI TRIA/KONTA",
+          "reason": "conteo CATSS (3 he / 2 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:36",
+          "he": "YD(YH =:YDW(",
+          "gr": "IEDOUA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:36",
+          "he": "L/BYT",
+          "gr": "TW=| OI)/KW|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:36",
+          "he": "Y$W(",
+          "gr": "I)HSOU=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:36",
+          "he": "T$( M)WT $B(YM W/$L$H",
+          "gr": "E)NNAKO/SIOI E(BDOMH/KONTA TREI=S",
+          "reason": "conteo CATSS (4 he / 3 gr)"
+        },
+        {
+          "ref": "Ezr 2:39",
+          "he": "W/$B(H (&R =+",
+          "gr": "E(PTA/",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:41",
+          "he": "M)H (&RYM W/$MNH",
+          "gr": "E(KATO\\N EI)/KOSI O)KTW/",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:42",
+          "he": "$BY =:$BW .yw",
+          "gr": "SABAOU",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:42",
+          "he": "H/KL",
+          "gr": "OI( PA/NTES",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:42",
+          "he": "M)H $L$YM W/T$(H",
+          "gr": "E(KATO\\N TRIA/KONTA E)NNE/A",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:43",
+          "he": "CYX) =:CWX) .yw",
+          "gr": "SOUIA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:43",
+          "he": "BNY",
+          "gr": "UI(OI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:43",
+          "he": "X&WP)",
+          "gr": "ASOUFE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:43",
+          "he": "BNY",
+          "gr": "UI(OI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:43",
+          "he": "+B(WT",
+          "gr": "TABAWQ",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:44",
+          "he": "SY(H) =:SW(H) .yw",
+          "gr": "SWHA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:44",
+          "he": "BNY",
+          "gr": "UI(OI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:44",
+          "he": "PDWN",
+          "gr": "FADWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:45",
+          "he": "(QWB =:(QBWT",
+          "gr": "AKABWQ",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:48",
+          "he": "RCYN =:RCWN .yw",
+          "gr": "RASWN",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:48",
+          "he": "BNY",
+          "gr": "UI(OI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:48",
+          "he": "NQWD)",
+          "gr": "NEKWDA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:48",
+          "he": "BNY",
+          "gr": "UI(OI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:48",
+          "he": "GZM",
+          "gr": "GAZEM",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:51",
+          "he": "XQWP) =:XQYP) .wy",
+          "gr": "AKIFA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:51",
+          "he": "BNY",
+          "gr": "UI(OI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:51",
+          "he": "XRXWR",
+          "gr": "AROUR",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:52",
+          "he": "MXYD) =:MXWD) .yw",
+          "gr": "MAOUDA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:52",
+          "he": "BNY",
+          "gr": "UI(OI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:52",
+          "he": "XR$)",
+          "gr": "ARHSA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:54",
+          "he": "NCYX =:NCWX .yw",
+          "gr": "NASOUE",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:54",
+          "he": "BNY",
+          "gr": "UI(OI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:54",
+          "he": "X+YP) =:X+WP) .yw",
+          "gr": "ATOUFA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:55",
+          "he": "PRWD) =:PDWR) .dr .rd",
+          "gr": "FADOURA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:57",
+          "he": "PKRT H/CBYYM =:PKRT H/CBWYN",
+          "gr": "FAXERAQ ASEBWIN",
+          "reason": "conteo CATSS (4 he / 2 gr)"
+        },
+        {
+          "ref": "Ezr 2:57",
+          "he": "BNY",
+          "gr": "UI(OI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:57",
+          "he": ")MY",
+          "gr": "HMI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:58",
+          "he": "$L$ M)WT T$(YM W/$NYM",
+          "gr": "TRIAKO/SIOI E)NENH/KONTA DU/O",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": "M/TL MLX",
+          "gr": "A)PO\\ QELMELEQ",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": "TL XR$)",
+          "gr": "QELARHSA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": "KRWB",
+          "gr": "XAROUB",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": ")DN",
+          "gr": "HDAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": ")MR",
+          "gr": "EMMHR",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": "W/L)",
+          "gr": "KAI\\ OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": "YKLW",
+          "gr": "H)DUNA/SQHSAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": "L/HGYD",
+          "gr": "TOU= A)NAGGEI=LAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": "BYT",
+          "gr": "OI)=KON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": ")BWT/M",
+          "gr": "PATRIA=S AU)TW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": "W/ZR(/M",
+          "gr": "KAI\\ SPE/RMA AU)TW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": ")M",
+          "gr": "EI)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": "M/Y&R)L",
+          "gr": "E)C ISRAHL",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:59",
+          "he": "HM",
+          "gr": "EI)SI/N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:60",
+          "he": "$$ M)WT XM$YM W/$NYM",
+          "gr": "E(CAKO/SIOI PENTH/KONTA DU/O",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:61",
+          "he": "W/M/BNY",
+          "gr": "KAI\\ A)PO\\ TW=N UI(W=N",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:62",
+          "he": "KTB/M",
+          "gr": "GRAFH\\N AU)TW=N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ezr 2:62",
+          "he": "H/MTYX&YM",
+          "gr": "OI( MEQWESIM",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:62",
+          "he": "W/L)",
+          "gr": "KAI\\ OU)X",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:62",
+          "he": "NMC)W",
+          "gr": "EU(RE/QHSAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:62",
+          "he": "W/YG)LW",
+          "gr": "KAI\\ H)GXISTEU/QHSAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:62",
+          "he": "MN",
+          "gr": "A)PO\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:62",
+          "he": "H/KHNH",
+          "gr": "TH=S I(ERATEI/AS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:64",
+          "he": "$L$ M)WT $$YM",
+          "gr": "TRIAKO/SIOI E(CH/KONTA",
+          "reason": "conteo CATSS (3 he / 2 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:65",
+          "he": "(BD/YHM",
+          "gr": "DOU/LWN AU)TW=N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ezr 2:65",
+          "he": "W/)MHT/YHM",
+          "gr": "KAI\\ PAIDISKW=N AU)TW=N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ezr 2:65",
+          "he": "$L$ M)WT $L$YM W/$B(H",
+          "gr": "TRIAKO/SIOI TRIA/KONTA E(PTA/",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:66",
+          "he": "SWS/YHM",
+          "gr": "I(/PPOI AU)TW=N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ezr 2:66",
+          "he": "$B( M)WT $L$YM W/$$H",
+          "gr": "E(PTAKO/SIOI TRIA/KONTA E(/C",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:66",
+          "he": "PRD/YHM",
+          "gr": "H(MI/ONOI AU)TW=N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ezr 2:67",
+          "he": "GML/YHM",
+          "gr": "KA/MHLOI AU)TW=N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ezr 2:67",
+          "he": ")RB( M)WT $L$YM W/XM$H",
+          "gr": "TETRAKO/SIOI TRIA/KONTA PE/NTE",
+          "reason": "conteo CATSS (4 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:67",
+          "he": "$B( M)WT W/(&RYM",
+          "gr": "E(PTAKO/SIOI EI)/KOSI",
+          "reason": "conteo CATSS (3 he / 2 gr)"
+        },
+        {
+          "ref": "Ezr 2:68",
+          "he": "B/BW)/M",
+          "gr": "E)N TW=| E)LQEI=N AU)TOU\\S",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:68",
+          "he": "L/H(MYD/W",
+          "gr": "TOU= STH=SAI AU)TO\\N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ezr 2:69",
+          "he": "K/KX/M",
+          "gr": "W(S H( DU/NAMIS AU)TW=N",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Ezr 2:70",
+          "he": "B/(R/YHM",
+          "gr": "E)N PO/LESIN AU)TW=N",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Ezr 2:70",
+          "he": "Y&R)L",
+          "gr": "ISRAHL",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Ezr 2:70",
+          "he": "B/(R/YHM",
+          "gr": "E)N PO/LESIN AU)TW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}
