@@ -114,6 +114,8 @@ function main(){
     ? shiftPath
     : path.join(ROOT, shiftPath.replace(/^\.\//, ''));
   const shiftCfg = readShiftCfg(shiftResolved);
+  const lxxChapterOffset = Number(shiftCfg.bookSlugRules?.[slug]?.lxxFileChapterOffset);
+  const lxxChapterOffsetN = Number.isFinite(lxxChapterOffset) ? lxxChapterOffset : 0;
   let ok = 0;
   let fail = 0;
   let skippedShift = 0;
@@ -136,6 +138,13 @@ function main(){
     const chRule = shiftCfg.chapters?.[chapterKey] || {};
     if(chRule.skipHints){
       console.log(`[skip cap ${ch}] skipHints (${chapterKey})`);
+      const outJsonStale = path.join(ROOT, 'IdiomaORIGEN', 'lxx-mt-word-hints', 'chapters', slug, `${ch}.json`);
+      if(fs.existsSync(outJsonStale)){
+        try{
+          fs.unlinkSync(outJsonStale);
+          console.log(`[skip cap ${ch}] eliminado hints obsoleto`);
+        }catch(_e){ /* */ }
+      }
       try{ fs.unlinkSync(slicePath); }catch(_e){ /* */ }
       skippedShift += 1;
       continue;
@@ -150,7 +159,8 @@ function main(){
       interJson = mergePath;
     }
 
-    const lxxJson = path.join(ROOT, 'LXX', 'chapters', lxxBook, `${ch}.json`);
+    const lxxFileChapter = ch + lxxChapterOffsetN;
+    const lxxJson = path.join(ROOT, 'LXX', 'chapters', lxxBook, `${lxxFileChapter}.json`);
     const outJson = path.join(ROOT, 'IdiomaORIGEN', 'lxx-mt-word-hints', 'chapters', slug, `${ch}.json`);
 
     if(!fs.existsSync(lxxJson)){

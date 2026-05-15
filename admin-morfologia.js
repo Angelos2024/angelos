@@ -46,6 +46,7 @@
     ['1_cronicas', '1 Cronicas', '13_1_Crónicas.json'],
     ['2_cronicas', '2 Cronicas', '14_2_Crónicas.json'],
     ['esdras', 'Esdras', '15_Esdras.json'],
+    ['ezra', 'Ezra', '15_Esdras.json'],
     ['nehemias', 'Nehemias', '16_Nehemías.json'],
     ['ester', 'Ester', '17_Ester.json'],
     ['job', 'Job', '18_Job.json'],
