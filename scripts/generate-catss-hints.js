@@ -454,19 +454,23 @@ function pickInterlinearVerseKey(slug, chapterNum, catssVer, vdef, inter, shiftC
   if(rule?.noCatssMtAutoMap) return String(catssVer);
 
   const cat = catssVerseConsonantStream(vdef);
+  const interKeys = Object.keys(inter);
+  const hasCompositeMtKeys = interKeys.some((k) => /^\d+:\d+$/.test(k));
   if(cat.length < 8) return String(catssVer);
 
   const directKey = String(catssVer);
-  const directNode = inter[directKey];
-  if(directNode){
-    const sig = verseInterlinearConsonantSig(directNode);
-    if(bestPrefixMatchLen(cat, sig) >= 14) return directKey;
+  if(!hasCompositeMtKeys){
+    const directNode = inter[directKey];
+    if(directNode){
+      const sig = verseInterlinearConsonantSig(directNode);
+      if(bestPrefixMatchLen(cat, sig) >= 14) return directKey;
+    }
   }
 
   let bestK = null;
   let bestScore = 0;
-  for(const k of Object.keys(inter)){
-    if(!/^\d+$/.test(k)) continue;
+  for(const k of interKeys){
+    if(!/^\d+$/.test(k) && !/^\d+:\d+$/.test(k)) continue;
     const sc = bestPrefixMatchLen(cat, verseInterlinearConsonantSig(inter[k]));
     if(sc > bestScore){
       bestScore = sc;

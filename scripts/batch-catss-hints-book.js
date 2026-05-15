@@ -38,6 +38,34 @@ function ensureDir(p){
   fs.mkdirSync(p, { recursive: true });
 }
 
+function readShiftCfg(absPath){
+  try{
+    return JSON.parse(fs.readFileSync(absPath, 'utf8'));
+  }catch(_e){
+    return { chapters: {} };
+  }
+}
+
+/** Fusiona varios `N.json` masoréticos en un objeto con claves `capituloMT:verso` (p. ej. 1 Esdras vs Esdras MT). */
+function mergeInterlinearByMtChapters(interAbs, mtChapterNums){
+  const merged = {};
+  const list = Array.isArray(mtChapterNums) ? mtChapterNums : [];
+  for(const mc of list){
+    const n = Number(mc);
+    if(!Number.isFinite(n) || n < 1) continue;
+    const jp = path.join(interAbs, `${n}.json`);
+    if(!fs.existsSync(jp)){
+      console.warn(`[warn] merge interlineal: no existe ${jp}`);
+      continue;
+    }
+    const j = JSON.parse(fs.readFileSync(jp, 'utf8'));
+    for(const [k, v] of Object.entries(j)){
+      if(/^\d+$/.test(k)) merged[`${n}:${k}`] = v;
+    }
+  }
+  return merged;
+}
+
 function main(){
   const args = parseArgs(process.argv);
   const parsedPath = args.parsed;
@@ -85,8 +113,10 @@ function main(){
   const shiftResolved = path.isAbsolute(shiftPath)
     ? shiftPath
     : path.join(ROOT, shiftPath.replace(/^\.\//, ''));
+  const shiftCfg = readShiftCfg(shiftResolved);
   let ok = 0;
   let fail = 0;
+  let skippedShift = 0;
 
   for(const ch of chapters){
     const slicePayload = {
@@ -102,7 +132,24 @@ function main(){
     const slicePath = path.join(sliceDir, `_slice-${slug}-${ch}.json`);
     fs.writeFileSync(slicePath, JSON.stringify(slicePayload), 'utf8');
 
-    const interJson = path.join(interAbs, `${ch}.json`);
+    const chapterKey = `${slug}::${ch}`;
+    const chRule = shiftCfg.chapters?.[chapterKey] || {};
+    if(chRule.skipHints){
+      console.log(`[skip cap ${ch}] skipHints (${chapterKey})`);
+      try{ fs.unlinkSync(slicePath); }catch(_e){ /* */ }
+      skippedShift += 1;
+      continue;
+    }
+
+    let interJson = path.join(interAbs, `${ch}.json`);
+    let mergePath = null;
+    if(Array.isArray(chRule.interlinearMtChapters) && chRule.interlinearMtChapters.length){
+      const merged = mergeInterlinearByMtChapters(interAbs, chRule.interlinearMtChapters);
+      mergePath = path.join(sliceDir, `_intermerge-${slug}-${ch}.json`);
+      fs.writeFileSync(mergePath, JSON.stringify(merged), 'utf8');
+      interJson = mergePath;
+    }
+
     const lxxJson = path.join(ROOT, 'LXX', 'chapters', lxxBook, `${ch}.json`);
     const outJson = path.join(ROOT, 'IdiomaORIGEN', 'lxx-mt-word-hints', 'chapters', slug, `${ch}.json`);
 
@@ -133,16 +180,23 @@ function main(){
 
     if(r.status !== 0){
       console.error(`[fallo cap ${ch}]`, r.stderr || r.stdout);
+      try{ fs.unlinkSync(slicePath); }catch(_e){ /* */ }
+      if(mergePath){
+        try{ fs.unlinkSync(mergePath); }catch(_e){ /* */ }
+      }
       fail += 1;
     }else{
       try{ fs.unlinkSync(slicePath); }catch(_e){ /* opcional */ }
+      if(mergePath){
+        try{ fs.unlinkSync(mergePath); }catch(_e){ /* */ }
+      }
       const repLine = (r.stdout || '').split('\n').find((l) => l.includes('Pares emparejados'));
       console.log(`cap ${ch}:`, repLine || '(sin salida)');
       ok += 1;
     }
   }
 
-  console.log(`Hecho ${slug}: ok=${ok} fallos=${fail}`);
+  console.log(`Hecho ${slug}: ok=${ok} fallos=${fail} omitidosShift=${skippedShift}`);
   if(fail){ process.exit(1); }
 }
 
