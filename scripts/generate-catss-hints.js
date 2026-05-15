@@ -437,7 +437,8 @@ function main(){
   const shiftPath = args.shift || 'IdiomaORIGEN/lxx-mt-verse-shift.min.json';
 
   if(!catssPath || !interPath || !lxxPath){
-    console.error('Uso: node scripts/generate-catss-hints.js --catss <parsed.json> --interlinear <Capitulo.json> --lxx <LXX/Gen/N.json> [--slug genesis] [--chapter 1] [--shift ...] [--out ...]');
+    console.error('Uso: node scripts/generate-catss-hints.js --catss <parsed.json> --interlinear <Capitulo.json> --lxx <LXX/Gen/N.json> [--slug genesis] [--chapter N] [--shift ...] [--out ...]');
+    console.error('Nota: solo se procesan versos con vdef.chapter === --chapter (obligatorio al usar un .json con varios capitulos).');
     process.exit(1);
   }
 
@@ -455,6 +456,7 @@ function main(){
   const report = { matchedPairs: 0, totalPairs: 0, skipped: [] };
 
   for(const vdef of catss.verses || []){
+    if(Number(vdef.chapter) !== chapter){ continue; }
     const mtV = Number(vdef.verse);
     if(!Number.isFinite(mtV)) continue;
     const lxxV = LxxLayer.targetLxxVerseFromShiftTable(slug, chapter, mtV, shiftCfg);

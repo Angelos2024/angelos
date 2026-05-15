@@ -1,0 +1,1904 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (02.Exodus.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "exodo",
+  "chapter": 39,
+  "verses": {
+    "9": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "τῆς",
+        "strong": "H7251",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "10": [
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "ἐποίησαν",
+        "strong": "H68",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "11": [
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "κυρίου",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "κυρίου",
+        "strong": "H8145",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      }
+    ],
+    "12": [
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "ἐν",
+        "strong": "H3958",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "13": [
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "τοὺς",
+        "strong": "H8658",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 22,
+        "surface": "στύλους",
+        "strong": "H4142",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "14": [
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "αὐτῆς",
+        "strong": "H5921",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "18": [
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "ἱερατείαν",
+        "strong": "H7098",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "21": [
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "μαρτυρίου",
+        "strong": "H413",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "02.Exodus.par",
+    "interlinear": "39.json",
+    "lxx": "39.json",
+    "report": {
+      "matchedPairs": 9,
+      "totalPairs": 290,
+      "skipped": [
+        {
+          "ref": "Exod 39:1",
+          "he": "W/MN =?W/M/YTR",
+          "gr": "KAI\\ TH\\N KATALEIFQEI=SAN [39.12]",
+          "reason": "conteo CATSS (2 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "H/TKLT",
+          "gr": "U(A/KINQON [39.12]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "W/H/)RGMN",
+          "gr": "KAI\\ PORFU/RAN [39.12]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "W/TWL(T {...?H/$NY}",
+          "gr": "KAI\\ TO\\ KO/KKINON [39.12]",
+          "reason": "conteo CATSS (2 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "H/$NY",
+          "gr": "--- ?",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "(&W",
+          "gr": "E)POI/HSAN [39.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "BGDY",
+          "gr": "STOLA\\S [39.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "&RD",
+          "gr": "LEITOURGIKA\\S [39.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "L/$RT",
+          "gr": "W(/STE LEITOURGEI=N [39.12]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "B/QD$",
+          "gr": "E)N TW=| A(GI/W| [39.12]",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": ")T BGDY",
+          "gr": "TA\\S STOLA\\S [36.8]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "H/QD$",
+          "gr": "TW=N A(GI/WN [36.8]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": ")$R",
+          "gr": "AI(/ EI)SIN [36.8]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "L/)HRN",
+          "gr": "AARWN [36.8]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "K/)$R",
+          "gr": "KAQA\\ [36.8]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "CWH",
+          "gr": "SUNE/TACEN [36.8]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": "YHWH",
+          "gr": "KU/RIOS [36.8]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:1",
+          "he": ")T M$H",
+          "gr": "TW=| MWUSH=| [36.8]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:2",
+          "he": "W/Y(& <sp>",
+          "gr": "KAI\\ E)POI/HSAN [36.9]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:2",
+          "he": ")T H/)PD",
+          "gr": "TH\\N E)PWMI/DA [36.9]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:2",
+          "he": "{...}",
+          "gr": "E)K [36.9]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:2",
+          "he": "ZHB",
+          "gr": "{..pE)K} XRUSI/OU [36.9]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:2",
+          "he": "TKLT",
+          "gr": "KAI\\ U(AKI/NQOU [36.9]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:2",
+          "he": "W/)RGMN",
+          "gr": "KAI\\ PORFU/RAS [36.9]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:2",
+          "he": "W/TWL(T",
+          "gr": "KAI\\ KOKKI/NOU [36.9]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:2",
+          "he": "$NY",
+          "gr": "NENHSME/NOU [36.9]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:2",
+          "he": "W/$$",
+          "gr": "KAI\\ BU/SSOU [36.9]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:2",
+          "he": "M$ZR",
+          "gr": "KEKLWSME/NHS [36.9]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "W/YRQ(W ^? =W/QCC =%vap",
+          "gr": "KAI\\ E)TMH/QH [36.10]",
+          "reason": "conteo CATSS (4 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": ")T PXY",
+          "gr": "TA\\ PE/TALA [36.10]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "H/ZHB",
+          "gr": "TOU= XRUSI/OU [36.10]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "^ W/QCC",
+          "gr": "^^^ ?",
+          "reason": "conteo CATSS (2 he / 0 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "PTYLM",
+          "gr": "TRI/XES [36.10]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "L/(&WT",
+          "gr": "W(/STE SUNUFA=NAI [36.10]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "B/TWK",
+          "gr": "SU\\N [36.10]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "H/TKLT",
+          "gr": "TH=| U(AKI/NQW| [36.10]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "W/B/TWK",
+          "gr": "KAI\\ {..dSU\\N} [36.10]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "H/)RGMN",
+          "gr": "TH=| PORFU/RA| [36.10]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "W/B/TWK",
+          "gr": "KAI\\ SU\\N [36.10]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "TWL(T",
+          "gr": "TW=| KOKKI/NW| [36.10]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "H/$NY",
+          "gr": "TW=| DIANENHSME/NW| [36.10]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "W/B/TWK",
+          "gr": "KAI\\ SU\\N [36.10]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "H/$$",
+          "gr": "TH=| BU/SSW| [36.10]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "M(&H",
+          "gr": "E)/RGON [36.10]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:3",
+          "he": "X$B",
+          "gr": "U(FANTO/N [36.10]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:4",
+          "he": "KTPT ^",
+          "gr": "^^^",
+          "reason": "conteo CATSS (2 he / 0 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:4",
+          "he": "(&W",
+          "gr": "E)POI/HSAN [36.11]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:4",
+          "he": "L/W",
+          "gr": "AU)TO\\ [36.11]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:4",
+          "he": "^ ^^^ =KTPT",
+          "gr": "E)PWMI/DAS [36.11]",
+          "reason": "conteo CATSS (3 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:4",
+          "he": "XBRT",
+          "gr": "SUNEXOU/SAS [36.11]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:4",
+          "he": "(L",
+          "gr": "E)C [36.11]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:4",
+          "he": "$NY",
+          "gr": "A)MFOTE/RWN [36.11]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:4",
+          "he": "*QCWWT/W **QCWT/YW",
+          "gr": "TW=N MERW=N [36.11]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:4",
+          "he": "XBR",
+          "gr": "{..^SUMPEPLEGME/NON} [36.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "W/X$B {...?)PDT/W} =;M(&H #",
+          "gr": "E)/RGON U(FANTO\\N [36.12]",
+          "reason": "conteo CATSS (4 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "X$B <39.3>",
+          "gr": "#",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": ")PDT/W",
+          "gr": "--- ?",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": ")$R",
+          "gr": "--- ?",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "{...?)$R} (L/YW =%p",
+          "gr": "EI)S A)/LLHLA [36.12]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "{...}",
+          "gr": "SUMPEPLEGME/NON [36.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "M/M/NW",
+          "gr": "KAQ' E(AUTO\\ {d} E)C AU)TOU= [36.12]",
+          "reason": "conteo CATSS (1 he / 6 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "HW)",
+          "gr": "E)POI/HSAN [36.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "K/M(&/HW",
+          "gr": "KATA\\ TH\\N AU)TOU= POI/HSIN [36.12]",
+          "reason": "conteo CATSS (1 he / 5 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "{...}",
+          "gr": "E)K [36.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "ZHB",
+          "gr": "{..pE)K} XRUSI/OU [36.12]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "TKLT",
+          "gr": "KAI\\ U(AKI/NQOU [36.12]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "W/)RGMN",
+          "gr": "KAI\\ PORFU/RAS [36.12]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "W/TWL(T",
+          "gr": "KAI\\ KOKKI/NOU [36.12]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "$NY",
+          "gr": "DIANENHSME/NOU [36.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "W/$$",
+          "gr": "KAI\\ BU/SSOU [36.12]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "M$ZR",
+          "gr": "KEKLWSME/NHS [36.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "K/)$R",
+          "gr": "KAQA\\ [36.12]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "CWH",
+          "gr": "SUNE/TACEN [36.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": "YHWH",
+          "gr": "KU/RIOS [36.12]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:5",
+          "he": ")T M$H",
+          "gr": "TW=| MWUSH=| [36.12]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "W/Y(&W",
+          "gr": "KAI\\ E)POI/HSAN [36.13]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": ")T )BNY",
+          "gr": "TOU\\S LI/QOUS [36.13]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "H/$HM",
+          "gr": "TH=S SMARA/GDOU [36.13]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "MSBT",
+          "gr": "SUMPEPORPHME/NOUS [36.13]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "M$BCT",
+          "gr": "KAI\\ PERISESIALWME/NOUS [36.13]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "ZHB",
+          "gr": "XRUSI/W| [36.13]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "MPTXT",
+          "gr": "GEGLUMME/NOUS {d} #",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "#",
+          "gr": "KAI\\ E)KKEKOLAMME/NOUS [36.13]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "PTWXY",
+          "gr": "E)KKO/LAMMA [36.13]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "XWTM",
+          "gr": "SFRAGI=DOS [36.13]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "(L",
+          "gr": "E)K [36.13]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "$MWT",
+          "gr": "TW=N O)NOMA/TWN [36.13]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "BNY",
+          "gr": "TW=N UI(W=N [36.13]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:6",
+          "he": "Y&R)L",
+          "gr": "ISRAHL [36.13]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": "W/Y&M",
+          "gr": "KAI\\ E)PE/QHKEN [36.14]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": ")T/M",
+          "gr": "AU)TOU\\S [36.14]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": "(L",
+          "gr": "E)PI\\ [36.14]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": "KTPT",
+          "gr": "TOU\\S W)/MOUS [36.14]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": "H/)PD",
+          "gr": "TH=S E)PWMI/DOS [36.14]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": ")BNY",
+          "gr": "LI/QOUS [36.14]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": "ZKRWN",
+          "gr": "MNHMOSU/NOU [36.14]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": "L/BNY",
+          "gr": "TW=N UI(W=N [36.14]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": "Y&R)L",
+          "gr": "ISRAHL [36.14]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": "K/)$R",
+          "gr": "KAQA\\ [36.14]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": "CWH",
+          "gr": "SUNE/TACEN [36.14]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": "YHWH",
+          "gr": "KU/RIOS [36.14]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:7",
+          "he": ")T M$H",
+          "gr": "TW=| MWUSH=| [36.14]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "W/Y(& <sp>",
+          "gr": "KAI\\ E)POI/HSAN [36.15]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": ")T H/X$N",
+          "gr": "LOGEI=ON [36.15]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "M(&H",
+          "gr": "E)/RGON [36.15]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "X$B",
+          "gr": "U(FANTO\\N {d} POIKILI/A| [36.15]",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "K/M(&H",
+          "gr": "KATA\\ TO\\ E)/RGON [36.15]",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": ")PD",
+          "gr": "TH=S E)PWMI/DOS [36.15]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "{...}",
+          "gr": "E)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "ZHB",
+          "gr": "{..pE)K} XRUSI/OU [36.15]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "TKLT",
+          "gr": "KAI\\ U(AKI/NQOU [36.15]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "W/)RGMN",
+          "gr": "KAI\\ PORFU/RAS [36.15]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "W/TWL(T",
+          "gr": "KAI\\ KOKKI/NOU [36.15]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "$NY",
+          "gr": "DIANENHSME/NOU [36.15]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "W/$$",
+          "gr": "KAI\\ BU/SSOU [36.15]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:8",
+          "he": "M$ZR",
+          "gr": "KEKLWSME/NHS [36.15]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:9",
+          "he": "KPWL",
+          "gr": "DIPLOU=N [36.16]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:9",
+          "he": "(&W",
+          "gr": "E)POI/HSAN [36.16]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:9",
+          "he": ")T H/X$N",
+          "gr": "TO\\ LOGEI=ON [36.16]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:9",
+          "he": "ZRT",
+          "gr": "SPIQAMH=S [36.16]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:9",
+          "he": ")RK/W",
+          "gr": "TO\\ MH=KOS [36.16]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:9",
+          "he": "W/ZRT",
+          "gr": "KAI\\ SPIQAMH=S [36.16]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:9",
+          "he": "RXB/W",
+          "gr": "TO\\ EU)=ROS [36.16]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:9",
+          "he": "KPWL",
+          "gr": "DIPLOU=N [36.16]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:10",
+          "he": "W/YML)W =%vap",
+          "gr": "KAI\\ SUNUFA/NQH [36.17]",
+          "reason": "conteo CATSS (2 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:10",
+          "he": "B/W",
+          "gr": "E)N AU)TW=| [36.17]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:10",
+          "he": ")RB(H +WRY ^",
+          "gr": "^^^",
+          "reason": "conteo CATSS (3 he / 0 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:10",
+          "he": "^ ^^^ =)RB(H +WRY",
+          "gr": "TETRA/STIXON [36.17]",
+          "reason": "conteo CATSS (4 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:10",
+          "he": "+WR",
+          "gr": "STI/XOS [36.17]",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Exod 39:10",
+          "he": ")DM",
+          "gr": "SA/RDION [36.17]",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Exod 39:10",
+          "he": "P+DH",
+          "gr": "KAI\\ TOPA/ZION [36.17]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:10",
+          "he": "W/BRQT",
+          "gr": "KAI\\ SMA/RAGDOS [36.17]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:10",
+          "he": "H/+WR",
+          "gr": "O( STI/XOS [36.17]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:10",
+          "he": "H/)XD",
+          "gr": "O( EI(=S [36.17]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:11",
+          "he": "W/H/+WR",
+          "gr": "KAI\\ O( STI/XOS [36.18]",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:11",
+          "he": "NPK",
+          "gr": "A)/NQRAC [36.18]",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Exod 39:11",
+          "he": "SPYR",
+          "gr": "KAI\\ SA/PFEIROS [36.18]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:11",
+          "he": "W/YHLM",
+          "gr": "KAI\\ I)/ASPIS [36.18]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:12",
+          "he": "W/H/+WR",
+          "gr": "KAI\\ O( STI/XOS [36.19]",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:12",
+          "he": "H/$LY$Y",
+          "gr": "O( TRI/TOS [36.19]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:12",
+          "he": "$BW",
+          "gr": "KAI\\ A)XA/THS [36.19]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:12",
+          "he": "W/)XLMH",
+          "gr": "KAI\\ A)ME/QUSTOS [36.19]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:13",
+          "he": "W/H/+WR",
+          "gr": "KAI\\ O( STI/XOS [36.20]",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:13",
+          "he": "H/RBY(Y",
+          "gr": "O( TE/TARTOS [36.20]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:13",
+          "he": "$HM",
+          "gr": "KAI\\ BHRU/LLION [36.20]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:13",
+          "he": "W/Y$PH",
+          "gr": "KAI\\ O)NU/XION [36.20]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:13",
+          "he": "M$BCWT",
+          "gr": "KAI\\ SUNDEDEME/NA [36.20]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:13",
+          "he": "ZHB",
+          "gr": "XRUSI/W| [36.20]",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "W/H/)BNYM",
+          "gr": "KAI\\ OI( LI/QOI [36.21]",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "^ ^^^ =HNH",
+          "gr": "H)=SAN [36.21]",
+          "reason": "conteo CATSS (3 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "$MT",
+          "gr": "TW=N O)NOMA/TWN [36.21]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "BNY",
+          "gr": "TW=N UI(W=N [36.21]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "Y&R)L",
+          "gr": "ISRAHL [36.21]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "HNH ^",
+          "gr": "^^^",
+          "reason": "conteo CATSS (2 he / 0 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "$TYM (&RH",
+          "gr": "DW/DEKA [36.21]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "(L",
+          "gr": "E)K [36.21]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "$MT/M",
+          "gr": "TW=N O)NOMA/TWN AU)TW=N [36.21]",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "PTWXY",
+          "gr": "E)GGEGRAMME/NA [36.21]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "{...}",
+          "gr": "EI)S [36.21]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "XTM",
+          "gr": "{..pEI)S} SFRAGI=DAS [36.21]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": ")Y$",
+          "gr": "E(/KASTOS [36.21]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "(L",
+          "gr": "E)K [36.21]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "$M/W",
+          "gr": "TOU= E(AUTOU= ^ O)NO/MATOS [36.21]",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "L/$NYM (&R",
+          "gr": "EI)S TA\\S DW/DEKA [36.21]",
+          "reason": "conteo CATSS (2 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 39:14",
+          "he": "$B+",
+          "gr": "FULA/S [36.21]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:15",
+          "he": "W/Y(&W",
+          "gr": "KAI\\ E)POI/HSAN [36.22]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:15",
+          "he": "(L",
+          "gr": "E)PI\\ [36.22]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:15",
+          "he": "H/X$N",
+          "gr": "TO\\ LOGEI=ON [36.22]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:15",
+          "he": "$R$RT",
+          "gr": "KROSSOU\\S [36.22]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:15",
+          "he": "GBLT",
+          "gr": "SUMPEPLEGME/NOUS [36.22]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:15",
+          "he": "M(&H",
+          "gr": "E)/RGON [36.22]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:15",
+          "he": "(BT",
+          "gr": "E)MPLOKI/OU [36.22]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:15",
+          "he": "{...}",
+          "gr": "E)K [36.22]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:15",
+          "he": "ZHB",
+          "gr": "{..pE)K} XRUSI/OU [36.22]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:15",
+          "he": "+HWR",
+          "gr": "KAQAROU= [36.22]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "W/Y(&W",
+          "gr": "KAI\\ E)POI/HSAN [36.23]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "$TY",
+          "gr": "DU/O [36.23]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "M$BCT",
+          "gr": "A)SPIDI/SKAS [36.23]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "ZHB",
+          "gr": "XRUSA=S [36.23]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "W/$TY",
+          "gr": "KAI\\ DU/O [36.23]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "+B(T",
+          "gr": "DAKTULI/OUS [36.23]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "ZHB",
+          "gr": "XRUSOU=S [36.23]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "W/YTNW",
+          "gr": "KAI\\ E)PE/QHKAN [36.23]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": ")T $TY",
+          "gr": "TOU\\S DU/O [36.23]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "H/+B(T",
+          "gr": "DAKTULI/OUS [36.23]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "(L",
+          "gr": "E)P' [36.23]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "$NY",
+          "gr": "A)MFOTE/RAS [36.23]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "QCWT",
+          "gr": "TA\\S A)RXA\\S [36.23]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:16",
+          "he": "H/X$N",
+          "gr": "TOU= LOGEI/OU [36.23]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:17",
+          "he": "W/YTNW",
+          "gr": "KAI\\ E)PE/QHKAN [36.24]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:17",
+          "he": "H/(BTT",
+          "gr": "TA\\ E)MPLO/KIA [36.24]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:17",
+          "he": "H/ZHB",
+          "gr": "E)K XRUSI/OU [36.24]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:17",
+          "he": "(L",
+          "gr": "E)PI\\ [36.24]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:17",
+          "he": "H/+B(T",
+          "gr": "TOU\\S DAKTULI/OUS [36.24]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:17",
+          "he": "(L",
+          "gr": "E)P' [36.24]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:17",
+          "he": "QCWT",
+          "gr": "TW=N MERW=N [36.24]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:17",
+          "he": "H/X$N",
+          "gr": "TOU= LOGEI/OU [36.24]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "W/)T $TY =%p",
+          "gr": "KAI\\ EI)S TA\\S DU/O [36.25]",
+          "reason": "conteo CATSS (3 he / 5 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "$TY",
+          "gr": "TA\\ DU/O [36.25]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "H/(BTT",
+          "gr": "E)MPLO/KIA [36.25]",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "NTNW",
+          "gr": "KAI\\ E)PE/QHKAN [36.25]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "(L",
+          "gr": "E)PI\\ [36.25]",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "$TY",
+          "gr": "TA\\S DU/O [36.25]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "H/M$BCT",
+          "gr": "A)SPIDI/SKAS [36.25]",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "W/YTN/M",
+          "gr": "KAI\\ E)PE/QHKAN [36.25]",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "(L",
+          "gr": "E)PI\\ [36.25]",
+          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "KTPT",
+          "gr": "TOU\\S W)/MOUS [36.25]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "H/)PD",
+          "gr": "TH=S E)PWMI/DOS [36.25]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": ")L MWL PN/YW",
+          "gr": "E)C E)NANTI/AS {d} KATA\\ PRO/SWPON #",
+          "reason": "conteo CATSS (3 he / 6 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:18",
+          "he": "#",
+          "gr": "[36.25]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "W/Y(&W",
+          "gr": "KAI\\ E)POI/HSAN [36.26]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "$TY",
+          "gr": "DU/O [36.26]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "+B(T",
+          "gr": "DAKTULI/OUS [36.26]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "ZHB",
+          "gr": "XRUSOU=S [36.26]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "W/Y&YMW",
+          "gr": "KAI\\ E)PE/QHKAN [36.26]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "(L",
+          "gr": "E)PI\\ [36.26]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "$NY",
+          "gr": "TA\\ DU/O [36.26]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "QCWT",
+          "gr": "PTERU/GIA [36.26]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "H/X$N",
+          "gr": "TOU= LOGEI/OU [36.26]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "(L",
+          "gr": "E)PI\\ [36.26]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "&PT/W",
+          "gr": "TO\\ A)/KRON [36.26]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": ")$R",
+          "gr": "TOU= [36.26]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": ")L (BR",
+          "gr": "O)PISQI/OU [36.26]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "H/)PD",
+          "gr": "TH=S E)PWMI/DOS [36.26]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:19",
+          "he": "BYT/H",
+          "gr": "E)/SWQEN [36.26]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "W/Y(&W",
+          "gr": "KAI\\ E)POI/HSAN [36.27]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "$TY",
+          "gr": "DU/O [36.27]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "+B(T",
+          "gr": "DAKTULI/OUS [36.27]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "ZHB",
+          "gr": "XRUSOU=S [36.27]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "W/YTN/M",
+          "gr": "KAI\\ E)PE/QHKAN [36.27]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "(L",
+          "gr": "E)P' [36.27]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "$TY",
+          "gr": "A)MFOTE/ROUS [36.27]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "KTPT",
+          "gr": "TOU\\S W)/MOUS [36.27]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "H/)PD",
+          "gr": "TH=S E)PWMI/DOS [36.27]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "M/L/M+/H",
+          "gr": "KA/TWQEN AU)TOU= [36.27]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "M/MWL PN/YW",
+          "gr": "KATA\\ PRO/SWPON [36.27]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "L/(MT",
+          "gr": "KATA\\ [36.27]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "MXBRT/W",
+          "gr": "TH\\N SUMBOLH\\N [36.27]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "M/M/(L",
+          "gr": "A)/NWQEN [36.27]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "L/X$B",
+          "gr": "TH=S SUNUFH=S [36.27]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:20",
+          "he": "H/)PD",
+          "gr": "TH=S E)PWMI/DOS [36.27]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "W/YRKSW",
+          "gr": "KAI\\ SUNE/SFIGCEN [36.28]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": ")T H/X$N",
+          "gr": "TO\\ LOGEI=ON [36.28]",
+          "reason": "conteo CATSS (2 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "M/+B(T/YW",
+          "gr": "A)PO\\ TW=N DAKTULI/WN TW=N E)P' #",
+          "reason": "conteo CATSS (1 he / 6 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "#",
+          "gr": "AU)TOU= [36.28]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "+B(T",
+          "gr": "TOU\\S DAKTULI/OUS [36.28]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "H/)PD",
+          "gr": "TH=S E)PWMI/DOS [36.28]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "B/PTYL",
+          "gr": "SUNEXOME/NOUS {d} {..^SUMPEPLEGME/NOUS} #",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "#",
+          "gr": "[36.28]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "{...}",
+          "gr": "E)K [36.28]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "TKLT",
+          "gr": "{..pE)K} TH=S U(AKI/NQOU [36.28]",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "{...}",
+          "gr": "SUMPEPLEGME/NOUS [36.28]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "(L",
+          "gr": "EI)S [36.28]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "X$B",
+          "gr": "TO\\ U(/FASMA [36.28]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "H/)PD",
+          "gr": "TH=S E)PWMI/DOS [36.28]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "W/L)",
+          "gr": "I(/NA MH\\ [36.28]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "YZX",
+          "gr": "XALA=TAI [36.28]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "H/X$N",
+          "gr": "TO\\ LOGEI=ON [36.28]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "M/(L",
+          "gr": "A)PO\\ [36.28]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "H/)PD",
+          "gr": "TH=S E)PWMI/DOS [36.28]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "K/)$R",
+          "gr": "KAQA\\ [36.28]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "CWH",
+          "gr": "SUNE/TACEN [36.28]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": "YHWH",
+          "gr": "KU/RIOS [36.28]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:21",
+          "he": ")T M$H",
+          "gr": "TW=| MWUSH=| [36.28]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:22",
+          "he": "W/Y(& <sp>",
+          "gr": "KAI\\ E)POI/HSAN [36.29]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:22",
+          "he": ")T M(YL",
+          "gr": "TO\\N U(PODU/THN [36.29]",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 39:22",
+          "he": "{...}",
+          "gr": "U(PO\\ [36.29]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:22",
+          "he": "H/)PD",
+          "gr": "{..pU(PO\\} TH\\N E)PWMI/DA [36.29]",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 39:22",
+          "he": "M(&H",
+          "gr": "E)/RGON [36.29]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:22",
+          "he": ")RG",
+          "gr": "U(FANTO\\N [36.29]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:22",
+          "he": "KLYL",
+          "gr": "O(/LON [36.29]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:22",
+          "he": "TKLT",
+          "gr": "U(AKI/NQINON [36.29]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:23",
+          "he": "W/PY",
+          "gr": "TO\\ ^ DE\\ PERISTO/MION [36.30]",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:23",
+          "he": "H/M(YL",
+          "gr": "TOU= U(PODU/TOU [36.30]",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:23",
+          "he": "B/TWK/W",
+          "gr": "E)N TW=| ME/SW| [36.30]",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:23",
+          "he": "K/PY TXR)",
+          "gr": "DIUFASME/NON {d?} SUMPLEKTO/N [36.30]",
+          "reason": "conteo CATSS (2 he / 4 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Exod 39:23",
+          "he": "&PH",
+          "gr": "W)/|AN [36.30]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:23",
+          "he": "{...}",
+          "gr": "E)/XON [36.30]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:23",
+          "he": "L/PY/W ^ =SBYB",
+          "gr": "KU/KLW| [36.30]",
+          "reason": "conteo CATSS (3 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 39:23",
+          "he": "^ SBYB =L/PY/W",
+          "gr": "{...E)/XON} TO\\ PERISTO/MION [36.30]",
+          "reason": "conteo CATSS (3 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 39:23",
+          "he": "L) YQR(",
+          "gr": "A)DIA/LUTON [36.30]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 39:24",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:25",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:26",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:27",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:28",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:29",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:30",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:31",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:32",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:33",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:34",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:35",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:36",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:37",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:38",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:39",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:40",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:41",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:42",
+          "reason": "sin tokens LXX"
+        },
+        {
+          "ref": "Exod 39:43",
+          "reason": "sin tokens LXX"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}

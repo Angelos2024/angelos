@@ -1,0 +1,2183 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (02.Exodus.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "exodo",
+  "chapter": 22,
+  "verses": {
+    "2": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "δὲ",
+        "strong": "H518",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "3": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "δὲ",
+        "strong": "H518",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "5": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "δὲ",
+        "strong": "H3588",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "6": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "δέ",
+        "strong": "H3588",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "25": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "δὲ",
+        "strong": "H518",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "02.Exodus.par",
+    "interlinear": "22.json",
+    "lxx": "22.json",
+    "report": {
+      "matchedPairs": 5,
+      "totalPairs": 355,
+      "skipped": [
+        {
+          "ref": "Exod 22:1",
+          "he": ")M",
+          "gr": "E)A\\N DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:1",
+          "he": "B/MXTRT",
+          "gr": "E)N TW=| DIORU/GMATI",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:1",
+          "he": "YMC)",
+          "gr": "EU(REQH=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:1",
+          "he": "H/GNB",
+          "gr": "O( KLE/PTHS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:1",
+          "he": "W/HKH",
+          "gr": "KAI\\ PLHGEI\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:1",
+          "he": "W/MT",
+          "gr": "A)POQA/NH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:1",
+          "he": ")YN",
+          "gr": "OU)K E)/STIN",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:1",
+          "he": "L/W",
+          "gr": "AU)TW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:1",
+          "he": "DMYM",
+          "gr": "FO/NOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:2",
+          "he": "ZRXH",
+          "gr": "A)NATEI/LH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:2",
+          "he": "H/$M$",
+          "gr": "O( H(/LIOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:2",
+          "he": "(L/YW",
+          "gr": "E)P' AU)TW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:2",
+          "he": "DMYM L/W",
+          "gr": "E)/NOXO/S E)STIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:2",
+          "he": "$LM Y$LM {!}-",
+          "gr": "A)NTAPOQANEI=TAI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:2",
+          "he": ")M",
+          "gr": "E)A\\N DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:2",
+          "he": ")YN",
+          "gr": "MH\\ U(PA/RXH|",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:2",
+          "he": "L/W",
+          "gr": "AU)TW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:2",
+          "he": "W/NMKR",
+          "gr": "PRAQH/TW",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:2",
+          "he": "B/GNBT/W",
+          "gr": "A)NTI\\ TOU= KLE/MMATOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "HMC) {!}v",
+          "gr": "KATALHMFQH=|",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "TMC) {!}v",
+          "gr": "KAI\\ EU(REQH=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "B/YD/W",
+          "gr": "E)N TH=| XEIRI\\ AU)TOU=",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "H/GNBH",
+          "gr": "TO\\ KLE/MMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "M/$WR",
+          "gr": "A)PO/ TE ---",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "XMWR",
+          "gr": "O)/NOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "(D",
+          "gr": "E(/WS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "&H",
+          "gr": "PROBA/TOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "XYYM",
+          "gr": "ZW=NTA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "$NYM",
+          "gr": "DIPLA=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:3",
+          "he": "Y$LM",
+          "gr": "A)POTEI/SEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "KY",
+          "gr": "E)A\\N DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "YB(R",
+          "gr": "KATABOSKH/SH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": ")Y$",
+          "gr": "TIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "&DH",
+          "gr": "A)GRO\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": ")W",
+          "gr": "H)\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "KRM",
+          "gr": "A)MPELW=NA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "W/$LX",
+          "gr": "KAI\\ A)FH=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": ")T *B(YR/H **B(YR/W",
+          "gr": "TO\\ KTH=NOS AU)TOU=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "W/B(R",
+          "gr": "KATABOSKH=SAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "B/&DH",
+          "gr": "A)GRO\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": ")XR",
+          "gr": "E(/TERON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "<q4p-m>",
+          "gr": "#",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "MY+B",
+          "gr": "TA\\ BE/LTISTA",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "&D/HW",
+          "gr": "TOU= A)GROU= AU)TOU=",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "W/MY+B",
+          "gr": "KAI\\ TA\\ BE/LTISTA",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "KRM/W",
+          "gr": "TOU= A)MPELW=NOS AU)TOU=",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:4",
+          "he": "Y$LM",
+          "gr": "A)POTEI/SEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": "TC)",
+          "gr": "E)CELQO\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": ")$",
+          "gr": "PU=R",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": "W/MC)H",
+          "gr": "EU(/RH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": "QCYM",
+          "gr": "A)KA/NQAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": "W/N)KL =%vpa",
+          "gr": "KAI\\ PROSEMPRH/SH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": "GDY$",
+          "gr": "A(/LWNA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": ")W",
+          "gr": "H)\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": "H/QMH",
+          "gr": "STA/XUS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": ")W",
+          "gr": "H)\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": "H/&DH",
+          "gr": "PEDI/ON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": "$LM Y$LM {!}-",
+          "gr": "A)POTEI/SEI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": "H/MB(R",
+          "gr": "O( {..^E)KKAU/SAS}",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": ")T H/B(RH",
+          "gr": "TO\\ PU=R",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:5",
+          "he": "{...}",
+          "gr": "E)KKAU/SAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "{...}",
+          "gr": "TIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "YTN",
+          "gr": "DW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": ")Y$",
+          "gr": "{..^TIS}",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": ")L R(/HW",
+          "gr": "TW=| PLHSI/ON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "KSP",
+          "gr": "A)RGU/RION",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": ")W",
+          "gr": "H)\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "KLYM",
+          "gr": "SKEU/H",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "L/$MR",
+          "gr": "FULA/CAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "W/GNB",
+          "gr": "KAI\\ KLAPH=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "M/BYT",
+          "gr": "E)K TH=S OI)KI/AS",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "H/)Y$",
+          "gr": "TOU= A)NQRW/POU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": ")M",
+          "gr": "E)A\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "YMC)",
+          "gr": "EU(REQH=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "H/GNB",
+          "gr": "O( KLE/YAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "Y$LM",
+          "gr": "A)POTEI/SEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:6",
+          "he": "$NYM",
+          "gr": "DIPLOU=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": ")M",
+          "gr": "E)A\\N DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "L)",
+          "gr": "MH\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "YMC)",
+          "gr": "EU(REQH=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "H/GNB",
+          "gr": "O( KLE/YAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "W/NQRB",
+          "gr": "PROSELEU/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "B(L",
+          "gr": "O( KU/RIOS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "H/BYT",
+          "gr": "TH=S OI)KI/AS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": ")L",
+          "gr": "E)NW/PION",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "H/)LHYM",
+          "gr": "TOU= QEOU=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": ")M",
+          "gr": "H)= MH\\N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "L)",
+          "gr": "MH\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "$LX YD/W",
+          "gr": "AU)TO\\S PEPONHREU=SQAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "B/ML)KT",
+          "gr": "E)F' {+} O(/LHS TH=S PARAKATAQH/KHS",
+          "reason": "conteo CATSS (1 he / 5 gr)"
+        },
+        {
+          "ref": "Exod 22:7",
+          "he": "R(/HW",
+          "gr": "TOU= PLHSI/ON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "(L",
+          "gr": "KATA\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "KL",
+          "gr": "PA=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "DBR",
+          "gr": "R(HTO\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "P$(",
+          "gr": "A)DI/KHMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "(L",
+          "gr": "PERI/ TE",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "$WR",
+          "gr": "MO/SXOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "(L",
+          "gr": "KAI\\ {..dPERI\\}",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "XMWR",
+          "gr": "U(POZUGI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "(L",
+          "gr": "KAI\\ {..dPERI\\}",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "&H",
+          "gr": "PROBA/TOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "(L",
+          "gr": "KAI\\ {..dPERI\\}",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "&LMH",
+          "gr": "I(MATI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "(L",
+          "gr": "KAI\\ {..dPERI\\}",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "KL",
+          "gr": "PA/SHS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": ")BDH",
+          "gr": "A)PWLEI/AS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": ")$R",
+          "gr": "TH=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "Y)MR",
+          "gr": "E)GKALOUME/NHS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "KY",
+          "gr": "O(/ {..^OU)=N A)\\N}",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "HW)",
+          "gr": "TI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "{...}",
+          "gr": "OU)=N A)\\N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "ZH",
+          "gr": "H)=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "(D",
+          "gr": "E)NW/PION",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "H/)LHYM",
+          "gr": "TOU= QEOU=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "YB)",
+          "gr": "E)LEU/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "DBR",
+          "gr": "H( KRI/SIS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "$N/YHM",
+          "gr": "A)MFOTE/RWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": ")$R",
+          "gr": "KAI\\ O(",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "YR$Y(N",
+          "gr": "A(LOU\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "{...}",
+          "gr": "DIA\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": ")LHYM",
+          "gr": "{..pDIA\\} TOU= QEOU=",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "Y$LM",
+          "gr": "A)POTEI/SEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "$NYM",
+          "gr": "DIPLOU=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:8",
+          "he": "L/R(/HW",
+          "gr": "TW=| PLHSI/ON",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "KY",
+          "gr": "E)A\\N DE/",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "{...}",
+          "gr": "TIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "YTN",
+          "gr": "DW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": ")Y$",
+          "gr": "{..^TIS}",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": ")L R(/HW",
+          "gr": "TW=| PLHSI/ON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "XMWR",
+          "gr": "U(POZU/GION",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": ")W",
+          "gr": "H)\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "$WR",
+          "gr": "MO/SXON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": ")W",
+          "gr": "H)\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "&H",
+          "gr": "PRO/BATON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "W/KL",
+          "gr": "H)\\ PA=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "BHMH",
+          "gr": "KTH=NOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "L/$MR",
+          "gr": "FULA/CAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "W/MT ^ =W/N$BR",
+          "gr": "KAI\\ SUNTRIBH=|",
+          "reason": "conteo CATSS (3 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": ")W",
+          "gr": "H)\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "^ N$BR =MT",
+          "gr": "TELEUTH/SH|",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": ")W",
+          "gr": "H)\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "N$BH",
+          "gr": "AI)XMA/LWTON GE/NHTAI",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": ")YN",
+          "gr": "KAI\\ MHDEI\\S",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:9",
+          "he": "R)H",
+          "gr": "GNW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "$B(T",
+          "gr": "O(/RKOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "{...}",
+          "gr": "E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "YHWH",
+          "gr": "TOU= QEOU=",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "THYH",
+          "gr": "{..^E)/STAI}",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "BYN",
+          "gr": "A)NA\\ ME/SON",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "$N/YHM",
+          "gr": "A)MFOTE/RWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": ")M",
+          "gr": "H)= MH\\N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "L)",
+          "gr": "MH\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "$LX YD/W",
+          "gr": "AU)TO\\N PEPONHREU=SQAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "B/ML)KT",
+          "gr": "KAQ' {+} O(/LHS TH=S PARAKATAQH/KHS",
+          "reason": "conteo CATSS (1 he / 5 gr)"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "R(/HW",
+          "gr": "TOU= PLHSI/ON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "{...}",
+          "gr": "KAI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "W/LQX",
+          "gr": "{...KAI\\} {...?OU(/TWS} PROSDE/CETAI",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "B(L/YW",
+          "gr": "O( KU/RIOS AU)TOU=",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "W/L)",
+          "gr": "KAI\\ OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:10",
+          "he": "Y$LM",
+          "gr": "A)POTEI/SEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:11",
+          "he": "W/)M",
+          "gr": "E)A\\N DE\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:11",
+          "he": "GNB YGNB {!}-",
+          "gr": "KLAPH=|",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:11",
+          "he": "M/(M/W",
+          "gr": "PAR' AU)TOU=",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:11",
+          "he": "Y$LM",
+          "gr": "A)POTEI/SEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:11",
+          "he": "L/B(L/YW",
+          "gr": "TW=| KURI/W|",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:12",
+          "he": ")M",
+          "gr": "E)A\\N DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:12",
+          "he": "+RP Y+RP {!}v",
+          "gr": "QHRIA/LWTON GE/NHTAI",
+          "reason": "conteo CATSS (3 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:12",
+          "he": "YB)/HW",
+          "gr": "A)/CEI AU)TO\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:12",
+          "he": "(D =v",
+          "gr": "E)PI\\",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:12",
+          "he": "H/+RPH",
+          "gr": "TH\\N QH/RAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:12",
+          "he": "L)",
+          "gr": "KAI\\ OU)K",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:12",
+          "he": "Y$LM",
+          "gr": "A)POTEI/SEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": "W/KY",
+          "gr": "E)A\\N ^ DE\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": "Y$)L",
+          "gr": "AI)TH/SH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": ")Y$",
+          "gr": "TIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": "M/(M",
+          "gr": "PARA\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": "R(/HW",
+          "gr": "TOU= PLHSI/ON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": "W/N$BR",
+          "gr": "KAI\\ SUNTRIBH=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": ")W",
+          "gr": "H)\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": "MT",
+          "gr": "A)POQA/NH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": "B(L/YW",
+          "gr": "O( ^ DE\\ KU/RIOS",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": ")YN",
+          "gr": "MH\\ H)=|",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": "(M/W",
+          "gr": "MET' AU)TOU=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:13",
+          "he": "$LM Y$LM {!}-",
+          "gr": "A)POTEI/SEI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:14",
+          "he": ")M",
+          "gr": "E)A\\N DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:14",
+          "he": "B(L/YW",
+          "gr": "O( KU/RIOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:14",
+          "he": "(M/W",
+          "gr": "MET' AU)TOU=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:14",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:14",
+          "he": "Y$LM",
+          "gr": "A)POTEI/SEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:14",
+          "he": ")M",
+          "gr": "E)A\\N DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:14",
+          "he": "&KYR",
+          "gr": "MISQWTO\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:14",
+          "he": "HW)",
+          "gr": "H)=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:14",
+          "he": "B)",
+          "gr": "E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:14",
+          "he": "B/&KR/W",
+          "gr": "A)NTI\\ TOU= MISQOU= AU)TOU=",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": "W/KY",
+          "gr": "E)A\\N ^ DE\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": "YPTH",
+          "gr": "A)PATH/SH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": ")Y$",
+          "gr": "TIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": "BTWLH",
+          "gr": "PARQE/NON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": ")$R L) )R&H",
+          "gr": "A)MNH/STEUTON",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": "W/$KB",
+          "gr": "KAI\\ KOIMHQH=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": "(M/H",
+          "gr": "MET' AU)TH=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": "MHR {!}nd",
+          "gr": "FERNH=|",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": "YMHR/NH {!}nd",
+          "gr": "FERNIEI= AU)TH\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": "L/W",
+          "gr": "AU)TW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:15",
+          "he": "L/)$H",
+          "gr": "GUNAI=KA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": ")M",
+          "gr": "E)A\\N DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": "M)N {!}p",
+          "gr": "A)NANEU/WN",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": "YM)N {!}p",
+          "gr": "A)NANEU/SH| {d} {...KAI\\ MH\\ BOU/LHTAI}",
+          "reason": "conteo CATSS (2 he / 5 gr)"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": "{...}",
+          "gr": "KAI\\ MH\\ BOU/LHTAI",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": ")BY/H",
+          "gr": "O( PATH\\R AU)TH=S",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": "L/TT/H",
+          "gr": "DOU=NAI AU)TH\\N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": "L/W",
+          "gr": "AU)TW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": "KSP",
+          "gr": "A)RGU/RION",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": "Y$QL",
+          "gr": "A)POTEI/SEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": "K/MHR",
+          "gr": "KAQ' O(/SON E)STI\\N H( FERNH\\",
+          "reason": "conteo CATSS (1 he / 5 gr)"
+        },
+        {
+          "ref": "Exod 22:16",
+          "he": "H/BTWLT",
+          "gr": "TW=N PARQE/NWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:17",
+          "he": "MK$PH",
+          "gr": "FARMAKOU\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:17",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:17",
+          "he": "TXYH",
+          "gr": "PERIPOIH/SETE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:18",
+          "he": "KL",
+          "gr": "PA=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:18",
+          "he": "$KB",
+          "gr": "KOIMW/MENON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:18",
+          "he": "(M",
+          "gr": "META\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:18",
+          "he": "BHMH",
+          "gr": "KTH/NOUS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:18",
+          "he": "MWT {!}ndd",
+          "gr": "QANA/TW|",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:18",
+          "he": "YWMT {!}ndd",
+          "gr": "A)POKTENEI=TE",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:19",
+          "he": "ZBX",
+          "gr": "O( QUSIA/ZWN",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:19",
+          "he": "L/)LHYM",
+          "gr": "QEOI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:19",
+          "he": "YXRM {!}nd+",
+          "gr": "O)LEQREUQH/SETAI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:19",
+          "he": "BLTY",
+          "gr": "PLH\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:19",
+          "he": "L/YHWH",
+          "gr": "KURI/W|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:19",
+          "he": "L/BD/W",
+          "gr": "MO/NW|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "W/GR",
+          "gr": "KAI\\ PROSH/LUTON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "TWNH",
+          "gr": "KAKW/SETE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "W/L)",
+          "gr": "OU)DE\\ MH\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "TLXC/NW",
+          "gr": "QLI/YHTE AU)TO/N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "{...}",
+          "gr": "H)=TE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "KY",
+          "gr": "GA\\R",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "GRYM",
+          "gr": "PROSH/LUTOI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "HYYTM",
+          "gr": "{..^H)=TE}",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "B/)RC",
+          "gr": "E)N GH=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:20",
+          "he": "MCRYM",
+          "gr": "AI)GU/PTW|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:21",
+          "he": "KL",
+          "gr": "PA=SAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:21",
+          "he": ")LMNH",
+          "gr": "XH/RAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:21",
+          "he": "W/YTWM",
+          "gr": "KAI\\ O)RFANO\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:21",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:21",
+          "he": "T(NWN",
+          "gr": "KAKW/SETE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": ")M",
+          "gr": "E)A\\N DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": "(NH {!}nd",
+          "gr": "KAKI/A|",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": "T(NH {!}nd",
+          "gr": "KAKW/SHTE",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": ")T/W",
+          "gr": "AU)TOU\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": "KY )M",
+          "gr": "KAI\\",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": "C(Q {!}pd",
+          "gr": "KEKRA/CANTES",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": "YC(Q {!}pd",
+          "gr": "KATABOH/SWSI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": ")L/Y",
+          "gr": "PRO/S ME",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": "$M( {!}ndd",
+          "gr": "A)KOH=|",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": ")$M( {!}ndd",
+          "gr": "EI)SAKOU/SOMAI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:22",
+          "he": "C(QT/W",
+          "gr": "TH=S FWNH=S AU)TW=N",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:23",
+          "he": "W/XRH",
+          "gr": "KAI\\ O)RGISQH/SOMAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:23",
+          "he": ")P/Y",
+          "gr": "QUMW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:23",
+          "he": "W/HRGTY",
+          "gr": "KAI\\ A)POKTENW=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:23",
+          "he": ")T/KM",
+          "gr": "U(MA=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:23",
+          "he": "B/XRB",
+          "gr": "MAXAI/RA|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:23",
+          "he": "W/HYW",
+          "gr": "KAI\\ E)/SONTAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:23",
+          "he": "N$/YKM",
+          "gr": "AI( GUNAI=KES U(MW=N",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:23",
+          "he": ")LMNWT",
+          "gr": "XH=RAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:23",
+          "he": "W/BN/YKM",
+          "gr": "KAI\\ TA\\ PAIDI/A U(MW=N",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 22:23",
+          "he": "YTMYM",
+          "gr": "O)RFANA/",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": ")M",
+          "gr": "E)A\\N DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "KSP",
+          "gr": "A)RGU/RION",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "TLWH",
+          "gr": "E)KDANEI/SH|S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": ")T (M/Y =?)T )XY/W",
+          "gr": "TW=| A)DELFW=|",
+          "reason": "conteo CATSS (4 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": ")T H/(NY",
+          "gr": "TW=| PENIXRW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "(M/K",
+          "gr": "PARA\\ SOI/",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "THYH",
+          "gr": "E)/SH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "L/W",
+          "gr": "AU)TO\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "K/N$H",
+          "gr": "KATEPEI/GWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "T&YMWN",
+          "gr": "E)PIQH/SEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "(L/YW",
+          "gr": "AU)TW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:24",
+          "he": "N$K",
+          "gr": "TO/KON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:25",
+          "he": "XBL {!}na",
+          "gr": "E)NEXU/RASMA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:25",
+          "he": "TXBL {!}na",
+          "gr": "E)NEXURA/SH|S",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Exod 22:25",
+          "he": "&LMT",
+          "gr": "TO\\ I(MA/TION",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:25",
+          "he": "R(/K",
+          "gr": "TOU= PLHSI/ON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:25",
+          "he": "(D",
+          "gr": "PRO\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:25",
+          "he": "B)",
+          "gr": "DUSMW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:25",
+          "he": "H/$M$",
+          "gr": "H(LI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:25",
+          "he": "T$YB/NW",
+          "gr": "A)PODW/SEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:25",
+          "he": "L/W",
+          "gr": "AU)TW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "{...}",
+          "gr": "E)/STIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "KY",
+          "gr": "GA\\R",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "HW)",
+          "gr": "TOU=TO {..^E)/STIN}",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "*KSWT/H **KSWT/W",
+          "gr": "PERIBO/LAION AU)TOU=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "L/BD/H",
+          "gr": "MO/NON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "HW)",
+          "gr": "TOU=TO",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "&MLT/W",
+          "gr": "TO\\ I(MA/TION",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "L/(R/W",
+          "gr": "A)SXHMOSU/NHS AU)TOU=",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "B/MH",
+          "gr": "E)N TI/NI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "Y$KB",
+          "gr": "KOIMHQH/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "W/HYH KY",
+          "gr": "E)A\\N OU)=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "YC(Q",
+          "gr": "KATABOH/SH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": ")L/Y",
+          "gr": "PRO/S ME",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "W/$M(TY",
+          "gr": "EI)SAKOU/SOMAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "KY",
+          "gr": "{..^GA/R}",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "XNWN",
+          "gr": "E)LEH/MWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": "{...}",
+          "gr": "GA/R",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:26",
+          "he": ")NY",
+          "gr": "EI)MI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:27",
+          "he": ")LHYM",
+          "gr": "QEOU\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:27",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:27",
+          "he": "TQLL",
+          "gr": "KAKOLOGH/SEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:27",
+          "he": "W/N&Y)",
+          "gr": "KAI\\ A)/RXONTAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:27",
+          "he": "B/(M/K",
+          "gr": "TOU= LAOU= SOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:27",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:27",
+          "he": "T)R",
+          "gr": "KAKW=S E)REI=S",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:28",
+          "he": "ML)T/K",
+          "gr": "A)PARXA\\S A(/LWNOS {..dSOU}",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:28",
+          "he": "W/DM(/K",
+          "gr": "KAI\\ {..dA)PARXA\\S} LHNOU= SOU",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 22:28",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:28",
+          "he": "T)XR",
+          "gr": "KAQUSTERH/SEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:28",
+          "he": "BKWR",
+          "gr": "TA\\ PRWTO/TOKA",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Exod 22:28",
+          "he": "BN/YK",
+          "gr": "TW=N UI(W=N SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:28",
+          "he": "TTN",
+          "gr": "DW/SEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:28",
+          "he": "L/Y",
+          "gr": "E)MOI/",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "KN",
+          "gr": "OU(/TWS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "T(&H",
+          "gr": "POIH/SEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "L/$R/K",
+          "gr": "TO\\N MO/SXON SOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "L/C)N/K",
+          "gr": "KAI\\ TO\\ PRO/BATO/N SOU",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "$B(T",
+          "gr": "E(PTA\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "YMYM",
+          "gr": "H(ME/RAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "YHYH",
+          "gr": "E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "(M",
+          "gr": "U(PO\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": ")M/W",
+          "gr": "TH\\N MHTE/RA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "B/YWM",
+          "gr": "TH=| ^ DE\\ {..^H(ME/RA|}",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "H/$MYNY",
+          "gr": "{...TH=|} O)GDO/H|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "{...}",
+          "gr": "H(ME/RA|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "TTN/W",
+          "gr": "A)PODW/SEIS {..^AU)TO/}",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "L/Y",
+          "gr": "MOI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:29",
+          "he": "{...}",
+          "gr": "AU)TO/",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": "W/)N$Y",
+          "gr": "KAI\\ A)/NDRES",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": "QD$",
+          "gr": "A(/GIOI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": "THYWN",
+          "gr": "E)/SESQE/",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": "L/Y",
+          "gr": "MOI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": "W/B&R",
+          "gr": "KAI\\ KRE/AS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": "+RPH",
+          "gr": "QHRIA/LWTON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": "T)KLW",
+          "gr": "E)/DESQE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": "L/KLB",
+          "gr": "TW=| KUNI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": "T$LKWN",
+          "gr": "A)PORRI/YATE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Exod 22:30",
+          "he": ")T/W",
+          "gr": "AU)TO/",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}
