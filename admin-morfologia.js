@@ -17,6 +17,9 @@
   const MANIFEST_PATH = './IdiomaORIGEN/manifest.json';
   const MORPH_INDEX_PATH = './IdiomaORIGEN/morph-index.min.json';
   const LXX_SHIFT_PATH = './IdiomaORIGEN/lxx-mt-verse-shift.min.json';
+  /** Pistas editoriales MT⇄token LXX: capitulos opcionales en IdiomaORIGEN/lxx-mt-word-hints/chapters/<slug>/<n>.json */
+  const lxxWordHintsChapterUrl = (slug, chapter) =>
+    `./IdiomaORIGEN/lxx-mt-word-hints/chapters/${slug}/${chapter}.json`;
   /** Fragmentos opcionales: generados por `node scripts/atomize-lxx-chapters.js` */
   const LXX_ATOMIZED_DIR = './LXX/chapters';
 
@@ -1035,7 +1038,7 @@
     return merged;
   }
 
-  async function buildVerseCardHtml(verseNumber, verseNode, oshbVerseNode = null, precomputedPlan = null, lxxCtx = null){
+  async function buildVerseCardHtml(verseNumber, verseNode, oshbVerseNode = null, precomputedPlan = null, lxxCtx = null, wordHintsChapter = null){
     const versePlan = precomputedPlan || (AdminEngine?.buildAdminVersePlan
       ? AdminEngine.buildAdminVersePlan(verseNode, oshbVerseNode)
       : { items: [] });
@@ -1064,7 +1067,8 @@
     const mergedRows = mergeDisplayMorphemes(rawRows);
 
     let lxxChipHtml = '';
-    let alignedGreekByColumn = null;
+    let lxxSurfaces = null;
+    let lxxTiers = null;
     const Align = window.AdminLxxAlign;
     const LxxLayer = window.AdminOtLxxLayer;
     if(lxxCtx?.bundle?.verses && LxxLayer && Align){
@@ -1081,16 +1085,31 @@
         const gTok = lxxCtx.bundle.verses[String(lxxVN)];
         if(Array.isArray(gTok) && gTok.length){
           const columns = [];
-          mergedRows.forEach(({ morphemes }) => {
-            (morphemes || []).forEach((m) => {
+          mergedRows.forEach(({ token, morphemes }) => {
+            const tkKey = window.AdminLxxWordHints
+              ? window.AdminLxxWordHints.normalizeTokenNumKey(token)
+              : (Array.isArray(token?.num) ? token.num.map(String).join(',') : String(token?.num ?? ''));
+            const strongs = String(token?.strongs || '').trim();
+            (morphemes || []).forEach((m, morphemeIdx) => {
               columns.push({
                 gloss: String(m.gloss || ''),
                 label: String(m.label || ''),
-                hebrew: String(m.surface || '')
+                hebrew: String(m.surface || ''),
+                tokenNum: tkKey,
+                morphemeIdx,
+                strongs
               });
             });
           });
-          alignedGreekByColumn = Align.pairColumnsToGreek(columns, gTok);
+          const pack = Align.pairColumnsToGreek(columns, gTok);
+          lxxSurfaces = pack.surfaces;
+          lxxTiers = pack.tiers;
+          const verseHints = wordHintsChapter?.verses && Array.isArray(wordHintsChapter.verses[String(hv)])
+            ? wordHintsChapter.verses[String(hv)]
+            : [];
+          if(verseHints.length && window.AdminLxxWordHints){
+            window.AdminLxxWordHints.applyHintsToAlignment(columns, lxxSurfaces, lxxTiers, gTok, verseHints);
+          }
           const shifted = Number(lxxVN) !== hv;
           const shiftNote = shifted
             ? ` · Masora v${hv}→LXX v${lxxVN}`
@@ -1104,11 +1123,21 @@
     const rows = mergedRows.map(({ token, morphemes }) => {
       const morphemeHtml = morphemes.map((morpheme) => {
         let greekLine = '';
-        if(alignedGreekByColumn){
-          const surf = String(alignedGreekByColumn[greekCol] || '').trim();
+        if(lxxSurfaces){
+          const surf = String(lxxSurfaces[greekCol] || '').trim();
+          const tier = lxxTiers && lxxTiers[greekCol];
           greekCol += 1;
           if(surf){
-            greekLine = `<div class="admin-morph-segment-lxx">${escapeHtml(surf)}</div>`;
+            let lxxClass = 'admin-morph-segment-lxx';
+            let lxxTitle = '';
+            if(tier === 'soft'){
+              lxxClass += ' admin-morph-segment-lxx-soft';
+              lxxTitle = ' title="Sugerencia algoritmica (MT y LXX pueden divergir)"';
+            }else if(tier === 'hint'){
+              lxxClass += ' admin-morph-segment-lxx-hint';
+              lxxTitle = ' title="Alineacion editorial (modulo lxx-mt-word-hints)"';
+            }
+            greekLine = `<div class="${lxxClass}"${lxxTitle}>${escapeHtml(surf)}</div>`;
           }
         }
         return `
@@ -1232,11 +1261,12 @@
     if(chapterTotal > 0 && state.chapter > chapterTotal) state.chapter = chapterTotal;
 
     // Tanda 3: traemos solo el capítulo en juego (interlineal + OSHB + versículos LXX del capitulo).
-    const [interlinearChapter, oshbChapter, lxxBundle, shiftCfg] = await Promise.all([
+    const [interlinearChapter, oshbChapter, lxxBundle, shiftCfg, lxxWordHintsChapter] = await Promise.all([
       getInterlinearChapter(state.slug, state.chapter),
       getOshbMorphChapter(state.slug, state.chapter).catch(() => null),
       getOtLxxChapterBundle(state.slug, state.chapter).catch(() => null),
-      getLxxShiftConfig().catch(() => ({ chapters: {} }))
+      getLxxShiftConfig().catch(() => ({ chapters: {} })),
+      loadJson(lxxWordHintsChapterUrl(state.slug, state.chapter)).catch(() => null)
     ]);
     if(!isAlive()) return;
 
@@ -1273,7 +1303,7 @@
       : null;
 
     const cards = await Promise.all(versePlans.map(({ verseNumber, verseNode, oshbVerseNode, plan }) =>
-      buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode, oshbVerseNode, plan, lxxCtx)
+      buildVerseCardHtml(`${state.chapter}:${verseNumber}`, verseNode, oshbVerseNode, plan, lxxCtx, lxxWordHintsChapter)
     ));
     if(!isAlive()) return;
 

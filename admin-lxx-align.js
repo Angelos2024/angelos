@@ -1,7 +1,7 @@
 /**
  * Alineacion español (gloss laboratorio) ⇄ tokens LXX del verso (orden griego).
- * Reordena por DP monotona; solo rellena griego cuando la pareja supera reglas de certificacion.
- * (Sin tabla de alineacion verso-a-verso no existe certeza semantica perfecta — aqui evitamos falsas asignaciones.)
+ * DP monotono + parejas firm / soft + relleno monotono de huecos.
+ * La capa 'soft' amplia cobertura sin indice verso-a-verso completo.
  */
 (function(global){
   'use strict';
@@ -79,7 +79,11 @@
     }
     if(/^AND|^XN|^TN|NEG/.test(lab) && /^[Dd]$/i.test(gm)) b = Math.max(b, 58);
     if(/^ART|^XD|^DET/i.test(lab) && /^ra\./i.test(gm)) b = Math.max(b, 72);
-
+    /** Nombre / verbo / adjetivo (Hebreo laboratorio vs etiquetas LXX RA/N/V/A) */
+    if(/SUBS|NC|PROP|NPROP|NP/.test(lab) && /^N\./.test(gm)) b = Math.max(b, 54);
+    if(/VERBO|VERB|VQ|VH|VN/.test(lab) && /^V\./.test(gm)) b = Math.max(b, 54);
+    if(/ADJ/.test(lab) && /^A\./.test(gm)) b = Math.max(b, 50);
+    if(/SUF|PRS|PRON|SUFFIX|POS/i.test(lab) && /^RP/.test(gm)) b = Math.max(b, 58);
     return b;
   }
 
@@ -88,7 +92,7 @@
   }
 
   function weakExactHit(esH, g1, g2, weakBag){
-    if(!weakBag || typeof weakBag.has !== 'function' || esH.length < 4 || !weakBag.has(esH)){
+    if(!weakBag || typeof weakBag.has !== 'function' || esH.length < 3 || !weakBag.has(esH)){
       return false;
     }
     for(const gv of weakBag.get(esH)){
@@ -148,6 +152,57 @@
     if(br >= 82 && morphB >= 58) return true;
     if(br >= 72 && morphB >= 68) return true;
 
+    /** Sustantivo / verbo / adj: evidencia debil + columna morfologica alineada */
+    const labN = String(col.label || '');
+    if(weak && /SUBS|NC|PROP|NPROP|NP/.test(labN) && /^N\./.test(morph)) return morphB >= 45;
+    if(weak && /VERBO|VERB|VQ|VH|VN/.test(labN) && /^V\./.test(morph)) return morphB >= 45;
+    if(weak && /ADJ/.test(labN) && /^A\./.test(morph)) return morphB >= 42;
+    if(weak && /^RP/.test(morph) && morphB >= 48) return true;
+
+    return false;
+  }
+
+  /** Emparejamientos DP con buena puntuacion pero criterio lexical menos estricto */
+  function isSoftPair(col, gt, weakBag){
+    if(isCertifiedPair(col, gt, weakBag)) return false;
+    const glossHead = esHeadWord(col.gloss);
+    const morph = String(gt?.morph || '').trim();
+    const lab = String(col.label || '').toUpperCase();
+    const g1 = normGr(gt?.w);
+    const g2 = normGr(gt?.lemma);
+    const br = bridgeScore(glossHead, g1, g2, morph);
+    const morphB = morphAgreementBonus(col.label, morph);
+    const weak = weakExactHit(glossHead, g1, g2, weakBag);
+    const ms = matchScore(col, gt, weakBag);
+
+    if(ms >= 92) return true;
+    if(ms >= 82 && morphB >= 50) return true;
+    if(weak && morphB >= 40) return true;
+    if(br >= 58 && morphB >= 55) return true;
+    if(/SUBS|NC|PROP|NPROP|VERB|VERBO|VQ|VH|VN|ADJ/.test(lab) && ms >= 72 && morphB >= 42) return true;
+    return false;
+  }
+
+  /** Relleno monotono de huecos restantes (orden preservado) */
+  function isGapFillPair(col, gt, weakBag){
+    const glossHead = esHeadWord(col.gloss);
+    if(!String(col.hebrew || '').replace(/[^\u0590-\u05FF]/g, '').trim() && !glossHead){
+      return false;
+    }
+    const morph = String(gt?.morph || '').trim();
+    const lab = String(col.label || '').toUpperCase();
+    const g1 = normGr(gt?.w);
+    const g2 = normGr(gt?.lemma);
+    const morphB = morphAgreementBonus(col.label, morph);
+    const weak = weakExactHit(glossHead, g1, g2, weakBag);
+    const ms = matchScore(col, gt, weakBag);
+
+    if(ms < 48) return false;
+    if(isCertifiedPair(col, gt, weakBag) || isSoftPair(col, gt, weakBag)) return true;
+    if(ms >= 76) return true;
+    if(weak && morphB >= 32) return true;
+    if(ms >= 62 && morphB >= 48) return true;
+    if(/SUBS|NC|VERB|VERBO|VQ|ADJ/.test(lab) && ms >= 58) return true;
     return false;
   }
 
@@ -197,15 +252,15 @@
     const rows = Array.isArray(data) ? data : (data?.rows || []);
     rows.forEach((row) => {
       const rawEs = typeof row.es === 'string' ? row.es.trim() : '';
-      if(rawEs.length < 4) return;
+      if(rawEs.length < 2) return;
       const esKey = normEsPhrase(rawEs).split(/\s+/).filter(Boolean)[0] || '';
-      if(esKey.length < 4) return;
+      if(esKey.length < 3) return;
       if(!map.has(esKey)) map.set(esKey, new Set());
       const target = map.get(esKey);
       const grSide = Array.isArray(row.gr) ? row.gr : [];
-      grSide.slice(0, 10).forEach((tok) => {
+      grSide.slice(0, 12).forEach((tok) => {
         const clipped = normGr(String(tok || ''));
-        if(clipped.length >= 3 && clipped.length <= 20){ target.add(clipped); }
+        if(clipped.length >= 2 && clipped.length <= 22){ target.add(clipped); }
       });
     });
     weakEsToGr = map;
@@ -226,8 +281,9 @@
     const m = gTok.length;
     const weakBag = weakEsToGr instanceof Map ? weakEsToGr : new Map();
     const out = Array(n).fill('');
+    const tier = Array(n).fill('');
 
-    if(!n || !m) return out;
+    if(!n || !m) return { surfaces: out, tiers: tier };
 
     const dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(NEG));
     const bt = Array.from({ length: n + 1 }, () => Array(m + 1).fill(null));
@@ -261,7 +317,7 @@
 
     let i = n;
     let j = m;
-    if(dp[i][j] <= NEG / 5){ return out; }
+    if(dp[i][j] <= NEG / 5){ return { surfaces: out, tiers: tier }; }
 
     const matches = [];
 
@@ -279,18 +335,47 @@
       j = pj;
     }
 
+    const ordered = matches.slice().reverse();
     const usedG = new Set();
-    matches.forEach(({ pi, pj }) => {
+
+    ordered.forEach(({ pi, pj }) => {
       if(!out[pi]) return;
-      if(!isCertifiedPair(cols[pi], gTok[pj], weakBag)){
+      if(usedG.has(pj)){
         out[pi] = '';
+        tier[pi] = '';
         return;
       }
-      if(usedG.has(pj)){ out[pi] = ''; }
-      else{ usedG.add(pj); }
+      if(isCertifiedPair(cols[pi], gTok[pj], weakBag)){
+        tier[pi] = 'firm';
+        usedG.add(pj);
+      }else if(isSoftPair(cols[pi], gTok[pj], weakBag)){
+        tier[pi] = 'soft';
+        usedG.add(pj);
+      }else{
+        out[pi] = '';
+        tier[pi] = '';
+      }
     });
 
-    return out;
+    let scanJ = 0;
+    for(let ci = 0; ci < n; ci += 1){
+      if(out[ci]) continue;
+      while(scanJ < m && usedG.has(scanJ)) scanJ += 1;
+      let placed = false;
+      for(let gj = scanJ; gj < m; gj += 1){
+        if(usedG.has(gj)) continue;
+        if(isGapFillPair(cols[ci], gTok[gj], weakBag)){
+          out[ci] = String(gTok[gj]?.w || '').trim();
+          tier[ci] = 'soft';
+          usedG.add(gj);
+          scanJ = gj + 1;
+          placed = true;
+          break;
+        }
+      }
+    }
+
+    return { surfaces: out, tiers: tier };
   }
 
   global.AdminLxxAlign = {

@@ -51,8 +51,8 @@
   gap:.22rem;
   /** Español (gloss) y griego (LXX) al mismo tamaño; hebreo un escalón mayor */
   --morph-lang-size:1.08rem;
-  --morph-hebrew-size:calc(var(--morph-lang-size) * 1.062);
-  --morph-label-size:calc(var(--morph-lang-size) * 0.94);
+  --morph-hebrew-size:calc(var(--morph-lang-size) * 1.14);
+  --morph-label-size:calc(var(--morph-lang-size) * 0.72);
 }
 
 .admin-morph-segment-prefix .admin-morph-segment-label{
@@ -76,12 +76,12 @@
   direction:ltr;
   text-align:center;
   font-size:var(--morph-label-size);
-  line-height:1.28;
+  line-height:1.22;
   color:#d6943a;
-  font-weight:700;
-  letter-spacing:.01em;
+  font-weight:600;
+  letter-spacing:.008em;
   white-space:normal;
-  max-width:16ch;
+  max-width:17ch;
 }
 
 .admin-morph-segment-gloss{
@@ -104,6 +104,24 @@
   color:#234a8a;
   max-width:18ch;
   overflow-wrap:anywhere;
+}
+
+.admin-morph-segment-lxx-soft{
+  font-style:italic;
+  color:#3d5d9e;
+  opacity:0.9;
+  text-decoration:underline dotted rgba(35,74,138,0.4);
+  text-decoration-thickness:1px;
+  text-underline-offset:2px;
+}
+
+.admin-morph-segment-lxx-hint{
+  font-style:normal;
+  color:#1c4d6e;
+  font-weight:600;
+  text-decoration:underline solid rgba(28,77,110,0.35);
+  text-decoration-thickness:1.5px;
+  text-underline-offset:3px;
 }
 
 .admin-lxx-verse-chip{
