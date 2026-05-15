@@ -460,6 +460,23 @@
         "source": "catss"
       },
       {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "ἐπέστρεψεν",
+        "strong": "H6437",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
         "tokenNum": "14",
         "morphemeIdx": 0,
         "lxxIdx": 12,
@@ -1322,22 +1339,6 @@
         "lxxIdx": 17,
         "surface": "κυριεύουσιν",
         "strong": "H4910",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "21",
-        "morphemeIdx": 0,
-        "lxxIdx": 35,
-        "surface": "ἐποίησα",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "21",
-        "morphemeIdx": 1,
-        "lxxIdx": 35,
-        "surface": "ἐποίησα",
         "tier": "hint",
         "source": "catss"
       }
@@ -2574,7 +2575,7 @@
     "lxx": "15.json",
     "report": {
       "matchedPairs": 180,
-      "totalPairs": 311,
+      "totalPairs": 307,
       "skipped": [
         {
           "ref": "JudgB 15:1",
@@ -2590,13 +2591,13 @@
         },
         {
           "ref": "JudgB 15:2",
-          "he": ")MR {!}p",
+          "he": ")MR p",
           "gr": "LE/GWN",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JudgB 15:2",
-          "he": ")MRTY {!}p",
+          "he": ")MRTY p",
           "gr": "EI)=PA",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -2608,13 +2609,13 @@
         },
         {
           "ref": "JudgB 15:2",
-          "he": "&N) {!}p",
+          "he": "&N) p",
           "gr": "MISW=N",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JudgB 15:2",
-          "he": "&N)T/H {!}p",
+          "he": "&N)T/H p",
           "gr": "E)MI/SHSAS AU)TH/N",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
@@ -2650,12 +2651,6 @@
         },
         {
           "ref": "JudgB 15:2",
-          "he": "{...}",
-          "gr": "AU)TH=S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 15:2",
           "he": "+WBH",
           "gr": "A)GAQWTE/RA",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
@@ -2663,8 +2658,8 @@
         {
           "ref": "JudgB 15:2",
           "he": "M/MN/H",
-          "gr": "{...AU)TH=S} U(PE\\R AU)TH/N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "gr": "U(PE\\R AU)TH/N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "JudgB 15:2",
@@ -2716,12 +2711,6 @@
         },
         {
           "ref": "JudgB 15:4",
-          "he": "W/YPN",
-          "gr": "KAI\\ E)PE/STREYEN {d} {...KAI\\ E)/DHSEN}",
-          "reason": "conteo CATSS (1 he / 5 gr): avanzó hebreo sin hint LXX"
-        },
-        {
-          "ref": "JudgB 15:4",
           "he": "W/Y&M",
           "gr": "KAI\\ E)/QHKEN",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
@@ -2753,14 +2742,8 @@
         {
           "ref": "JudgB 15:4",
           "he": "H/ZNBWT",
-          "gr": "{...TW=N} KE/RKWN",
+          "gr": "KE/RKWN",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 15:4",
-          "he": "{...}",
-          "gr": "KAI\\ E)/DHSEN",
-          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "JudgB 15:6",
@@ -2946,25 +2929,19 @@
           "ref": "JudgB 15:11",
           "he": "PL$TYM",
           "gr": "OI( A)LLO/FULOI",
-          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
-        },
-        {
-          "ref": "JudgB 15:11",
-          "he": "{...}",
-          "gr": "H(MW=N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "JudgB 15:11",
           "he": "W/MH",
           "gr": "KAI\\ TI/",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 15:11",
           "he": "Z)T",
           "gr": "TOU=TO",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 15:11",
@@ -3034,13 +3011,13 @@
         },
         {
           "ref": "JudgB 15:13",
-          "he": ")SR {!}nd",
+          "he": ")SR nd",
           "gr": "DESMW=|",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JudgB 15:13",
-          "he": "N)SR/K {!}nd",
+          "he": "N)SR/K nd",
           "gr": "DH/SOME/N SE",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
@@ -3058,7 +3035,7 @@
         },
         {
           "ref": "JudgB 15:13",
-          "he": "W/HMT {!}nd",
+          "he": "W/HMT nd",
           "gr": "KAI\\ QANA/TW|",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
@@ -3070,7 +3047,7 @@
         },
         {
           "ref": "JudgB 15:13",
-          "he": "NMYT/K {!}nd",
+          "he": "NMYT/K nd",
           "gr": "QANATW/SOME/N SE",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
@@ -3118,9 +3095,9 @@
         },
         {
           "ref": "JudgB 15:14",
-          "he": "HRY(W ={d} @RWC",
-          "gr": "H)LA/LACAN {d} KAI\\ E)/DRAMON",
-          "reason": "conteo CATSS (3 he / 4 gr)"
+          "he": "HRY(W = @RWC",
+          "gr": "H)LA/LACAN KAI\\ E)/DRAMON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 15:14",
@@ -3280,13 +3257,13 @@
         },
         {
           "ref": "JudgB 15:16",
-          "he": "XMWR =v {!}p",
+          "he": "XMWR =v p",
           "gr": "E)CALEI/FWN",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JudgB 15:16",
-          "he": "XMRTYM =v {!}p",
+          "he": "XMRTYM =v p",
           "gr": "E)CH/LEIYA AU)TOU/S",
           "reason": "conteo CATSS (3 he / 2 gr)"
         },

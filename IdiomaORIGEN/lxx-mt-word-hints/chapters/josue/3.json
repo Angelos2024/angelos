@@ -656,6 +656,24 @@
         "source": "catss"
       },
       {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "τῇ",
+        "strong": "H3117",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "ἡμέρᾳ",
+        "strong": "H3117",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
         "tokenNum": "8",
         "morphemeIdx": 0,
         "lxxIdx": 8,
@@ -1207,8 +1225,8 @@
     "interlinear": "3.json",
     "lxx": "3.json",
     "report": {
-      "matchedPairs": 77,
-      "totalPairs": 255,
+      "matchedPairs": 78,
+      "totalPairs": 250,
       "skipped": [
         {
           "ref": "JoshB 3:1",
@@ -1374,20 +1392,8 @@
         },
         {
           "ref": "JoshB 3:4",
-          "he": "KY",
-          "gr": "{..^GA\\R}",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 3:4",
           "he": "L)",
           "gr": "OU)",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 3:4",
-          "he": "{...}",
-          "gr": "GA\\R",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -1503,18 +1509,6 @@
           "he": "H/(M",
           "gr": "TOU= LAOU=",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 3:7",
-          "he": "{...}",
-          "gr": "E)N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 3:7",
-          "he": "H/YWM",
-          "gr": "{..pE)N} TH=| H(ME/RA|",
-          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
         },
         {
           "ref": "JoshB 3:7",
@@ -1740,13 +1734,13 @@
         },
         {
           "ref": "JoshB 3:10",
-          "he": "W/HWR$ {!}p",
+          "he": "W/HWR$ p",
           "gr": "KAI\\ O)LEQREU/WN",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 3:10",
-          "he": "YWRY$ {!}p",
+          "he": "YWRY$ p",
           "gr": "O)LEQREU/SEI",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -1824,9 +1818,9 @@
         },
         {
           "ref": "JoshB 3:12",
-          "he": "M/$B+Y =;M/BNY <3.1,9>",
+          "he": "M/$B+Y =;M/BNY",
           "gr": "A)PO\\ TW=N UI(W=N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo CATSS (2 he / 3 gr)"
         },
         {
           "ref": "JoshB 3:12",
@@ -1837,25 +1831,13 @@
         {
           "ref": "JoshB 3:12",
           "he": ")Y$ )XD )Y$ )XD",
-          "gr": "E(/NA {..^E(KA/STHS}",
-          "reason": "conteo CATSS (4 he / 2 gr)"
-        },
-        {
-          "ref": "JoshB 3:12",
-          "he": "{...}",
-          "gr": "A)F'",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 3:12",
-          "he": "{...}",
-          "gr": "E(KA/STHS",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "gr": "E(/NA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JoshB 3:12",
           "he": "L/$B+",
-          "gr": "{...A)F'} FULH=S",
+          "gr": "FULH=S",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -2040,9 +2022,9 @@
         },
         {
           "ref": "JoshB 3:15",
-          "he": "H/MYM =;MY <3.13>",
+          "he": "H/MYM =;MY",
           "gr": "TOU= U(/DATOS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 3:15",
@@ -2076,9 +2058,9 @@
         },
         {
           "ref": "JoshB 3:15",
-          "he": "KL YMY =K/YMY .j <q4b^>",
+          "he": "KL YMY =K/YMY .j",
           "gr": "W(SEI\\ H(ME/RAI",
-          "reason": "conteo CATSS (5 he / 2 gr)"
+          "reason": "conteo CATSS (4 he / 2 gr)"
         },
         {
           "ref": "JoshB 3:15",

@@ -1,0 +1,72 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (17.1Esdras.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "esdras",
+  "chapter": 3,
+  "verses": {},
+  "_catss_generator": {
+    "catssSource": "17.1Esdras.par",
+    "interlinear": "3.json",
+    "lxx": "3.json",
+    "report": {
+      "matchedPairs": 0,
+      "totalPairs": 0,
+      "skipped": [
+        {
+          "ref": "1Esdr 3:14",
+          "reason": "sin verso interlineal",
+          "interKey": "14"
+        },
+        {
+          "ref": "1Esdr 3:15",
+          "reason": "sin verso interlineal",
+          "interKey": "15"
+        },
+        {
+          "ref": "1Esdr 3:16",
+          "reason": "sin verso interlineal",
+          "interKey": "16"
+        },
+        {
+          "ref": "1Esdr 3:17",
+          "reason": "sin verso interlineal",
+          "interKey": "17"
+        },
+        {
+          "ref": "1Esdr 3:18",
+          "reason": "sin verso interlineal",
+          "interKey": "18"
+        },
+        {
+          "ref": "1Esdr 3:19",
+          "reason": "sin verso interlineal",
+          "interKey": "19"
+        },
+        {
+          "ref": "1Esdr 3:20",
+          "reason": "sin verso interlineal",
+          "interKey": "20"
+        },
+        {
+          "ref": "1Esdr 3:21",
+          "reason": "sin verso interlineal",
+          "interKey": "21"
+        },
+        {
+          "ref": "1Esdr 3:22",
+          "reason": "sin verso interlineal",
+          "interKey": "22"
+        },
+        {
+          "ref": "1Esdr 3:23",
+          "reason": "sin verso interlineal",
+          "interKey": "23"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}

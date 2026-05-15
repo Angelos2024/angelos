@@ -93,8 +93,7 @@
         "surface": "κορυφὴν",
         "strong": "H7218",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+        "source": "catss"
       },
       {
         "tokenNum": "11",
@@ -261,12 +260,20 @@
       {
         "tokenNum": "3",
         "morphemeIdx": 0,
-        "lxxIdx": 6,
+        "lxxIdx": 1,
         "surface": "πᾶσαν",
         "strong": "H3605",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 2×he/3×gr: morfema lexical ↔ 3er token griego."
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "Νεφθαλι",
+        "strong": "H5321",
+        "tier": "hint",
+        "source": "catss"
       }
     ],
     "3": [
@@ -665,15 +672,6 @@
         "strong": "H4872",
         "tier": "hint",
         "source": "catss"
-      },
-      {
-        "tokenNum": "3",
-        "morphemeIdx": 0,
-        "lxxIdx": 19,
-        "surface": "χελύνια",
-        "strong": "H1121",
-        "tier": "hint",
-        "source": "catss"
       }
     ],
     "8": [
@@ -767,43 +765,6 @@
         "strong": "H2451",
         "tier": "hint",
         "source": "catss"
-      },
-      {
-        "tokenNum": "8",
-        "morphemeIdx": 0,
-        "lxxIdx": 8,
-        "surface": "γὰρ",
-        "strong": "H3588",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "10",
-        "morphemeIdx": 0,
-        "lxxIdx": 9,
-        "surface": "Μωυσῆς",
-        "strong": "H4872",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "11",
-        "morphemeIdx": 0,
-        "lxxIdx": 10,
-        "surface": "τὰς",
-        "strong": "H853",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "12",
-        "morphemeIdx": 0,
-        "lxxIdx": 12,
-        "surface": "αὐτοῦ",
-        "strong": "H3027",
-        "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 2×he/3×gr: morfema lexical ↔ 3er token griego."
       }
     ],
     "10": [
@@ -921,25 +882,13 @@
     "interlinear": "34.json",
     "lxx": "34.json",
     "report": {
-      "matchedPairs": 61,
-      "totalPairs": 162,
+      "matchedPairs": 58,
+      "totalPairs": 157,
       "skipped": [
-        {
-          "ref": "Deut 34:1",
-          "he": "{...}",
-          "gr": "E)PI\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
         {
           "ref": "Deut 34:1",
           "he": "W/YR)/HW",
           "gr": "KAI\\ E)/DEICEN AU)TW=|",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "Deut 34:2",
-          "he": "NPTLY",
-          "gr": "NEFQALI",
           "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
@@ -969,8 +918,8 @@
         {
           "ref": "Deut 34:2",
           "he": "W/)T KL",
-          "gr": "KAI\\ {...TH\\N} PA=SAN",
-          "reason": "conteo CATSS (2 he / 3 gr)"
+          "gr": "KAI\\ PA=SAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 34:2",
@@ -1154,9 +1103,9 @@
         },
         {
           "ref": "Deut 34:7",
-          "he": "{...BN} $NH",
+          "he": "$NH",
           "gr": "E)TW=N",
-          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 34:7",
@@ -1264,30 +1213,36 @@
           "ref": "Deut 34:9",
           "he": "SMK",
           "gr": "E)PE/QHKEN",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 34:9",
-          "he": "{...}",
-          "gr": "GA\\R",
+          "he": "M$H",
+          "gr": "MWUSH=S",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 34:9",
+          "he": ")T YD/YW",
+          "gr": "TA\\S XEI=RAS AU)TOU=",
+          "reason": "conteo CATSS (2 he / 3 gr)"
         },
         {
           "ref": "Deut 34:9",
           "he": "(L/YW",
           "gr": "E)P' AU)TO/N",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 34:9",
-          "he": "W/Y$M(W {...)L/}",
+          "he": "W/Y$M(W",
           "gr": "KAI\\ EI)SH/KOUSAN",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 34:9",
           "he": ")L/YW",
-          "gr": "{p} AU)TOU=",
+          "gr": "AU)TOU=",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -1334,13 +1289,13 @@
         },
         {
           "ref": "Deut 34:10",
-          "he": "NBY) ^ =(WD <sp>",
+          "he": "NBY) ^ =(WD",
           "gr": "E)/TI",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Deut 34:10",
-          "he": "^ (WD =NBY) <sp>",
+          "he": "^ (WD =NBY)",
           "gr": "PROFH/THS",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -1365,19 +1320,13 @@
         {
           "ref": "Deut 34:10",
           "he": "YD(/W",
-          "gr": "E)/GNW {..^AU)TO\\N}",
+          "gr": "E)/GNW",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 34:10",
           "he": "YHWH",
           "gr": "KU/RIOS",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Deut 34:10",
-          "he": "{...}",
-          "gr": "AU)TO\\N",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {

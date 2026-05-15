@@ -1195,6 +1195,16 @@
         "source": "catss"
       },
       {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "Ομμωθ",
+        "strong": "H523",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
         "tokenNum": "14",
         "morphemeIdx": 0,
         "lxxIdx": 14,
@@ -1273,6 +1283,69 @@
         "lxxIdx": 5,
         "surface": "λέγων",
         "strong": "H559",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "17": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "ἐχθραίνετε",
+        "strong": "H6887",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "τοῖς",
+        "strong": "H853",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "Μαδιηναίοις",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "Μαδιηναίοις",
+        "strong": "H4084",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "πατάξατε",
+        "strong": "H5221",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "αὐτούς",
+        "strong": "H5221",
         "tier": "hint",
         "source": "catss"
       }
@@ -1452,7 +1525,7 @@
     "interlinear": "25.json",
     "lxx": "25.json",
     "report": {
-      "matchedPairs": 107,
+      "matchedPairs": 112,
       "totalPairs": 209,
       "skipped": [
         {
@@ -1518,8 +1591,8 @@
         {
           "ref": "Num 25:3",
           "he": "L/B(L P(WR",
-          "gr": "TW=| BEELFEGWR {t}",
-          "reason": "conteo CATSS (2 he / 3 gr)"
+          "gr": "TW=| BEELFEGWR",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 25:3",
@@ -1589,9 +1662,9 @@
         },
         {
           "ref": "Num 25:5",
-          "he": "L/B(L P(WR {t}",
+          "he": "L/B(L P(WR",
           "gr": "TW=| BEELFEGWR",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 25:6",
@@ -1620,8 +1693,8 @@
         {
           "ref": "Num 25:6",
           "he": ")T H/MDYNYT",
-          "gr": "PRO\\S TH\\N MADIANI=TIN {t?}",
-          "reason": "conteo CATSS (2 he / 4 gr)"
+          "gr": "PRO\\S TH\\N MADIANI=TIN",
+          "reason": "conteo CATSS (2 he / 3 gr)"
         },
         {
           "ref": "Num 25:6",
@@ -1680,8 +1753,8 @@
         {
           "ref": "Num 25:6",
           "he": "PTX",
-          "gr": "{..pPARA\\} TH\\N QU/RAN",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "TH\\N QU/RAN",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 25:6",
@@ -1979,12 +2052,6 @@
         },
         {
           "ref": "Num 25:15",
-          "he": ")MWT",
-          "gr": "E)/QNOUS {d} OMMWQ {t}",
-          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
-        },
-        {
-          "ref": "Num 25:15",
           "he": "B/MDYN ^ =HW)",
           "gr": "E)STIN",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
@@ -1994,30 +2061,6 @@
           "he": "^ HW) =B/MDYN",
           "gr": "TW=N MADIAN",
           "reason": "conteo CATSS (3 he / 2 gr)"
-        },
-        {
-          "ref": "Num 25:17",
-          "he": "CRWR <sp>",
-          "gr": "E)XQRAI/NETE",
-          "reason": "(N he / 1 gr) sin puente consonantico o griego"
-        },
-        {
-          "ref": "Num 25:17",
-          "he": ")T H/MDYNYM",
-          "gr": "TOI=S MADIHNAI/OIS",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 25:17",
-          "he": "W/HKYTM",
-          "gr": "KAI\\ PATA/CATE",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 25:17",
-          "he": ")WT/M",
-          "gr": "AU)TOU/S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 25:18",

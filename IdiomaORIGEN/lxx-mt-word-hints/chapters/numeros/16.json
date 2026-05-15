@@ -2985,6 +2985,25 @@
         "source": "catss"
       }
     ],
+    "32": [
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἡ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "γῆ",
+        "strong": "H776",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
     "33": [
       {
         "tokenNum": "1",
@@ -3293,8 +3312,8 @@
     "interlinear": "16.json",
     "lxx": "16.json",
     "report": {
-      "matchedPairs": 244,
-      "totalPairs": 457,
+      "matchedPairs": 245,
+      "totalPairs": 453,
       "skipped": [
         {
           "ref": "Num 16:2",
@@ -3862,7 +3881,7 @@
         },
         {
           "ref": "Num 16:15",
-          "he": "XMWR =XMWD .rd <sp>",
+          "he": "XMWR =XMWD .rd",
           "gr": "E)PIQU/MHMA",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -3988,15 +4007,9 @@
         },
         {
           "ref": "Num 16:18",
-          "he": "{...}",
-          "gr": "PARA\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 16:18",
           "he": "PTX",
-          "gr": "{..pPARA\\} TA\\S QU/RAS",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "TA\\S QU/RAS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 16:18",
@@ -4210,15 +4223,9 @@
         },
         {
           "ref": "Num 16:27",
-          "he": "{...}",
-          "gr": "PARA\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 16:27",
           "he": "PTX",
-          "gr": "{..pPARA\\} TA\\S QU/RAS",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "TA\\S QU/RAS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 16:27",
@@ -4432,21 +4439,9 @@
         },
         {
           "ref": "Num 16:32",
-          "he": "W/TPTX {...)T PY/H} =%vap =v",
+          "he": "W/TPTX =%vap =v",
           "gr": "KAI\\ H)NOI/XQH",
-          "reason": "conteo CATSS (5 he / 2 gr)"
-        },
-        {
-          "ref": "Num 16:32",
-          "he": "H/)RC",
-          "gr": "H( GH=",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 16:32",
-          "he": ")T PY/H",
-          "gr": "{...}",
-          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+          "reason": "conteo CATSS (3 he / 2 gr): avanzó hebreo sin hint LXX"
         },
         {
           "ref": "Num 16:32",
@@ -4492,15 +4487,9 @@
         },
         {
           "ref": "Num 16:32",
-          "he": "W/)T",
-          "gr": "{...}",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 16:32",
-          "he": "{...W/)T} H/RKW$",
+          "he": "H/RKW$",
           "gr": "KAI\\ TA\\ KTH/NH AU)TW=N",
-          "reason": "conteo CATSS (2 he / 4 gr)"
+          "reason": "conteo CATSS (1 he / 4 gr)"
         },
         {
           "ref": "Num 16:33",

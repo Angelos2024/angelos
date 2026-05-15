@@ -1396,18 +1396,9 @@
       {
         "tokenNum": "24",
         "morphemeIdx": 0,
-        "lxxIdx": 26,
-        "surface": "καὶ",
-        "strong": "H7971",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "25",
-        "morphemeIdx": 0,
         "lxxIdx": 27,
         "surface": "ἐκτείνασα",
-        "strong": "H3027",
+        "strong": "H7971",
         "tier": "hint",
         "source": "catss"
       },
@@ -1425,14 +1416,6 @@
         "lxxIdx": 30,
         "surface": "ἐπιλάβηται",
         "strong": "H2388",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "29",
-        "morphemeIdx": 0,
-        "lxxIdx": 30,
-        "surface": "ἐπιλάβηται",
         "tier": "hint",
         "source": "catss"
       }
@@ -1892,6 +1875,23 @@
         "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
       },
       {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "ἔκοψέν",
+        "strong": "H2179",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
         "tokenNum": "9",
         "morphemeIdx": 0,
         "lxxIdx": 8,
@@ -2216,15 +2216,9 @@
     "interlinear": "25.json",
     "lxx": "25.json",
     "report": {
-      "matchedPairs": 166,
-      "totalPairs": 249,
+      "matchedPairs": 167,
+      "totalPairs": 247,
       "skipped": [
-        {
-          "ref": "Deut 25:2",
-          "he": "{...}",
-          "gr": "H)=|",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
         {
           "ref": "Deut 25:2",
           "he": "W/HPYL/W",
@@ -2505,13 +2499,13 @@
           "ref": "Deut 25:11",
           "he": "YD/H",
           "gr": "TH\\N XEI=RA",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
           "ref": "Deut 25:11",
           "he": "B/MB$/YW",
-          "gr": "{p} TW=N DIDU/MWN AU)TOU=",
-          "reason": "conteo CATSS (1 he / 4 gr)"
+          "gr": "TW=N DIDU/MWN AU)TOU=",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
           "ref": "Deut 25:13",
@@ -2644,18 +2638,6 @@
           "he": "QR/K",
           "gr": "A)NTE/STH SOI",
           "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "Deut 25:18",
-          "he": "W/YZNB",
-          "gr": "KAI\\ E)/KOYE/N {...TH\\N OU)RAGI/AN}",
-          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
-        },
-        {
-          "ref": "Deut 25:18",
-          "he": "{...}",
-          "gr": "TH\\N OU)RAGI/AN",
-          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Deut 25:18",

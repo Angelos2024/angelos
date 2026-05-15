@@ -908,6 +908,15 @@
         "source": "catss"
       },
       {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "ἄρτος",
+        "strong": "H3899",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
         "tokenNum": "16",
         "morphemeIdx": 0,
         "lxxIdx": 14,
@@ -1137,60 +1146,6 @@
         "lxxIdx": 2,
         "surface": "ἱερεὺς",
         "strong": "H3548",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "4",
-        "morphemeIdx": 0,
-        "lxxIdx": 3,
-        "surface": "κτήσηται",
-        "strong": "H7069",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "5",
-        "morphemeIdx": 0,
-        "lxxIdx": 4,
-        "surface": "ψυχὴν",
-        "strong": "H5315",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "6",
-        "morphemeIdx": 0,
-        "lxxIdx": 5,
-        "surface": "ἔγκτητον",
-        "strong": "H5315",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "7",
-        "morphemeIdx": 0,
-        "lxxIdx": 6,
-        "surface": "ἀργυρίου",
-        "strong": "H3701",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "9",
-        "morphemeIdx": 0,
-        "lxxIdx": 7,
-        "surface": "οὗτος",
-        "strong": "H1931",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "10",
-        "morphemeIdx": 0,
-        "lxxIdx": 8,
-        "surface": "φάγεται",
-        "strong": "H398",
         "tier": "hint",
         "source": "catss"
       }
@@ -1956,17 +1911,25 @@
       {
         "tokenNum": "3",
         "morphemeIdx": 0,
-        "lxxIdx": 6,
-        "surface": "αὐτῷ",
+        "lxxIdx": 3,
+        "surface": "ἔχῃ",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+        "source": "catss"
       },
       {
         "tokenNum": "3",
         "morphemeIdx": 1,
         "lxxIdx": 3,
         "surface": "ἔχῃ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "μῶμον",
+        "strong": "H3971",
         "tier": "hint",
         "source": "catss"
       },
@@ -2964,8 +2927,8 @@
     "interlinear": "22.json",
     "lxx": "22.json",
     "report": {
-      "matchedPairs": 230,
-      "totalPairs": 421,
+      "matchedPairs": 226,
+      "totalPairs": 416,
       "skipped": [
         {
           "ref": "Lev 22:2",
@@ -3084,7 +3047,7 @@
         {
           "ref": "Lev 22:3",
           "he": "H/HW)",
-          "gr": "{...H(} E)KEI/NH",
+          "gr": "E)KEI/NH",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -3184,18 +3147,6 @@
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
-          "ref": "Lev 22:7",
-          "he": "LXM/W",
-          "gr": "A)/RTOS {..^AU)TOU=}",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "Lev 22:7",
-          "he": "{...}",
-          "gr": "AU)TOU=",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
           "ref": "Lev 22:9",
           "he": ")T M$MRT/Y =v",
           "gr": "TA\\ FULA/GMATA/ MOU",
@@ -3287,15 +3238,39 @@
         },
         {
           "ref": "Lev 22:11",
-          "he": "{...}",
-          "gr": "E)A\\N",
+          "he": "YQNH",
+          "gr": "KTH/SHTAI",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Lev 22:11",
-          "he": "KY",
-          "gr": "{..^E)A\\N}",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "he": "NP$",
+          "gr": "YUXH\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Lev 22:11",
+          "he": "QNYN",
+          "gr": "E)/GKTHTON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Lev 22:11",
+          "he": "KSP/W",
+          "gr": "A)RGURI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Lev 22:11",
+          "he": "HW)",
+          "gr": "OU(=TOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Lev 22:11",
+          "he": "Y)KL",
+          "gr": "FA/GETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Lev 22:11",
@@ -3305,9 +3280,9 @@
         },
         {
           "ref": "Lev 22:11",
-          "he": "W/YLYD BYT/W <sp>",
+          "he": "W/YLYD BYT/W",
           "gr": "KAI\\ OI( OI)KOGENEI=S AU)TOU=",
-          "reason": "conteo CATSS (3 he / 4 gr)"
+          "reason": "conteo CATSS (2 he / 4 gr)"
         },
         {
           "ref": "Lev 22:11",
@@ -3443,7 +3418,7 @@
         },
         {
           "ref": "Lev 22:18",
-          "he": "BNY =;QHL <16.17>",
+          "he": "BNY =;QHL",
           "gr": "SUNAGWGH=|",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -3479,9 +3454,9 @@
         },
         {
           "ref": "Lev 22:18",
-          "he": "M/BYT =;M/BNY <20.2>",
+          "he": "M/BYT =;M/BNY",
           "gr": "A)PO\\ TW=N UI(W=N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo CATSS (2 he / 3 gr)"
         },
         {
           "ref": "Lev 22:18",
@@ -3590,18 +3565,6 @@
           "he": "W/B/(ZYM =%p",
           "gr": "KAI\\ E)K TW=N AI)GW=N",
           "reason": "conteo CATSS (2 he / 4 gr)"
-        },
-        {
-          "ref": "Lev 22:20",
-          "he": "MWM",
-          "gr": "MW=MON",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "Lev 22:20",
-          "he": "{...}",
-          "gr": "E)N AU)TW=|",
-          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Lev 22:21",
@@ -3821,21 +3784,15 @@
         },
         {
           "ref": "Lev 22:25",
-          "he": "M$XT/M =M$XTYM <sp> <q11p>",
+          "he": "M$XT/M =M$XTYM",
           "gr": "FQA/RMATA/",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Lev 22:25",
-          "he": "{...}",
-          "gr": "E)STIN",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Lev 22:25",
           "he": "B/HM",
-          "gr": "E)N AU)TOI=S {...E)STIN}",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "E)N AU)TOI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Lev 22:25",
@@ -4019,15 +3976,15 @@
         },
         {
           "ref": "Lev 22:29",
-          "he": "TZBXW =TZBX/HW <sp>",
+          "he": "TZBXW =TZBX/HW",
           "gr": "QU/SETE AU)TO/",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Lev 22:30",
-          "he": "M/MN/W =;M/B&R/W <7.17>",
+          "he": "M/MN/W =;M/B&R/W",
           "gr": "A)PO\\ TW=N KREW=N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo CATSS (2 he / 3 gr)"
         },
         {
           "ref": "Lev 22:30",

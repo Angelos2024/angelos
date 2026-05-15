@@ -832,8 +832,7 @@
         "surface": "λίθων",
         "strong": "H68",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+        "source": "catss"
       },
       {
         "tokenNum": "11",
@@ -1190,8 +1189,8 @@
       {
         "tokenNum": "2",
         "morphemeIdx": 0,
-        "lxxIdx": 0,
-        "surface": "καὶ",
+        "lxxIdx": 1,
+        "surface": "εἰσακούσῃ",
         "strong": "H8085",
         "tier": "hint",
         "source": "catss"
@@ -1199,10 +1198,38 @@
       {
         "tokenNum": "3",
         "morphemeIdx": 0,
-        "lxxIdx": 1,
-        "surface": "εἰσακούσῃ",
+        "lxxIdx": 2,
+        "surface": "τῆς",
         "tier": "hint",
         "source": "catss"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "φωνῆς",
+        "strong": "H6963",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "κυρίου",
+        "strong": "H3069",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "σου",
+        "strong": "H430",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
       }
     ],
     "11": [
@@ -2773,8 +2800,8 @@
     "interlinear": "27.json",
     "lxx": "27.json",
     "report": {
-      "matchedPairs": 212,
-      "totalPairs": 309,
+      "matchedPairs": 215,
+      "totalPairs": 308,
       "skipped": [
         {
           "ref": "Deut 27:1",
@@ -2888,12 +2915,6 @@
           "ref": "Deut 27:4",
           "he": "B/&YD",
           "gr": "KONI/A|",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Deut 27:5",
-          "he": "{...}",
-          "gr": "E)K",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -3032,24 +3053,6 @@
           "ref": "Deut 27:9",
           "he": ")LH/YK",
           "gr": "TW=| QEW=| SOU",
-          "reason": "conteo CATSS (1 he / 3 gr)"
-        },
-        {
-          "ref": "Deut 27:10",
-          "he": "B/QWL",
-          "gr": "{p} TH=S FWNH=S",
-          "reason": "conteo CATSS (1 he / 3 gr)"
-        },
-        {
-          "ref": "Deut 27:10",
-          "he": "YHWH",
-          "gr": "KURI/OU",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Deut 27:10",
-          "he": ")LH/YK",
-          "gr": "TOU= QEOU= SOU",
           "reason": "conteo CATSS (1 he / 3 gr)"
         },
         {
@@ -3300,9 +3303,9 @@
         },
         {
           "ref": "Deut 27:26",
-          "he": ")T --+ =)T KL <sp>",
+          "he": ")T --+ =)T KL",
           "gr": "E)N PA=SIN",
-          "reason": "conteo CATSS (5 he / 2 gr)"
+          "reason": "conteo CATSS (4 he / 2 gr)"
         },
         {
           "ref": "Deut 27:26",

@@ -543,6 +543,16 @@
         "strong": "H7392",
         "tier": "hint",
         "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "θηλείας",
+        "strong": "H860",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
       }
     ],
     "11": [
@@ -2129,8 +2139,8 @@
     "interlinear": "5.json",
     "lxx": "5.json",
     "report": {
-      "matchedPairs": 185,
-      "totalPairs": 365,
+      "matchedPairs": 186,
+      "totalPairs": 361,
       "skipped": [
         {
           "ref": "JudgB 5:2",
@@ -2362,9 +2372,9 @@
         },
         {
           "ref": "JudgB 5:8",
-          "he": "$(RYM ={d}?&RYM .(- =vs",
-          "gr": "PO/LEIS {d} A)RXO/NTWN",
-          "reason": "conteo CATSS (4 he / 3 gr)"
+          "he": "$(RYM =?&RYM .(- =vs",
+          "gr": "PO/LEIS A)RXO/NTWN",
+          "reason": "conteo CATSS (4 he / 2 gr)"
         },
         {
           "ref": "JudgB 5:8",
@@ -2440,18 +2450,6 @@
         },
         {
           "ref": "JudgB 5:10",
-          "he": "{...}",
-          "gr": "E)PI",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 5:10",
-          "he": ")TNWT",
-          "gr": "{..pE)PI\\} O)/NOU QHLEI/AS",
-          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
-        },
-        {
-          "ref": "JudgB 5:10",
           "he": "CXRWT =@CHRYM .xh",
           "gr": "MESHMBRI/AS",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
@@ -2483,37 +2481,19 @@
         {
           "ref": "JudgB 5:10",
           "he": "(L",
-          "gr": "E)PI\\ {d} {...E)F'}",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "E)PI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 5:10",
           "he": "DRK",
-          "gr": "O(DOU\\S {d}{...O(DW=|}",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "O(DOU\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 5:10",
           "he": "&YXW",
-          "gr": "SUNE/DRWN {d} {...DIHGEI=SQE [11]}",
-          "reason": "conteo CATSS (1 he / 4 gr)"
-        },
-        {
-          "ref": "JudgB 5:10",
-          "he": "{...}",
-          "gr": "E)F'",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 5:10",
-          "he": "{...}",
-          "gr": "O(DW=|",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 5:10",
-          "he": "{...}",
-          "gr": "DIHGEI=SQE [11]",
+          "gr": "SUNE/DRWN {...DIHGEI=SQE",
           "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
@@ -2717,8 +2697,8 @@
         {
           "ref": "JudgB 5:14",
           "he": "SPR",
-          "gr": "DIHGH/SEWS {d} GRAMMATE/WS",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "DIHGH/SEWS GRAMMATE/WS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "JudgB 5:15",
@@ -2813,8 +2793,8 @@
         {
           "ref": "JudgB 5:16",
           "he": "(DRYM =?(YRYM .dy",
-          "gr": "A)GGE/LWN {c?A)GELW=N}",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "gr": "A)GGE/LWN",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JudgB 5:16",

@@ -3590,6 +3590,23 @@
         "source": "catss"
       },
       {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "τῆς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "γῆς",
+        "strong": "H776",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
         "tokenNum": "12",
         "morphemeIdx": 0,
         "lxxIdx": 12,
@@ -3694,8 +3711,8 @@
     "interlinear": "33.json",
     "lxx": "33.json",
     "report": {
-      "matchedPairs": 224,
-      "totalPairs": 434,
+      "matchedPairs": 225,
+      "totalPairs": 427,
       "skipped": [
         {
           "ref": "Num 33:1",
@@ -4287,9 +4304,9 @@
         },
         {
           "ref": "Num 33:32",
-          "he": "B/XR =B/HR .xh <sp>",
+          "he": "B/XR =B/HR .xh",
           "gr": "EI)S TO\\ O)/ROS",
-          "reason": "conteo CATSS (4 he / 3 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 33:32",
@@ -4299,9 +4316,9 @@
         },
         {
           "ref": "Num 33:33",
-          "he": "M/XR =M/HR .xh <sp>",
+          "he": "M/XR =M/HR .xh",
           "gr": "E)K TOU= O)/ROUS",
-          "reason": "conteo CATSS (4 he / 3 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 33:33",
@@ -4390,19 +4407,13 @@
         {
           "ref": "Num 33:38",
           "he": "B/$NT",
-          "gr": "E)N {..^E)/TEI}",
+          "gr": "E)N",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 33:38",
           "he": "H/)RB(YM",
           "gr": "TW=| TESSARAKOSTW=|",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 33:38",
-          "he": "{...}",
-          "gr": "E)/TEI",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -4563,15 +4574,9 @@
         },
         {
           "ref": "Num 33:48",
-          "he": "{...}",
-          "gr": "KATA\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 33:48",
           "he": "YRXW",
-          "gr": "{..pKATA\\} IERIXW",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "IERIXW",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 33:49",
@@ -4583,7 +4588,7 @@
           "ref": "Num 33:49",
           "he": ".tn",
           "gr": "#",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo CATSS (1 he / 0 gr)"
         },
         {
           "ref": "Num 33:49",
@@ -4635,15 +4640,9 @@
         },
         {
           "ref": "Num 33:50",
-          "he": "{...}",
-          "gr": "KATA\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 33:50",
           "he": "YRXW",
-          "gr": "{..pKATA\\} IERIXW",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "IERIXW",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 33:50",
@@ -4785,20 +4784,8 @@
         },
         {
           "ref": "Num 33:53",
-          "he": "KY",
-          "gr": "{..^GA\\R}",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 33:53",
           "he": "L/KM",
           "gr": "U(MI=N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 33:53",
-          "he": "{...}",
-          "gr": "GA\\R",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -4822,8 +4809,8 @@
         {
           "ref": "Num 33:54",
           "he": "$M/H =v",
-          "gr": "TO\\ O)/NOMA AU)TOU= {d} E)KEI=",
-          "reason": "conteo CATSS (2 he / 5 gr)"
+          "gr": "TO\\ O)/NOMA AU)TOU= E)KEI=",
+          "reason": "conteo CATSS (2 he / 4 gr)"
         },
         {
           "ref": "Num 33:54",
@@ -4848,18 +4835,6 @@
           "he": "TTNXLW",
           "gr": "KLHRONOMH/SETE",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 33:55",
-          "he": "{...}",
-          "gr": "E)PI\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 33:55",
-          "he": "H/)RC",
-          "gr": "{..pE)PI\\} TH=S GH=S",
-          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
         },
         {
           "ref": "Num 33:55",
@@ -4911,9 +4886,9 @@
         },
         {
           "ref": "Num 33:55",
-          "he": ")$R {...B/H}",
+          "he": ")$R",
           "gr": "E)F' H(\\N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 33:55",
@@ -4925,12 +4900,6 @@
           "ref": "Num 33:55",
           "he": "Y$BYM",
           "gr": "KATOIKH/SETE",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 33:55",
-          "he": "B/H",
-          "gr": "{...}",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {

@@ -1432,12 +1432,21 @@
       {
         "tokenNum": "12",
         "morphemeIdx": 0,
-        "lxxIdx": 15,
-        "surface": "ἔστιν",
+        "lxxIdx": 13,
+        "surface": "ᾗ",
         "strong": "H834",
         "tier": "hint",
         "source": "catss",
-        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "οὐκ",
+        "strong": "H3808",
+        "tier": "hint",
+        "source": "catss"
       },
       {
         "tokenNum": "14",
@@ -1506,66 +1515,6 @@
         "lxxIdx": 5,
         "surface": "ἔδυ",
         "strong": "H935",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "7",
-        "morphemeIdx": 0,
-        "lxxIdx": 8,
-        "surface": "αὐτοῖς",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "7",
-        "morphemeIdx": 1,
-        "lxxIdx": 8,
-        "surface": "αὐτοῖς",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "9",
-        "morphemeIdx": 0,
-        "lxxIdx": 10,
-        "surface": "τῆς",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "10",
-        "morphemeIdx": 0,
-        "lxxIdx": 12,
-        "surface": "ἥ",
-        "strong": "H8121",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "14",
-        "morphemeIdx": 0,
-        "lxxIdx": 13,
-        "surface": "ἐστιν",
-        "strong": "H834",
-        "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
-      },
-      {
-        "tokenNum": "15",
-        "morphemeIdx": 0,
-        "lxxIdx": 14,
-        "surface": "τῷ",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "16",
-        "morphemeIdx": 0,
-        "lxxIdx": 15,
-        "surface": "Βενιαμιν",
-        "strong": "H1144",
         "tier": "hint",
         "source": "catss"
       }
@@ -2937,6 +2886,16 @@
         "source": "catss"
       },
       {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "θύραν",
+        "strong": "H6607",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
         "tokenNum": "12",
         "morphemeIdx": 0,
         "lxxIdx": 13,
@@ -3130,6 +3089,16 @@
         "strong": "H5307",
         "tier": "hint",
         "source": "catss"
+      },
+      {
+        "tokenNum": "27",
+        "morphemeIdx": 0,
+        "lxxIdx": 30,
+        "surface": "θύρας",
+        "strong": "H6607",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
       },
       {
         "tokenNum": "28",
@@ -3447,8 +3416,8 @@
     "interlinear": "19.json",
     "lxx": "19.json",
     "report": {
-      "matchedPairs": 243,
-      "totalPairs": 514,
+      "matchedPairs": 242,
+      "totalPairs": 503,
       "skipped": [
         {
           "ref": "JudgB 19:1",
@@ -3656,9 +3625,9 @@
         },
         {
           "ref": "JudgB 19:3",
-          "he": "*L/H$YB/W **L/H$YB/H {**}",
+          "he": "*L/H$YB/W **L/H$YB/H",
           "gr": "TOU= E)PISTRE/YAI AU)TH\\N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo CATSS (2 he / 3 gr)"
         },
         {
           "ref": "JudgB 19:3",
@@ -3692,15 +3661,9 @@
         },
         {
           "ref": "JudgB 19:3",
-          "he": "{...}",
-          "gr": "EI)S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 19:3",
           "he": "BYT",
-          "gr": "{..pEI)S} OI)=KON",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "OI)=KON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 19:3",
@@ -3740,14 +3703,14 @@
         },
         {
           "ref": "JudgB 19:4",
-          "he": "W/YXZQ {...B/}",
+          "he": "W/YXZQ",
           "gr": "KAI\\ KATE/SXEN",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 19:4",
           "he": "B/W",
-          "gr": "{p} AU)TO\\N",
+          "gr": "AU)TO\\N",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -3782,15 +3745,9 @@
         },
         {
           "ref": "JudgB 19:4",
-          "he": "{...}",
-          "gr": "E)PI\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 19:4",
           "he": "$L$T",
-          "gr": "{..pE)PI\\} TREI=S",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "TREI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 19:4",
@@ -4070,18 +4027,6 @@
         },
         {
           "ref": "JudgB 19:12",
-          "he": "L)",
-          "gr": "OU)K",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "JudgB 19:12",
-          "he": "{...}",
-          "gr": "E)/STIN",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 19:12",
           "he": "Y&R)L",
           "gr": "ISRAHL",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
@@ -4172,21 +4117,33 @@
         },
         {
           "ref": "JudgB 19:14",
-          "he": "{...}",
-          "gr": "AU)TOI=S",
+          "he": "H/$M$",
+          "gr": "O( H(/LIOS",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 19:14",
           "he": ")CL",
           "gr": "E)XO/MENA",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 19:14",
           "he": "H/GB(H",
           "gr": "TH=S GABAA",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "JudgB 19:14",
+          "he": ")$R",
+          "gr": "H(/ E)STIN",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "JudgB 19:14",
+          "he": "L/BNYMN",
+          "gr": "TW=| BENIAMIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 19:16",
@@ -4263,8 +4220,8 @@
         {
           "ref": "JudgB 19:16",
           "he": "BNY YMYNY",
-          "gr": "UI(OI\\ {d} BENIAMIN",
-          "reason": "conteo CATSS (2 he / 3 gr)"
+          "gr": "UI(OI\\ BENIAMIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 19:17",
@@ -4286,21 +4243,9 @@
         },
         {
           "ref": "JudgB 19:17",
-          "he": "{...}",
-          "gr": "TO\\N O(DOIPO/RON",
-          "reason": "conteo/sin match (1 he / 2 gr)"
-        },
-        {
-          "ref": "JudgB 19:17",
           "he": ")T H/)Y$",
-          "gr": "{...TO\\N} A)/NDRA",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 19:17",
-          "he": "H/)RX",
-          "gr": "{...TO\\N O(DOIPO/RON}",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "gr": "A)/NDRA",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JudgB 19:17",
@@ -4473,13 +4418,7 @@
         {
           "ref": "JudgB 19:21",
           "he": "W/YRXCW",
-          "gr": "KAI\\ {...E)NI/YANTO}",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 19:21",
-          "he": "{...}",
-          "gr": "E)NI/YANTO",
+          "gr": "KAI\\",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -4850,27 +4789,9 @@
         },
         {
           "ref": "JudgB 19:26",
-          "he": "{...}",
-          "gr": "PARA\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 19:26",
-          "he": "PTX",
-          "gr": "{..pPARA\\} TH\\N QU/RAN",
-          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
-        },
-        {
-          "ref": "JudgB 19:26",
           "he": ")$R",
           "gr": "OU(= H)=N",
           "reason": "conteo/sin match (1 he / 2 gr)"
-        },
-        {
-          "ref": "JudgB 19:26",
-          "he": "{...}",
-          "gr": "AU)TH=S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 19:26",
@@ -4881,8 +4802,8 @@
         {
           "ref": "JudgB 19:26",
           "he": "^ $M =)DWN/YH",
-          "gr": "{..^AU)TH=S} ^ O( A)NH/R",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "gr": "^ O( A)NH/R",
+          "reason": "conteo CATSS (3 he / 2 gr)"
         },
         {
           "ref": "JudgB 19:26",
@@ -4901,18 +4822,6 @@
           "he": "L/DRK/W",
           "gr": "TH\\N O(DO\\N AU)TOU=",
           "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "JudgB 19:27",
-          "he": "{...}",
-          "gr": "PARA\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 19:27",
-          "he": "PTX",
-          "gr": "{..pPARA\\} TA\\S QU/RAS",
-          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
         },
         {
           "ref": "JudgB 19:27",

@@ -115,26 +115,17 @@
       {
         "tokenNum": "9",
         "morphemeIdx": 0,
-        "lxxIdx": 11,
-        "surface": "ἀργυρίου",
+        "lxxIdx": 22,
+        "surface": "τὸ",
         "tier": "hint",
         "source": "catss"
       },
       {
         "tokenNum": "10",
         "morphemeIdx": 0,
-        "lxxIdx": 11,
-        "surface": "ἀργυρίου",
+        "lxxIdx": 23,
+        "surface": "ἀργύριον",
         "strong": "H3701",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "11",
-        "morphemeIdx": 0,
-        "lxxIdx": 19,
-        "surface": "ὠσί",
-        "strong": "H834",
         "tier": "hint",
         "source": "catss"
       }
@@ -974,8 +965,8 @@
     "interlinear": "17.json",
     "lxx": "17.json",
     "report": {
-      "matchedPairs": 69,
-      "totalPairs": 187,
+      "matchedPairs": 68,
+      "totalPairs": 180,
       "skipped": [
         {
           "ref": "JudgB 17:1",
@@ -991,21 +982,21 @@
         },
         {
           "ref": "JudgB 17:2",
-          "he": "LQX",
-          "gr": "E)/LABES",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "he": ")$R",
+          "gr": "OU(\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 17:2",
-          "he": "{...}",
-          "gr": "A)RGURI/OU",
+          "he": "LQX",
+          "gr": "E)/LABES",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 17:2",
           "he": "L/K",
           "gr": "SEAUTH=|",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 17:2",
@@ -1041,12 +1032,6 @@
           "ref": "JudgB 17:2",
           "he": "HNH",
           "gr": "I)DOU\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 17:2",
-          "he": "H/KSP",
-          "gr": "TO\\ A)RGU/RION",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -1105,13 +1090,13 @@
         },
         {
           "ref": "JudgB 17:3",
-          "he": "HQD$ {!}p",
+          "he": "HQD$ p",
           "gr": "A(GIA/ZOUSA",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JudgB 17:3",
-          "he": "HQD$TY {!}p",
+          "he": "HQD$TY p",
           "gr": "H(GI/AKA",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -1166,19 +1151,13 @@
         {
           "ref": "JudgB 17:3",
           "he": ")$YB/NW",
-          "gr": "A)PODW/SW {...AU)TO/}",
+          "gr": "A)PODW/SW",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 17:3",
           "he": "L/K",
           "gr": "SOI",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 17:3",
-          "he": "{...}",
-          "gr": "AU)TO/",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -1268,14 +1247,14 @@
         {
           "ref": "JudgB 17:5",
           "he": ")PWD",
-          "gr": "EFWD {t}",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "EFWD",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 17:5",
           "he": "W/TRPYM",
-          "gr": "KAI\\ QARAFIN {t}",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "KAI\\ QARAFIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 17:5",
@@ -1291,12 +1270,6 @@
         },
         {
           "ref": "JudgB 17:5",
-          "he": "{...}",
-          "gr": "A)PO\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 17:5",
           "he": ")XD",
           "gr": "E(NO\\S",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
@@ -1304,8 +1277,8 @@
         {
           "ref": "JudgB 17:5",
           "he": "M/BN/YW",
-          "gr": "{...A)PO\\} UI(W=N AU)TOU=",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "gr": "UI(W=N AU)TOU=",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "JudgB 17:5",
@@ -1436,19 +1409,13 @@
         {
           "ref": "JudgB 17:8",
           "he": "B/)$R",
-          "gr": "E)N W(=| E)A\\N {...TO/PW|}",
-          "reason": "conteo CATSS (1 he / 4 gr)"
+          "gr": "E)N W(=| E)A\\N",
+          "reason": "conteo CATSS (1 he / 3 gr)"
         },
         {
           "ref": "JudgB 17:8",
           "he": "YMC)",
           "gr": "EU(/RH|",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 17:8",
-          "he": "{...}",
-          "gr": "TO/PW|",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -1459,15 +1426,9 @@
         },
         {
           "ref": "JudgB 17:8",
-          "he": "{...}",
-          "gr": "E(/WS",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 17:8",
           "he": "HR",
-          "gr": "{..pE(/WS} O)/ROUS",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "O)/ROUS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JudgB 17:8",
@@ -1544,19 +1505,13 @@
         {
           "ref": "JudgB 17:9",
           "he": "B/)$R",
-          "gr": "E)N W(=| E)A\\N {...TO/PW|}",
-          "reason": "conteo CATSS (1 he / 4 gr)"
+          "gr": "E)N W(=| E)A\\N",
+          "reason": "conteo CATSS (1 he / 3 gr)"
         },
         {
           "ref": "JudgB 17:9",
           "he": ")MC)",
           "gr": "EU(/RW",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JudgB 17:9",
-          "he": "{...}",
-          "gr": "TO/PW|",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {

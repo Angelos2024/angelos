@@ -676,7 +676,7 @@
         "source": "catss"
       },
       {
-        "tokenNum": "20",
+        "tokenNum": "12",
         "morphemeIdx": 0,
         "lxxIdx": 10,
         "surface": "καὶ",
@@ -684,9 +684,42 @@
         "source": "catss"
       },
       {
-        "tokenNum": "21",
+        "tokenNum": "13",
         "morphemeIdx": 0,
         "lxxIdx": 11,
+        "surface": "ἐν",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 1,
+        "lxxIdx": 12,
+        "surface": "Ασηδωθ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "Ασηδωθ",
+        "strong": "H794",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "20",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "21",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
         "surface": "ἐν",
         "tier": "hint",
         "source": "catss"
@@ -1071,12 +1104,11 @@
       {
         "tokenNum": "1",
         "morphemeIdx": 0,
-        "lxxIdx": 5,
-        "surface": "Χερμελ",
+        "lxxIdx": 0,
+        "surface": "βασιλέα",
         "strong": "H4428",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+        "source": "catss"
       }
     ],
     "23": [
@@ -1118,12 +1150,11 @@
       {
         "tokenNum": "5",
         "morphemeIdx": 0,
-        "lxxIdx": 6,
-        "surface": "τῆς",
+        "lxxIdx": 3,
+        "surface": "Ναφεδδωρ",
         "strong": "H1756",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 2×he/3×gr: morfema lexical ↔ 3er token griego."
+        "source": "catss"
       }
     ],
     "24": [
@@ -1152,8 +1183,8 @@
     "interlinear": "12.json",
     "lxx": "12.json",
     "report": {
-      "matchedPairs": 81,
-      "totalPairs": 205,
+      "matchedPairs": 82,
+      "totalPairs": 200,
       "skipped": [
         {
           "ref": "JoshB 12:1",
@@ -1187,12 +1218,6 @@
         },
         {
           "ref": "JoshB 12:1",
-          "he": "{...}",
-          "gr": "A)F'",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 12:1",
           "he": "MZRX/H ^ =H/$M$",
           "gr": "H(LI/OU",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
@@ -1200,8 +1225,8 @@
         {
           "ref": "JoshB 12:1",
           "he": "^ H/$M$ =MZRX/H",
-          "gr": "{..pA)F'} A)NATOLW=N",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "gr": "A)NATOLW=N",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JoshB 12:1",
@@ -1374,13 +1399,13 @@
         {
           "ref": "JoshB 12:3",
           "he": ")$DWT",
-          "gr": "ASHDWQ {t}",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "ASHDWQ",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 12:3",
           "he": "H/PSGH",
-          "gr": "FASGA {t}",
+          "gr": "FASGA",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -1578,7 +1603,7 @@
         {
           "ref": "JoshB 12:7",
           "he": "H/XLQ",
-          "gr": "XELXA {t}",
+          "gr": "XELXA",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -1633,12 +1658,6 @@
           "ref": "JoshB 12:8",
           "he": "W/B/$PLH",
           "gr": "KAI\\ E)N TW=| PEDI/W|",
-          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
-        },
-        {
-          "ref": "JoshB 12:8",
-          "he": "W/B/)$DWT",
-          "gr": "KAI\\ E)N ASHDWQ {t}",
           "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
         },
         {
@@ -1805,45 +1824,21 @@
         },
         {
           "ref": "JoshB 12:21",
-          "he": "{...}",
-          "gr": "BASILE/A [[22]]",
-          "reason": "conteo/sin match (1 he / 2 gr)"
-        },
-        {
-          "ref": "JoshB 12:21",
-          "he": "{...}",
-          "gr": "KADHS [[22]]",
-          "reason": "conteo/sin match (1 he / 2 gr)"
-        },
-        {
-          "ref": "JoshB 12:21",
           "he": "MLK",
-          "gr": "BASILE/A [22]",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "BASILE/A",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 12:21",
           "he": "MGDW",
-          "gr": "MAGEDWN [22]",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "MAGEDWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 12:22",
           "he": "QD$",
-          "gr": "KADHS [[21]]",
-          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
-        },
-        {
-          "ref": "JoshB 12:22",
-          "he": "{...}",
-          "gr": "BASILE/A [21]",
-          "reason": "conteo/sin match (1 he / 2 gr)"
-        },
-        {
-          "ref": "JoshB 12:22",
-          "he": "{...}",
-          "gr": "MAGEDWN [21]",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "KADHS",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
           "ref": "JoshB 12:22",

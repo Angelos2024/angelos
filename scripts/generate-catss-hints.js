@@ -277,6 +277,35 @@ function splitCatssHebrewAtoms(he, gCount){
   return [];
 }
 
+/**
+ * Una celda griega CATSS puede listar variantes texto-criticas: primera lectura + [stemmata]+.
+ * Nos quedamos con la primera variante para un solo texto Rahlfs en `LXX/chapters`.
+ */
+function canonicalCatssGreekCell(grRaw){
+  const full = String(grRaw || '').trim();
+  if(!full) return '';
+  const cut = full.indexOf('[');
+  let s = cut >= 0 ? full.slice(0, cut).trim() : full;
+  if(!s){
+    s = full.replace(/\[[^\]]*\]/g, '').replace(/\{[^}]*\}/g, '').trim();
+  }
+  s = s.replace(/\{[^}]*\}/g, '').trim();
+  s = s.replace(/\[[^\]]*\]/g, '').trim();
+  s = s.replace(/\s+#$/i, '').trim();
+  s = s.replace(/\s+/g, ' ');
+  return s;
+}
+
+/** Aparato / etiquetas discourse en celda hebrea CATSS (no son consonantes de contraste local). */
+function normalizeCatssHebrewAlignCell(heRaw){
+  return String(heRaw || '')
+    .replace(/\{[^}]*\}/g, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/=\{[^}]+\}/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function splitCatssGreek(grRaw){
   return String(grRaw || '')
     .trim()
@@ -285,7 +314,7 @@ function splitCatssGreek(grRaw){
     .split(/\s+/)
     .map(stripTlgMarks)
     .map((s) => String(s || '').trim())
-    .filter((s) => s && !/^[!?;:.,·]+$/.test(s));
+    .filter((s) => s && s !== '#' && !/^[!?;:.,·]+$/.test(s));
 }
 
 /** Encuentra indice Rahlf desde start; refina con prefijos comunes TLG cortos */
@@ -379,6 +408,76 @@ function fuseCatssHebrewRun(heRaw){
     .replace(/\//g, '');
 }
 
+/** Toda la alineacion CATSS de un verso → cuerda consonantica (para acoplar numeracion LXX vs masoretica). */
+function catssVerseConsonantStream(vdef){
+  let out = '';
+  for(const p of vdef.pairs || []){
+    if(p.kind && p.kind !== 'align') continue;
+    if(p.isGreekOmitted) continue;
+    const he = normalizeCatssHebrewAlignCell(String(p.he || '').trim());
+    if(!he || he === '#') continue;
+    for(const chunk of he.split(/\s+/)){
+      const fused = fuseCatssHebrewRun(chunk);
+      if(fused){ out += ccatToLocalConsonants(fused); }
+    }
+  }
+  return unifyFinalSofritForMatch(normalizeHebrew(out, false));
+}
+
+function verseInterlinearConsonantSig(verseNode){
+  if(!verseNode) return '';
+  const merged = buildMergedRowsForVerse(verseNode);
+  const columns = flattenColumnsMerged(merged);
+  const raw = columns.map((c) => c.hebrew).join('');
+  return unifyFinalSofritForMatch(normalizeHebrew(raw, false));
+}
+
+function bestPrefixMatchLen(catStream, interSig){
+  if(!catStream || !interSig) return 0;
+  const max = Math.min(catStream.length, 120);
+  for(let L = max; L >= 8; L -= 1){
+    if(interSig.includes(catStream.slice(0, L))) return L;
+  }
+  return 0;
+}
+
+/**
+ * Muchos .par de Reyes y similares numeran el verso como el LXX; el interlineal local sigue el MT.
+ * Elegimos la clave JSON masoretica por huella consonantica, con tabla opcional en shiftCfg.
+ */
+function pickInterlinearVerseKey(slug, chapterNum, catssVer, vdef, inter, shiftCfg){
+  const chapterKey = `${slug}::${chapterNum}`;
+  const rule = shiftCfg.chapters?.[chapterKey];
+  if(rule?.catssToMt && Object.prototype.hasOwnProperty.call(rule.catssToMt, String(catssVer))){
+    return String(rule.catssToMt[String(catssVer)]);
+  }
+  if(rule?.noCatssMtAutoMap) return String(catssVer);
+
+  const cat = catssVerseConsonantStream(vdef);
+  if(cat.length < 8) return String(catssVer);
+
+  const directKey = String(catssVer);
+  const directNode = inter[directKey];
+  if(directNode){
+    const sig = verseInterlinearConsonantSig(directNode);
+    if(bestPrefixMatchLen(cat, sig) >= 14) return directKey;
+  }
+
+  let bestK = null;
+  let bestScore = 0;
+  for(const k of Object.keys(inter)){
+    if(!/^\d+$/.test(k)) continue;
+    const sc = bestPrefixMatchLen(cat, verseInterlinearConsonantSig(inter[k]));
+    if(sc > bestScore){
+      bestScore = sc;
+      bestK = k;
+    }
+  }
+  const threshold = Math.min(22, Math.max(14, Math.floor(cat.length * 0.3)));
+  if(bestK != null && bestScore >= threshold) return bestK;
+  return directKey;
+}
+
 function tryAdvanceColCursorHeOnly(columns, colCursor, heRaw){
   const fused = fuseCatssHebrewRun(heRaw);
   if(!fused){ return null; }
@@ -457,18 +556,19 @@ function main(){
 
   for(const vdef of catss.verses || []){
     if(Number(vdef.chapter) !== chapter){ continue; }
-    const mtV = Number(vdef.verse);
-    if(!Number.isFinite(mtV)) continue;
-    const lxxV = LxxLayer.targetLxxVerseFromShiftTable(slug, chapter, mtV, shiftCfg);
+    const catssVer = Number(vdef.verse);
+    if(!Number.isFinite(catssVer)) continue;
+    const interKey = pickInterlinearVerseKey(slug, chapter, catssVer, vdef, inter, shiftCfg);
+    const lxxV = LxxLayer.targetLxxVerseFromShiftTable(slug, chapter, catssVer, shiftCfg);
     const gTokens = lxxCh?.verses?.[String(lxxV)];
     if(!Array.isArray(gTokens) || !gTokens.length){
       report.skipped.push({ ref: vdef.ref, reason: 'sin tokens LXX' });
       continue;
     }
 
-    const verseNode = inter[String(mtV)];
+    const verseNode = inter[interKey];
     if(!verseNode){
-      report.skipped.push({ ref: vdef.ref, reason: 'sin verso interlineal' });
+      report.skipped.push({ ref: vdef.ref, reason: 'sin verso interlineal', interKey });
       continue;
     }
 
@@ -482,8 +582,8 @@ function main(){
     for(const pair of vdef.pairs || []){
       if(pair.kind && pair.kind !== 'align') continue;
       if(pair.isGreekOmitted) continue;
-      const he = String(pair.he || '').trim();
-      const gr = String(pair.gr || '').trim();
+      const he = normalizeCatssHebrewAlignCell(String(pair.he || '').trim());
+      const gr = canonicalCatssGreekCell(String(pair.gr || '').trim());
       if(!he || !gr) continue;
       report.totalPairs += 1;
 
@@ -694,7 +794,7 @@ function main(){
     }
 
     if(hints.length){
-      versesOut[String(mtV)] = hints;
+      versesOut[interKey] = hints;
     }
   }
 

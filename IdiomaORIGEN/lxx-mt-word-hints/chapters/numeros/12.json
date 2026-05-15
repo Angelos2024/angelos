@@ -210,9 +210,26 @@
       {
         "tokenNum": "5",
         "morphemeIdx": 0,
-        "lxxIdx": 4,
-        "surface": "μόνῳ",
+        "lxxIdx": 2,
+        "surface": "μὴ",
         "strong": "H389",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Μωυσῇ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "Μωυσῇ",
+        "strong": "H4872",
         "tier": "hint",
         "source": "catss"
       },
@@ -537,9 +554,19 @@
         "source": "catss"
       },
       {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "θύρας",
+        "strong": "H6607",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
         "tokenNum": "10",
         "morphemeIdx": 0,
-        "lxxIdx": 9,
+        "lxxIdx": 11,
         "surface": "τῆς",
         "tier": "hint",
         "source": "catss"
@@ -1698,21 +1725,9 @@
     "interlinear": "12.json",
     "lxx": "12.json",
     "report": {
-      "matchedPairs": 131,
-      "totalPairs": 189,
+      "matchedPairs": 133,
+      "totalPairs": 187,
       "skipped": [
-        {
-          "ref": "Num 12:2",
-          "he": "B/M$H",
-          "gr": "MWUSH=|",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "Num 12:2",
-          "he": "{...}",
-          "gr": "MO/NW|",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
         {
           "ref": "Num 12:3",
           "he": "*(NW **(NYW",
@@ -1758,32 +1773,20 @@
         {
           "ref": "Num 12:4",
           "he": "W/)L )HRN ^ =W/)L MRYM",
-          "gr": "KAI\\ {..dPRO\\S} MARIAM",
-          "reason": "conteo CATSS (5 he / 3 gr): avanzó hebreo sin hint LXX"
+          "gr": "KAI\\ MARIAM",
+          "reason": "conteo CATSS (5 he / 2 gr): avanzó hebreo sin hint LXX"
         },
         {
           "ref": "Num 12:4",
           "he": "^ W/)L MRYM =W/)L )HRN",
-          "gr": "KAI\\ {..dPRO\\S} AARWN",
-          "reason": "conteo CATSS (5 he / 3 gr)"
+          "gr": "KAI\\ AARWN",
+          "reason": "conteo CATSS (5 he / 2 gr)"
         },
         {
           "ref": "Num 12:4",
           "he": "$L$T/M",
           "gr": "OI( TREI=S",
           "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "Num 12:5",
-          "he": "{...}",
-          "gr": "E)PI\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 12:5",
-          "he": "PTX",
-          "gr": "{..pE)PI\\} TH=S QU/RAS",
-          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
         },
         {
           "ref": "Num 12:5",
@@ -1841,9 +1844,9 @@
         },
         {
           "ref": "Num 12:6",
-          "he": "B/XLWM <sp>",
+          "he": "B/XLWM",
           "gr": "KAI\\ E)N U(/PNW|",
-          "reason": "conteo CATSS (2 he / 3 gr)"
+          "reason": "conteo CATSS (1 he / 3 gr)"
         },
         {
           "ref": "Num 12:6",
@@ -1859,9 +1862,9 @@
         },
         {
           "ref": "Num 12:8",
-          "he": "W/MR)H =%p+ .wb <sp>",
+          "he": "W/MR)H =%p+ .wb",
           "gr": "E)N EI)/DEI",
-          "reason": "conteo CATSS (4 he / 2 gr)"
+          "reason": "conteo CATSS (3 he / 2 gr)"
         },
         {
           "ref": "Num 12:8",
@@ -1926,14 +1929,14 @@
         {
           "ref": "Num 12:8",
           "he": "B/M$H",
-          "gr": "{..dKATA\\} MWUSH=",
+          "gr": "MWUSH=",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 12:12",
           "he": "K/MT",
-          "gr": "W(SEI\\ {d} I)/SON QANA/TW| {d} W(SEI\\ #",
-          "reason": "conteo CATSS (1 he / 7 gr): avanzó hebreo sin hint LXX"
+          "gr": "W(SEI\\ I)/SON QANA/TW| W(SEI\\",
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
         },
         {
           "ref": "Num 12:12",
@@ -1967,13 +1970,13 @@
         },
         {
           "ref": "Num 12:14",
-          "he": "YRQ {!}pc",
+          "he": "YRQ pc",
           "gr": "PTU/WN",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Num 12:14",
-          "he": "YRQ {!}pc",
+          "he": "YRQ pc",
           "gr": "E)NE/PTUSEN",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },

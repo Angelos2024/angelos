@@ -159,6 +159,93 @@
         "strong": "H7126",
         "tier": "hint",
         "source": "catss"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "προστεθήτωσάν",
+        "strong": "H3867",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 15,
+        "surface": "σοι",
+        "strong": "H5921",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "21",
+        "morphemeIdx": 0,
+        "lxxIdx": 19,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "22",
+        "morphemeIdx": 0,
+        "lxxIdx": 20,
+        "surface": "σὺ",
+        "strong": "H859",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "28",
+        "morphemeIdx": 0,
+        "lxxIdx": 27,
+        "surface": "ἀπέναντι",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "29",
+        "morphemeIdx": 0,
+        "lxxIdx": 27,
+        "surface": "ἀπέναντι",
+        "strong": "H6440",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "30",
+        "morphemeIdx": 0,
+        "lxxIdx": 29,
+        "surface": "σκηνῆς",
+        "strong": "H168",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "31",
+        "morphemeIdx": 0,
+        "lxxIdx": 30,
+        "surface": "τοῦ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "32",
+        "morphemeIdx": 0,
+        "lxxIdx": 31,
+        "surface": "μαρτυρίου",
+        "strong": "H5715",
+        "tier": "hint",
+        "source": "catss"
       }
     ],
     "3": [
@@ -861,6 +948,25 @@
         "surface": "ὑμῖν",
         "tier": "hint",
         "source": "catss"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "ἡγιασμένων",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "ἡγιασμένων",
+        "strong": "H6944",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
       },
       {
         "tokenNum": "7",
@@ -2121,6 +2227,16 @@
         "source": "catss"
       },
       {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "ὑμῶν",
+        "strong": "H8641",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
         "tokenNum": "7",
         "morphemeIdx": 0,
         "lxxIdx": 6,
@@ -2394,8 +2510,7 @@
         "surface": "ληνοῦ",
         "strong": "H3342",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+        "source": "catss"
       }
     ],
     "31": [
@@ -2486,8 +2601,8 @@
     "interlinear": "18.json",
     "lxx": "18.json",
     "report": {
-      "matchedPairs": 184,
-      "totalPairs": 485,
+      "matchedPairs": 192,
+      "totalPairs": 482,
       "skipped": [
         {
           "ref": "Num 18:1",
@@ -2557,57 +2672,21 @@
         },
         {
           "ref": "Num 18:2",
-          "he": "W/YLWW {...(L/}",
-          "gr": "KAI\\ PROSTEQH/TWSA/N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 18:2",
-          "he": "(L/YK",
-          "gr": "{p} SOI",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 18:2",
           "he": "W/Y$RTW/K",
           "gr": "KAI\\ LEITOURGEI/TWSA/N SOI",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 18:2",
-          "he": "W/)TH",
-          "gr": "KAI\\ SU\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
           "ref": "Num 18:2",
           "he": "W/BN/YK",
           "gr": "KAI\\ OI( UI(OI/ SOU",
-          "reason": "conteo CATSS (1 he / 4 gr)"
+          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
         },
         {
           "ref": "Num 18:2",
           "he": ")T/K",
           "gr": "META\\ SOU=",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 18:2",
-          "he": "L/PNY",
-          "gr": "A)PE/NANTI",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 18:2",
-          "he": ")HL",
-          "gr": "TH=S SKHNH=S",
-          "reason": "conteo/sin match (1 he / 2 gr)"
-        },
-        {
-          "ref": "Num 18:2",
-          "he": "H/(DT",
-          "gr": "TOU= MARTURI/OU",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
           "ref": "Num 18:3",
@@ -2863,15 +2942,9 @@
         },
         {
           "ref": "Num 18:8",
-          "he": "{...}",
-          "gr": "PARA\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 18:8",
           "he": "BNY",
-          "gr": "{..pPARA\\} TW=N UI(W=N",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "TW=N UI(W=N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 18:8",
@@ -2914,12 +2987,6 @@
           "he": "(WLM",
           "gr": "AI)W/NION",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 18:9",
-          "he": "M/QD$ <sp>",
-          "gr": "A)PO\\ TW=N H(GIASME/NWN",
-          "reason": "conteo CATSS (2 he / 3 gr): avanzó hebreo sin hint LXX"
         },
         {
           "ref": "Num 18:9",
@@ -3211,13 +3278,13 @@
         },
         {
           "ref": "Num 18:15",
-          "he": "PDH {!}nd",
+          "he": "PDH nd",
           "gr": "LU/TROIS",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Num 18:15",
-          "he": "TPDH {!}nd =%vap",
+          "he": "TPDH nd =%vap",
           "gr": "LUTRWQH/SETAI",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -3984,12 +4051,6 @@
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
-          "ref": "Num 18:27",
-          "he": "TRWMT/KM <sp>",
-          "gr": "TA\\ A)FAIRE/MATA U(MW=N",
-          "reason": "conteo CATSS (2 he / 3 gr): avanzó hebreo sin hint LXX"
-        },
-        {
           "ref": "Num 18:28",
           "he": "TRWMT =%p+",
           "gr": "A)PO\\ TW=N A)FAIREMA/TWN",
@@ -4141,15 +4202,9 @@
         },
         {
           "ref": "Num 18:30",
-          "he": "{...}",
-          "gr": "A)PO\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 18:30",
           "he": "GRN",
-          "gr": "{..pA)PO\\} A(/LW",
-          "reason": "1 he / 2 gr: sólo puente consonantico hacia siguiente par"
+          "gr": "A(/LW",
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
           "ref": "Num 18:30",
@@ -4158,16 +4213,10 @@
           "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
-          "ref": "Num 18:30",
-          "he": "{...}",
-          "gr": "A)PO\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
           "ref": "Num 18:31",
-          "he": "W/BYT/KM =W/BT/YKM .m <sp>",
+          "he": "W/BYT/KM =W/BT/YKM .m",
           "gr": "KAI\\ OI( OI)=KOI U(MW=N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo CATSS (3 he / 4 gr)"
         },
         {
           "ref": "Num 18:31",

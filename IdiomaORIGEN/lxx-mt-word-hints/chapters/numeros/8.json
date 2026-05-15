@@ -1335,6 +1335,15 @@
         "source": "catss"
       },
       {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 3,
+        "surface": "οὗτοί",
+        "strong": "H1992",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
         "tokenNum": "5",
         "morphemeIdx": 0,
         "lxxIdx": 4,
@@ -2169,8 +2178,8 @@
     "interlinear": "8.json",
     "lxx": "8.json",
     "report": {
-      "matchedPairs": 144,
-      "totalPairs": 315,
+      "matchedPairs": 145,
+      "totalPairs": 313,
       "skipped": [
         {
           "ref": "Num 8:2",
@@ -2608,18 +2617,6 @@
           "ref": "Num 8:14",
           "he": "L/Y",
           "gr": "E)MOI/",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 8:16",
-          "he": "HMH",
-          "gr": "OU(=TOI/ {d} {...EI)SIN}",
-          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
-        },
-        {
-          "ref": "Num 8:16",
-          "he": "{...}",
-          "gr": "EI)SIN",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -3086,15 +3083,9 @@
         },
         {
           "ref": "Num 8:24",
-          "he": "{...}",
-          "gr": "E)N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 8:24",
           "he": ")HL",
-          "gr": "{..pE)N} TH=| SKHNH=|",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "TH=| SKHNH=|",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 8:24",

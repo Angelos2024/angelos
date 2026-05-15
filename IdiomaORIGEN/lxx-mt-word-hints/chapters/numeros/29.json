@@ -1324,9 +1324,37 @@
     ],
     "35": [
       {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἡμέρᾳ",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 1,
+        "lxxIdx": 2,
+        "surface": "ἡμέρᾳ",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἡμέρᾳ",
+        "strong": "H3117",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
         "tokenNum": "4",
         "morphemeIdx": 0,
-        "lxxIdx": 1,
+        "lxxIdx": 3,
         "surface": "τῇ",
         "tier": "hint",
         "source": "catss"
@@ -1523,8 +1551,8 @@
     "interlinear": "29.json",
     "lxx": "29.json",
     "report": {
-      "matchedPairs": 90,
-      "totalPairs": 411,
+      "matchedPairs": 91,
+      "totalPairs": 401,
       "skipped": [
         {
           "ref": "Num 29:1",
@@ -1594,7 +1622,7 @@
         },
         {
           "ref": "Num 29:2",
-          "he": "^^^ ^ =)XD <sp>",
+          "he": "^^^ ^ =)XD",
           "gr": "E(/NA",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -1672,9 +1700,9 @@
         },
         {
           "ref": "Num 29:3",
-          "he": "$NY <sp>",
+          "he": "$NY",
           "gr": "KAI\\ DU/O",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 29:3",
@@ -1696,7 +1724,7 @@
         },
         {
           "ref": "Num 29:4",
-          "he": ")XD =;(&RWN <29.10> <sp>",
+          "he": ")XD =;(&RWN",
           "gr": "DE/KATON",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -1732,15 +1760,9 @@
         },
         {
           "ref": "Num 29:5",
-          "he": "{...}",
-          "gr": "E)C",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 29:5",
           "he": "(ZYM",
-          "gr": "{..pE)C} AI)GW=N",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "AI)GW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:5",
@@ -1750,9 +1772,9 @@
         },
         {
           "ref": "Num 29:5",
-          "he": "X+)T =%p+ <sp>",
+          "he": "X+)T =%p+",
           "gr": "PERI\\ A(MARTI/AS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:5",
@@ -1852,9 +1874,9 @@
         },
         {
           "ref": "Num 29:7",
-          "he": "KL <sp>",
+          "he": "KL",
           "gr": "KAI\\ PA=N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 29:7",
@@ -1996,9 +2018,9 @@
         },
         {
           "ref": "Num 29:9",
-          "he": "$NY <sp>",
+          "he": "$NY",
           "gr": "KAI\\ DU/O",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 29:9",
@@ -2056,21 +2078,15 @@
         },
         {
           "ref": "Num 29:11",
-          "he": "&(YR <sp>",
+          "he": "&(YR",
           "gr": "KAI\\ XI/MARON",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 29:11",
-          "he": "{...}",
-          "gr": "E)C",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 29:11",
           "he": "(ZYM",
-          "gr": "{..pE)C} AI)GW=N",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "AI)GW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:11",
@@ -2080,9 +2096,9 @@
         },
         {
           "ref": "Num 29:11",
-          "he": "X+)T =%p+ <sp>",
+          "he": "X+)T =%p+",
           "gr": "PERI\\ A(MARTI/AS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:11",
@@ -2122,9 +2138,9 @@
         },
         {
           "ref": "Num 29:11",
-          "he": "W/NSK/YHM <sp^>",
+          "he": "W/NSK/YHM",
           "gr": "KAI\\ H( SPONDH\\ AU)TH=S",
-          "reason": "conteo CATSS (2 he / 4 gr)"
+          "reason": "conteo CATSS (1 he / 4 gr)"
         },
         {
           "ref": "Num 29:12",
@@ -2350,15 +2366,15 @@
         },
         {
           "ref": "Num 29:14",
-          "he": "PRYM <sp>",
-          "gr": "{...TOI=S} MO/SXOIS",
+          "he": "PRYM",
+          "gr": "MO/SXOIS",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:14",
-          "he": "$NY <sp>",
+          "he": "$NY",
           "gr": "KAI\\ DU/O",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Num 29:14",
@@ -2422,8 +2438,8 @@
         },
         {
           "ref": "Num 29:15",
-          "he": "KB&YM <sp>",
-          "gr": "{...TOU\\S} A)MNOU/S",
+          "he": "KB&YM",
+          "gr": "A)MNOU/S",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -2434,15 +2450,9 @@
         },
         {
           "ref": "Num 29:16",
-          "he": "{...}",
-          "gr": "E)C",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 29:16",
           "he": "(ZYM",
-          "gr": "{..pE)C} AI)GW=N",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "AI)GW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:16",
@@ -2452,9 +2462,9 @@
         },
         {
           "ref": "Num 29:16",
-          "he": "X+)T =%p+ <sp>",
+          "he": "X+)T =%p+",
           "gr": "PERI\\ A(MARTI/AS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:16",
@@ -2566,15 +2576,9 @@
         },
         {
           "ref": "Num 29:19",
-          "he": "{...}",
-          "gr": "E)C",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 29:19",
           "he": "(ZYM",
-          "gr": "{..pE)C} AI)GW=N",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "AI)GW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:19",
@@ -2584,9 +2588,9 @@
         },
         {
           "ref": "Num 29:19",
-          "he": "X+)T =%p+ <sp>",
+          "he": "X+)T =%p+",
           "gr": "PERI\\ A(MARTI/AS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:19",
@@ -2698,21 +2702,15 @@
         },
         {
           "ref": "Num 29:22",
-          "he": "{...}",
-          "gr": "E)C",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 29:22",
-          "he": "^^^ ^ =)XD <Sp>",
+          "he": "^^^ ^ =)XD",
           "gr": "E(/NA",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Num 29:22",
-          "he": "X+)T =%p+ <sp>",
+          "he": "X+)T =%p+",
           "gr": "PERI\\ A(MARTI/AS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:22",
@@ -2746,9 +2744,9 @@
         },
         {
           "ref": "Num 29:22",
-          "he": "W/NSK/H <sp^>",
+          "he": "W/NSK/H",
           "gr": "KAI\\ AI( SPONDAI\\ AU)TW=N",
-          "reason": "conteo CATSS (2 he / 4 gr)"
+          "reason": "conteo CATSS (1 he / 4 gr)"
         },
         {
           "ref": "Num 29:23",
@@ -2824,15 +2822,9 @@
         },
         {
           "ref": "Num 29:25",
-          "he": "{...}",
-          "gr": "E)C",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 29:25",
           "he": "(ZYM",
-          "gr": "{..pE)C} AI)GW=N",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "AI)GW=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:25",
@@ -2842,9 +2834,9 @@
         },
         {
           "ref": "Num 29:25",
-          "he": "X+)T =%p+ <sp>",
+          "he": "X+)T =%p+",
           "gr": "PERI\\ A(MARTI/AS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:25",
@@ -2872,9 +2864,9 @@
         },
         {
           "ref": "Num 29:25",
-          "he": "W/NSKH <sp^>",
+          "he": "W/NSKH",
           "gr": "KAI\\ AI( SPONDAI\\ AU)TW=N",
-          "reason": "conteo CATSS (2 he / 4 gr)"
+          "reason": "conteo CATSS (1 he / 4 gr)"
         },
         {
           "ref": "Num 29:26",
@@ -2938,21 +2930,15 @@
         },
         {
           "ref": "Num 29:28",
-          "he": "{...}",
-          "gr": "E)C",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 29:28",
-          "he": "^^^ ^ =)XD <sp>",
+          "he": "^^^ ^ =)XD",
           "gr": "E(/NA",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Num 29:28",
-          "he": "X+)T =%p+ <sp>",
+          "he": "X+)T =%p+",
           "gr": "PERI\\ A(MARTI/AS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:28",
@@ -2986,9 +2972,9 @@
         },
         {
           "ref": "Num 29:28",
-          "he": "W/NSK/H <sp^>",
+          "he": "W/NSK/H",
           "gr": "KAI\\ AI( SPONDAI\\ AU)TW=N",
-          "reason": "conteo CATSS (2 he / 4 gr)"
+          "reason": "conteo CATSS (1 he / 4 gr)"
         },
         {
           "ref": "Num 29:29",
@@ -3052,21 +3038,15 @@
         },
         {
           "ref": "Num 29:31",
-          "he": "{...}",
-          "gr": "E)C",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 29:31",
-          "he": "^^^ ^ =)XD <sp>",
+          "he": "^^^ ^ =)XD",
           "gr": "E(/NA",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Num 29:31",
-          "he": "X+)T =%p+ <sp>",
+          "he": "X+)T =%p+",
           "gr": "PERI\\ A(MARTI/AS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:31",
@@ -3166,21 +3146,15 @@
         },
         {
           "ref": "Num 29:34",
-          "he": "{...}",
-          "gr": "E)C",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 29:34",
-          "he": "^^^ ^ =)XD <sp>",
+          "he": "^^^ ^ =)XD",
           "gr": "E(/NA",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Num 29:34",
-          "he": "X+)T =%p+ <sp>",
+          "he": "X+)T =%p+",
           "gr": "PERI\\ A(MARTI/AS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:34",
@@ -3214,15 +3188,9 @@
         },
         {
           "ref": "Num 29:34",
-          "he": "W/NSK/H <sp^>",
+          "he": "W/NSK/H",
           "gr": "KAI\\ AI( SPONDAI\\ AU)TW=N",
-          "reason": "conteo CATSS (2 he / 4 gr)"
-        },
-        {
-          "ref": "Num 29:35",
-          "he": "B/YWM <sp>",
-          "gr": "KAI\\ TH=| H(ME/RA|",
-          "reason": "conteo CATSS (2 he / 3 gr): avanzó hebreo sin hint LXX"
+          "reason": "conteo CATSS (1 he / 4 gr)"
         },
         {
           "ref": "Num 29:35",
@@ -3340,21 +3308,15 @@
         },
         {
           "ref": "Num 29:38",
-          "he": "{...}",
-          "gr": "E)C",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 29:38",
-          "he": "^^^ ^ =)XD <sp>",
+          "he": "^^^ ^ =)XD",
           "gr": "E(/NA",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Num 29:38",
-          "he": "X+)T =%p+ <sp>",
+          "he": "X+)T =%p+",
           "gr": "PERI\\ A(MARTI/AS",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Num 29:38",
@@ -3388,9 +3350,9 @@
         },
         {
           "ref": "Num 29:38",
-          "he": "W/NSK/H <sp^>",
+          "he": "W/NSK/H",
           "gr": "KAI\\ AI( SPONDAI\\ AU)TW=N",
-          "reason": "conteo CATSS (2 he / 4 gr)"
+          "reason": "conteo CATSS (1 he / 4 gr)"
         },
         {
           "ref": "Num 29:39",

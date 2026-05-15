@@ -2,7 +2,7 @@
 /**
  * Parser aislado para archivos CATSS "parallel" (.par) del CCAT.
  * Formato observado (ej. 01.Genesis.par):
- *   - Linea de versiculo: "Gen 1:1" (libro abreviado + cap + versiculo)
+ *   - Linea de versiculo: "Gen 1:1", "Ruth 2:3", "1Sam/K 12:1" (etiqueta libro + cap:verso)
  *   - Lineas de alineacion: columna hebrea (transliteracion CCAT) TAB columna griega (TLG-style)
  *   - Lineas con prefijo --+ : continuidad / aparato / remisiones (ver documentacion CATSS)
  *
@@ -39,7 +39,8 @@ function parseParText(text, opts = {}){
   let current = null;
   let book = bookFromFile;
 
-  const verseHeader = /^([A-Za-z]{2,8})\s+(\d+):(\d+)\s*$/;
+  /** Incluye prefijos numericos y sufijos tipo K (p.ej. 1Sam/K) usados en algunos .par. */
+  const verseHeader = /^(\S+)\s+(\d+):(\d+)\s*$/;
 
   for(const raw of lines){
     const line = raw;

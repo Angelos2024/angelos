@@ -185,46 +185,11 @@
         "source": "catss"
       },
       {
-        "tokenNum": "17",
-        "morphemeIdx": 0,
-        "lxxIdx": 16,
-        "surface": "ἢ",
-        "strong": "H176",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "21",
+        "tokenNum": "16",
         "morphemeIdx": 0,
         "lxxIdx": 18,
         "surface": "ἄνδρες",
         "strong": "H376",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "22",
-        "morphemeIdx": 0,
-        "lxxIdx": 19,
-        "surface": "ἀναβήτωσαν",
-        "strong": "H5927",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "23",
-        "morphemeIdx": 0,
-        "lxxIdx": 20,
-        "surface": "καὶ",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "24",
-        "morphemeIdx": 0,
-        "lxxIdx": 21,
-        "surface": "ἐκπολιορκησάτωσαν",
-        "strong": "H5221",
         "tier": "hint",
         "source": "catss"
       }
@@ -1355,6 +1320,23 @@
         "strong": "H3091",
         "tier": "hint",
         "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "καὶ",
+        "strong": "H413",
+        "tier": "hint",
+        "source": "catss"
       }
     ],
     "24": [
@@ -1614,8 +1596,8 @@
     "interlinear": "7.json",
     "lxx": "7.json",
     "report": {
-      "matchedPairs": 114,
-      "totalPairs": 415,
+      "matchedPairs": 112,
+      "totalPairs": 406,
       "skipped": [
         {
           "ref": "JoshB 7:1",
@@ -1805,15 +1787,27 @@
         },
         {
           "ref": "JoshB 7:3",
-          "he": ")Y$",
-          "gr": "{..dA)/NDRES}",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "he": ")W",
+          "gr": "H)\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 7:3",
           "he": "K/$L$T )LPYM",
-          "gr": "{..dW(S} TRISXI/LIOI",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "gr": "TRISXI/LIOI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "JoshB 7:3",
+          "he": "Y(LW",
+          "gr": "A)NABH/TWSAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "JoshB 7:3",
+          "he": "W/YKW",
+          "gr": "KAI\\ E)KPOLIORKHSA/TWSAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 7:3",
@@ -1842,37 +1836,19 @@
         {
           "ref": "JoshB 7:3",
           "he": ")T KL",
-          "gr": "TO\\N {..^PA/NTA}",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "gr": "TO\\N",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JoshB 7:3",
           "he": "H/(M",
-          "gr": "{...TO\\N} LAO\\N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 7:3",
-          "he": "{...}",
-          "gr": "PA/NTA",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 7:3",
-          "he": "KY",
-          "gr": "{..^GA/R}",
+          "gr": "LAO\\N",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 7:3",
           "he": "M(+",
           "gr": "O)LI/GOI",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 7:3",
-          "he": "{...}",
-          "gr": "GA/R",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -2105,15 +2081,15 @@
         },
         {
           "ref": "JoshB 7:7",
-          "he": "H(BRT {!}",
+          "he": "H(BRT",
           "gr": "DIEBI/BASEN",
-          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
           "ref": "JoshB 7:7",
-          "he": "H(BYR {!} =(BD/K .rd",
+          "he": "H(BYR =(BD/K .rd",
           "gr": "O( PAI=S SOU",
-          "reason": "conteo CATSS (4 he / 3 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 7:7",
@@ -2670,7 +2646,7 @@
         {
           "ref": "JoshB 7:15",
           "he": "W/KY",
-          "gr": "KAI\\ {..dO(/TI}",
+          "gr": "KAI\\",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -3029,20 +3005,8 @@
         },
         {
           "ref": "JoshB 7:21",
-          "he": "{...}",
-          "gr": "MI/AN",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 7:21",
           "he": "ZHB",
           "gr": "XRUSH=N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 7:21",
-          "he": ")XD",
-          "gr": "{..^MI/AN}",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -3133,12 +3097,6 @@
           "ref": "JoshB 7:23",
           "he": "W/YQXW/M",
           "gr": "KAI\\ E)CH/NEGKAN AU)TA\\",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "JoshB 7:23",
-          "he": "W/)L",
-          "gr": "KAI\\ {..dPRO\\S}",
           "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
@@ -3299,15 +3257,9 @@
         },
         {
           "ref": "JoshB 7:24",
-          "he": "{...}",
-          "gr": "EI)S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 7:24",
           "he": "(MQ (KWR",
-          "gr": "{..pEI)S} EMEKAXWR",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "gr": "EMEKAXWR",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "JoshB 7:25",
@@ -3323,20 +3275,8 @@
         },
         {
           "ref": "JoshB 7:25",
-          "he": "{...}",
-          "gr": "LI/QOIS",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 7:25",
           "he": "Y&R)L",
           "gr": "ISRAHL",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 7:25",
-          "he": ")BN",
-          "gr": "{..^LI/QOIS}",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {

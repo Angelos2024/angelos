@@ -1110,7 +1110,7 @@
     "lxx": "36.json",
     "report": {
       "matchedPairs": 80,
-      "totalPairs": 195,
+      "totalPairs": 194,
       "skipped": [
         {
           "ref": "Num 36:1",
@@ -1792,15 +1792,9 @@
         },
         {
           "ref": "Num 36:13",
-          "he": "{...}",
-          "gr": "KATA\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Num 36:13",
           "he": "YRXW",
-          "gr": "{..pKATA\\} IERIXW",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "IERIXW",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         }
       ]
     },

@@ -540,22 +540,28 @@
         "source": "catss"
       },
       {
+        "tokenNum": "35",
+        "morphemeIdx": 0,
+        "lxxIdx": 33,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "36",
+        "morphemeIdx": 0,
+        "lxxIdx": 33,
+        "surface": "καὶ",
+        "strong": "H5921",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
         "tokenNum": "37",
         "morphemeIdx": 0,
         "lxxIdx": 34,
         "surface": "σοῦ",
         "strong": "H182",
-        "tier": "hint",
-        "source": "catss"
-      }
-    ],
-    "7": [
-      {
-        "tokenNum": "1",
-        "morphemeIdx": 0,
-        "lxxIdx": 17,
-        "surface": "γῆν",
-        "strong": "H1121",
         "tier": "hint",
         "source": "catss"
       }
@@ -707,11 +713,10 @@
       {
         "tokenNum": "4",
         "morphemeIdx": 0,
-        "lxxIdx": 6,
-        "surface": "ἡμέρᾳ",
+        "lxxIdx": 5,
+        "surface": "τῇ",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+        "source": "catss"
       },
       {
         "tokenNum": "4",
@@ -719,8 +724,7 @@
         "lxxIdx": 6,
         "surface": "ἡμέρᾳ",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+        "source": "catss"
       },
       {
         "tokenNum": "6",
@@ -728,25 +732,6 @@
         "lxxIdx": 6,
         "surface": "ἡμέρᾳ",
         "strong": "H3117",
-        "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
-      },
-      {
-        "tokenNum": "9",
-        "morphemeIdx": 0,
-        "lxxIdx": 7,
-        "surface": "λέγων",
-        "strong": "H559",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "10",
-        "morphemeIdx": 0,
-        "lxxIdx": 7,
-        "surface": "λέγων",
-        "strong": "H559",
         "tier": "hint",
         "source": "catss"
       }
@@ -1299,8 +1284,8 @@
     "interlinear": "14.json",
     "lxx": "14.json",
     "report": {
-      "matchedPairs": 97,
-      "totalPairs": 255,
+      "matchedPairs": 96,
+      "totalPairs": 249,
       "skipped": [
         {
           "ref": "JoshB 14:1",
@@ -1628,12 +1613,6 @@
         },
         {
           "ref": "JoshB 14:6",
-          "he": "W/(L",
-          "gr": "KAI\\ {..dPERI\\}",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "JoshB 14:6",
           "he": "B/QD$ BRN(",
           "gr": "E)N KADHS BARNH",
           "reason": "conteo CATSS (2 he / 3 gr)"
@@ -1642,13 +1621,13 @@
           "ref": "JoshB 14:7",
           "he": ")RB(YM",
           "gr": "TESSARA/KONTA",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 14:7",
-          "he": "{...BN} $NH",
+          "he": "$NH",
           "gr": "E)TW=N",
-          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 14:7",
@@ -1754,21 +1733,9 @@
         },
         {
           "ref": "JoshB 14:9",
-          "he": "{...}",
-          "gr": "E)N",
+          "he": "L/)MR",
+          "gr": "LE/GWN",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 14:9",
-          "he": "{...}",
-          "gr": "E)KEI/NH|",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 14:9",
-          "he": "H/HW)",
-          "gr": "{..^E)KEI/NH|}",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
         },
         {
           "ref": "JoshB 14:9",
@@ -1778,21 +1745,15 @@
         },
         {
           "ref": "JoshB 14:9",
-          "he": ")$R {...B/H}",
+          "he": ")$R",
           "gr": "E)F' H(\\N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "JoshB 14:9",
           "he": "DRKH RGL/K",
           "gr": "E)PE/BHS",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
-        },
-        {
-          "ref": "JoshB 14:9",
-          "he": "B/H",
-          "gr": "{...}",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 14:9",
@@ -2115,25 +2076,19 @@
         {
           "ref": "JoshB 14:12",
           "he": "KY",
-          "gr": "NUNI\\ DE\\ {...EI)SIN}",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "NUNI\\ DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "JoshB 14:12",
           "he": "(NQYM",
-          "gr": "OI( ENAKIM {t}",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "OI( ENAKIM",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "JoshB 14:12",
           "he": "$M",
           "gr": "E)KEI=",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 14:12",
-          "he": "{...}",
-          "gr": "EI)SIN",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -2223,8 +2178,8 @@
         {
           "ref": "JoshB 14:15",
           "he": "B/(NQYM",
-          "gr": "TW=N ENAKIM {t}",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "TW=N ENAKIM",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "JoshB 14:15",

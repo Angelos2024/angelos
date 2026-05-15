@@ -172,6 +172,23 @@
         "strong": "H1",
         "tier": "hint",
         "source": "catss"
+      },
+      {
+        "tokenNum": "20",
+        "morphemeIdx": 0,
+        "lxxIdx": 23,
+        "surface": "τῶν",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "21",
+        "morphemeIdx": 0,
+        "lxxIdx": 24,
+        "surface": "φυλῶν",
+        "strong": "H4294",
+        "tier": "hint",
+        "source": "catss"
       }
     ],
     "2": [
@@ -2780,21 +2797,9 @@
     "interlinear": "21.json",
     "lxx": "21.json",
     "report": {
-      "matchedPairs": 181,
-      "totalPairs": 431,
+      "matchedPairs": 182,
+      "totalPairs": 430,
       "skipped": [
-        {
-          "ref": "JoshB 21:1",
-          "he": "{...}",
-          "gr": "E)K",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "JoshB 21:1",
-          "he": "H/M+WT",
-          "gr": "{..pE)K} TW=N FULW=N",
-          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
-        },
         {
           "ref": "JoshB 21:1",
           "he": "Y&R)L",
@@ -3404,7 +3409,7 @@
         {
           "ref": "JoshB 21:16",
           "he": "H/$B+YM",
-          "gr": "{...TW=N} FULW=N",
+          "gr": "FULW=N",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {

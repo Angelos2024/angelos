@@ -119,6 +119,164 @@
         "strong": "H559",
         "tier": "hint",
         "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "δὸς",
+        "strong": "H5414",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "ἡμῖν",
+        "strong": "H5414",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 1,
+        "lxxIdx": 8,
+        "surface": "ἡμῖν",
+        "strong": "H5414",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "ὕδωρ",
+        "strong": "H4325",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "ἵνα",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "πίωμεν",
+        "strong": "H8354",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "εἶπεν",
+        "strong": "H559",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "αὐτοῖς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 1,
+        "lxxIdx": 14,
+        "surface": "αὐτοῖς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "19",
+        "morphemeIdx": 0,
+        "lxxIdx": 15,
+        "surface": "Μωυσῆς",
+        "strong": "H4872",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "20",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "τί",
+        "strong": "H4100",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "21",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "λοιδορεῖσθέ",
+        "strong": "H7378",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "22",
+        "morphemeIdx": 0,
+        "lxxIdx": 18,
+        "surface": "μοι",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "24",
+        "morphemeIdx": 0,
+        "lxxIdx": 20,
+        "surface": "τί",
+        "strong": "H4100",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      },
+      {
+        "tokenNum": "25",
+        "morphemeIdx": 0,
+        "lxxIdx": 21,
+        "surface": "πειράζετε",
+        "strong": "H5254",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "26",
+        "morphemeIdx": 0,
+        "lxxIdx": 22,
+        "surface": "κύριον",
+        "strong": "H853",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "27",
+        "morphemeIdx": 0,
+        "lxxIdx": 22,
+        "surface": "κύριον",
+        "strong": "H3068",
+        "tier": "hint",
+        "source": "catss"
       }
     ],
     "3": [
@@ -1176,8 +1334,7 @@
         "surface": "μνημόσυνον",
         "strong": "H2146",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+        "source": "catss"
       },
       {
         "tokenNum": "9",
@@ -1284,8 +1441,8 @@
     "interlinear": "17.json",
     "lxx": "17.json",
     "report": {
-      "matchedPairs": 92,
-      "totalPairs": 235,
+      "matchedPairs": 105,
+      "totalPairs": 230,
       "skipped": [
         {
           "ref": "Exod 17:1",
@@ -1357,84 +1514,6 @@
           "ref": "Exod 17:1",
           "he": "^ H/(M =L/$TT",
           "gr": "PIEI=N",
-          "reason": "(N he / 1 gr) sin puente consonantico o griego"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "TNW <sp> <q4p-m>",
-          "gr": "DO\\S",
-          "reason": "(N he / 1 gr) sin puente consonantico o griego"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "L/NW",
-          "gr": "H(MI=N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "MYM",
-          "gr": "U(/DWR",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "W/N$TH",
-          "gr": "I(/NA PI/WMEN",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "W/Y)MR",
-          "gr": "KAI\\ EI)=PEN",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "L/HM",
-          "gr": "AU)TOI=S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "M$H",
-          "gr": "MWUSH=S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "MH",
-          "gr": "TI/",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "TRYBWN",
-          "gr": "LOIDOREI=SQE/",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "(MD/Y",
-          "gr": "MOI",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "MH <sp> <q4p-m>",
-          "gr": "KAI\\ TI/",
-          "reason": "conteo CATSS (3 he / 2 gr)"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": "TNSWN",
-          "gr": "PEIRA/ZETE",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:2",
-          "he": ")T YHWH",
-          "gr": "KU/RION",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
@@ -1523,20 +1602,14 @@
         },
         {
           "ref": "Exod 17:5",
-          "he": ")$R {...B/W}",
+          "he": ")$R",
           "gr": "E)N H(=|",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Exod 17:5",
           "he": "HKYT",
           "gr": "E)PA/TACAS",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:5",
-          "he": "B/W",
-          "gr": "{...}",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -1698,8 +1771,8 @@
         {
           "ref": "Exod 17:9",
           "he": ")N$YM",
-          "gr": "A)/NDRAS {..?DUNATOU\\S}",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "A)/NDRAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Exod 17:9",
@@ -1847,15 +1920,9 @@
         },
         {
           "ref": "Exod 17:10",
-          "he": "{...}",
-          "gr": "E)PI\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:10",
           "he": "R)$",
-          "gr": "{..pE)PI\\} TH\\N KORUFH\\N",
-          "reason": "conteo CATSS (1 he / 3 gr)"
+          "gr": "TH\\N KORUFH\\N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
         },
         {
           "ref": "Exod 17:10",
@@ -1979,9 +2046,9 @@
         },
         {
           "ref": "Exod 17:12",
-          "he": "W/YHY <sp> <q4p-m>",
+          "he": "W/YHY",
           "gr": "KAI\\ E)GE/NONTO",
-          "reason": "conteo CATSS (3 he / 2 gr)"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Exod 17:12",
@@ -2021,12 +2088,6 @@
         },
         {
           "ref": "Exod 17:14",
-          "he": "{...}",
-          "gr": "EI)S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:14",
           "he": "W/&YM",
           "gr": "KAI\\ DO\\S",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
@@ -2051,7 +2112,7 @@
         },
         {
           "ref": "Exod 17:14",
-          "he": "MXH )MXH {!}ndd",
+          "he": "MXH )MXH ndd",
           "gr": "A)LOIFH=| E)CALEI/YW",
           "reason": "conteo CATSS (3 he / 2 gr)"
         },
@@ -2093,15 +2154,9 @@
         },
         {
           "ref": "Exod 17:16",
-          "he": "{...}",
-          "gr": "E)N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:16",
           "he": "YD",
-          "gr": "{..pE)N} XEIRI\\",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "XEIRI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Exod 17:16",
@@ -2111,9 +2166,9 @@
         },
         {
           "ref": "Exod 17:16",
-          "he": "MLXMH {...L/}",
+          "he": "MLXMH",
           "gr": "POLEMEI=",
-          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Exod 17:16",
@@ -2135,15 +2190,9 @@
         },
         {
           "ref": "Exod 17:16",
-          "he": "{...}",
-          "gr": "EI)S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Exod 17:16",
           "he": "DR",
-          "gr": "{..pEI)S} GENEA/S",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "GENEA/S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         }
       ]
     },

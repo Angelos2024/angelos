@@ -341,8 +341,8 @@
       {
         "tokenNum": "15",
         "morphemeIdx": 0,
-        "lxxIdx": 15,
-        "surface": "μὴ",
+        "lxxIdx": 16,
+        "surface": "ὑπερίδῃς",
         "strong": "H5956",
         "tier": "hint",
         "source": "catss"
@@ -350,8 +350,16 @@
       {
         "tokenNum": "16",
         "morphemeIdx": 0,
-        "lxxIdx": 16,
-        "surface": "ὑπερίδῃς",
+        "lxxIdx": 17,
+        "surface": "αὐτούς",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 1,
+        "lxxIdx": 17,
+        "surface": "αὐτούς",
         "tier": "hint",
         "source": "catss"
       }
@@ -816,41 +824,6 @@
         "strong": "H3947",
         "tier": "hint",
         "source": "catss"
-      },
-      {
-        "tokenNum": "4",
-        "morphemeIdx": 0,
-        "lxxIdx": 4,
-        "surface": "γυναῖκα",
-        "strong": "H802",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "5",
-        "morphemeIdx": 0,
-        "lxxIdx": 5,
-        "surface": "καὶ",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "6",
-        "morphemeIdx": 0,
-        "lxxIdx": 6,
-        "surface": "συνοικήσῃ",
-        "strong": "H935",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "7",
-        "morphemeIdx": 0,
-        "lxxIdx": 7,
-        "surface": "αὐτῇ",
-        "strong": "H413",
-        "tier": "hint",
-        "source": "catss"
       }
     ],
     "15": [
@@ -926,15 +899,6 @@
         "lxxIdx": 1,
         "surface": "νῦν",
         "strong": "H2009",
-        "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "3",
-        "morphemeIdx": 0,
-        "lxxIdx": 3,
-        "surface": "αὐτῇ",
-        "strong": "H1931",
         "tier": "hint",
         "source": "catss"
       }
@@ -1641,8 +1605,8 @@
     "interlinear": "22.json",
     "lxx": "22.json",
     "report": {
-      "matchedPairs": 127,
-      "totalPairs": 413,
+      "matchedPairs": 124,
+      "totalPairs": 404,
       "skipped": [
         {
           "ref": "Deut 22:1",
@@ -1670,13 +1634,13 @@
         },
         {
           "ref": "Deut 22:1",
-          "he": "H$B {!}nd",
+          "he": "H$B nd",
           "gr": "A)POSTROFH=|",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Deut 22:1",
-          "he": "T$YB/M {!}nd",
+          "he": "T$YB/M nd",
           "gr": "A)POSTRE/YEIS AU)TA\\",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
@@ -1832,19 +1796,13 @@
         },
         {
           "ref": "Deut 22:4",
-          "he": "M/HM",
-          "gr": "{p} AU)TOU/S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Deut 22:4",
-          "he": "HQM {!}p",
+          "he": "HQM p",
           "gr": "A)NISTW=N",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Deut 22:4",
-          "he": "TQYM {!}p",
+          "he": "TQYM p",
           "gr": "A)NASTH/SEIS",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -1869,8 +1827,8 @@
         {
           "ref": "Deut 22:5",
           "he": "KY",
-          "gr": "O(/TI {...E)STIN}",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "O(/TI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 22:5",
@@ -1889,12 +1847,6 @@
           "he": ")LH/YK",
           "gr": "TW=| QEW=| SOU/",
           "reason": "conteo CATSS (1 he / 3 gr)"
-        },
-        {
-          "ref": "Deut 22:5",
-          "he": "{...}",
-          "gr": "E)STIN",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 22:5",
@@ -2066,13 +2018,13 @@
         },
         {
           "ref": "Deut 22:7",
-          "he": "$LX {!}nd",
+          "he": "$LX nd",
           "gr": "A)POSTOLH=|",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
         {
           "ref": "Deut 22:7",
-          "he": "T$LX {!}nd",
+          "he": "T$LX nd",
           "gr": "A)POSTELEI=S",
           "reason": "(N he / 1 gr) sin puente consonantico o griego"
         },
@@ -2109,19 +2061,13 @@
         {
           "ref": "Deut 22:7",
           "he": "YY+B",
-          "gr": "EU)= {...GE/NHTAI}",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "EU)=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 22:7",
           "he": "L/K",
           "gr": "SOI",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Deut 22:7",
-          "he": "{...}",
-          "gr": "GE/NHTAI",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -2252,15 +2198,21 @@
         },
         {
           "ref": "Deut 22:13",
-          "he": "{...}",
-          "gr": "TIS",
+          "he": ")$H",
+          "gr": "GUNAI=KA",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 22:13",
-          "he": ")Y$",
-          "gr": "{..^TIS}",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
+          "he": "W/B)",
+          "gr": "KAI\\ SUNOIKH/SH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 22:13",
+          "he": ")L/YH",
+          "gr": "AU)TH=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 22:13",
@@ -2294,14 +2246,14 @@
         },
         {
           "ref": "Deut 22:14",
-          "he": "W/HWCY) {...(L/}",
+          "he": "W/HWCY)",
           "gr": "KAI\\ KATENE/GKH|",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 22:14",
           "he": "(L/YH",
-          "gr": "{p} AU)TH=S",
+          "gr": "AU)TH=S",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -2474,12 +2426,6 @@
         },
         {
           "ref": "Deut 22:17",
-          "he": "{...}",
-          "gr": "AU)TO\\S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Deut 22:17",
           "he": "&M",
           "gr": "E)PITI/QHSIN",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
@@ -2625,7 +2571,7 @@
         {
           "ref": "Deut 22:19",
           "he": "YM/YW",
-          "gr": "{...TO\\N} XRO/NON",
+          "gr": "XRO/NON",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -2715,7 +2661,7 @@
         {
           "ref": "Deut 22:21",
           "he": "B/Y&R)L",
-          "gr": "{...E)N} ISRAHL",
+          "gr": "ISRAHL",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
@@ -3056,9 +3002,9 @@
         },
         {
           "ref": "Deut 22:26",
-          "he": "T(&H <sp> <q11t>",
+          "he": "T(&H",
           "gr": "POIH/SETE",
-          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 22:26",
@@ -3104,12 +3050,6 @@
         },
         {
           "ref": "Deut 22:26",
-          "he": "{...}",
-          "gr": "TIS",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Deut 22:26",
           "he": "YQWM",
           "gr": "E)PANASTH=|",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
@@ -3117,8 +3057,8 @@
         {
           "ref": "Deut 22:26",
           "he": ")Y$",
-          "gr": "{..^TIS} A)/NQRWPOS",
-          "reason": "conteo/sin match (1 he / 2 gr)"
+          "gr": "A)/NQRWPOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
         {
           "ref": "Deut 22:26",
@@ -3212,18 +3152,6 @@
         },
         {
           "ref": "Deut 22:28",
-          "he": "{...}",
-          "gr": "TIS",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Deut 22:28",
-          "he": ")Y$",
-          "gr": "{..^TIS}",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "Deut 22:28",
           "he": "*N(R **N(RH",
           "gr": "TH\\N PAI=DA",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
@@ -3272,7 +3200,7 @@
         },
         {
           "ref": "Deut 22:28",
-          "he": "W/NMC)W <q11t>",
+          "he": "W/NMC)W",
           "gr": "KAI\\ EU(REQH=|",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         },
@@ -3357,7 +3285,7 @@
         {
           "ref": "Deut 22:29",
           "he": "YM/YW",
-          "gr": "{...TO\\N} XRO/NON",
+          "gr": "XRO/NON",
           "reason": "puente consonantico o griego CATSS sin match Rahlf"
         }
       ]
