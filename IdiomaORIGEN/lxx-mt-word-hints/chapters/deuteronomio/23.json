@@ -1,0 +1,2017 @@
+{
+  "_schema": "lxx-mt-word-hints-chapter-v1",
+  "_doc": "Generado desde CATSS (05.Deut.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
+  "slug": "deuteronomio",
+  "chapter": 23,
+  "verses": {
+    "1": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "οὐ",
+        "strong": "H3808",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "2": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "οὐκ",
+        "strong": "H3808",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "εἰσελεύσεται",
+        "strong": "H935",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "3": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "οὐκ",
+        "strong": "H3808",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "εἰσελεύσεται",
+        "strong": "H935",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "7": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "οὐ",
+        "strong": "H3808",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "10": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "δὲ",
+        "strong": "H3588",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ],
+    "17": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "οὗ",
+        "strong": "H3808",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "19": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "οὐ",
+        "strong": "H3808",
+        "tier": "hint",
+        "source": "catss"
+      }
+    ],
+    "25": [
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 19,
+        "surface": "ἐπιβάλῃς",
+        "strong": "H3588",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 25,
+        "surface": "σου",
+        "strong": "H935",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+      }
+    ]
+  },
+  "_catss_generator": {
+    "catssSource": "05.Deut.par",
+    "interlinear": "23.json",
+    "lxx": "23.json",
+    "report": {
+      "matchedPairs": 11,
+      "totalPairs": 323,
+      "skipped": [
+        {
+          "ref": "Deut 23:1",
+          "he": "YQX",
+          "gr": "LH/MYETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:1",
+          "he": ")Y$",
+          "gr": "A)/NQRWPOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:1",
+          "he": ")T )$T",
+          "gr": "TH\\N GUNAI=KA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:1",
+          "he": ")B/YW",
+          "gr": "TOU= PATRO\\S AU)TOU=",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:1",
+          "he": "W/L)",
+          "gr": "KAI\\ OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:1",
+          "he": "YGLH",
+          "gr": "A)POKALU/YEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:1",
+          "he": "KNP",
+          "gr": "SUGKA/LUMMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:1",
+          "he": ")BY/W",
+          "gr": "TOU= PATRO\\S AU)TOU=",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:2",
+          "he": "PCW( DK)",
+          "gr": "QLADI/AS",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Deut 23:2",
+          "he": "W/KRWT",
+          "gr": "KAI\\ A)POKEKOMME/NOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:2",
+          "he": "B/QHL",
+          "gr": "EI)S E)KKLHSI/AN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:2",
+          "he": "YHWH",
+          "gr": "KURI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "MMZR",
+          "gr": "E)K PO/RNHS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "B/QHL",
+          "gr": "EI)S E)KKLHSI/AN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "YHWH",
+          "gr": "KURI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "GM",
+          "gr": "--- ''",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "DWR",
+          "gr": "--- ''",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "(&YRY",
+          "gr": "--- ''",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "L)",
+          "gr": "--- ''",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "YB)",
+          "gr": "--- ''",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "L/W",
+          "gr": "--- ''",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "B/QHL",
+          "gr": "--- ''",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:3",
+          "he": "YHWH",
+          "gr": "--- ''",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "YB)",
+          "gr": "EI)SELEU/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "(MWNY",
+          "gr": "AMMANI/THS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "W/MW)BY",
+          "gr": "KAI\\ MWABI/THS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "B/QHL",
+          "gr": "EI)S E)KKLHSI/AN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "YHWH",
+          "gr": "KURI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "GM",
+          "gr": "KAI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "{...}",
+          "gr": "DEKA/THS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "DWR",
+          "gr": "GENEA=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "(&YRY",
+          "gr": "{..^DEKA/THS}",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "YB)",
+          "gr": "EI)SELEU/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "B/QHL",
+          "gr": "EI)S E)KKLHSI/AN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "YHWH",
+          "gr": "KURI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "(D",
+          "gr": "KAI\\ E(/WS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:4",
+          "he": "(WLM",
+          "gr": "EI)S TO\\N AI)W=NA",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "(L DBR )$R",
+          "gr": "PARA\\",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "L)",
+          "gr": "TO\\ MH\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "QDMW",
+          "gr": "SUNANTH=SAI AU)TOU\\S",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": ")T/KM",
+          "gr": "U(MI=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "B/LXM",
+          "gr": "META\\ A)/RTWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "W/B/MYM",
+          "gr": "KAI\\ {..dMETA\\} U(/DATOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "B/DRK",
+          "gr": "E)N TH=| O(DW=|",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "B/C)T/KM",
+          "gr": "E)KPOREUOME/NWN U(MW=N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "M/MCRYM",
+          "gr": "E)C AI)GU/PTOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "W/)$R",
+          "gr": "KAI\\ O(/TI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "&KR",
+          "gr": "E)MISQW/SANTO",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "(L/YK",
+          "gr": "E)PI\\ SE\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": ")T BL(M",
+          "gr": "TO\\N BALAAM",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "BN",
+          "gr": "UI(O\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "B(WR",
+          "gr": "BEWR",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "M/PTWR )RM NHRYM",
+          "gr": "E)K TH=S MESOPOTAMI/AS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:5",
+          "he": "L/QLL/K",
+          "gr": "KATARA/SASQAI/ SE",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": "W/L)",
+          "gr": "KAI\\ OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": ")BH",
+          "gr": "H)QE/LHSEN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": "YHWH",
+          "gr": "KU/RIOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": ")LH/YK",
+          "gr": "O( QEO/S SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": "L/$M( {...)L}",
+          "gr": "EI)SAKOU=SAI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": ")L BL(M",
+          "gr": "{p} TOU= BALAAM",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": "W/YHPK",
+          "gr": "KAI\\ METE/STREYEN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": "YHWH",
+          "gr": "KU/RIOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": ")LH/YK",
+          "gr": "O( QEO/S SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": ")T H/QLLH",
+          "gr": "TA\\S KATA/RAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": "L/BRKH",
+          "gr": "EI)S EU)LOGI/AN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": "KY",
+          "gr": "O(/TI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": ")HB/K",
+          "gr": "H)GA/PHSE/N SE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": "YHWH",
+          "gr": "KU/RIOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:6",
+          "he": ")LH/YK",
+          "gr": "O( QEO/S SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:7",
+          "he": "TDR$",
+          "gr": "PROSAGOREU/SEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:7",
+          "he": "$LM/M",
+          "gr": "EI)RHNIKA\\ AU)TOI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:7",
+          "he": "W/+BT/M",
+          "gr": "KAI\\ SUMFE/RONTA AU)TOI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:7",
+          "he": "KL",
+          "gr": "PA/SAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:7",
+          "he": "YM/YK",
+          "gr": "TA\\S H(ME/RAS SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:7",
+          "he": "L/(WLM",
+          "gr": "EI)S TO\\N AI)W=NA",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "TT(B",
+          "gr": "BDELU/CH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": ")DMY",
+          "gr": "IDOUMAI=ON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "KY",
+          "gr": "O(/TI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": ")XY/K",
+          "gr": "A)DELFO/S SOU/",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "HW)",
+          "gr": "E)STIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "TT(B",
+          "gr": "BDELU/CH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "MCRY",
+          "gr": "AI)GU/PTION",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "KY",
+          "gr": "O(/TI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "GR",
+          "gr": "PA/ROIKOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "HYYT",
+          "gr": "E)GE/NOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:8",
+          "he": "B/)RC/W",
+          "gr": "E)N TH=| GH=| AU)TOU=",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Deut 23:9",
+          "he": "BNYM",
+          "gr": "UI(OI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:9",
+          "he": ")$R",
+          "gr": "E)A\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:9",
+          "he": "YWLDW",
+          "gr": "GENHQW=SIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:9",
+          "he": "L/HM",
+          "gr": "AU)TOI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:9",
+          "he": "DWR",
+          "gr": "GENEA\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:9",
+          "he": "$LY$Y",
+          "gr": "TRI/TH",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:9",
+          "he": "YB)",
+          "gr": "EI)SELEU/SONTAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:9",
+          "he": "B/QHL",
+          "gr": "EI)S E)KKLHSI/AN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:9",
+          "he": "YHWH",
+          "gr": "KURI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:10",
+          "he": "TC)",
+          "gr": "E)CE/LQH|S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:10",
+          "he": "MXNH",
+          "gr": "PAREMBALEI=N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:10",
+          "he": "(L",
+          "gr": "E)PI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:10",
+          "he": ")YB/YK",
+          "gr": "TOU\\S E)XQROU/S SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:10",
+          "he": "W/N$MRT",
+          "gr": "KAI\\ FULA/CH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:10",
+          "he": "M/KL",
+          "gr": "A)PO\\ PANTO\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:10",
+          "he": "DBR",
+          "gr": "R(H/MATOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:10",
+          "he": "R(",
+          "gr": "PONHROU=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "KY",
+          "gr": "E)A\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "YHYH",
+          "gr": "H)=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "B/K",
+          "gr": "E)N SOI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": ")Y$",
+          "gr": "A)/NQRWPOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": ")$R",
+          "gr": "O(\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "YHYH",
+          "gr": "E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "+HWR",
+          "gr": "KAQARO\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "M/QRH",
+          "gr": "E)K R(U/SEWS AU)TOU=",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "LYLH",
+          "gr": "NUKTO/S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "W/YC)",
+          "gr": "KAI\\ E)CELEU/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": ")L M/XWC",
+          "gr": "E)/CW",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "L/MXNH",
+          "gr": "TH=S PAREMBOLH=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "L)",
+          "gr": "KAI\\ OU)K",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "YB)",
+          "gr": "EI)SELEU/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": ")L TWK",
+          "gr": "EI)S",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Deut 23:11",
+          "he": "H/MXNH",
+          "gr": "TH\\N PAREMBOLH/N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:12",
+          "he": "W/HYH",
+          "gr": "KAI\\ E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:12",
+          "he": "L/PNWT",
+          "gr": "TO\\ PRO\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:12",
+          "he": "(RB",
+          "gr": "E(SPE/RAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:12",
+          "he": "YRXC",
+          "gr": "LOU/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:12",
+          "he": "B/MYM",
+          "gr": "U(/DATI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:12",
+          "he": "W/K/B)",
+          "gr": "KAI\\ DEDUKO/TOS",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:12",
+          "he": "H/$M$",
+          "gr": "H(LI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:12",
+          "he": "YB)",
+          "gr": "EI)SELEU/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:12",
+          "he": ")L TWK",
+          "gr": "EI)S",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Deut 23:12",
+          "he": "H/MXNH",
+          "gr": "TH\\N PAREMBOLH/N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:13",
+          "he": "W/YD",
+          "gr": "KAI\\ TO/POS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:13",
+          "he": "THYH",
+          "gr": "E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:13",
+          "he": "L/K",
+          "gr": "SOI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:13",
+          "he": "M/XWC",
+          "gr": "E)/CW",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:13",
+          "he": "L/MXNH",
+          "gr": "TH=S PAREMBOLH=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:13",
+          "he": "W/YC)T",
+          "gr": "KAI\\ E)CELEU/SH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:13",
+          "he": "$M/H",
+          "gr": "E)KEI=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:13",
+          "he": "XWC",
+          "gr": "E)/CW",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "W/YTD",
+          "gr": "KAI\\ PA/SSALOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "THYH",
+          "gr": "E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "L/K",
+          "gr": "SOI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "(L",
+          "gr": "E)PI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": ")ZN/K =)ZR/K .nr",
+          "gr": "TH=S ZW/NHS SOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "W/HYH",
+          "gr": "KAI\\ E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "B/$BT/K",
+          "gr": "O(/TAN DIAKAQIZA/NH|S",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "XWC",
+          "gr": "E)/CW",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "W/XPRTH",
+          "gr": "KAI\\ O)RU/CEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "B/H",
+          "gr": "E)N AU)TW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "W/$BT",
+          "gr": "KAI\\ E)PAGAGW\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": "W/KSYT",
+          "gr": "KALU/YEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:14",
+          "he": ")T C)T/K",
+          "gr": "TH\\N A)SXHMOSU/NHN SOU",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "KY",
+          "gr": "O(/TI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "YHWH",
+          "gr": "KU/RIOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": ")LH/YK",
+          "gr": "O( QEO/S SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "MTHLK",
+          "gr": "E)MPERIPATEI=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "B/QRB",
+          "gr": "E)N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "MXNK",
+          "gr": "TH=| PAREMBOLH=| SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "L/HCYL/K",
+          "gr": "E)CELE/SQAI SE",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "W/L/TT",
+          "gr": "KAI\\ PARADOU=NAI",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": ")YB/YK",
+          "gr": "TO\\N E)XQRO/N SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "L/PN/YK",
+          "gr": "PRO\\ PROSW/POU SOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "W/HYH",
+          "gr": "KAI\\ E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "MXNY/K",
+          "gr": "H( PAREMBOLH/ SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "QDW$",
+          "gr": "A(GI/A",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "W/L)",
+          "gr": "KAI\\ OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "YR)H",
+          "gr": "O)FQH/SETAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "B/K",
+          "gr": "E)N SOI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "(RWT",
+          "gr": "A)SXHMOSU/NH",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "DBR",
+          "gr": "PRA/GMATOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "W/$B",
+          "gr": "KAI\\ A)POSTRE/YEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:15",
+          "he": "M/)XR/YK",
+          "gr": "A)PO\\ SOU=",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:16",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:16",
+          "he": "TSGYR",
+          "gr": "PARADW/SEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:16",
+          "he": "(BD",
+          "gr": "PAI=DA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:16",
+          "he": ")L )DN/YW",
+          "gr": "TW=| KURI/W| AU)TOU=",
+          "reason": "conteo CATSS (2 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:16",
+          "he": ")$R",
+          "gr": "O(\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:16",
+          "he": "YNCL {...)L}",
+          "gr": "PROSTE/QEITAI/",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Deut 23:16",
+          "he": ")L/YK",
+          "gr": "{p} SOI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:16",
+          "he": "M/(M",
+          "gr": "PARA\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:16",
+          "he": ")DN/YW",
+          "gr": "TOU= KURI/OU AU)TOU=",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "(M/K",
+          "gr": "META\\ SOU=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "Y$B",
+          "gr": "KATOIKH/SEI {d} {...KATOIKH/SEI}",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "B/QRB/K",
+          "gr": "E)N U(MI=N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "{...}",
+          "gr": "KATOIKH/SEI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "{...}",
+          "gr": "E)N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "B/MQWM",
+          "gr": "{...E)N} TO/PW|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": ")$R",
+          "gr": "--- ''",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "YBXR",
+          "gr": "--- ''",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "B/)XD",
+          "gr": "--- ''",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "$(R/YK",
+          "gr": "--- ''",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "B/+WB",
+          "gr": "OU(= E)A\\N A)RE/SH|",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "L/W",
+          "gr": "AU)TW=|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:17",
+          "he": "TWN/NW",
+          "gr": "QLI/YEIS AU)TO/N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "L)",
+          "gr": "OU)K {d} {...OU)K}",
+          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "THYH",
+          "gr": "E)/STAI {d} {...E)/STAI}",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "QD$H",
+          "gr": "PO/RNH {d} {...TELESFO/ROS}",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "M/BNWT",
+          "gr": "A)PO\\ QUGATE/RWN {d} {...A)PO\\ #",
+          "reason": "conteo CATSS (1 he / 5 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "#",
+          "gr": "QUGATE/RWN}",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "Y&R)L",
+          "gr": "ISRAHL {d} {...ISRAHL}",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "W/L)",
+          "gr": "KAI\\ OU)K {d} {...KAI\\ OU)K}",
+          "reason": "conteo CATSS (1 he / 5 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "YHYH",
+          "gr": "E)/STAI {d} {...E)/STAI}",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "QD$",
+          "gr": "PORNEU/WN {d} {...TELISKO/MENOS}",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "M/BNY",
+          "gr": "A)PO\\ UI(W=N {d} {...A)PO\\ UI(W=N}",
+          "reason": "conteo CATSS (1 he / 5 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "Y&R)L",
+          "gr": "ISRAHL {d} {...ISRAHL}",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "{...}",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "{...}",
+          "gr": "E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "{...}",
+          "gr": "TELESFO/ROS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "{...}",
+          "gr": "A)PO\\ QUGATE/RWN",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "{...}",
+          "gr": "ISRAHL",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "{...}",
+          "gr": "KAI\\ OU)K",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "{...}",
+          "gr": "E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "{...}",
+          "gr": "TELISKO/MENOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "{...}",
+          "gr": "A)PO\\ UI(W=N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:18",
+          "he": "{...}",
+          "gr": "ISRAHL",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "TBY)",
+          "gr": "PROSOI/SEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": ")TNN",
+          "gr": "MI/SQWMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "ZWNH",
+          "gr": "PO/RNHS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "W/MXYR {..rL)}",
+          "gr": "OU)DE\\ A)/LLAGMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "KLB",
+          "gr": "KUNO\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "{...}",
+          "gr": "EI)S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "BYT",
+          "gr": "{..pEI)S} TO\\N OI)=KON",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "YHWH",
+          "gr": "KURI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": ")LH/YK",
+          "gr": "TOU= QEOU= SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "L/KL",
+          "gr": "PRO\\S PA=SAN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "NDR",
+          "gr": "EU)XH/N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "KY",
+          "gr": "O(/TI {...E)STIN}",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "TW(BT",
+          "gr": "BDE/LUGMA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "YHWH",
+          "gr": "KURI/W|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": ")LH/YK",
+          "gr": "TW=| QEW=| SOU/",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "{...}",
+          "gr": "E)STIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "GM",
+          "gr": "KAI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:19",
+          "he": "$N/YHM",
+          "gr": "A)MFO/TERA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": "T$YK",
+          "gr": "E)KTOKIEI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": "L/)XY/K",
+          "gr": "TW=| A)DELFW=| SOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": "N$K",
+          "gr": "TO/KON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": "KSP",
+          "gr": "A)RGURI/OU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": "N$K",
+          "gr": "KAI\\ TO/KON",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": ")KL",
+          "gr": "BRWMA/TWN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": "N$K",
+          "gr": "KAI\\ TO/KON",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": "KL",
+          "gr": "PANTO\\S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": "DBR",
+          "gr": "PRA/GMATOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": ")$R",
+          "gr": "OU(= A)\\N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:20",
+          "he": "Y$K",
+          "gr": "E)KDANEI/SH|S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "L/NKRY",
+          "gr": "TW=| A)LLOTRI/W|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "T$YK",
+          "gr": "E)KTOKIEI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "W/L/)XY/K",
+          "gr": "TW=| ^ DE\\ A)DELFW=| SOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "T$YK",
+          "gr": "E)KTOKIEI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "L/M(N",
+          "gr": "I(/NA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "YBRK/K",
+          "gr": "EU)LOGH/SH| SE",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "YHWH",
+          "gr": "KU/RIOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": ")LH/YK",
+          "gr": "O( QEO/S SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "B/KL",
+          "gr": "E)N PA=SI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "M$LX YD/K =M(&/YK",
+          "gr": "TOI=S E)/RGOIS SOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "(L",
+          "gr": "E)PI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "H/)RC",
+          "gr": "TH=S GH=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": ")$R",
+          "gr": "EI)S H(\\N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": ")TH B)",
+          "gr": "EI)SPOREU/H|",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "$M/H",
+          "gr": "E)KEI=",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:21",
+          "he": "L/R$T/H",
+          "gr": "KLHRONOMH=SAI AU)TH/N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "KY",
+          "gr": "E)A\\N ^ DE\\",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "TDR",
+          "gr": "EU)/CH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "NDR",
+          "gr": "EU)XH\\N",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "L/YHWH",
+          "gr": "KURI/W|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": ")LH/YK",
+          "gr": "TW=| QEW=| SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "L)",
+          "gr": "OU)",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "T)XR",
+          "gr": "XRONIEI=S",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "L/$LM/W",
+          "gr": "A)PODOU=NAI AU)TH/N",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "KY",
+          "gr": "O(/TI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "DR$ {!}p",
+          "gr": "E)KZHTW=N",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "YDR$/NW {!}p",
+          "gr": "E)KZHTH/SEI",
+          "reason": "(N he / 1 gr) sin puente consonantico o griego"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "YHWH",
+          "gr": "KU/RIOS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": ")LH/YK",
+          "gr": "O( QEO/S SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "M/(M/K",
+          "gr": "PARA\\ SOU=",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "W/HYH",
+          "gr": "KAI\\ E)/STAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "B/K",
+          "gr": "E)N SOI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:22",
+          "he": "X+)",
+          "gr": "A(MARI/A",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:23",
+          "he": "W/KY",
+          "gr": "E)A\\N ^ DE\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:23",
+          "he": "TXDL",
+          "gr": "MH\\ QE/LH|S",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:23",
+          "he": "L/NDR",
+          "gr": "EU)/CASQAI",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:23",
+          "he": "L)",
+          "gr": "OU)K",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:23",
+          "he": "YHYH",
+          "gr": "E)/STIN",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:23",
+          "he": "B/K",
+          "gr": "E)N SOI\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:23",
+          "he": "X+)",
+          "gr": "A(MARTI/A",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "MWC)",
+          "gr": "TA\\ E)KPOREUO/MENA",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "{...}",
+          "gr": "DIA\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "&PT/YK",
+          "gr": "{..pDIA\\} TW=N XEILE/WN SOU",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "T$MR",
+          "gr": "FULA/CH|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "W/(&YT",
+          "gr": "KAI\\ POIH/SEIS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "K/)$R",
+          "gr": "O(\\N TRO/PON",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "NDRT",
+          "gr": "EU)/CW",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "L/YHWH",
+          "gr": "KURI/W|",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": ")LH/YK",
+          "gr": "TW=| QEW=| SOU",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "NDBH",
+          "gr": "DO/MA",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": ")$R",
+          "gr": "O(\\",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "DBRT",
+          "gr": "E)LA/LHSAS",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:24",
+          "he": "B/PY/K",
+          "gr": "TW=| STO/MATI/ SOU",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:25",
+          "he": "B/KRM",
+          "gr": "EI)S TO\\N A)MPELW=NA [26]",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Deut 23:25",
+          "he": "R(/K",
+          "gr": "TOU= PLHSI/ON SOU [26]",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Deut 23:25",
+          "he": "W/)KLT",
+          "gr": "FA/GH| [26]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:25",
+          "he": "(NBYM",
+          "gr": "STAFULH\\N [26]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:25",
+          "he": "K/NP$/K",
+          "gr": "O(/SON YUXH/N SOU [26]",
+          "reason": "conteo CATSS (1 he / 4 gr)"
+        },
+        {
+          "ref": "Deut 23:25",
+          "he": "&B(/K",
+          "gr": "E)MPLHSQH=NAI [26]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:25",
+          "he": "W/)L",
+          "gr": "EI)S ^ DE\\ [26]",
+          "reason": "conteo CATSS (1 he / 3 gr)"
+        },
+        {
+          "ref": "Deut 23:25",
+          "he": "KLY/K",
+          "gr": "A)/GGOS [26]",
+          "reason": "puente consonantico o griego CATSS sin match Rahlf"
+        },
+        {
+          "ref": "Deut 23:25",
+          "he": "L)",
+          "gr": "OU)K [26]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:25",
+          "he": "TTN",
+          "gr": "E)MBALEI=S [26]",
+          "reason": "conteo/sin match (1 he / 2 gr)"
+        },
+        {
+          "ref": "Deut 23:26",
+          "reason": "sin verso interlineal"
+        }
+      ]
+    },
+    "warnings": [
+      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
+      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
+    ]
+  }
+}
