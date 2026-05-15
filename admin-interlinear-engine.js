@@ -1172,6 +1172,9 @@
     }
     const lexical = resolveLexicalFallback(token, baseMorph, sourceGloss, context);
     let baseGloss = lexical.gloss || sourceGloss || resolveEmptyArticleGloss(token, baseMorph, context);
+    if(global.HebrewGlossGlobalFixes?.fixH6440ConstructPeneSpanish){
+      baseGloss = global.HebrewGlossGlobalFixes.fixH6440ConstructPeneSpanish(baseGloss, token) || baseGloss;
+    }
     if(normalizeStrong(token?.strongs || '') === 'H3190' && /^(?:VERBO(?:\.|$)|V)/.test(String(baseMorph || '').trim().toUpperCase())){
       baseGloss = 'vaya bien';
     }

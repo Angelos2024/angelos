@@ -1,7 +1,7 @@
 {
-  "_doc": "Política global post-alineación MT↔LXX para el panel admin (después de AdminLxxAlign, lxx-mt-word-hints y AutoStrong). Sirve como documento de referencia y como configuración editable sin tocar el motor de emparejamiento. Casos que siguen requiriendo hints por versículo: orden textual distinto (ἡ δὲ γῆ), variantes LXX, verbo ≠ MT (p. ej. ἐγένετο vs imperativo hebreo).",
-  "_versionNote": 1,
-  "version": 1,
+  "_doc": "Política global post-alineación MT↔LXX para el panel admin (después de AdminLxxAlign, lxx-mt-word-hints y AutoStrong). Incluye realinear artículos griegos sueltos (τὴν, τόν…) al renglón del artículo hebreo (הַ/הָ) cuando el DP los dejó en conjunción o אֵת por orden de palabra LXX.",
+  "_versionNote": 2,
+  "version": 2,
   "stripHebrewFromGreek": true,
   "stripHebrewMarksTier": "hint",
   "collapseArticleDuplicateLexicalGreek": true,
@@ -31,5 +31,9 @@
     "ἀνὰ",
     "πρός",
     "πρὸς"
-  ]
+  ],
+  "relocateStrayGreekArticles": true,
+  "relocateStrayArticleLookahead": 6,
+  "relocateStrayGreekArticlePasses": 2,
+  "fillKaiForEmptyHebrewConjunction": true
 }

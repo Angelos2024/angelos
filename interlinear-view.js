@@ -1716,6 +1716,10 @@
   function buildExactHebrewSourceGloss(tokenMeta) {
     if (!tokenMeta || typeof tokenMeta !== 'object') return '-';
 
+    const tokenForGloss = (typeof window !== 'undefined' && window.HebrewGlossGlobalFixes)
+      ? window.HebrewGlossGlobalFixes.patchTokenEsForGlobalFixes({ ...tokenMeta })
+      : tokenMeta;
+
     const asArray = (value) => Array.isArray(value) ? value : (value == null ? [] : [value]);
     const clean = (value) => String(value || '')
       .replace(/[←→]/g, ' ')
@@ -1723,8 +1727,8 @@
       .trim()
       .replace(/^[,;:.!?]+|[,;:.!?]+$/g, '')
       .trim();
-    const morph = Array.isArray(tokenMeta.morphs) ? tokenMeta.morphs.join(' ') : String(tokenMeta.morphs || '');
-    const esParts = asArray(tokenMeta.es).map(clean).filter(Boolean);
+    const morph = Array.isArray(tokenForGloss.morphs) ? tokenForGloss.morphs.join(' ') : String(tokenForGloss.morphs || '');
+    const esParts = asArray(tokenForGloss.es).map(clean).filter(Boolean);
     const addedParts = asArray(tokenMeta.added).map(clean).filter(Boolean);
     const notransParts = asArray(tokenMeta.notrans).map(clean).filter(Boolean);
 

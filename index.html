@@ -23,7 +23,8 @@
 <script defer src="./listanotas.js?v=1"></script>
   <script defer src="./backup-panel.js?v=1"></script>
   <script defer src="./interlinear-grammar.js?v=1"></script>
-  <script defer src="./interlinear-view.js?v=11"></script>
+  <script defer src="./hebrew-gloss-global-fixes.js?v=1"></script>
+  <script defer src="./interlinear-view.js?v=12"></script>
   <script src="./greek-lexicon-ui.js"></script>
    <script src="./hebrew-lexicon-ui.js"></script>
 <script src="./diccionario/greek-lexicon.js?v=17"></script>
@@ -1390,7 +1391,10 @@ function rebalanceHebrewInterlinearSpanishTokens(spanishTokens, sourceTokenMeta,
   let pendingArticle = '';
 
   return spanishTokens.map((fallback, idx) => {
-    const meta = sourceTokenMeta[idx] || null;
+    const metaRaw = sourceTokenMeta[idx] || null;
+    const meta = (typeof window !== 'undefined' && window.HebrewGlossGlobalFixes && metaRaw && typeof metaRaw === 'object')
+      ? window.HebrewGlossGlobalFixes.patchTokenEsForGlobalFixes({ ...metaRaw })
+      : metaRaw;
     const analysis = Array.isArray(analysisData) ? (analysisData[idx] || null) : null;
     if(!meta || typeof meta !== 'object'){
       const fallbackText = formatInterlinearSpanishTokenDisplay(fallback);

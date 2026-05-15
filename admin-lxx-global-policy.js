@@ -3,14 +3,16 @@
  * Configuración viva: IdiomaORIGEN/lxx-global-align-policy.json
  *
  * Se ejecuta tras AdminLxxAlign → hints → AdminLxxAutoStrong.
- * No sustituye pistas por versículo; reduce errores sistemáticos (hebreo en griego,
+ * También puede reubicar artículos griegos de una sola palabra (τὴν, τόν, ὁ…) que el DP dejó en conjunción o אֵת
+ * hacia el siguiente casillero hebreo ART/XD vacío (orden de palabra LXX distinto; p. ej. «ha-árets» ↔ «τὴν γῆν»).
+ * No sustituye pistas por versículo salvo saneamiento posterior; reduce errores sistemáticos (hebreo en griego,
  * artículo con el mismo lexema que el sustantivo siguiente, duplicados seguros tipo ἐπάνω).
  */
 (function(global){
   'use strict';
 
   const DEFAULT_POLICY = {
-    version: 1,
+    version: 2,
     stripHebrewFromGreek: true,
     stripHebrewMarksTier: 'hint',
     collapseArticleDuplicateLexicalGreek: true,
@@ -21,7 +23,13 @@
     ],
     dedupeGreekLexemesForSecondBlank: [
       'ἐπάνω', 'ὑποκάτω', 'διά', 'διὰ', 'μετά', 'μετὰ', 'ἀνά', 'ἀνὰ', 'πρός', 'πρὸς'
-    ]
+    ],
+    /** Desplazamientos LXX: artículo griegos (τὴν, τόν, ὁ…) en renglón de ו, אֵת, etc. → mover al siguiente XD/ART vacío */
+    relocateStrayGreekArticles: true,
+    relocateStrayArticleLookahead: 6,
+    relocateStrayGreekArticlePasses: 2,
+    /** Tras mover el artículo, si el renglón hebreo era conjunción (CC) y quedó vacío, poner καὶ (caso típico ו) */
+    fillKaiForEmptyHebrewConjunction: true
   };
 
   let policyCache = null;
@@ -74,6 +82,66 @@
     if(lab === 'ART' || lab === 'XD' || lab === 'RD' || lab === 'TD') return true;
     if(/^ART(\.|$)/.test(lab)) return true;
     return false;
+  }
+
+  function isHebrewConjunctionColumn(col){
+    const lab = String(col?.label || '').trim().toUpperCase();
+    if(lab === 'CC' || lab === 'CS') return true;
+    if(/^CONJ(?:\.|$)/.test(lab)) return true;
+    return false;
+  }
+
+  /** Una sola palabra griega que funciona como artículo (incl. formas acentuadas tras quitar diacríticos). */
+  function isSingleGreekArticleToken(surface){
+    let raw = String(surface || '').trim();
+    if(!raw || raw === '—') return false;
+    raw = raw.replace(/[,;:·.]+$/g, '').trim();
+    if(/\s/.test(raw)) return false;
+    const key = raw
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f\u0345]/g, '')
+      .toLowerCase();
+    return /^(ο|η|το|οι|αι|τα|του|της|των|τω|τη|τοις|ταις|τον|την|τους|τας)$/.test(key);
+  }
+
+  /**
+   * Cuando el algoritmo desplaza el artículo griego a un renglón funcional (conjunción, אֵת…),
+   * coloca ese término en el siguiente casillero de artículo hebreo (הַ / הָ) que siga vacío.
+   */
+  function relocateStrayGreekArticlesPass(columns, surfaces, tiers, pol){
+    const n = columns.length;
+    const win = Math.max(1, Number(pol.relocateStrayArticleLookahead) || 6);
+    const fillKai = pol.fillKaiForEmptyHebrewConjunction !== false;
+
+    for(let i = 0; i < n; i += 1){
+      const surf = String(surfaces[i] || '').trim();
+      if(!surf || surf === '—') continue;
+      if(!isSingleGreekArticleToken(surf)) continue;
+      if(isArticleColumn(columns[i])) continue;
+
+      let target = -1;
+      for(let j = i + 1; j <= Math.min(i + win, n - 1); j += 1){
+        if(!isArticleColumn(columns[j])) continue;
+        const dest = String(surfaces[j] || '').trim();
+        if(dest && dest !== '—') continue;
+        target = j;
+        break;
+      }
+      if(target < 0) continue;
+
+      surfaces[target] = surf;
+      surfaces[i] = '—';
+      tiers[target] = tiers[target] || 'hint';
+      tiers[i] = 'hint';
+
+      if(fillKai && isHebrewConjunctionColumn(columns[i])){
+        const now = String(surfaces[i] || '').trim();
+        if(!now || now === '—'){
+          surfaces[i] = 'καὶ';
+          tiers[i] = 'hint';
+        }
+      }
+    }
   }
 
   function lexemeInDedupeList(surface, list){
@@ -132,6 +200,13 @@
         if(restrict && !lexemeInDedupeList(cur, dedupeLexList)) continue;
         surfaces[i] = '—';
         tiers[i] = 'hint';
+      }
+    }
+
+    if(pol.relocateStrayGreekArticles !== false){
+      const passes = Math.min(5, Math.max(1, Number(pol.relocateStrayGreekArticlePasses) || 2));
+      for(let p = 0; p < passes; p += 1){
+        relocateStrayGreekArticlesPass(columns, surfaces, tiers, pol);
       }
     }
   }
