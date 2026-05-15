@@ -159,12 +159,18 @@ function main(){
       interJson = mergePath;
     }
 
-    const lxxFileChapter = ch + lxxChapterOffsetN;
+    const lxxOverride = Number(chRule.lxxFileChapter);
+    const lxxFileChapter = Number.isFinite(lxxOverride) && lxxOverride >= 1
+      ? lxxOverride
+      : ch + lxxChapterOffsetN;
     const lxxJson = path.join(ROOT, 'LXX', 'chapters', lxxBook, `${lxxFileChapter}.json`);
     const outJson = path.join(ROOT, 'IdiomaORIGEN', 'lxx-mt-word-hints', 'chapters', slug, `${ch}.json`);
 
     if(!fs.existsSync(lxxJson)){
-      console.error(`[skip cap ${ch}] no existe LXX: ${lxxJson} (cap.LXX ${lxxFileChapter} = CATSS ${ch} + offset ${lxxChapterOffsetN})`);
+      const via = Number.isFinite(lxxOverride) && lxxOverride >= 1
+        ? `override lxxFileChapter=${lxxFileChapter}`
+        : `CATSS ${ch} + offset ${lxxChapterOffsetN}`;
+      console.error(`[skip cap ${ch}] no existe LXX: ${lxxJson} (${via} -> cap.LXX ${lxxFileChapter})`);
       fail += 1;
       continue;
     }
