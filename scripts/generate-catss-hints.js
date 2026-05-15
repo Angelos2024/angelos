@@ -387,6 +387,34 @@ function tryAdvanceColCursorHeOnly(columns, colCursor, heRaw){
   return colCursor + m.span;
 }
 
+/** Esqueleto consonantico (una letra util) para partir articulo HA vs lexical. */
+function morphemeConsonantSkeleton(surface){
+  return unifyFinalSofritForMatch(normalizeHebrew(String(surface || ''), false));
+}
+
+/** Resuelve tres átomos TLG CATSS en orden ascendente dentro del verso Rahlf (ventana habitual). */
+function resolveTripleGreek(gTokens, gCursor, ga0, ga1, ga2){
+  const li0 = resolveLxxIdx(gTokens, gCursor, ga0);
+  if(li0 < 0){ return { li0: -1, li1: -1, li2: -1 }; }
+  const li1 = resolveLxxIdx(gTokens, li0 + 1, ga1);
+  if(li1 < 0){ return { li0, li1: -1, li2: -1 }; }
+  const li2 = resolveLxxIdx(gTokens, li1 + 1, ga2);
+  return { li0, li1, li2 };
+}
+
+function hintRow(col, li, gTokens, extras){
+  return {
+    tokenNum: col.tokenNum,
+    morphemeIdx: col.morphemeIdx,
+    lxxIdx: li,
+    surface: String(gTokens[li]?.w || ''),
+    ...(col.strongs ? { strong: col.strongs } : {}),
+    tier: 'hint',
+    source: 'catss',
+    ...(extras || {})
+  };
+}
+
 function parseArgs(argv){
   const o = {};
   for(let i = 2; i < argv.length; i += 2){
@@ -540,6 +568,69 @@ function main(){
           }
         }
         continue;
+      }
+
+      /** CATSS 2 he / 3 gr: primer hebreo ↔ kai; segundo bloque HA+lexical ↔ artículo+último sintagma griego. */
+      if(gAtoms.length === 3 && hAtoms.length === 2){
+        let ptr = colCursor;
+        const mA = matchOneCatssAtom(columns, ptr, hAtoms[0]);
+        if(mA.ok){
+          const blockA = columns.slice(ptr, ptr + mA.span);
+          ptr += mA.span;
+          const mB = matchOneCatssAtom(columns, ptr, hAtoms[1]);
+          if(mB.ok){
+            const blockB = columns.slice(ptr, ptr + mB.span);
+            const { li0: liKai, li1: liThn, li2: liGhn } =
+              resolveTripleGreek(gTokens, gCursor, gAtoms[0], gAtoms[1], gAtoms[2]);
+            if(liKai >= 0 && liThn >= 0 && liGhn >= 0){
+              blockA.forEach((col) => hints.push(hintRow(col, liKai, gTokens, {})));
+              blockB.forEach((col) => {
+                const liChosen = morphemeConsonantSkeleton(col.hebrew) === '\u05D4' ? liThn : liGhn;
+                hints.push(hintRow(col, liChosen, gTokens, {
+                  catssNote:
+                    morphemeConsonantSkeleton(col.hebrew) === '\u05D4'
+                      ? 'CATSS 2×he/3×gr: morfema artículo (ה) ↔ 2º token griego.'
+                      : 'CATSS 2×he/3×gr: morfema lexical ↔ 3er token griego.'
+                }));
+              });
+              colCursor = ptr + mB.span;
+              gCursor = liGhn + 1;
+              report.matchedPairs += 1;
+              continue;
+            }
+          }
+        }
+      }
+
+      /** CATSS 1 he / 3 gr: kai + (ἀνὰ) + μέσον ↔ vav+(בין): primer morfema=caí; ἀνὰ sin par MT; μέσων↔BYN. */
+      if(gAtoms.length === 3 && hAtoms.length === 1){
+        let mBlk = matchOneCatssAtom(columns, colCursor, hAtoms[0]);
+        let ptrSpan = null;
+        if(mBlk.ok){ ptrSpan = mBlk.span; }
+        else{
+          const ff = fuseCatssHebrewRun(he);
+          if(ff){
+            const alt = matchOneCatssAtom(columns, colCursor, ff);
+            if(alt.ok){ mBlk = alt; ptrSpan = alt.span; }
+          }
+        }
+        if(ptrSpan != null && mBlk.ok){
+          const blk = columns.slice(colCursor, colCursor + ptrSpan);
+          const { li0: liK, li2: liMes } = resolveTripleGreek(gTokens, gCursor, gAtoms[0], gAtoms[1], gAtoms[2]);
+          if(liK >= 0 && liMes >= 0 && blk.length){
+            blk.forEach((col) => {
+              const mono = morphemeConsonantSkeleton(col.hebrew);
+              const chosen = mono === '\u05D5' ? liK : liMes;
+              hints.push(hintRow(col, chosen, gTokens, mono === '\u05D5' ? {} : {
+                catssNote: 'CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito.'
+              }));
+            });
+            colCursor += ptrSpan;
+            gCursor = liMes + 1;
+            report.matchedPairs += 1;
+            continue;
+          }
+        }
       }
 
       if(gAtoms.length !== hAtoms.length){

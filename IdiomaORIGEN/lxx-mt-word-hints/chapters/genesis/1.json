@@ -66,6 +66,42 @@
         "strong": "H8064",
         "tier": "hint",
         "source": "catss"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "καὶ",
+        "strong": "H853",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "τὴν",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 2×he/3×gr: morfema artículo (ה) ↔ 2º token griego."
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "γῆν",
+        "strong": "H776",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 2×he/3×gr: morfema lexical ↔ 3er token griego."
       }
     ],
     "2": [
@@ -445,6 +481,24 @@
         "source": "catss"
       },
       {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "catss"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 18,
+        "surface": "μέσον",
+        "strong": "H996",
+        "tier": "hint",
+        "source": "catss",
+        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+      },
+      {
         "tokenNum": "17",
         "morphemeIdx": 0,
         "lxxIdx": 19,
@@ -652,22 +706,9 @@
     "interlinear": "1.json",
     "lxx": "1.json",
     "report": {
-      "matchedPairs": 45,
+      "matchedPairs": 47,
       "totalPairs": 47,
-      "skipped": [
-        {
-          "ref": "Gen 1:1",
-          "he": "W/)T H/)RC",
-          "gr": "KAI\\ TH\\N GH=N",
-          "reason": "conteo CATSS (2 he / 3 gr): avanzó hebreo sin hint LXX"
-        },
-        {
-          "ref": "Gen 1:4",
-          "he": "W/BYN",
-          "gr": "KAI\\ A)NA\\ ME/SON",
-          "reason": "conteo CATSS (1 he / 3 gr): avanzó hebreo sin hint LXX"
-        }
-      ]
+      "skipped": []
     },
     "warnings": [
       "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
