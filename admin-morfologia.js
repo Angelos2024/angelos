@@ -1196,6 +1196,9 @@
         </div>
       `;
       }).join('');
+      // Si todos los morfemas del token fueron suprimidos (sin hebreo real, sin glosa,
+      // sin griego significativo), saltamos también el contenedor externo.
+      if(!morphemeHtml.trim()) return '';
       return `
         <div class="admin-morph-token" data-num="${escapeHtml(token.num || '')}">
           <div class="admin-morph-token-strip-inner">${morphemeHtml}</div>

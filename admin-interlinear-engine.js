@@ -1166,7 +1166,39 @@
   }
 
   function buildSpanishLayerForToken(token, context = {}){
+    // Calcular morph de fallback primero para poder usarlo en los guards de abajo.
     const sourceMorphFallback = resolveSourceMorphFallback(token);
+
+    // ── Guard 1: tokens notrans ────────────────────────────────────────────────
+    // Tokens marcados notrans (ej: artículo fusionado solo-diacrítico ָ/ַ de לָ/בַּ)
+    // no tienen consonante hebrea propia y no deben generar ninguna glosa española.
+    //
+    // ── Guard 2: partícula de objeto directo (אֶת / H853) ─────────────────────
+    // אֶת (H853, morph PA) es un marcador gramatical puro sin equivalente en español.
+    // Cuando resuelve como PART.OBJ.DIR (es decir, cuando NO lleva sufijo pronominal
+    // unido, caso en que resolveSourceMorphFallback devuelve PRON.OBJ), se suprime
+    // la glosa por completo. Los compuestos אֹתִי / אֹתְךָ / etc. (PRON.OBJ) sí
+    // conservan su pronombre.
+    if(
+      (token?.notrans != null && String(token.notrans).trim()) ||
+      sourceMorphFallback === 'PART.OBJ.DIR'
+    ){
+      return {
+        token,
+        baseMorph: sourceMorphFallback,
+        baseGloss: '',
+        spanishArticleHint: '',
+        layer: {
+          original: String(token?.orig || ''),
+          morphemes: [{ surface: String(token?.orig || ''), label: sourceMorphFallback, type: 'base', gloss: '' }],
+          base: String(token?.orig || ''),
+          baseLabel: sourceMorphFallback,
+          hasConstructBase: false,
+          hasPronominalSuffix: false
+        },
+        tokenGloss: ''
+      };
+    }
     const oshbMorph = getOshbMorphAt(context.oshbVerseNode, token, context.posIndex);
     const sourceGloss = resolveTokenSourceGloss(token);
     let baseMorph = sourceMorphFallback === 'INTERROG' ? sourceMorphFallback : (oshbMorph || sourceMorphFallback);
@@ -2948,7 +2980,29 @@
     const participleItems = applyParticipleClauseSemantics(clauseItems);
     const specialItems = applySpecialClauseSemantics(participleItems);
     const predicateItems = applyNominalPredicateSemantics(specialItems);
-    const items = applyInterrogativePunctuation(predicateItems);
+    const interrogativeItems = applyInterrogativePunctuation(predicateItems);
+
+    // Pase final de seguridad: garantizar que los marcadores PART.OBJ.DIR (אֶת)
+    // nunca lleguen al renderizador con una glosa española, incluso si algún
+    // pase semántico intermedio hubiera sobreescrito tokenGloss.
+    const items = interrogativeItems.map((entry) => {
+      const bm = String(entry?.baseMorph || entry?.layer?.baseLabel || '').trim().toUpperCase();
+      if(bm !== 'PART.OBJ.DIR') return entry;
+      return {
+        ...entry,
+        baseGloss: '',
+        tokenGloss: '',
+        phraseGloss: '',
+        layer: entry.layer
+          ? {
+              ...entry.layer,
+              morphemes: Array.isArray(entry.layer.morphemes)
+                ? entry.layer.morphemes.map((m) => ({ ...m, gloss: '' }))
+                : entry.layer.morphemes
+            }
+          : entry.layer
+      };
+    });
 
     return {
       tokenCount: items.length,

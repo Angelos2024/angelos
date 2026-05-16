@@ -353,6 +353,30 @@
   }
 
   /**
+   * H853 (אֶת / אֶת־) — Partícula de objeto directo (PART.OBJ.DIR).
+   *
+   * אֶת es un marcador gramatical puro: indica que la siguiente palabra es el
+   * objeto directo definido del verbo. No tiene equivalente propio en español
+   * (a diferencia de otros idiomas que usan "a" con personas, en el interlineal
+   * cada token hebreo debe mostrar su morfema propio, no palabras funcionales del
+   * traductor).
+   *
+   * Regla: si el morph raíz es PA (PART.OBJ.DIR) → notrans:"s/t", borrar es.
+   * Los compuestos אֹתִי / אֹתְךָ / etc. tienen morph PA+RB… y resolveSourceMorphFallback
+   * los devuelve como PRON.OBJ, por lo que no son afectados.
+   */
+  function fixH853DirectObjectMarker(token){
+    if(!token) return token;
+    if(normalizeStrong(token.strongs) !== 'H853') return token;
+    const raw = Array.isArray(token.morphs) ? String(token.morphs[0] || '') : String(token.morphs || '');
+    if(raw.trim() !== 'PA') return token; // sólo el marcador simple, no compuestos con pronombre
+    if(token.notrans === 's/t' && !token.es) return token; // ya correcto
+    const result = { ...token, notrans: 's/t' };
+    delete result.es;
+    return result;
+  }
+
+  /**
    * H6213 (עָשָׂה, raíz ע-ש-ה "hacer") — Corrección de tiempo verbal.
    *
    * El corpus almacena en algunos casos "había ← hecho" (forma compuesta, pluscuamperfecto)
@@ -411,6 +435,7 @@
     if(!token || typeof token !== 'object') return token;
 
     let t = fixDiacriticOnlyXdSpanish({ ...token });
+    t = fixH853DirectObjectMarker(t);
     t = fixConjWawSpanishLowercase(t);
     t = fixH1242BoqerStripSpuriousEl(t);
     t = fixH1961WayyiqtolEveningMorningSpanish(t);
@@ -445,6 +470,7 @@
     fixH1242BoqerStripSpuriousEl,
     fixH1961WayyiqtolEveningMorningSpanish,
     fixDiacriticOnlyXdSpanish,
+    fixH853DirectObjectMarker,
     fixH6213QalPerfectSpanish,
     fixHebrewPrepSuffixChipSpanish,
     pronominalSuffixSpanish,
