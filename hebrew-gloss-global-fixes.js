@@ -322,12 +322,44 @@
   }
 
   /**
+   * Detecta si `orig` de un token es EXCLUSIVAMENTE marcas diacríticas / vocalizaciones
+   * sin ninguna letra consonante hebrea (U+05D0–U+05EA).
+   * Esto ocurre en los tokens XD generados por OSHB para el artículo fusionado en
+   * preposiciones prefijadas (לָ → ל PL + ָ XD), p.ej. token orig="ָ" o "ַ".
+   */
+  function isOrigDiacriticOnly(token){
+    const raw = Array.isArray(token?.orig) ? token.orig.join('') : String(token?.orig || '');
+    if(!raw.trim()) return false;
+    return !/[\u05D0-\u05EA]/.test(raw);
+  }
+
+  /**
+   * Elimina la glosa española de tokens ART/XD cuyo `orig` es solo vocalización
+   * (artículo fusionado en preposición). Estos tokens tienen `notrans:"s/t"` en los
+   * datos después del script de normalización, pero puede que lleguen al engine sin él.
+   * La regla garantiza que en ningún caso se muestre "el/la/los/las" para una casilla
+   * que no corresponde a un texto hebreo real.
+   */
+  function fixDiacriticOnlyXdSpanish(token){
+    if(!token || typeof token !== 'object') return token;
+    const morph = Array.isArray(token.morphs) ? token.morphs[0] : String(token.morphs || '');
+    const isArtMorph = /^XD$/i.test(String(morph || '').trim());
+    if(!isArtMorph) return token;
+    if(!isOrigDiacriticOnly(token)) return token;
+    if(token.notrans === 's/t' && !token.es) return token; // ya correcto
+    const result = { ...token, notrans: 's/t' };
+    delete result.es;
+    return result;
+  }
+
+  /**
    * Ajusta el campo `es` del token (string o array) aplicando reglas globales en cadena.
    */
   function patchTokenEsForGlobalFixes(token){
     if(!token || typeof token !== 'object') return token;
 
-    let t = fixConjWawSpanishLowercase({ ...token });
+    let t = fixDiacriticOnlyXdSpanish({ ...token });
+    t = fixConjWawSpanishLowercase(t);
     t = fixH1242BoqerStripSpuriousEl(t);
     t = fixH1961WayyiqtolEveningMorningSpanish(t);
     t = fixHebrewPrepSuffixChipSpanish(t);
@@ -353,11 +385,13 @@
     isHebrewWawConjunctionToken,
     isLikelyNominalConstructForPene,
     isSpanishDeterminerOnly,
+    isOrigDiacriticOnly,
     fixH6440ConstructPeneSpanish,
     fixH1961WayyiqtolSeaToFueSpanish,
     fixConjWawSpanishLowercase,
     fixH1242BoqerStripSpuriousEl,
     fixH1961WayyiqtolEveningMorningSpanish,
+    fixDiacriticOnlyXdSpanish,
     fixHebrewPrepSuffixChipSpanish,
     pronominalSuffixSpanish,
     prepPrefixSpanish,

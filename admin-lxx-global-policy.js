@@ -128,8 +128,21 @@
   }
 
   /**
+   * Devuelve true si la cadena contiene al menos una letra consonante hebrea (U+05D0–U+05EA).
+   * Los tokens XD creados por OSHB para el artículo fusionado en preposiciones
+   * (לָ → ל PL + ָ XD) solo tienen vocales diacríticas, sin consonante propia.
+   * Estos NO son casillas ART válidas para reubicar artículos griegos.
+   */
+  function hasHebrewConsonant(str){
+    return /[\u05D0-\u05EA]/.test(String(str || ''));
+  }
+
+  /**
    * Cuando el algoritmo desplaza el artículo griego a un renglón funcional (conjunción, אֵת…),
-   * coloca ese término en el siguiente casillero de artículo hebreo (הַ / הָ) que siga vacío.
+   * coloca ese término en el siguiente casillero de artículo hebreo (הַ / הָ) que siga vacío
+   * Y que tenga una consonante hebrea real en su superficie.
+   * Los tokens XD que son solo vocalización (artículo fusionado en prep: לָ, בָּ…) se IGNORAN
+   * como destino para no crear columnas ART fantasma sin texto hebreo real.
    */
   function relocateStrayGreekArticlesPass(columns, surfaces, tiers, pol){
     const n = columns.length;
@@ -147,6 +160,10 @@
         if(!isArticleColumn(columns[j])) continue;
         const dest = String(surfaces[j] || '').trim();
         if(dest && dest !== '—') continue;
+        // Exigir que la casilla ART tenga al menos una consonante hebrea real.
+        // Columnas XD de solo-vocalización (ָ, ַ, ִ…) no son destinos válidos.
+        const hebrewSurf = String(columns[j].hebrew || '').trim();
+        if(!hasHebrewConsonant(hebrewSurf)) continue;
         target = j;
         break;
       }
