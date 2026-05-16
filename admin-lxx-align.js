@@ -43,21 +43,47 @@
     const bundles = [
       { es: ['en'], targets: ['εν'], score: 98 },
       { es: ['de', 'del', 'des'], targets: ['απο', 'απ', 'εκ'], score: 90 },
-      { es: ['a', 'al', 'hacia'], targets: ['εις', 'επι', 'προσ', 'προς'], score: 88 },
+      // εἰς captura tanto "a/al/hacia" como "para/por" (finalidad en LXX)
+      { es: ['a', 'al', 'hacia'], targets: ['εις', 'επι', 'προσ', 'προς', 'ινα'], score: 88 },
       { es: ['con'], targets: ['εν', 'μετα', 'μετ'], score: 75 },
-      { es: ['para', 'por'], targets: ['επι', 'υπερ', 'περι', 'δια', 'ινα'], score: 70 },
+      { es: ['para', 'por'], targets: ['εις', 'επι', 'υπερ', 'περι', 'δια', 'ινα', 'ωστε'], score: 72 },
       { es: ['y', 'e', 'ni'], targets: ['και'], score: 95 },
-      { es: ['que'], targets: ['οτι', 'ο'], score: 65 },
-      { es: ['no'], targets: ['ου', 'ουκ', 'μη'], score: 85 },
+      { es: ['ni', 'tampoco'], targets: ['ουδε', 'μηδε'], score: 90 },
+      { es: ['que'], targets: ['οτι', 'ο', 'ος', 'οπωσ'], score: 65 },
+      { es: ['no'], targets: ['ου', 'ουκ', 'ουχ', 'μη'], score: 85 },
       { es: ['pues'], targets: ['γαρ'], score: 88 },
-      { es: ['pero'], targets: ['δε'], score: 80 },
+      { es: ['pero', 'sino', 'mas'], targets: ['δε', 'αλλ', 'αλλα', 'πλην'], score: 80 },
       { es: ['yo', 'me', 'mi', 'mis', 'nos', 'nosotros'], targets: ['εγω', 'μοι', 'με', 'μου', 'ημιν'], score: 78 },
-      { es: ['tu', 'te', 'tus', 'ti'], targets: ['συ', 'σοι', 'σε', 'σου'], score: 78 }
+      { es: ['tu', 'te', 'tus', 'ti'], targets: ['συ', 'σοι', 'σε', 'σου'], score: 78 },
+      // Formas del verbo ser/haber (H1961 הָיָה) → γίγνομαι / εἰμί
+      { es: ['fue', 'fui', 'fuiste', 'fueron', 'era', 'eran', 'erais'], targets: ['εγεν', 'εγιν', 'γεγον'], score: 74 },
+      { es: ['sea', 'sean', 'haya', 'habrá', 'habra', 'habrán', 'habran', 'sera', 'seran', 'será', 'serán'],
+        targets: ['γεν', 'γιν', 'εστ', 'εσο', 'εστω', 'γεντ', 'εσται'], score: 74 },
+      { es: ['sirvan', 'sirva', 'sirve'], targets: ['εστ', 'γεν', 'γιν'], score: 68 },
+      // Vocabulario común con baja representación en el diccionario débil
+      { es: ['lumbreras', 'lumbrera', 'lumbre', 'luminaria', 'luminarias', 'luz'],
+        targets: ['φως', 'φωστ', 'φαυσ', 'λαμπ', 'φωτ'], score: 72 },
+      { es: ['estaciones', 'estacion', 'tiempos', 'tiempo', 'epocas', 'fiestas'],
+        targets: ['καιρ'], score: 70 },
+      { es: ['señales', 'señal', 'señas'], targets: ['σημε'], score: 70 },
+      { es: ['bueno', 'buena', 'buenos', 'buenas', 'bello', 'bella'], targets: ['καλ', 'αγαθ'], score: 68 },
+      { es: ['grande', 'grandes', 'gran', 'mayor', 'mayor'], targets: ['μεγ', 'μειζ'], score: 68 },
+      { es: ['tierra', 'tierras'], targets: ['γη', 'γης', 'γην'], score: 72 },
+      { es: ['aguas', 'agua'], targets: ['υδατ', 'υδωρ', 'υδ'], score: 72 },
+      { es: ['cielo', 'cielos'], targets: ['ουραν'], score: 72 },
+      { es: ['dios', 'dios:'], targets: ['θεο', 'θεω', 'θεον', 'κυρι'], score: 72 },
+      { es: ['jehova', 'señor'], targets: ['κυρι'], score: 72 },
+      { es: ['dia', 'días', 'dias', 'día'], targets: ['ημερ'], score: 70 },
+      { es: ['noche', 'noches'], targets: ['νυκτ', 'νυξ'], score: 70 },
     ];
 
     for(const b of bundles){
       if(!b.es.includes(esH)) continue;
-      if(b.targets.some((t) => (g.startsWith(t) || lem.startsWith(t)))) return b.score;
+      // Normalizar targets para evitar diferencias σ/ς u otras variantes diacríticas
+      if(b.targets.some((t) => {
+        const nt = normGr(t);
+        return nt && (g.startsWith(nt) || lem.startsWith(nt));
+      })) return b.score;
     }
 
     if(/^(el|los|las|la|un|una)$/i.test(esH)){
@@ -78,12 +104,16 @@
       if(gm === 'C') b = Math.max(b, 76);
     }
     if(/^AND|^XN|^TN|NEG/.test(lab) && /^[Dd]$/i.test(gm)) b = Math.max(b, 58);
+    // Negación hebrea (ANN/D) ↔ adverbio negativo griego
+    if(/^ANN|NEG|^D$/.test(lab) && /^[Dd]$/i.test(gm)) b = Math.max(b, 68);
     if(/^ART|^XD|^DET/i.test(lab) && /^ra\./i.test(gm)) b = Math.max(b, 72);
     /** Nombre / verbo / adjetivo (Hebreo laboratorio vs etiquetas LXX RA/N/V/A) */
-    if(/SUBS|NC|PROP|NPROP|NP/.test(lab) && /^N\./.test(gm)) b = Math.max(b, 54);
-    if(/VERBO|VERB|VQ|VH|VN/.test(lab) && /^V\./.test(gm)) b = Math.max(b, 54);
-    if(/ADJ/.test(lab) && /^A\./.test(gm)) b = Math.max(b, 50);
-    if(/SUF|PRS|PRON|SUFFIX|POS/i.test(lab) && /^RP/.test(gm)) b = Math.max(b, 58);
+    if(/SUBS|NC|PROP|NPROP|NP/.test(lab) && /^N\./.test(gm)) b = Math.max(b, 56);
+    if(/VERBO|VERB|VQ|VH|VN/.test(lab) && /^V\./.test(gm)) b = Math.max(b, 56);
+    if(/ADJ/.test(lab) && /^A\./.test(gm)) b = Math.max(b, 52);
+    if(/SUF|PRS|PRON|SUFFIX|POS/i.test(lab) && /^RP/.test(gm)) b = Math.max(b, 60);
+    // Adverbio hebreo ↔ adverbio/partícula griego
+    if(/ADV|AM$|^AM/.test(lab) && /^[Dd]$/i.test(gm)) b = Math.max(b, 50);
     return b;
   }
 
@@ -197,12 +227,17 @@
     const weak = weakExactHit(glossHead, g1, g2, weakBag);
     const ms = matchScore(col, gt, weakBag);
 
-    if(ms < 48) return false;
+    if(ms < 46) return false;
     if(isCertifiedPair(col, gt, weakBag) || isSoftPair(col, gt, weakBag)) return true;
-    if(ms >= 76) return true;
-    if(weak && morphB >= 32) return true;
-    if(ms >= 62 && morphB >= 48) return true;
-    if(/SUBS|NC|VERB|VERBO|VQ|ADJ/.test(lab) && ms >= 58) return true;
+    if(ms >= 74) return true;
+    if(weak && morphB >= 30) return true;
+    if(ms >= 60 && morphB >= 46) return true;
+    // Sustantivos, verbos y adjetivos: morfología coincidente basta para el relleno
+    if(/SUBS|NC|PROP|NPROP|NP/.test(lab) && /^N\./.test(morph) && ms >= 50) return true;
+    if(/VERB|VERBO|VQ|VH|VN/.test(lab) && /^V\./.test(morph) && ms >= 50) return true;
+    if(/ADJ/.test(lab) && /^A\./.test(morph) && ms >= 50) return true;
+    // Comodín general (umbral levemente bajado)
+    if(/SUBS|NC|VERB|VERBO|VQ|ADJ/.test(lab) && ms >= 52) return true;
     return false;
   }
 

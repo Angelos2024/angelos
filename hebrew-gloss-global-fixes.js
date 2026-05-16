@@ -345,7 +345,11 @@
     const morph = Array.isArray(token.morphs) ? token.morphs[0] : String(token.morphs || '');
     const isArtMorph = /^XD$/i.test(String(morph || '').trim());
     if(!isArtMorph) return token;
-    if(!isOrigDiacriticOnly(token)) return token;
+    // Suprimir tanto tokens de solo diacríticos como artículos XD con consonante (הָ/הַ/הֶ)
+    // que no tienen Strong's propio (artículo determinado fragmentado del sustantivo).
+    const hasConsonant = /[\u05D0-\u05EA]/.test(String(token.orig || ''));
+    const isStandaloneArticle = hasConsonant && !token.strongs;
+    if(!isOrigDiacriticOnly(token) && !isStandaloneArticle) return token;
     if(token.notrans === 's/t' && !token.es) return token; // ya correcto
     const result = { ...token, notrans: 's/t' };
     delete result.es;
