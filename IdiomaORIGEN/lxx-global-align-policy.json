@@ -1,6 +1,6 @@
 {
-  "_doc": "Política global MT↔LXX (admin): artículos sueltos; H8432+ἐν→μέσῳ; H1961 juss./wayyiqtol+καί; H8478 מִתַּחַת→ὑποκάτω (no ἀνὰ/ἐπάνω desplazados); H1242→πρωί; ordinales de día desde el LXX.",
-  "_versionNote": 7,
+  "_doc": "Política global MT↔LXX (admin): artículos sueltos; H8432+ἐν→μέσῳ; H1961 juss./wayyiqtol+καί; H8478 מִתַּחַת→ὑποκάτω (no ἀνὰ/ἐπάνω desplazados); chip prep+sufijo (לָכֶם, בּוֹ…)→pronombre LXX (ὑμῖν, ἑαυτῷ…) + — en la 2.ª casilla; H1242→πρωί; ordinales de día desde el LXX.",
+  "_versionNote": 8,
   "version": 2,
   "stripHebrewFromGreek": true,
   "stripHebrewMarksTier": "hint",
@@ -40,6 +40,7 @@
   "fixGlobalH1961JussiveKai": true,
   "fixGlobalH1961WayyiqtolKai": true,
   "fixGlobalH8478Hypokato": true,
+  "fixGlobalHebrewPrepSuffixPronoun": true,
   "fixGlobalH1242Proi": true,
   "fixGlobalOrdinalDayFromLxx": true
 }

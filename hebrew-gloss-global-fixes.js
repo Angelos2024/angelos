@@ -172,6 +172,156 @@
   }
 
   /**
+   * Glosas españolas estándar para los sufijos pronominales hebreos
+   * (etiquetas RB / PRS. del corpus OSHB usado en este proyecto).
+   *
+   * Convención: clave «<N><G><P>» donde N = S|P (sg./pl.), G = M|F|C (m/f/com.),
+   * P = 1|2|3 (persona). Se devuelve el tónico («mí, ti, él…») para que se
+   * componga con la preposición delante («en él», «a vosotros», «de ellos…»).
+   */
+  const HEBREW_PRONOMINAL_SUFFIX_SPANISH = {
+    SC1: 'mí',
+    SM2: 'ti',
+    SF2: 'ti',
+    SM3: 'él',
+    SF3: 'ella',
+    PC1: 'nosotros',
+    PM2: 'vosotros',
+    PF2: 'vosotras',
+    PM3: 'ellos',
+    PF3: 'ellas'
+  };
+
+  /** Glosas estándar para preposiciones prefijadas. */
+  const HEBREW_PREP_PREFIX_SPANISH = {
+    PB: 'en',
+    PL: 'a',
+    PM: 'de',
+    PR: 'de',
+    PU: 'sobre',
+    PK: 'como'
+  };
+
+  function pronominalSuffixSpanish(rawMorph){
+    const m = String(rawMorph || '').trim().toUpperCase();
+    const match = m.match(/^(?:RB|PRS\.?)([SP])([MFC])([123])$/);
+    if(!match) return '';
+    const key = `${match[1]}${match[2]}${match[3]}`;
+    return HEBREW_PRONOMINAL_SUFFIX_SPANISH[key] || '';
+  }
+
+  function prepPrefixSpanish(rawMorph){
+    const m = String(rawMorph || '').trim().toUpperCase();
+    return HEBREW_PREP_PREFIX_SPANISH[m] || '';
+  }
+
+  function isVerbalMorph(rawMorph){
+    const m = String(rawMorph || '').trim().toUpperCase();
+    return /^V[HQNPHT]?[A-Z]/.test(m);
+  }
+
+  function flattenMorphArray(value){
+    if(Array.isArray(value)){
+      const out = [];
+      for(const item of value){
+        const s = String(item || '').trim();
+        if(!s || s === ',') continue;
+        out.push(s);
+      }
+      return out;
+    }
+    return String(value || '')
+      .split(',')
+      .map((p) => p.trim())
+      .filter((p) => p && p !== ',');
+  }
+
+  function joinSpanishAddedParts(added){
+    const parts = Array.isArray(added) ? added : [added];
+    return parts
+      .map((p) => String(p ?? '').replace(/[←→]/g, '').replace(/\s+/g, ' ').trim())
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+  }
+
+  /**
+   * Chips compuestos prep+sufijo (לָכֶם, בּוֹ, מִמֶּנּוּ, …) y verbo+prep+sufijo (נָתַתִּי+לָ+כֶם, …):
+   * cuando el campo `es` es UN string (la glosa proclítica del español como «os», «me»,
+   * «le»), el motor lo deposita sólo en el morfema léxico (el verbo) y deja la prep.
+   * y el sufijo sin glosa. Esta regla reparte la glosa en el array completo:
+   *   - 2 morfemas (prep + sufijo): [prep, pronombre]
+   *   - 3+ morfemas (verbo + … + prep + sufijo): [<existing/added en idx 0>, …, prep, pronombre]
+   *
+   * No se aplica cuando `es` ya es array con el mismo tamaño que `orig` o cuando los
+   * morfemas no encajan en el patrón esperado.
+   */
+  function fixHebrewPrepSuffixChipSpanish(token){
+    if(!token || typeof token !== 'object') return token;
+    const orig = Array.isArray(token.orig) ? token.orig : null;
+    if(!orig || orig.length < 2) return token;
+    if(Array.isArray(token.es) && token.es.length >= orig.length) return token;
+
+    const morphs = flattenMorphArray(token.morphs);
+    if(morphs.length !== orig.length) return token;
+
+    const lastIdx = morphs.length - 1;
+    const prepIdx = lastIdx - 1;
+    if(prepIdx < 0) return token;
+
+    const prepGloss = prepPrefixSpanish(morphs[prepIdx]);
+    const pronGloss = pronominalSuffixSpanish(morphs[lastIdx]);
+    if(!prepGloss || !pronGloss) return token;
+
+    if(prepIdx > 0){
+      for(let i = 0; i < prepIdx; i += 1){
+        if(!isVerbalMorph(morphs[i])){
+          return token;
+        }
+      }
+    }
+
+    const existingArray = Array.isArray(token.es) ? token.es.slice() : null;
+    const existingString = !Array.isArray(token.es) ? String(token.es ?? '').trim() : '';
+    const addedJoined = joinSpanishAddedParts(token.added);
+
+    const newEs = new Array(orig.length).fill('');
+
+    if(prepIdx === 0){
+      newEs[0] = prepGloss;
+      newEs[1] = pronGloss;
+    }else{
+      let verbGloss = '';
+      if(addedJoined){
+        verbGloss = addedJoined;
+      }else if(existingArray && existingArray[0]){
+        verbGloss = String(existingArray[0]).trim();
+      }else if(existingString){
+        verbGloss = existingString;
+      }
+      newEs[0] = verbGloss;
+      newEs[prepIdx] = prepGloss;
+      newEs[lastIdx] = pronGloss;
+    }
+
+    if(existingArray){
+      for(let i = 0; i < orig.length; i += 1){
+        if(!newEs[i] && existingArray[i]){
+          newEs[i] = String(existingArray[i]).trim();
+        }
+      }
+    }
+
+    const result = { ...token, es: newEs };
+    if(prepIdx > 0 && token.added){
+      const rest = { ...result };
+      delete rest.added;
+      return rest;
+    }
+    return result;
+  }
+
+  /**
    * Ajusta el campo `es` del token (string o array) aplicando reglas globales en cadena.
    */
   function patchTokenEsForGlobalFixes(token){
@@ -180,6 +330,7 @@
     let t = fixConjWawSpanishLowercase({ ...token });
     t = fixH1242BoqerStripSpuriousEl(t);
     t = fixH1961WayyiqtolEveningMorningSpanish(t);
+    t = fixHebrewPrepSuffixChipSpanish(t);
 
     const es0 = Array.isArray(t.es) ? t.es[0] : t.es;
     const prev0 = String(es0 ?? '').trim();
@@ -207,6 +358,11 @@
     fixConjWawSpanishLowercase,
     fixH1242BoqerStripSpuriousEl,
     fixH1961WayyiqtolEveningMorningSpanish,
+    fixHebrewPrepSuffixChipSpanish,
+    pronominalSuffixSpanish,
+    prepPrefixSpanish,
+    HEBREW_PRONOMINAL_SUFFIX_SPANISH,
+    HEBREW_PREP_PREFIX_SPANISH,
     patchTokenEsForGlobalFixes
   };
 })(typeof window !== 'undefined' ? window : globalThis);

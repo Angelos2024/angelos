@@ -13,6 +13,9 @@
  * H1242 בֹּקֶר: rellenar πρωί desde el verso LXX si la casilla está vacía/Hebreo/καί;
  * ordinales de día (H8145, H7992, …): tomar δευτέρα/τρίτη/… del verso cuando la casilla griega está rota;
  * H8478 מִתַּחַת: casillas PM+תַּחַת con ἀνὰ/ἐπάνω/Hebreo por desplazamiento → ὑποκάτω del verso + — en la 2.ª parte.
+ * Chip prep+sufijo (PL/PB/PM/PR/PU/PK + RB[SP][MFC][123]): la LXX cubre el binomio con un solo
+ * pronombre dat./acus./gen. (ὑμῖν, ἡμῖν, ἑαυτῷ, αὐτῷ, μοι, σοι…). Se rellena la 1.ª casilla
+ * con la persona/número que case y se fuerza — en la 2.ª; pareado por tokenNum compartido.
  */
 (function(global){
   'use strict';
@@ -47,7 +50,9 @@
     /** יוֹם + ordinal escolar (2.º–6.º día): casillero griego roto → forma ordinal del texto LXX del verso */
     fixGlobalOrdinalDayFromLxx: true,
     /** תַּחַת / מִתַּחַת (H8478): corregir desalineación (ἀνὰ, ἐπάνω) → ὑποκάτω del verso; pareja PM+PT → 2.ª celda — */
-    fixGlobalH8478Hypokato: true
+    fixGlobalH8478Hypokato: true,
+    /** Chip prep+sufijo (לָכֶם, בּוֹ, מִמֶּנּוּ…): LXX cubre con pronombre único (ὑμῖν, ἑαυτῷ, αὐτῷ…); 2.ª casilla — */
+    fixGlobalHebrewPrepSuffixPronoun: true
   };
 
   let policyCache = null;
@@ -273,6 +278,123 @@
     const n = normGrPlain(s);
     if(n === 'ανα' || n === 'επανω') return true;
     return false;
+  }
+
+  /**
+   * Chip Hebreo prep prefijada + sufijo pronominal (לָכֶם, בּוֹ, מִמֶּנּוּ, …) →
+   * la LXX suele cubrirlo con UN solo pronombre dat./acus./gen. (ὑμῖν, ἑαυτῷ, αὐτῷ, …).
+   *
+   * Detección de la pareja: dos columnas consecutivas con el MISMO tokenNum,
+   * la primera con etiqueta prep (PL/PB/PM/PR/PU/PK) y la segunda con etiqueta
+   * pronominal (RB[SP][MFC][123] o PRS.<...>). Si la superficie griega de la
+   * primera es vacía / hebreo / conjunción / preposición «desplazada», se rellena
+   * con el pronombre del verso LXX que case en persona/número, y la segunda
+   * casilla se fuerza a «—». No machaca pistas en tier=firm.
+   */
+  function prepLabelForChip(lab){
+    const L = String(lab || '').trim().toUpperCase().replace(/\s+/g, '');
+    return /^(PB|PL|PM|PR|PU|PK)$/.test(L) || /\bPREP\b/.test(L);
+  }
+
+  function pronounLabelForChip(lab){
+    const L = String(lab || '').trim().toUpperCase().replace(/\s+/g, '');
+    const match = L.match(/^(?:RB|PRS\.?)([SP])([MFC])([123])$/);
+    return match ? { num: match[1], gen: match[2], per: match[3] } : null;
+  }
+
+  function lxxPersonalPronounLemmaMatches(lemma, num, per){
+    const L = String(lemma || '').toLowerCase();
+    if(!L) return false;
+    if(per === '1' && num === 'S') return /^(ἐγώ|εγω|μου|μοι|με)$/.test(L);
+    if(per === '2' && num === 'S') return /^(σύ|συ|σου|σοι|σε)$/.test(L);
+    if(per === '1' && num === 'P') return /^(ἡμεῖς|ημεις|ἡμῖν|ημιν|ἡμῶν|ημων|ἡμᾶς|ημας)$/.test(L);
+    if(per === '2' && num === 'P') return /^(ὑμεῖς|υμεις|ὑμῖν|υμιν|ὑμῶν|υμων|ὑμᾶς|υμας)$/.test(L);
+    if(per === '3') return /^(αὐτός|αυτος|αὐτή|αυτη|αὐτό|αυτο|ἑαυτοῦ|εαυτου|ἑαυτῆς|εαυτης)$/.test(L);
+    return false;
+  }
+
+  function buildLxxPronounQueue(gTokens, suffix){
+    const q = [];
+    if(!Array.isArray(gTokens) || !suffix) return q;
+    const wantPer = suffix.per;
+    const wantNum = suffix.num;
+    for(const gt of gTokens){
+      if(!gt?.w) continue;
+      const morph = String(gt.morph || '').trim().toUpperCase();
+      const lemma = String(gt.lemma || '').trim();
+      const isPronoun = /^R[PD]\./.test(morph) || lxxPersonalPronounLemmaMatches(lemma, wantNum, wantPer);
+      if(!isPronoun) continue;
+      const morphNum = morph.charAt(4);
+      if(morphNum && morphNum !== wantNum) continue;
+      if(morph.startsWith('RP.')){
+        const morphPer = morph.charAt(5);
+        if(morphPer && /[123]/.test(morphPer) && morphPer !== wantPer) continue;
+        if(!lxxPersonalPronounLemmaMatches(lemma, wantNum, wantPer)) continue;
+      }else if(morph.startsWith('RD.')){
+        if(wantPer !== '3') continue;
+      }
+      q.push(String(gt.w).trim());
+    }
+    return q;
+  }
+
+  function greekSurfaceNeedsPronounFix(surf, conjWl){
+    const s = String(surf || '').trim();
+    if(!s || s === '—') return true;
+    if(containsHebrew(s)) return true;
+    if(isConjunctionGreek(s, conjWl)) return true;
+    const n = normGrPlain(s);
+    if(n === 'επανω' || n === 'ανα' || n === 'υποκατω' || n === 'επι' || n === 'εν' || n === 'εις' || n === 'προς') return true;
+    return false;
+  }
+
+  function fixGlobalHebrewPrepSuffixPronoun(columns, surfaces, tiers, gTokens, pol){
+    if(pol.fixGlobalHebrewPrepSuffixPronoun === false) return;
+    if(!Array.isArray(gTokens) || !gTokens.length) return;
+    const conjWl = pol.dedupeConjunctiveGreekWhitelist || DEFAULT_POLICY.dedupeConjunctiveGreekWhitelist;
+    const n = columns.length;
+    const usedSurfaces = new Set();
+
+    for(let i = 0; i < n - 1; i += 1){
+      const a = columns[i];
+      const b = columns[i + 1];
+      if(!prepLabelForChip(a?.label)) continue;
+      const suf = pronounLabelForChip(b?.label);
+      if(!suf) continue;
+      if(String(a?.tokenNum || '') !== String(b?.tokenNum || '')) continue;
+      if(!tierAllowsGlobalOverride(tiers[i]) || !tierAllowsGlobalOverride(tiers[i + 1])) continue;
+
+      const queue = buildLxxPronounQueue(gTokens, suf);
+      if(!queue.length){
+        const sB = String(surfaces[i + 1] || '').trim();
+        if(sB && sB !== '—' && tierAllowsGlobalOverride(tiers[i + 1])){
+          surfaces[i + 1] = '—';
+          tiers[i + 1] = tiers[i + 1] || 'hint';
+        }
+        continue;
+      }
+
+      let chosen = '';
+      for(const cand of queue){
+        if(!usedSurfaces.has(cand)){
+          chosen = cand;
+          usedSurfaces.add(cand);
+          break;
+        }
+      }
+      if(!chosen) chosen = queue[queue.length - 1];
+
+      const sA = String(surfaces[i] || '').trim();
+      if(greekSurfaceNeedsPronounFix(sA, conjWl) || sA !== chosen){
+        if(greekSurfaceNeedsPronounFix(sA, conjWl)){
+          surfaces[i] = chosen;
+          tiers[i] = tiers[i] || 'hint';
+        }
+      }
+      surfaces[i + 1] = '—';
+      tiers[i + 1] = tiers[i + 1] || 'hint';
+      i += 1;
+    }
   }
 
   function fixGlobalH8478Hypokato(columns, surfaces, tiers, gTokens, pol){
@@ -538,6 +660,7 @@
       fixGlobalH1961JussiveKai(columns, surfaces, tiers, gTokens, pol);
       fixGlobalH1961WayyiqtolKai(columns, surfaces, tiers, gTokens, pol);
       fixGlobalH8478Hypokato(columns, surfaces, tiers, gTokens, pol);
+      fixGlobalHebrewPrepSuffixPronoun(columns, surfaces, tiers, gTokens, pol);
       fixGlobalH1242Proi(columns, surfaces, tiers, gTokens, pol);
       fixGlobalOrdinalDayFromLxx(columns, surfaces, tiers, gTokens, pol);
     }
