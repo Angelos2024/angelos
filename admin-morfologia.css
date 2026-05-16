@@ -33,6 +33,7 @@
   box-shadow:none;
   align-items:center;
   text-align:center;
+  min-width:0;          /* flex: evitar que el contenido desborde el token */
 }
 
 .admin-morph-token-strip-inner{
@@ -49,10 +50,11 @@
   flex-direction:column;
   align-items:center;
   gap:.22rem;
+  min-width:0;          /* permite que flex comprima sin overflow horizontal */
   /** Español (gloss) y griego (LXX) al mismo tamaño; hebreo un escalón mayor */
   --morph-lang-size:1.08rem;
   --morph-hebrew-size:calc(var(--morph-lang-size) * 1.14);
-  --morph-label-size:calc(var(--morph-lang-size) * 0.72);
+  --morph-label-size:calc(var(--morph-lang-size) * 0.66); /* reducido de 0.72 */
 }
 
 .admin-morph-segment-prefix .admin-morph-segment-label{
@@ -80,8 +82,14 @@
   color:#d6943a;
   font-weight:600;
   letter-spacing:.008em;
+  /* Los códigos morfológicos usan "." como separador pero no es un word-break
+     natural en CSS. overflow-wrap:anywhere + word-break:break-all fuerzan rotura
+     dentro del código (p.ej. VERBO.QAL.WAYYIQT.P3.M.SG → 2-3 líneas cortas)
+     impidiendo que la etiqueta desborde su columna y se empalme con las vecinas. */
   white-space:normal;
-  max-width:17ch;
+  overflow-wrap:anywhere;
+  word-break:break-all;
+  max-width:11ch;       /* reducido de 17ch: columnas más estrechas, no se empalman */
 }
 
 .admin-morph-segment-gloss{
@@ -210,6 +218,7 @@
 @media (max-width: 900px){
   .admin-morph-segment{
     --morph-lang-size:1rem;
+    /* label-size se recalcula automáticamente desde 0.66 × --morph-lang-size */
   }
 
   .admin-lxx-verse-flow{

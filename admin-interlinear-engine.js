@@ -935,6 +935,9 @@
   }
 
   function resolveEmptyArticleGloss(token, baseMorph, context = {}){
+    // Tokens marcados notrans (artículo fusionado en prep: łָ → ל + ָ)
+    // no tienen consonante hebrea propia y no deben generar glosa de artículo.
+    if(token?.notrans != null && String(token.notrans).trim()) return '';
     if(!isDefiniteArticleToken(token, baseMorph)) return '';
     const labels = [context.nextMorph, context.nextSourceMorph].filter(Boolean);
     for(const label of labels){

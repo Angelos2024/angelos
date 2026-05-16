@@ -353,6 +353,58 @@
   }
 
   /**
+   * H6213 (עָשָׂה, raíz ע-ש-ה "hacer") — Corrección de tiempo verbal.
+   *
+   * El corpus almacena en algunos casos "había ← hecho" (forma compuesta, pluscuamperfecto)
+   * como glosa del Qal Perfecto. En el interlineal cada token hebreo debe mostrar la
+   * traducción directa de su forma morfológica:
+   *
+   *   Qal Perfecto 3ms → "hizo"   |  3fs → "hizo"
+   *   Qal Perfecto 2ms → "hiciste"
+   *   Qal Perfecto 1cs → "hice"
+   *   Qal Perfecto 3cp → "hicieron"
+   *   Qal Perfecto 2cp → "hicisteis"
+   *   Qal Perfecto 1cp → "hicimos"
+   *
+   * Nota: el Qal Wayyiqtol de H6213 ("וַיַּעַשׂ") se gestiona por su propia regla si hiciese falta;
+   * esta función sólo actúa sobre Qal Perfecto (VqAs…).
+   */
+  function fixH6213QalPerfectSpanish(token){
+    if(!token) return token;
+    if(normalizeStrong(token.strongs) !== 'H6213') return token;
+    const morph = Array.isArray(token.morphs) ? token.morphs[0] : String(token.morphs || '');
+    if(!/^VqAs/.test(morph)) return token; // sólo Qal Perfecto
+
+    const esRaw = Array.isArray(token.es) ? token.es[0] : token.es;
+    const es0 = String(esRaw ?? '').trim().toLowerCase();
+    // Actuar sólo si la glosa actual es una forma auxiliar "haber" (había/habían/habéis/habiendo…)
+    if(!/^hab/i.test(es0)) return token;
+
+    // Resolver persona/número desde el código morfológico
+    // Formato OSHB: VqAs[S|P][M|F|C][1|2|3]
+    const persNumMatch = morph.match(/^VqAs([SP])([MFC])([123])/i);
+    let direct = 'hizo'; // fallback
+    if(persNumMatch){
+      const [, sp, gen, per] = persNumMatch;
+      const plural = sp.toUpperCase() === 'P';
+      if(!plural){
+        if(per === '3') direct = 'hizo';
+        else if(per === '2') direct = 'hiciste';
+        else direct = 'hice';
+      }else{
+        if(per === '3') direct = 'hicieron';
+        else if(per === '2') direct = 'hicisteis';
+        else direct = 'hicimos';
+      }
+    }
+
+    const result = { ...token, es: direct };
+    delete result.added;
+    delete result.marks;
+    return result;
+  }
+
+  /**
    * Ajusta el campo `es` del token (string o array) aplicando reglas globales en cadena.
    */
   function patchTokenEsForGlobalFixes(token){
@@ -362,6 +414,7 @@
     t = fixConjWawSpanishLowercase(t);
     t = fixH1242BoqerStripSpuriousEl(t);
     t = fixH1961WayyiqtolEveningMorningSpanish(t);
+    t = fixH6213QalPerfectSpanish(t);
     t = fixHebrewPrepSuffixChipSpanish(t);
 
     const es0 = Array.isArray(t.es) ? t.es[0] : t.es;
@@ -392,6 +445,7 @@
     fixH1242BoqerStripSpuriousEl,
     fixH1961WayyiqtolEveningMorningSpanish,
     fixDiacriticOnlyXdSpanish,
+    fixH6213QalPerfectSpanish,
     fixHebrewPrepSuffixChipSpanish,
     pronominalSuffixSpanish,
     prepPrefixSpanish,

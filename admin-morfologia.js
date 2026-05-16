@@ -1141,15 +1141,25 @@
       }
     }
 
+    /**
+     * Oculta columnas morfológicas completamente vacías (sin hebreo real, sin glosa,
+     * sin griego significativo). Típico caso: artículo fusionado en preposición (לָ → ל + ָ)
+     * donde el token XD no tiene consonante propia, no tiene glosa y el LXX ya lo absorbió.
+     */
+    function hasHebrewConsonantSurf(str){
+      return /[\u05D0-\u05EA]/.test(String(str || ''));
+    }
+
     let greekCol = 0;
     const rows = mergedRows.map(({ token, morphemes }) => {
       const morphemeHtml = morphemes.map((morpheme) => {
+        let greekSurf = '';
         let greekLine = '';
         if(lxxSurfaces){
-          const surf = String(lxxSurfaces[greekCol] || '').trim();
+          greekSurf = String(lxxSurfaces[greekCol] || '').trim();
           const tier = lxxTiers && lxxTiers[greekCol];
           greekCol += 1;
-          if(surf){
+          if(greekSurf && greekSurf !== '—'){
             let lxxClass = 'admin-morph-segment-lxx';
             let lxxTitle = '';
             if(tier === 'soft'){
@@ -1162,14 +1172,26 @@
               lxxClass += ' admin-morph-segment-lxx-auto';
               lxxTitle = ' title="Concordancia Strong↔griego (equivalencias_trilingue); revisar si el sentido diverge"';
             }
-            greekLine = `<div class="${lxxClass}"${lxxTitle}>${escapeHtml(surf)}</div>`;
+            greekLine = `<div class="${lxxClass}"${lxxTitle}>${escapeHtml(greekSurf)}</div>`;
+          } else if(greekSurf === '—'){
+            greekLine = `<div class="admin-morph-segment-lxx">—</div>`;
           }
         }
+
+        // Suprimir columna si: sin consonante hebrea + sin glosa + sin griego real.
+        // Cubre los tokens XD diacríticos (artículo fusionado) que no aportan texto.
+        const hebrewSurface = String(morpheme.surface || '').trim();
+        const gloss = String(morpheme.gloss || '').trim();
+        const hasRealGreek = greekSurf && greekSurf !== '—';
+        if(!hasHebrewConsonantSurf(hebrewSurface) && !gloss && !hasRealGreek){
+          return '';
+        }
+
         return `
         <div class="admin-morph-segment admin-morph-segment-${escapeHtml(morpheme.type || 'base')}">
-          <div class="admin-morph-segment-hebrew">${escapeHtml(morpheme.surface || '')}</div>
+          <div class="admin-morph-segment-hebrew">${escapeHtml(hebrewSurface)}</div>
           <div class="admin-morph-segment-label">${escapeHtml(morpheme.label || '-')}</div>
-          <div class="admin-morph-segment-gloss">${escapeHtml(morpheme.gloss || '')}</div>
+          <div class="admin-morph-segment-gloss">${escapeHtml(gloss)}</div>
           ${greekLine}
         </div>
       `;
