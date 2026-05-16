@@ -431,15 +431,52 @@
   /**
    * Ajusta el campo `es` del token (string o array) aplicando reglas globales en cadena.
    */
+  /**
+   * H3427 יָשַׁב — Qal Perfecto: "sentado" (participio) → forma verbal conjugada.
+   * VqAsSM3 → "se sentó" | VqAsSM1 → "me senté" | VqAsPM3 → "se sentaron"
+   */
+  function fixH3427QalPerfectSpanish(token){
+    if(!token || normalizeStrong(token.strongs) !== 'H3427') return token;
+    const morph = morphUpper(token);
+    if(!/^VQAS/.test(morph)) return token;
+    const es0 = String(Array.isArray(token.es) ? token.es[0] : token.es || '').trim().toLowerCase();
+    if(!/^sentad/i.test(es0)) return token;
+    const MAP = {
+      VQASSSM3: 'se sentó',  VQASSM3: 'se sentó',
+      VQASSSM1: 'me senté',  VQASSM1: 'me senté',
+      VQASSPM3: 'se sentaron', VQASSPM1: 'nos sentamos',
+      VQASSPM2: 'os sentasteis', VQASSSM2: 'te sentaste'
+    };
+    const shortKey = morph.replace(/\s+/g,'').slice(0,10);
+    const direct = MAP[shortKey] || MAP[morph.slice(0,8)] || 'se sentó';
+    return { ...token, es: direct };
+  }
+
+  /**
+   * XD con consonante hebrea (הָ/הַ/הֶ) sin Strong's = artículo determinado
+   * fragmentado. No se traduce en interlineal: la columna del sustantivo lleva el artículo.
+   */
+  function fixXdStandaloneArticle(token){
+    if(!token || String(token.morphs || '') !== 'XD') return token;
+    if(token.strongs) return token;  // Tiene Strong's propio → no tocar
+    if(!/[\u05D0-\u05EA]/.test(String(token.orig || ''))) return token;  // Sin consonante → ya manejado por fixDiacriticOnlyXdSpanish
+    if(token.notrans === 's/t' && !token.es) return token;  // Ya correcto
+    const result = { ...token, notrans: 's/t' };
+    delete result.es;
+    return result;
+  }
+
   function patchTokenEsForGlobalFixes(token){
     if(!token || typeof token !== 'object') return token;
 
     let t = fixDiacriticOnlyXdSpanish({ ...token });
+    t = fixXdStandaloneArticle(t);
     t = fixH853DirectObjectMarker(t);
     t = fixConjWawSpanishLowercase(t);
     t = fixH1242BoqerStripSpuriousEl(t);
     t = fixH1961WayyiqtolEveningMorningSpanish(t);
     t = fixH6213QalPerfectSpanish(t);
+    t = fixH3427QalPerfectSpanish(t);
     t = fixHebrewPrepSuffixChipSpanish(t);
 
     const es0 = Array.isArray(t.es) ? t.es[0] : t.es;
@@ -469,6 +506,8 @@
     fixConjWawSpanishLowercase,
     fixH1242BoqerStripSpuriousEl,
     fixH1961WayyiqtolEveningMorningSpanish,
+    fixH3427QalPerfectSpanish,
+    fixXdStandaloneArticle,
     fixDiacriticOnlyXdSpanish,
     fixH853DirectObjectMarker,
     fixH6213QalPerfectSpanish,
