@@ -1,8 +1,10 @@
 {
-  "_schema": "lxx-mt-word-hints-chapter-v1",
-  "_doc": "Generado desde CATSS (20.Psalms.par) como puente hacia tokens locales + LXX Rahlf. Revisar `skipped` en reporte.",
-  "slug": "salmos",
-  "chapter": 1,
+  "meta": {
+    "book": "Psalms",
+    "chapter": 1,
+    "lxxSource": "Rahlfs 1935",
+    "createdBy": "manual alignment"
+  },
   "verses": {
     "1": [
       {
@@ -10,53 +12,42 @@
         "morphemeIdx": 0,
         "lxxIdx": 0,
         "surface": "μακάριος",
-        "strong": "H835",
         "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "2",
-        "morphemeIdx": 0,
-        "lxxIdx": 1,
-        "surface": "ἀνήρ",
-        "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "אַשְׁרֵי → μακάριος (bienaventurado)"
       },
       {
         "tokenNum": "3",
         "morphemeIdx": 0,
         "lxxIdx": 1,
         "surface": "ἀνήρ",
-        "strong": "H376",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "אִישׁ → ἀνήρ; artículo הָ (num:2) absorbido"
       },
       {
         "tokenNum": "4",
         "morphemeIdx": 0,
         "lxxIdx": 2,
         "surface": "ὃς",
-        "strong": "H834",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "5",
         "morphemeIdx": 0,
         "lxxIdx": 3,
         "surface": "οὐκ",
-        "strong": "H3808",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "6",
         "morphemeIdx": 0,
         "lxxIdx": 4,
         "surface": "ἐπορεύθη",
-        "strong": "H1980",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "7",
@@ -64,25 +55,24 @@
         "lxxIdx": 5,
         "surface": "ἐν",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "בַּ (PB+XD) → ἐν"
       },
       {
         "tokenNum": "8",
         "morphemeIdx": 0,
         "lxxIdx": 6,
         "surface": "βουλῇ",
-        "strong": "H6098",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "9",
         "morphemeIdx": 0,
         "lxxIdx": 7,
         "surface": "ἀσεβῶν",
-        "strong": "H7563",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "10",
@@ -90,7 +80,8 @@
         "lxxIdx": 8,
         "surface": "καὶ",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "וּ CONJ → καὶ"
       },
       {
         "tokenNum": "11",
@@ -98,43 +89,39 @@
         "lxxIdx": 9,
         "surface": "ἐν",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "12",
         "morphemeIdx": 0,
         "lxxIdx": 10,
         "surface": "ὁδῷ",
-        "strong": "H1870",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "13",
         "morphemeIdx": 0,
         "lxxIdx": 11,
         "surface": "ἁμαρτωλῶν",
-        "strong": "H2400",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "14",
         "morphemeIdx": 0,
         "lxxIdx": 12,
         "surface": "οὐκ",
-        "strong": "H3808",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "15",
         "morphemeIdx": 0,
         "lxxIdx": 13,
         "surface": "ἔστη",
-        "strong": "H5975",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "16",
@@ -142,7 +129,8 @@
         "lxxIdx": 14,
         "surface": "καὶ",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "וּ CONJ → καὶ"
       },
       {
         "tokenNum": "17",
@@ -150,43 +138,172 @@
         "lxxIdx": 15,
         "surface": "ἐπὶ",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "18",
         "morphemeIdx": 0,
         "lxxIdx": 16,
         "surface": "καθέδραν",
-        "strong": "H4186",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "19",
         "morphemeIdx": 0,
         "lxxIdx": 17,
         "surface": "λοιμῶν",
-        "strong": "H3887",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "20",
         "morphemeIdx": 0,
         "lxxIdx": 18,
         "surface": "οὐκ",
-        "strong": "H3808",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "21",
         "morphemeIdx": 0,
         "lxxIdx": 19,
         "surface": "ἐκάθισεν",
-        "strong": "H3427",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "יָשָׁב Qal Perf → ἐκάθισεν (se sentó)"
+      }
+    ],
+    "2": [
+      {
+        "tokenNum": "0",
+        "morphemeIdx": 0,
+        "lxxIdx": 0,
+        "surface": "ἀλλ᾿",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "כִּי (parte de כִּי אִם) → ἀλλ᾿"
+      },
+      {
+        "tokenNum": "1",
+        "morphemeIdx": 0,
+        "lxxIdx": 1,
+        "surface": "ἢ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "אִם (כִּי אִם adversativo) → ἢ"
+      },
+      {
+        "tokenNum": "2",
+        "morphemeIdx": 0,
+        "lxxIdx": 2,
+        "surface": "ἐν",
+        "tier": "hint",
+        "source": "manual"
+      },
+      {
+        "tokenNum": "3",
+        "morphemeIdx": 0,
+        "lxxIdx": 4,
+        "surface": "νόμῳ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "τῷ en lxxIdx=3 absorbido como artículo"
+      },
+      {
+        "tokenNum": "4",
+        "morphemeIdx": 0,
+        "lxxIdx": 5,
+        "surface": "κυρίου",
+        "tier": "hint",
+        "source": "manual"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "θέλημα",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "חֶפְצ (num:5) → θέλημα; τὸ (idx 6) absorbido"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "αὐτοῦ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "וֹ sufijo (num:6) → αὐτοῦ (de su voluntad)"
+      },
+      {
+        "tokenNum": "7",
+        "morphemeIdx": 0,
+        "lxxIdx": 9,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "וּ CONJ → καὶ"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "ἐν",
+        "tier": "hint",
+        "source": "manual"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "νόμῳ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "תוֹרָת (num:9) → νόμῳ; τῷ (idx 11) absorbido"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "αὐτοῦ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "וֹ sufijo (num:10) → αὐτוῦ (en su ley)"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "μελετήσει",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "יֶהְגֶּה Qal Impf 3ms → μελετήσει (meditará)"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 15,
+        "surface": "ἡμέρας",
+        "tier": "hint",
+        "source": "manual"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 16,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "וָ CONJ (kamatz pausale) → καὶ"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "νυκτός",
+        "tier": "hint",
+        "source": "manual"
       }
     ],
     "3": [
@@ -196,45 +313,44 @@
         "lxxIdx": 0,
         "surface": "καὶ",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "וְ CONJ → καὶ"
       },
       {
         "tokenNum": "2",
         "morphemeIdx": 0,
         "lxxIdx": 1,
         "surface": "ἔσται",
-        "strong": "H1961",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "הָיָה H1961 → ἔσται"
       },
       {
         "tokenNum": "3",
         "morphemeIdx": 0,
-        "lxxIdx": 4,
-        "surface": "ξύλον",
+        "lxxIdx": 2,
+        "surface": "ὡς",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+        "source": "manual",
+        "catssNote": "כְּ partícula comparativa → ὡς (NO ξύλον)"
       },
       {
         "tokenNum": "4",
         "morphemeIdx": 0,
         "lxxIdx": 4,
         "surface": "ξύλον",
-        "strong": "H6086",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+        "source": "manual",
+        "catssNote": "עֵץ → ξύλον; τὸ (idx 3) absorbido"
       },
       {
         "tokenNum": "5",
         "morphemeIdx": 0,
         "lxxIdx": 6,
         "surface": "πεφυτευμένον",
-        "strong": "H8362",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+        "source": "manual",
+        "catssNote": "שָׁתוּל → πεφυτευμένον; τὸ (idx 5) absorbido"
       },
       {
         "tokenNum": "6",
@@ -242,73 +358,130 @@
         "lxxIdx": 7,
         "surface": "παρὰ",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "7",
         "morphemeIdx": 0,
         "lxxIdx": 9,
         "surface": "διεξόδους",
-        "strong": "H6388",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+        "source": "manual",
+        "catssNote": "פַּלְגֵי → διεξόδους; τὰς (idx 8) absorbido"
       },
       {
         "tokenNum": "8",
         "morphemeIdx": 0,
         "lxxIdx": 11,
         "surface": "ὑδάτων",
-        "strong": "H4325",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+        "source": "manual",
+        "catssNote": "מָיִם → ὑδάτων; τῶν (idx 10) absorbido"
       },
       {
         "tokenNum": "9",
         "morphemeIdx": 0,
         "lxxIdx": 12,
         "surface": "ὃ",
-        "strong": "H834",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "10",
         "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "καρπὸν",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "פִּרְי → καρπὸν; τὸν (idx 13) absorbido"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
         "lxxIdx": 15,
         "surface": "αὐτοῦ",
-        "strong": "H6529",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS 1×he/3×gr: μέσον (último token) enlaza בין; el 2º griego ἀνὰ queda implicito."
+        "source": "manual",
+        "catssNote": "וֹ sufijo 3ms → αὐτοῦ (de su fruto)"
       },
       {
         "tokenNum": "12",
         "morphemeIdx": 0,
         "lxxIdx": 16,
         "surface": "δώσει",
-        "strong": "H5414",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "יִתֵּן → δώσει"
+      },
+      {
+        "tokenNum": "13",
+        "morphemeIdx": 0,
+        "lxxIdx": 17,
+        "surface": "ἐν",
+        "tier": "hint",
+        "source": "manual"
+      },
+      {
+        "tokenNum": "14",
+        "morphemeIdx": 0,
+        "lxxIdx": 18,
+        "surface": "καιρῷ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "עִתּ → καιρῷ"
+      },
+      {
+        "tokenNum": "15",
+        "morphemeIdx": 0,
+        "lxxIdx": 19,
+        "surface": "αὐτοῦ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "וֹ sufijo 3ms → αὐτοῦ (en su tiempo)"
+      },
+      {
+        "tokenNum": "16",
+        "morphemeIdx": 0,
+        "lxxIdx": 20,
+        "surface": "καὶ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "וְ CONJ → καὶ"
+      },
+      {
+        "tokenNum": "17",
+        "morphemeIdx": 0,
+        "lxxIdx": 22,
+        "surface": "φύλλον",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "עָל hoja → φύλλον; τὸ (idx 21) absorbido"
+      },
+      {
+        "tokenNum": "18",
+        "morphemeIdx": 0,
+        "lxxIdx": 23,
+        "surface": "αὐτοῦ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "ֵהוּ sufijo 3ms → αὐτοῦ"
       },
       {
         "tokenNum": "19",
         "morphemeIdx": 0,
         "lxxIdx": 24,
         "surface": "οὐκ",
-        "strong": "H3808",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "20",
         "morphemeIdx": 0,
         "lxxIdx": 25,
         "surface": "ἀπορρυήσεται",
-        "strong": "H5034",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "יִבּוֹל → ἀπορρυήσεται (no caerá)"
       },
       {
         "tokenNum": "21",
@@ -316,63 +489,142 @@
         "lxxIdx": 26,
         "surface": "καὶ",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "וְ CONJ → καὶ"
       },
       {
         "tokenNum": "22",
         "morphemeIdx": 0,
         "lxxIdx": 27,
         "surface": "πάντα",
-        "strong": "H3605",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "23",
         "morphemeIdx": 0,
-        "lxxIdx": 29,
-        "surface": "ἂν",
-        "strong": "H834",
+        "lxxIdx": 28,
+        "surface": "ὅσα",
         "tier": "hint",
-        "source": "catss",
-        "catssNote": "CATSS dio artic.+sustantivo; solo el sustantivo enlaza al morfema local."
+        "source": "manual",
+        "catssNote": "אֲשֶׁר → ὅσα ἂν (lxxIdx 29 ἂν absorbido)"
+      },
+      {
+        "tokenNum": "24",
+        "morphemeIdx": 0,
+        "lxxIdx": 30,
+        "surface": "ποιῇ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "יַעֲשֶׂה → ποιῇ (haga)"
+      },
+      {
+        "tokenNum": "25",
+        "morphemeIdx": 0,
+        "lxxIdx": 31,
+        "surface": "κατευοδωθήσεται",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "יַצְלִיחַ → κατευοδωθήσεται (prosperará)"
       }
     ],
     "4": [
+      {
+        "tokenNum": "4.5",
+        "morphemeIdx": 0,
+        "lxxIdx": 6,
+        "surface": "ἀλλ᾿",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "כִּי (num:4.5, parte de כִּי אִם) → ἀλλ᾿"
+      },
       {
         "tokenNum": "1",
         "morphemeIdx": 0,
         "lxxIdx": 0,
         "surface": "οὐχ",
-        "strong": "H3808",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "2",
         "morphemeIdx": 0,
         "lxxIdx": 1,
         "surface": "οὕτως",
-        "strong": "H3651",
         "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "3",
-        "morphemeIdx": 0,
-        "lxxIdx": 2,
-        "surface": "οἱ",
-        "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "4",
         "morphemeIdx": 0,
         "lxxIdx": 3,
         "surface": "ἀσεβεῖς",
-        "strong": "H7563",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "רְשָׁעִים → ἀσεβεῖς; οἱ (idx 2) absorbido"
+      },
+      {
+        "tokenNum": "5",
+        "morphemeIdx": 0,
+        "lxxIdx": 7,
+        "surface": "ἢ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "אִם (כִּי אִם) → ἢ; οὐχ (idx4) y οὕτως (idx5) también pertenecen al segundo כֵן"
+      },
+      {
+        "tokenNum": "6",
+        "morphemeIdx": 0,
+        "lxxIdx": 8,
+        "surface": "ὡς",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "כַּ comparativo → ὡς (NO ἀπὸ)"
+      },
+      {
+        "tokenNum": "8",
+        "morphemeIdx": 0,
+        "lxxIdx": 10,
+        "surface": "χνοῦς",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "מֹּץ tamo → χνοῦς; ὁ (idx 9) absorbido"
+      },
+      {
+        "tokenNum": "9",
+        "morphemeIdx": 0,
+        "lxxIdx": 11,
+        "surface": "ὃν",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "אֲשֶׁר relativo → ὃν"
+      },
+      {
+        "tokenNum": "10",
+        "morphemeIdx": 0,
+        "lxxIdx": 12,
+        "surface": "ἐκριπτεῖ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "תִּדְּפ → ἐκριπτεῖ (arrebata/lanza)"
+      },
+      {
+        "tokenNum": "11",
+        "morphemeIdx": 0,
+        "lxxIdx": 13,
+        "surface": "ὁ",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "ֶנּוּ sufijo 3ms (objeto) → ὁ como artículo de ἄνεμος"
+      },
+      {
+        "tokenNum": "12",
+        "morphemeIdx": 0,
+        "lxxIdx": 14,
+        "surface": "ἄνεμος",
+        "tier": "hint",
+        "source": "manual",
+        "catssNote": "רוּחַ viento → ἄνεמος (NO κִּי)"
       }
     ],
     "5": [
@@ -381,45 +633,44 @@
         "morphemeIdx": 0,
         "lxxIdx": 0,
         "surface": "διὰ",
-        "strong": "H5921",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "עַל (Pu) → διὰ"
       },
       {
         "tokenNum": "2",
         "morphemeIdx": 0,
         "lxxIdx": 1,
         "surface": "τοῦτο",
-        "strong": "H3651",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "כֵּן → τοῦτο"
       },
       {
         "tokenNum": "3",
         "morphemeIdx": 0,
         "lxxIdx": 2,
         "surface": "οὐκ",
-        "strong": "H3808",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "4",
         "morphemeIdx": 0,
         "lxxIdx": 3,
         "surface": "ἀναστήσονται",
-        "strong": "H6965",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "יָקֻמוּ Qal Impf 3mpl → ἀναστήσονται"
       },
       {
         "tokenNum": "5",
         "morphemeIdx": 0,
         "lxxIdx": 4,
         "surface": "ἀσεβεῖς",
-        "strong": "H7563",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "רְשָׁעִים → ἀσεβεῖς"
       },
       {
         "tokenNum": "6",
@@ -427,41 +678,34 @@
         "lxxIdx": 5,
         "surface": "ἐν",
         "tier": "hint",
-        "source": "catss"
-      },
-      {
-        "tokenNum": "6",
-        "morphemeIdx": 1,
-        "lxxIdx": 6,
-        "surface": "κρίσει",
-        "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "בּ (PB) → ἐν; XD ַ (num:7) absorbido/notrans"
       },
       {
         "tokenNum": "8",
         "morphemeIdx": 0,
         "lxxIdx": 6,
         "surface": "κρίσει",
-        "strong": "H4941",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "מִּשְׁפָּט → κρίσει"
       },
       {
         "tokenNum": "9",
         "morphemeIdx": 0,
-        "lxxIdx": 8,
-        "surface": "ἁμαρτωλοὶ",
+        "lxxIdx": 7,
+        "surface": "οὐδὲ",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "וְ CONJ negativo → οὐδὲ (ni/tampoco, NO ἁμαρτωλοὶ)"
       },
       {
         "tokenNum": "10",
         "morphemeIdx": 0,
         "lxxIdx": 8,
         "surface": "ἁμαρτωλοὶ",
-        "strong": "H2400",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "11",
@@ -469,25 +713,26 @@
         "lxxIdx": 9,
         "surface": "ἐν",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "בַּ (PB+XD) → ἐν"
       },
       {
         "tokenNum": "12",
         "morphemeIdx": 0,
         "lxxIdx": 10,
         "surface": "βουλῇ",
-        "strong": "H5712",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "עֲדַת → βουλῇ (congregación/asamblea)"
       },
       {
         "tokenNum": "13",
         "morphemeIdx": 0,
         "lxxIdx": 11,
         "surface": "δικαίων",
-        "strong": "H6662",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "צַדִּיקִים → δικαίων"
       }
     ],
     "6": [
@@ -496,45 +741,42 @@
         "morphemeIdx": 0,
         "lxxIdx": 0,
         "surface": "ὅτι",
-        "strong": "H3588",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "כִּי → ὅτι"
       },
       {
         "tokenNum": "2",
         "morphemeIdx": 0,
         "lxxIdx": 1,
         "surface": "γινώσκει",
-        "strong": "H3045",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "יוֹדֵעַ → γινώσκει"
       },
       {
         "tokenNum": "3",
         "morphemeIdx": 0,
         "lxxIdx": 2,
         "surface": "κύριος",
-        "strong": "H3068",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "4",
         "morphemeIdx": 0,
         "lxxIdx": 3,
         "surface": "ὁδὸν",
-        "strong": "H1870",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "5",
         "morphemeIdx": 0,
         "lxxIdx": 4,
         "surface": "δικαίων",
-        "strong": "H6662",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "6",
@@ -542,152 +784,34 @@
         "lxxIdx": 5,
         "surface": "καὶ",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "וְ CONJ → καὶ"
       },
       {
         "tokenNum": "7",
         "morphemeIdx": 0,
         "lxxIdx": 6,
         "surface": "ὁδὸς",
-        "strong": "H1870",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "8",
         "morphemeIdx": 0,
         "lxxIdx": 7,
         "surface": "ἀσεβῶν",
-        "strong": "H7563",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual"
       },
       {
         "tokenNum": "9",
         "morphemeIdx": 0,
         "lxxIdx": 8,
         "surface": "ἀπολεῖται",
-        "strong": "H6",
         "tier": "hint",
-        "source": "catss"
+        "source": "manual",
+        "catssNote": "תֹּאבֵד → ἀπολεῖται (perecerá)"
       }
-    ]
-  },
-  "_catss_generator": {
-    "catssSource": "20.Psalms.par",
-    "interlinear": "1.json",
-    "lxx": "1.json",
-    "report": {
-      "matchedPairs": 47,
-      "totalPairs": 64,
-      "skipped": [
-        {
-          "ref": "Ps 1:2",
-          "he": "KY )M",
-          "gr": "A)LL' H)\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Ps 1:2",
-          "he": "B/TWRT",
-          "gr": "E)N TW=| NO/MW|",
-          "reason": "conteo CATSS (1 he / 3 gr)"
-        },
-        {
-          "ref": "Ps 1:2",
-          "he": "YHWH",
-          "gr": "KURI/OU",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Ps 1:2",
-          "he": "XPC/W",
-          "gr": "TO\\ QE/LHMA AU)TOU=",
-          "reason": "conteo CATSS (1 he / 3 gr)"
-        },
-        {
-          "ref": "Ps 1:2",
-          "he": "W/B/TWRT/W",
-          "gr": "KAI\\ E)N TW=| NO/MW| AU)TOU=",
-          "reason": "conteo CATSS (1 he / 5 gr)"
-        },
-        {
-          "ref": "Ps 1:2",
-          "he": "YHGH",
-          "gr": "MELETH/SEI",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Ps 1:2",
-          "he": "YWMM",
-          "gr": "H(ME/RAS",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Ps 1:2",
-          "he": "W/LYLH",
-          "gr": "KAI\\ NUKTO/S",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Ps 1:3",
-          "he": "B/(T/W",
-          "gr": "E)N KAIRW=| AU)TOU=",
-          "reason": "griego CATSS sin match Rahlf; avanzó solo hebreo"
-        },
-        {
-          "ref": "Ps 1:3",
-          "he": "W/(LH/W",
-          "gr": "KAI\\ TO\\ FU/LLON AU)TOU=",
-          "reason": "conteo CATSS (1 he / 4 gr): avanzó hebreo sin hint LXX"
-        },
-        {
-          "ref": "Ps 1:3",
-          "he": "Y(&H",
-          "gr": "POIH=|",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Ps 1:3",
-          "he": "YCLYX",
-          "gr": "KATEUODWQH/SETAI",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Ps 1:4",
-          "he": "KY )M",
-          "gr": "A)LL' H)\\",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Ps 1:4",
-          "he": "K/MC",
-          "gr": "W(S O( XNOU=S",
-          "reason": "conteo CATSS (1 he / 3 gr)"
-        },
-        {
-          "ref": "Ps 1:4",
-          "he": ")$R",
-          "gr": "O(\\N",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Ps 1:4",
-          "he": "TDP/NW",
-          "gr": "E)KRIPTEI=",
-          "reason": "puente consonantico o griego CATSS sin match Rahlf"
-        },
-        {
-          "ref": "Ps 1:4",
-          "he": "RWX",
-          "gr": "O( A)/NEMOS",
-          "reason": "conteo/sin match (1 he / 2 gr)"
-        }
-      ]
-    },
-    "warnings": [
-      "El hebreo CCAT solo se uso para ubicar consonantes locales; glosses y etiquetas siguen siendo los del proyecto.",
-      "Las pistas con propiedad extra `source: \"catss\"` son consumibles igual que `tier: hint`; el UI ignora props desconocidas."
     ]
   }
 }
