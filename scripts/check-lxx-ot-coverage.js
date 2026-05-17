@@ -53,7 +53,7 @@ const LXX_TO_HEBREW_SLUG = {
   Mal: 'malaquias'
 };
 
-/** Igual PRIMARY_LXX_BY_OT_SLUG en admin-lxx-layer.js (ajustado a los JSON instalados). */
+/** Edición Rahlfs preferida cuando hay paralelos A/B (Josh/Judg) u OG/Theod.; debe coincidir con tus JSON en LXX/. */
 const PREFERRED_EDIT = {
   josue: 'JoshB',
   jueces: 'JudgB',

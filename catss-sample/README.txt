@@ -3,8 +3,8 @@ Prueba CATSS / CCAT — texto paralelo hebreo // griego
 
 Criterios del proyecto (angelos):
 
-- Solo libros donde ya tenemos **interlineal hebreo** local; el LXX se toma de la edición Rahlfs que usa el admin (`LXX/chapters/...`), **sin añadir apócrifos** como fuente de pistas MT⇄LXX.
-- Josué y Jueces: paralelo CATSS **`JoshB`** y **`JudgesB`** (“edición B”), alineado con `admin-lxx-layer.js` (`JoshB`, `JudgB`).
+- Solo libros donde ya tenemos **interlineal hebreo** local; el LXX se toma de la edición Rahlfs en `LXX/chapters/...`, **sin añadir apócrifos** como fuente de pistas MT⇄LXX.
+- Josué y Jueces: paralelo CATSS **`JoshB`** y **`JudgesB`** (“edición B”); ediciones **`JoshB`**, **`JudgB`** en carpeta LXX.
 
 1) Descarga local del .par (no incluido en git por tamaño y licencia):
 
@@ -55,21 +55,12 @@ Criterios del proyecto (angelos):
    node scripts/parse-catss-par.js catss-par/17.1Esdras.par --out catss-parsed/esdras.full.json
    node scripts/parse-catss-par.js catss-par/18.Esther.par --out catss-parsed/ester.full.json
 
-5) Generar todas las pistas `lxx-mt-word-hints` por capítulo (requiere pars parseados):
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/exodus.full.json --slug exodo --lxxBook Exod --interlinearDir "IdiomaORIGEN/interlineal/chapters/02_Éxodo"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/leviticus.full.json --slug levitico --lxxBook Lev --interlinearDir "IdiomaORIGEN/interlineal/chapters/03_Levítico"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/numeros.full.json --slug numeros --lxxBook Num --interlinearDir "IdiomaORIGEN/interlineal/chapters/04_Números"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/deuteronomio.full.json --slug deuteronomio --lxxBook Deut --interlinearDir "IdiomaORIGEN/interlineal/chapters/05_Deuteronomio"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/josue-joshb.full.json --slug josue --lxxBook JoshB --interlinearDir "IdiomaORIGEN/interlineal/chapters/06_Josué"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/jueces-judgb.full.json --slug jueces --lxxBook JudgB --interlinearDir "IdiomaORIGEN/interlineal/chapters/07_Jueces"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/ruth.full.json --slug rut --lxxBook Ruth --interlinearDir "IdiomaORIGEN/interlineal/chapters/08_Rut"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/1samuel.full.json --slug 1_samuel --lxxBook 1Sam --interlinearDir "IdiomaORIGEN/interlineal/chapters/09_1_Samuel"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/2samuel.full.json --slug 2_samuel --lxxBook 2Sam --interlinearDir "IdiomaORIGEN/interlineal/chapters/10_2_Samuel"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/1reyes.full.json --slug 1_reyes --lxxBook 1Kgs --interlinearDir "IdiomaORIGEN/interlineal/chapters/11_1_Reyes"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/2reyes.full.json --slug 2_reyes --lxxBook 2Kgs --interlinearDir "IdiomaORIGEN/interlineal/chapters/12_2_Reyes"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/1cronicas.full.json --slug 1_cronicas --lxxBook 1Chr --interlinearDir "IdiomaORIGEN/interlineal/chapters/13_1_Crónicas"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/2cronicas.full.json --slug 2_cronicas --lxxBook 2Chr --interlinearDir "IdiomaORIGEN/interlineal/chapters/14_2_Crónicas"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/esdras.full.json --slug esdras --lxxBook 1Esdr --interlinearDir "IdiomaORIGEN/interlineal/chapters/15_Esdras"
-   node scripts/batch-catss-hints-book.js --parsed catss-parsed/ester.full.json --slug ester --lxxBook Esth --interlinearDir "IdiomaORIGEN/interlineal/chapters/17_Ester"
+5) Pistas `lxx-mt-word-hints` a partir de CATSS:
+
+   El script por lotes que generaba hints desde `.full.json` ya no está en este repo.
+   Puedes crear plantillas por capítulo con `node scripts/scaffold-lxx-word-hints-chapter.js <slug> <cap>`
+   o recuperar la herramienta antigua desde el historial de Git si la necesitas.
+
+   (Referencia histórica — comandos que antes llamaban a `batch-catss-hints-book.js`: se omiten aquí.)
 
 Antes de publicar o redistribuir datos derivados, revisa las condiciones de uso en CCAT / Oxford Text Archive según corresponda.

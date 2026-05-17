@@ -27,7 +27,7 @@ fs.mkdirSync(root, { recursive: true });
 
 const payload = {
   _schema: 'lxx-mt-word-hints-chapter-v1',
-  _doc: 'Ver admin: admin-lxx-word-hints.js y comentarios en salmos/4.json.',
+  _doc: 'Pistas MT⇄LXX opcionales; formato legacy compatible con datos existentes en lxx-mt-word-hints/.',
   slug,
   chapter: chapterNum,
   verses: {}

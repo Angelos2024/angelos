@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * Genera los índices que consume el modo admin de la biblia interlineal:
+ * Genera índices para el proyecto (manifest, morph-index, atomización de capítulos):
  *
  *   IdiomaORIGEN/manifest.json
  *     Resumen liviano por libro (label, archivo, total de capítulos y
@@ -9,14 +9,13 @@
  *
  *   IdiomaORIGEN/morph-index.min.json
  *     Mapas precomputados (byStrong, byPointed, byPlain) extraídos de
- *     diccionario/diccionario_unificado.min.json. Reemplaza el
- *     reindexado runtime que hacía admin-morfologia.js.
+ *     diccionario/diccionario_unificado.min.json (consumido por herramientas
+ *     que aún lean morph-index; el panel admin solo usa interlinear-snapshot).
  *
  *   IdiomaORIGEN/interlineal/chapters/<base>/<N>.json
  *   IdiomaORIGEN/oshb-morph/chapters/<base>/<N>.json
- *     Atomización por capítulo (Tanda 3). admin-morfologia.js los pide
- *     uno a uno cuando el manifest los anuncia, evitando descargar
- *     libros completos.
+ *     Atomización por capítulo (Tanda 3): consumidor típico lector/interlinear-view;
+ *     el admin (`admin-interlinear-static.js`) usa snapshot por capítulo aparte.
  *
  *   Otro script paralelo fragmenta los libros griegos Rahlfs (admin LXX):
  *     node scripts/atomize-lxx-chapters.js
@@ -34,8 +33,7 @@
  *   SKIP_HINTS_INDEX=1 node scripts/build-bible-indices.js # omite lxx-mt-hints-index.min.json
  *
  * Si el diccionario fuente no existe, sólo se genera el manifest y se
- * informa por consola. admin-morfologia.js cae en su ruta legada en ese
- * caso, así que el sitio sigue funcionando.
+ * informa por consola.
  */
 
 'use strict';

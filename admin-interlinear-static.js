@@ -438,7 +438,7 @@
       chapterDoc = await loadJson(url);
     }catch(error){
       if(!isAlive()) return;
-      handleError(new Error(`No hay snapshot para este capitulo (${url}). Ejecuta scripts/export-interlinear-snapshot.js.`));
+      handleError(new Error(`No hay snapshot para este capitulo (${url}). Coloca JSON en IdiomaORIGEN/interlinear-snapshot/chapters/… o recuperalo desde tu respaldo.`));
       return;
     }
     if(!isAlive()) return;

@@ -3,8 +3,8 @@
  * Atomiza cada libro LXX Rahlfs (lxx_rahlfs_1935_*.json) en archivos por capítulo:
  *   LXX/chapters/<Edition>/<numero>.json
  *
- * Contrato compatible con admin-morfologia.js (clave `verses` = mapa versículo→tokens).
- * Si no existen los fragmentos, el admin sigue cargando el libro entero (compatibilidad).
+ * Contrato: cada archivo lleva `verses` = mapa versículo→tokens (array griego).
+ * Si no existen los fragmentos, el cargador puede caer al JSON completo del libro.
  *
  * Uso:
  *   node scripts/atomize-lxx-chapters.js
