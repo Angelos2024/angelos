@@ -368,21 +368,38 @@
 }
 
 .admin-morph-card-toolbar{
-  margin:.35rem 0 .55rem;
+  margin:.45rem 0 .65rem;
 }
 
+/**
+ * Tarjetas de versículo = fondo claro; el botón debe leerse como control (no texto fantasma).
+ */
 .admin-btn-edit-verse{
-  border:1px solid rgba(255,255,255,.35);
-  background:rgba(255,255,255,.08);
-  color:#f8fafc;
-  border-radius:.35rem;
-  padding:.15rem .55rem;
-  font-size:.72rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.35rem;
+  border:1px solid rgba(75,39,67,.32);
+  background:linear-gradient(180deg, #ffffff 0%, #faf4ee 100%);
+  color:#4b2743;
+  border-radius:.45rem;
+  padding:.4rem .85rem;
+  font-size:.8rem;
+  font-weight:700;
+  letter-spacing:.02em;
   cursor:pointer;
+  box-shadow:0 1px 3px rgba(15,23,42,.08);
 }
 
 .admin-btn-edit-verse:hover{
-  background:rgba(255,255,255,.16);
+  background:linear-gradient(180deg, #fffefb 0%, #f3e8df 100%);
+  border-color:rgba(75,39,67,.5);
+  color:#361c30;
+}
+
+.admin-btn-edit-verse:focus-visible{
+  outline:2px solid rgba(75,39,67,.45);
+  outline-offset:2px;
 }
 
 .admin-modal-backdrop{
