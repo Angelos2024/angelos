@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="./index.css?v=1">
   <link rel="stylesheet" href="./menu.css?v=1">
   <link rel="stylesheet" href="./secret-admin.css?v=1">
-  <link rel="stylesheet" href="./admin-interlinear.css?v=2">
+  <link rel="stylesheet" href="./admin-interlinear.css?v=4">
   <link rel="stylesheet" href="./admin-morfologia.css?v=13">
 </head>
 <body class="admin-interlinear-page admin-morph-page">
@@ -99,7 +99,7 @@
           <section class="panel admin-panel">
             <div class="panel-header">Preparacion</div>
             <div class="panel-body d-grid gap-2">
-              <button id="adminSaveDraftBtn" type="button" class="btn btn-outline-primary w-100" disabled>OSHB2 como base</button>
+              <button id="adminSaveDraftBtn" type="button" class="btn btn-outline-primary w-100">Guardar en disco</button>
               <button id="adminExportBtn" type="button" class="btn btn-outline-primary w-100" disabled>Morfologia contextual</button>
               <button id="adminResetChapterBtn" type="button" class="btn btn-outline-danger w-100" disabled>Solo admin privado</button>
             </div>
@@ -144,7 +144,43 @@
     </div>
   </main>
 
-  <!-- Solo lectura: datos congelados en IdiomaORIGEN/interlinear-snapshot (sin motor ni LXX runtime). -->
-  <script defer src="./admin-interlinear-static.js?v=2"></script>
+  <div id="adminVerseEditBackdrop" class="admin-modal-backdrop" hidden aria-hidden="true"></div>
+  <div id="adminVerseEditModal" class="admin-modal-shell" hidden role="dialog" aria-modal="true" aria-labelledby="adminVerseEditTitle">
+    <div class="admin-modal-card">
+      <div class="admin-modal-head">
+        <h2 id="adminVerseEditTitle" class="admin-modal-title">Editar versículo</h2>
+        <button type="button" class="btn btn-sm btn-outline-secondary admin-modal-close" id="adminVerseEditCloseBtn" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="admin-modal-body">
+        <div class="admin-edit-mode-row">
+          <label class="admin-radio-label"><input type="radio" name="adminEditMode" value="unique" checked/> Solo este versículo</label>
+          <label class="admin-radio-label"><input type="radio" name="adminEditMode" value="global"/> Global por número Strong (desglose)</label>
+        </div>
+        <div id="adminEditUniquePanel" class="admin-edit-panel"></div>
+        <div id="adminEditGlobalPanel" class="admin-edit-panel" hidden>
+          <p class="admin-edit-hint">Elige un Strong presente en este versículo y carga todas las apariciones del snapshot para ajustar cada contexto (tiempo, matiz).</p>
+          <div class="d-flex flex-wrap gap-2 align-items-end mb-2">
+            <div class="admin-field flex-grow-1" style="min-width:12rem">
+              <label for="adminGlobalStrongSelect">Strong</label>
+              <select id="adminGlobalStrongSelect" class="form-select form-select-sm admin-global-strong-select"></select>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" id="adminGlobalLoadBtn">Mostrar todas las formas</button>
+          </div>
+          <div id="adminGlobalStatus" class="small text-muted mb-2"></div>
+          <div id="adminGlobalTableWrap" class="admin-global-table-wrap"></div>
+        </div>
+      </div>
+      <div class="admin-modal-foot">
+        <p class="small admin-modal-save-hint mb-0">Cancelar descarta los cambios de esta ventana. Guardar aplica los cambios y los escribe en los JSON del proyecto (requiere servidor local).</p>
+        <div class="admin-modal-foot-actions">
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="adminVerseEditCancelBtn">Cancelar</button>
+          <button type="button" class="btn btn-primary btn-sm" id="adminVerseEditSaveBtn">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Snapshot local editable en memoria + descarga JSON; índice Strong para modo global. -->
+  <script defer src="./admin-interlinear-static.js?v=5"></script>
 </body>
 </html>

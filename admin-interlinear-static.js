@@ -4,6 +4,7 @@
   const ADMIN_PASSWORD_HASH = '9ece8d19ac8b4bb531ad35e6e6ef440e9e4815868d0f8912585b97f0e6dc2d8c';
   const RENDER_BATCH_SIZE = 6;
   const SNAPSHOT_BASE = './IdiomaORIGEN/interlinear-snapshot/chapters';
+  const INDEX_BY_STRONGS_URL = './IdiomaORIGEN/interlinear-snapshot/index.by-strongs.json';
   const MANIFEST_PATH = './IdiomaORIGEN/manifest.json';
 
   const OT_BOOKS = [
@@ -56,6 +57,20 @@
   let chapterListSlug = null;
   let manifestPromise = null;
   let chapterCountCache = new Map();
+  /** @type {Map<string, object>} clave `${slug}/${chapter}` → documento JSON mutado */
+  const chapterCache = new Map();
+  /** @type {Set<string>} capítulos con cambios sin volcar a disco */
+  const dirtyChapters = new Set();
+  let strongsIndexPromise = null;
+  /** True si la página se sirve con scripts/admin-interlinear-local-server.js (guardado POST). */
+  let directSaveEnabled = false;
+
+  /** Contexto del modal de edición (versículo dentro del capítulo cargado). */
+  let editSession = {
+    verseNum: '',
+    globalRows: [],
+    globalRefsLoaded: false
+  };
 
   const els = {
     form: document.getElementById('adminSearchForm'),
@@ -79,14 +94,27 @@
     bookListOT: document.getElementById('adminBookListOT'),
     bookListNT: document.getElementById('adminBookListNT'),
     chapterList: document.getElementById('adminChapterList'),
-    chapterTitle: document.getElementById('adminChapterTitle')
+    chapterTitle: document.getElementById('adminChapterTitle'),
+    verseEditBackdrop: document.getElementById('adminVerseEditBackdrop'),
+    verseEditModal: document.getElementById('adminVerseEditModal'),
+    verseEditTitle: document.getElementById('adminVerseEditTitle'),
+    verseEditCloseBtn: document.getElementById('adminVerseEditCloseBtn'),
+    verseEditCancelBtn: document.getElementById('adminVerseEditCancelBtn'),
+    verseEditSaveBtn: document.getElementById('adminVerseEditSaveBtn'),
+    editUniquePanel: document.getElementById('adminEditUniquePanel'),
+    editGlobalPanel: document.getElementById('adminEditGlobalPanel'),
+    globalStrongSelect: document.getElementById('adminGlobalStrongSelect'),
+    globalLoadBtn: document.getElementById('adminGlobalLoadBtn'),
+    globalStatus: document.getElementById('adminGlobalStatus'),
+    globalTableWrap: document.getElementById('adminGlobalTableWrap')
   };
 
   const state = {
     slug: 'genesis',
     label: 'Genesis',
     chapter: 1,
-    bookLabelDisplay: 'Génesis'
+    bookLabelDisplay: 'Génesis',
+    chapterDoc: null
   };
 
   function normalizeKey(value){
@@ -104,6 +132,13 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  function escapeAttr(value){
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;');
   }
 
   async function sha256(text){
@@ -147,8 +182,100 @@
     els.statusBadge.classList.toggle('err', tone === 'err');
   }
 
+  function chapterCacheKey(slug, chapterNum){
+    return `${slug}/${chapterNum}`;
+  }
+
+  function isCurrentChapterDirty(){
+    return dirtyChapters.has(chapterCacheKey(state.slug, state.chapter));
+  }
+
+  function markChapterDirty(slug, chapterNum){
+    dirtyChapters.add(chapterCacheKey(slug, chapterNum));
+    updateDraftStateLabel();
+  }
+
   function updateDraftStateLabel(){
-    if(els.draftState) els.draftState.textContent = 'Snapshot AT (solo lectura)';
+    if(!els.draftState) return;
+    if(isCurrentChapterDirty()){
+      els.draftState.textContent = directSaveEnabled
+        ? 'Capítulo editado · Guardar en disco escribe en los JSON'
+        : 'Capítulo editado en memoria · Guardar en disco (o servidor local)';
+      return;
+    }
+    els.draftState.textContent = directSaveEnabled
+      ? 'Servidor local · guardado directo activo'
+      : 'Snapshot AT';
+  }
+
+  async function probeDirectSave(){
+    directSaveEnabled = false;
+    try{
+      const response = await fetch('/api/interlinear-local-status', { cache: 'no-store' });
+      if(!response.ok) return;
+      const data = await response.json();
+      directSaveEnabled = Boolean(data.directSave);
+    }catch(_e){
+      directSaveEnabled = false;
+    }
+    updateDraftStateLabel();
+  }
+
+  async function getChapterDocument(slug, chapterNum){
+    const key = chapterCacheKey(slug, chapterNum);
+    if(chapterCache.has(key)) return chapterCache.get(key);
+    const doc = await loadJson(snapshotChapterUrl(slug, chapterNum));
+    chapterCache.set(key, doc);
+    return doc;
+  }
+
+  /** Garantiza que el documento en curso es la referencia única del cache para ese capítulo. */
+  function attachCurrentChapterDoc(doc){
+    state.chapterDoc = doc;
+    chapterCache.set(chapterCacheKey(state.slug, state.chapter), doc);
+  }
+
+  async function getStrongsIndex(){
+    if(!strongsIndexPromise){
+      strongsIndexPromise = loadJson(INDEX_BY_STRONGS_URL).catch((error) => {
+        strongsIndexPromise = null;
+        throw error;
+      });
+    }
+    return strongsIndexPromise;
+  }
+
+  function parseSegmentRef(ref){
+    const parts = String(ref || '').split('/');
+    if(parts.length !== 4) return null;
+    const slug = parts[0];
+    const chapter = Number(parts[1]);
+    const verseKey = parts[2];
+    const segmentIndex = Number(parts[3]);
+    if(!BOOK_MAP.has(slug) || !Number.isInteger(chapter) || chapter < 1) return null;
+    if(!verseKey || !Number.isInteger(segmentIndex) || segmentIndex < 0) return null;
+    return { slug, chapter, verseKey, segmentIndex };
+  }
+
+  function segmentEditRowsForVerse(verse){
+    const segments = verse?.segments || [];
+    const rows = [];
+    segments.forEach((seg, idx) => {
+      if(seg && seg.visible_in_admin_ui !== false){
+        rows.push({ seg, idx });
+      }
+    });
+    return rows;
+  }
+
+  function collectStrongsInVerse(verse){
+    const seen = new Set();
+    const rows = segmentEditRowsForVerse(verse);
+    for(const { seg } of rows){
+      const s = String(seg?.strongs || '').trim();
+      if(s) seen.add(s);
+    }
+    return [...seen].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   }
 
   async function loadJson(url){
@@ -247,7 +374,7 @@
     return rows;
   }
 
-  function buildVerseCardFromSnapshot(bookLabel, chapterVerseKey, verse){
+  function buildVerseCardFromSnapshot(bookLabel, chapterVerseKey, verseNum, verse){
     const segments = verse?.segments || [];
     const mergedRows = groupSegmentsForVerse(segments);
 
@@ -306,6 +433,9 @@
         </div>
         <div class="admin-morph-card-body">
           ${lxxChipHtml}
+          <div class="admin-morph-card-toolbar">
+            <button type="button" class="admin-btn-edit-verse" data-action="edit-verse" data-verse-num="${escapeHtml(verseNum)}">Modificar versículo</button>
+          </div>
           <div class="admin-morph-token-strip">${rows.join('') || '<div class="admin-morph-empty">No hay tokens hebreos en este versiculo.</div>'}</div>
         </div>
       </article>
@@ -335,6 +465,25 @@
       };
       scheduler(step);
     });
+  }
+
+  function buildCardsArrayFromDoc(chapterDoc, chapterNum, bookLabel){
+    const verses = chapterDoc?.verses && typeof chapterDoc.verses === 'object' ? chapterDoc.verses : {};
+    const verseKeys = Object.keys(verses).sort((a, b) => Number(a) - Number(b));
+    return verseKeys.map((vk) => {
+      const verse = verses[vk];
+      const chapterVerseKey = `${chapterNum}:${vk}`;
+      return buildVerseCardFromSnapshot(bookLabel, chapterVerseKey, vk, verse);
+    });
+  }
+
+  async function refreshChapterCards(){
+    const token = renderToken;
+    const isAlive = () => token === renderToken;
+    if(!state.chapterDoc || !els.mount) return;
+    const bookLabel = state.bookLabelDisplay || BOOK_MAP.get(state.slug)?.label || state.label;
+    const cards = buildCardsArrayFromDoc(state.chapterDoc, state.chapter, bookLabel);
+    await paintCardsInBatches(els.mount, cards, isAlive);
   }
 
   function renderBookListSection(container, books, activeSlug){
@@ -435,9 +584,11 @@
     const url = snapshotChapterUrl(state.slug, state.chapter);
     let chapterDoc;
     try {
-      chapterDoc = await loadJson(url);
+      chapterDoc = await getChapterDocument(state.slug, state.chapter);
+      attachCurrentChapterDoc(chapterDoc);
     }catch(error){
       if(!isAlive()) return;
+      chapterCache.delete(chapterCacheKey(state.slug, state.chapter));
       handleError(new Error(`No hay snapshot para este capitulo (${url}). Coloca JSON en IdiomaORIGEN/interlinear-snapshot/chapters/… o recuperalo desde tu respaldo.`));
       return;
     }
@@ -456,11 +607,7 @@
 
     const bookLabel = state.bookLabelDisplay || BOOK_MAP.get(state.slug)?.label || state.label;
 
-    const cards = verseKeys.map((vk) => {
-      const verse = verses[vk];
-      const chapterVerseKey = `${state.chapter}:${vk}`;
-      return buildVerseCardFromSnapshot(bookLabel, chapterVerseKey, verse);
-    });
+    const cards = buildCardsArrayFromDoc(chapterDoc, state.chapter, bookLabel);
 
     let tokenTally = 0;
     for(const vk of verseKeys){
@@ -548,6 +695,406 @@
     });
   }
 
+  function getEditMode(){
+    const radio = document.querySelector('input[name="adminEditMode"]:checked');
+    return radio?.value === 'global' ? 'global' : 'unique';
+  }
+
+  function openVerseModal(){
+    if(els.verseEditBackdrop){
+      els.verseEditBackdrop.hidden = false;
+      els.verseEditBackdrop.setAttribute('aria-hidden', 'false');
+    }
+    if(els.verseEditModal){
+      els.verseEditModal.hidden = false;
+    }
+  }
+
+  function closeVerseModal(){
+    if(els.verseEditBackdrop){
+      els.verseEditBackdrop.hidden = true;
+      els.verseEditBackdrop.setAttribute('aria-hidden', 'true');
+    }
+    if(els.verseEditModal){
+      els.verseEditModal.hidden = true;
+    }
+    editSession.globalRows = [];
+    editSession.globalRefsLoaded = false;
+    if(els.globalTableWrap) els.globalTableWrap.innerHTML = '';
+    if(els.globalStatus) els.globalStatus.textContent = '';
+  }
+
+  function syncEditModePanels(){
+    const mode = getEditMode();
+    if(els.editUniquePanel) els.editUniquePanel.hidden = mode === 'global';
+    if(els.editGlobalPanel) els.editGlobalPanel.hidden = mode !== 'global';
+  }
+
+  function renderUniquePanelHtml(verseNum){
+    const verse = state.chapterDoc?.verses?.[verseNum];
+    const rows = segmentEditRowsForVerse(verse);
+    if(!rows.length){
+      return '<p class="small mb-0 opacity-75">No hay segmentos editables en este versículo.</p>';
+    }
+    return rows.map(({ seg, idx }) => {
+      const he = escapeHtml(String(seg.hebrew || '').trim());
+      const morph = escapeHtml(String(seg.morphology || '').trim());
+      const strong = escapeHtml(String(seg.strongs || '').trim());
+      const sp = String(seg.spanish || '');
+      const gr = String(seg.greek_lxx || '');
+      return `
+<details class="admin-seg-row" open>
+  <summary><strong>${he || '(vacío)'}</strong> ${strong ? `<code>${strong}</code>` : ''} · ${morph || '-'}</summary>
+  <div class="d-grid gap-2 mt-2">
+    <label class="admin-field-label">Glosa (español)<input type="text" class="form-control form-control-sm admin-unique-spanish" data-seg-index="${idx}" value="${escapeAttr(sp)}"/></label>
+    <label class="admin-field-label">Griego LXX (opcional)<input type="text" class="form-control form-control-sm admin-unique-greek" data-seg-index="${idx}" value="${escapeAttr(gr)}"/></label>
+  </div>
+</details>`;
+    }).join('');
+  }
+
+  function populateGlobalStrongSelect(verseNum){
+    const verse = state.chapterDoc?.verses?.[verseNum];
+    const strongs = collectStrongsInVerse(verse);
+    if(!els.globalStrongSelect) return;
+    els.globalStrongSelect.innerHTML = '';
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = strongs.length ? 'Elige Strong…' : 'Sin Strong en este versículo';
+    els.globalStrongSelect.appendChild(placeholder);
+    for(const s of strongs){
+      const opt = document.createElement('option');
+      opt.value = s;
+      opt.textContent = s;
+      els.globalStrongSelect.appendChild(opt);
+    }
+  }
+
+  function openVerseEditor(verseNum){
+    if(!state.chapterDoc || !verseNum) return;
+    editSession.verseNum = String(verseNum);
+    editSession.globalRows = [];
+    editSession.globalRefsLoaded = false;
+    if(els.verseEditTitle){
+      els.verseEditTitle.textContent = `Editar · ${state.bookLabelDisplay || state.label} ${state.chapter}:${editSession.verseNum}`;
+    }
+    const uniqueRadio = document.querySelector('input[name="adminEditMode"][value="unique"]');
+    if(uniqueRadio) uniqueRadio.checked = true;
+    syncEditModePanels();
+    if(els.editUniquePanel) els.editUniquePanel.innerHTML = renderUniquePanelHtml(editSession.verseNum);
+    populateGlobalStrongSelect(editSession.verseNum);
+    if(els.globalTableWrap) els.globalTableWrap.innerHTML = '';
+    if(els.globalStatus) els.globalStatus.textContent = '';
+    openVerseModal();
+  }
+
+  async function loadGlobalOccurrencesTable(){
+    const strong = els.globalStrongSelect?.value?.trim();
+    if(!strong){
+      window.alert('Elige un número Strong.');
+      return;
+    }
+    if(els.globalLoadBtn) els.globalLoadBtn.disabled = true;
+    if(els.globalStatus) els.globalStatus.textContent = 'Cargando índice Strong…';
+    try {
+      const index = await getStrongsIndex();
+      const refs = index?.refsByStrongs?.[strong];
+      if(!Array.isArray(refs) || !refs.length){
+        editSession.globalRows = [];
+        if(els.globalTableWrap) els.globalTableWrap.innerHTML = '<p class="small mb-0">No hay referencias para ese Strong en el snapshot.</p>';
+        if(els.globalStatus) els.globalStatus.textContent = '';
+        return;
+      }
+      const parsed = refs.map((r) => ({ raw: r, p: parseSegmentRef(r) })).filter((x) => x.p);
+      parsed.sort((a, b) => {
+        const A = a.p;
+        const B = b.p;
+        if(A.slug !== B.slug) return String(A.slug).localeCompare(B.slug);
+        if(A.chapter !== B.chapter) return A.chapter - B.chapter;
+        if(Number(A.verseKey) !== Number(B.verseKey)) return Number(A.verseKey) - Number(B.verseKey);
+        return A.segmentIndex - B.segmentIndex;
+      });
+      const chapterKeys = [...new Set(parsed.map((x) => chapterCacheKey(x.p.slug, x.p.chapter)))];
+      if(els.globalStatus) els.globalStatus.textContent = `Cargando ${parsed.length} ocurrencias en ${chapterKeys.length} archivos de capítulo…`;
+      await Promise.all(chapterKeys.map((key) => {
+        const [slug, ch] = key.split('/');
+        return getChapterDocument(slug, Number(ch));
+      }));
+
+      const rows = [];
+      const tableRows = [];
+      for(const { raw, p } of parsed){
+        const doc = chapterCache.get(chapterCacheKey(p.slug, p.chapter));
+        const seg = doc?.verses?.[p.verseKey]?.segments?.[p.segmentIndex];
+        if(!seg){
+          tableRows.push(`<tr><td colspan="4"><span class="text-warning">Falta segmento ${escapeHtml(raw)}</span></td></tr>`);
+          continue;
+        }
+        const book = BOOK_MAP.get(p.slug)?.label || p.slug;
+        const refLabel = `${book} ${p.chapter}:${p.verseKey}`;
+        const he = escapeHtml(String(seg.hebrew || '').trim());
+        const morph = escapeHtml(String(seg.morphology || '').trim());
+        const gloss = String(seg.spanish || '');
+        rows.push({ ref: raw, slug: p.slug, chapter: p.chapter });
+        tableRows.push(`
+<tr>
+  <td><code>${escapeHtml(raw)}</code><div class="small opacity-75">${escapeHtml(refLabel)}</div></td>
+  <td dir="rtl">${he || '—'}</td>
+  <td>${morph || '—'}</td>
+  <td><input type="text" class="admin-global-gloss-input" data-ref="${escapeAttr(raw)}" value="${escapeAttr(gloss)}"/></td>
+</tr>`);
+      }
+      editSession.globalRows = rows;
+      editSession.globalRefsLoaded = true;
+      if(els.globalTableWrap){
+        els.globalTableWrap.innerHTML = `
+<table class="admin-global-table">
+<thead><tr><th>Referencia</th><th>Hebreo</th><th>Morfología</th><th>Glosa español</th></tr></thead>
+<tbody>${tableRows.join('')}</tbody>
+</table>`;
+      }
+      if(els.globalStatus) els.globalStatus.textContent = `${parsed.length} filas · Strong ${strong}`;
+    }catch(e){
+      console.error(e);
+      window.alert(`No se pudo cargar el índice global: ${e instanceof Error ? e.message : e}`);
+      if(els.globalStatus) els.globalStatus.textContent = '';
+    }finally{
+      if(els.globalLoadBtn) els.globalLoadBtn.disabled = false;
+    }
+  }
+
+  function applyUniqueEditsFromModal(){
+    const verseNum = editSession.verseNum;
+    const verse = state.chapterDoc?.verses?.[verseNum];
+    if(!verse?.segments) return;
+    let touched = false;
+    els.editUniquePanel?.querySelectorAll('.admin-unique-spanish[data-seg-index]').forEach((input) => {
+      const idx = Number(input.dataset.segIndex);
+      if(!Number.isInteger(idx) || idx < 0 || idx >= verse.segments.length) return;
+      const seg = verse.segments[idx];
+      if(!seg) return;
+      const next = input.value;
+      if(String(seg.spanish || '') !== next){
+        seg.spanish = next;
+        touched = true;
+      }
+    });
+    els.editUniquePanel?.querySelectorAll('.admin-unique-greek[data-seg-index]').forEach((input) => {
+      const idx = Number(input.dataset.segIndex);
+      if(!Number.isInteger(idx) || idx < 0 || idx >= verse.segments.length) return;
+      const seg = verse.segments[idx];
+      if(!seg) return;
+      const next = input.value;
+      if(String(seg.greek_lxx || '') !== next){
+        seg.greek_lxx = next;
+        touched = true;
+      }
+    });
+    if(touched) markChapterDirty(state.slug, state.chapter);
+  }
+
+  function applyGlobalEditsFromModal(){
+    const inputs = els.globalTableWrap?.querySelectorAll('.admin-global-gloss-input[data-ref]');
+    if(!inputs || !inputs.length){
+      window.alert('Primero pulsa «Mostrar todas las formas».');
+      return false;
+    }
+    const touchedChapters = new Set();
+    inputs.forEach((input) => {
+      const raw = input.dataset.ref;
+      const p = parseSegmentRef(raw);
+      if(!p) return;
+      const doc = chapterCache.get(chapterCacheKey(p.slug, p.chapter));
+      const seg = doc?.verses?.[p.verseKey]?.segments?.[p.segmentIndex];
+      if(!seg) return;
+      const next = input.value;
+      if(String(seg.spanish || '') === next) return;
+      seg.spanish = next;
+      touchedChapters.add(chapterCacheKey(p.slug, p.chapter));
+    });
+    touchedChapters.forEach((key) => {
+      const [slug, ch] = key.split('/');
+      markChapterDirty(slug, Number(ch));
+    });
+    return true;
+  }
+
+  /**
+   * Escribe en disco los capítulos indicados (servidor local).
+   * Quita de dirtyChapters los que se guardaron bien.
+   */
+  async function persistChapterKeysToDisk(keysIterable){
+    const keys = [...keysIterable];
+    if(!keys.length){
+      return { ok: true, saved: 0 };
+    }
+    if(!directSaveEnabled){
+      window.alert(
+        'Para escribir en los archivos del proyecto (IdiomaORIGEN/interlinear-snapshot/chapters/), abre Admin Interlineal con admin-interlinear-local.bat y usa de nuevo Guardar.'
+      );
+      return { ok: false, saved: 0 };
+    }
+    const failed = [];
+    let saved = 0;
+    for(const key of keys){
+      const slash = key.indexOf('/');
+      if(slash < 1){
+        failed.push(`${key} (clave invalida)`);
+        continue;
+      }
+      const slug = key.slice(0, slash);
+      const chapterNum = Number(key.slice(slash + 1));
+      if(!Number.isInteger(chapterNum) || chapterNum < 1){
+        failed.push(`${key} (capitulo invalido)`);
+        continue;
+      }
+      const doc = chapterCache.get(key);
+      if(!doc){
+        failed.push(`${key} (sin cache)`);
+        continue;
+      }
+      try{
+        const response = await fetch('/api/save-interlinear-chapter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug, chapter: chapterNum, document: doc })
+        });
+        const payload = await response.json().catch(() => ({}));
+        if(response.ok && payload.ok){
+          dirtyChapters.delete(key);
+          saved += 1;
+        }else{
+          failed.push(`${key}: ${payload.error || response.status}`);
+        }
+      }catch(e){
+        failed.push(`${key}: ${e instanceof Error ? e.message : e}`);
+      }
+    }
+    updateDraftStateLabel();
+    if(failed.length){
+      window.alert('No se pudieron guardar:\n\n' + failed.join('\n'));
+      return { ok: false, saved };
+    }
+    return { ok: true, saved };
+  }
+
+  async function saveVerseModalChanges(){
+    const btn = els.verseEditSaveBtn;
+    const prevLabel = btn ? btn.textContent : '';
+    if(btn){
+      btn.disabled = true;
+      btn.textContent = 'Guardando…';
+    }
+    try{
+      const mode = getEditMode();
+      if(mode === 'unique'){
+        applyUniqueEditsFromModal();
+      }else{
+        const ok = applyGlobalEditsFromModal();
+        if(!ok) return;
+      }
+      const result = await persistChapterKeysToDisk(new Set(dirtyChapters));
+      closeVerseModal();
+      void refreshChapterCards();
+      if(result.ok){
+        setBadge(
+          result.saved > 0
+            ? `Guardado en archivos del snapshot (${result.saved} capítulo(s)).`
+            : 'Sin cambios nuevos que guardar.',
+          'ok'
+        );
+      }else if(!directSaveEnabled){
+        setBadge('En memoria solamente. Ejecuta admin-interlinear-local.bat y guarda de nuevo.', 'err');
+      }else{
+        setBadge('No todo se pudo guardar; revisa el aviso.', 'err');
+      }
+    }finally{
+      if(btn){
+        btn.disabled = false;
+        btn.textContent = prevLabel || 'Guardar';
+      }
+    }
+  }
+
+  async function saveChapterJsonToDisk(){
+    if(!state.chapterDoc){
+      window.alert('No hay capítulo cargado.');
+      return;
+    }
+    const keys = new Set(dirtyChapters);
+    keys.add(chapterCacheKey(state.slug, state.chapter));
+    const result = await persistChapterKeysToDisk(keys);
+    if(result.ok){
+      setBadge(
+        result.saved > 0
+          ? `Guardado en disco (${result.saved} archivo(s)).`
+          : `Capítulo visible guardado (${state.slug} ${state.chapter}).`,
+        'ok'
+      );
+      return;
+    }
+    if(directSaveEnabled){
+      return;
+    }
+
+    const json = JSON.stringify(state.chapterDoc, null, 2);
+    const suggested = `${state.slug}-${state.chapter}.json`;
+
+    if(window.showSaveFilePicker){
+      try{
+        const handle = await window.showSaveFilePicker({
+          suggestedName: suggested,
+          types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+        });
+        const writable = await handle.createWritable();
+        await writable.write(json);
+        await writable.close();
+        setBadge('Archivo guardado.', 'ok');
+        dirtyChapters.delete(chapterCacheKey(state.slug, state.chapter));
+        updateDraftStateLabel();
+        return;
+      }catch(e){
+        if(e && e.name === 'AbortError') return;
+      }
+    }
+    const blob = new Blob([json], { type: 'application/json' });
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    a.href = url;
+    a.download = suggested;
+    a.click();
+    URL.revokeObjectURL(url);
+    setBadge('Descarga iniciada; sustituye el archivo en interlinear-snapshot/chapters/…', 'ok');
+    dirtyChapters.delete(chapterCacheKey(state.slug, state.chapter));
+    updateDraftStateLabel();
+  }
+
+  function setupVerseEditModal(){
+    document.querySelectorAll('input[name="adminEditMode"]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        syncEditModePanels();
+      });
+    });
+    els.verseEditCloseBtn?.addEventListener('click', () => closeVerseModal());
+    els.verseEditCancelBtn?.addEventListener('click', () => closeVerseModal());
+    els.verseEditSaveBtn?.addEventListener('click', () => void saveVerseModalChanges());
+    els.globalLoadBtn?.addEventListener('click', () => void loadGlobalOccurrencesTable());
+    els.verseEditBackdrop?.addEventListener('click', () => closeVerseModal());
+    document.addEventListener('keydown', (event) => {
+      if(event.key !== 'Escape') return;
+      if(els.verseEditModal && !els.verseEditModal.hidden){
+        closeVerseModal();
+      }
+    });
+    els.mount?.addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-action="edit-verse"]');
+      if(!btn || !els.mount.contains(btn)) return;
+      const verseNum = btn.dataset.verseNum;
+      if(verseNum) openVerseEditor(verseNum);
+    });
+    els.saveBtn?.addEventListener('click', () => void saveChapterJsonToDisk());
+  }
+
   function bindEvents(){
     els.form?.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -582,14 +1129,15 @@
       return;
     }
 
-    if(els.saveBtn) els.saveBtn.disabled = true;
     if(els.exportBtn) els.exportBtn.disabled = true;
     if(els.resetBtn) els.resetBtn.disabled = true;
 
     setupThemeMenu();
     setupBookMenu();
     bindChapterListDelegation();
+    setupVerseEditModal();
     bindEvents();
+    await probeDirectSave();
     try{
       await renderEditor();
     }catch(error){
