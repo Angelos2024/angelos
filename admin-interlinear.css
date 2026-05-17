@@ -414,9 +414,9 @@
   inset:0;
   z-index:1050;
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   justify-content:center;
-  padding:max(1rem, env(safe-area-inset-top)) 1rem 2rem;
+  padding:max(.75rem, env(safe-area-inset-top)) max(.75rem, env(safe-area-inset-right)) max(.75rem, env(safe-area-inset-bottom)) max(.75rem, env(safe-area-inset-left));
   overflow:auto;
   pointer-events:none;
 }
@@ -426,16 +426,21 @@
 }
 
 .admin-modal-card{
-  width:min(960px, 100%);
-  margin-top:2rem;
+  width:min(1180px, calc(100vw - 1.25rem));
+  max-height:min(92vh, 940px);
+  margin:0;
   border-radius:.65rem;
   background:#0f172a;
   border:1px solid rgba(148,163,184,.35);
   box-shadow:0 18px 48px rgba(0,0,0,.55);
   color:#e5e7eb;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
 }
 
 .admin-modal-head{
+  flex-shrink:0;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -445,7 +450,7 @@
 }
 
 .admin-modal-title{
-  font-size:1.05rem;
+  font-size:1.08rem;
   margin:0;
 }
 
@@ -454,12 +459,15 @@
 }
 
 .admin-modal-body{
-  padding:.85rem 1rem;
-  max-height:min(72vh, 720px);
-  overflow:auto;
+  flex:1 1 auto;
+  min-height:0;
+  padding:.9rem 1.05rem;
+  overflow-x:hidden;
+  overflow-y:auto;
 }
 
 .admin-modal-foot{
+  flex-shrink:0;
   display:flex;
   flex-wrap:wrap;
   align-items:center;
@@ -478,7 +486,7 @@
 
 .admin-modal-save-hint{
   color:#94a3b8;
-  max-width:42ch;
+  max-width:min(54ch, 100%);
   line-height:1.35;
 }
 
@@ -513,11 +521,94 @@
   color:#94a3b8;
 }
 
+/* Solo este versículo: tarjetas por segmento (vista simple) */
+.admin-unique-list{
+  display:flex;
+  flex-direction:column;
+  gap:.55rem;
+}
+
+.admin-unique-seg{
+  border:1px solid rgba(148,163,184,.22);
+  border-radius:.45rem;
+  background:rgba(15,23,42,.55);
+  padding:.55rem .65rem;
+}
+
+.admin-unique-seg-main{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.65rem .9rem;
+  align-items:flex-start;
+}
+
+.admin-unique-seg-hewrap{
+  flex:0 1 11rem;
+  min-width:min(11rem, 100%);
+}
+
+.admin-unique-seg-he{
+  font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;
+  font-size:1.35rem;
+  line-height:1.25;
+  color:#f8fafc;
+}
+
+.admin-unique-seg-meta{
+  margin-top:.28rem;
+  font-size:.68rem;
+  line-height:1.25;
+  color:#94a3b8;
+  overflow-wrap:anywhere;
+}
+
+.admin-unique-strong{
+  font-size:.72rem;
+}
+
+.admin-unique-morph{
+  font-size:.68rem;
+}
+
+.admin-unique-seg-fields{
+  flex:1 1 16rem;
+  min-width:min(100%, 14rem);
+  display:flex;
+  flex-direction:column;
+  gap:.45rem;
+}
+
+.admin-unique-field-label{
+  display:block;
+  font-size:.74rem;
+  font-weight:600;
+  color:#cbd5e1;
+  margin:0;
+}
+
+.admin-unique-field-label input{
+  margin-top:.22rem;
+}
+
+.admin-unique-lxx-details{
+  margin:0;
+}
+
+.admin-unique-lxx-sum{
+  cursor:pointer;
+  font-size:.72rem;
+  color:#94a3b8;
+}
+
+.admin-unique-lxx-details[open] .admin-unique-lxx-sum{
+  color:#cbd5e1;
+}
+
 .admin-global-table-wrap{
   border:1px solid rgba(148,163,184,.28);
   border-radius:.45rem;
   overflow:auto;
-  max-height:min(48vh, 520px);
+  max-height:min(58vh, 680px);
 }
 
 .admin-global-table{
@@ -571,7 +662,146 @@
   box-shadow:0 0 0 2px rgba(129,140,248,.2);
 }
 
-.admin-modal-card details.admin-seg-row summary{
+.admin-modal-card details.admin-unique-lxx-details summary.admin-unique-lxx-sum{
   cursor:pointer;
+  color:#94a3b8;
+  font-size:.72rem;
+}
+
+.admin-modal-card details.admin-unique-lxx-details[open] summary.admin-unique-lxx-sum{
+  color:#cbd5e1;
+}
+
+/* Modo global: elegir palabra hebrea del versículo + contexto por pasaje */
+.admin-global-word-pick-wrap .admin-field-label{
+  color:#cbd5e1;
+}
+
+.admin-global-word-pick{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.45rem;
+  align-items:stretch;
+}
+
+.admin-global-word-chip{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.12rem;
+  max-width:9rem;
+  padding:.38rem .55rem;
+  border:1px solid rgba(148,163,184,.42);
+  border-radius:.42rem;
+  background:#020617;
   color:#e5e7eb;
+  cursor:pointer;
+  text-align:center;
+  line-height:1.2;
+}
+
+.admin-global-word-chip-he{
+  font-size:1.12rem;
+  font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;
+  direction:rtl;
+}
+
+.admin-global-word-chip-meta{
+  font-size:.62rem;
+  opacity:.88;
+  word-break:break-word;
+}
+
+.admin-global-word-chip:hover:not(:disabled){
+  border-color:rgba(129,140,248,.75);
+  background:#0f172a;
+}
+
+.admin-global-word-chip.is-selected{
+  outline:2px solid rgba(129,140,248,.85);
+  outline-offset:2px;
+  background:#172554;
+  border-color:rgba(129,140,248,.55);
+}
+
+.admin-global-word-chip:disabled{
+  opacity:.42;
+  cursor:not-allowed;
+}
+
+.admin-global-strong-details summary.admin-global-strong-summary{
+  cursor:pointer;
+  color:#94a3b8;
+}
+
+.admin-global-table-context .admin-global-col-ref{
+  width:9.5rem;
+  white-space:normal;
+  vertical-align:top;
+}
+
+.admin-global-ref-label{
+  font-weight:600;
+  color:#e5e7eb;
+  margin-bottom:.15rem;
+}
+
+.admin-global-col-ctx{
+  min-width:12rem;
+  max-width:42rem;
+  vertical-align:top;
+}
+
+.admin-global-col-gloss{
+  min-width:11rem;
+  max-width:22rem;
+  vertical-align:top;
+}
+
+.admin-global-ctx-strip{
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+  gap:.35rem;
+  align-items:flex-end;
+  justify-content:flex-start;
+  padding:.25rem 0;
+}
+
+.admin-global-ctx-cell{
+  border:1px solid rgba(148,163,184,.22);
+  border-radius:.3rem;
+  padding:.22rem .32rem;
+  background:rgba(15,23,42,.65);
+  min-width:2.8rem;
+  max-width:9.5rem;
+}
+
+.admin-global-ctx-hit{
+  border-color:rgba(245,158,11,.75);
+  box-shadow:0 0 0 2px rgba(245,158,11,.22);
+  background:rgba(120,53,15,.28);
+}
+
+.admin-global-ctx-he{
+  font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;
+  font-size:.92rem;
+  line-height:1.28;
+  color:#f8fafc;
+}
+
+.admin-global-ctx-gl{
+  font-size:.68rem;
+  line-height:1.22;
+  color:#cbd5e1;
+  margin-top:.12rem;
+}
+
+.admin-global-ctx-morph{
+  font-size:.58rem;
+  line-height:1.15;
+  color:#94a3b8;
+  margin-top:.06rem;
+  overflow-wrap:anywhere;
+  word-break:break-word;
 }

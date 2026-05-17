@@ -69,7 +69,13 @@
   let editSession = {
     verseNum: '',
     globalRows: [],
-    globalRefsLoaded: false
+    globalRefsLoaded: false,
+    /** Strong elegido por chip hebreo o select opcional */
+    selectedGlobalStrong: '',
+    /** 'strong' | 'hebrewEmptyStrong' */
+    globalSearchKind: 'strong',
+    /** Superficie NFC para búsqueda sin Strong */
+    globalHebrewTarget: ''
   };
 
   const els = {
@@ -104,6 +110,7 @@
     editUniquePanel: document.getElementById('adminEditUniquePanel'),
     editGlobalPanel: document.getElementById('adminEditGlobalPanel'),
     globalStrongSelect: document.getElementById('adminGlobalStrongSelect'),
+    globalWordPick: document.getElementById('adminGlobalWordPick'),
     globalLoadBtn: document.getElementById('adminGlobalLoadBtn'),
     globalStatus: document.getElementById('adminGlobalStatus'),
     globalTableWrap: document.getElementById('adminGlobalTableWrap')
@@ -139,6 +146,10 @@
       .replace(/&/g, '&amp;')
       .replace(/"/g, '&quot;')
       .replace(/</g, '&lt;');
+  }
+
+  function normalizeHebrewSurface(value){
+    return String(value || '').normalize('NFC').trim();
   }
 
   async function sha256(text){
@@ -276,6 +287,130 @@
       if(s) seen.add(s);
     }
     return [...seen].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  }
+
+  /** Mini strip del versículo completo resaltando el segmento Strong correspondiente. */
+  function renderOccurrenceVerseContextHtml(doc, verseKey, highlightSegmentIndex){
+    const verse = doc?.verses?.[verseKey];
+    if(!verse?.segments?.length){
+      return '<p class="small opacity-75 mb-0">Sin datos de versículo.</p>';
+    }
+    const parts = [];
+    for(let idx = 0; idx < verse.segments.length; idx++){
+      const seg = verse.segments[idx];
+      if(!seg || seg.visible_in_admin_ui === false) continue;
+      const he = escapeHtml(String(seg.hebrew || '').trim()) || '·';
+      const gl = escapeHtml(String(seg.spanish || '').trim());
+      const morph = escapeHtml(String(seg.morphology || '').trim());
+      const hit = idx === highlightSegmentIndex;
+      parts.push(
+        `<div class="admin-global-ctx-cell${hit ? ' admin-global-ctx-hit' : ''}">
+          <div class="admin-global-ctx-he" dir="rtl">${he}</div>
+          <div class="admin-global-ctx-gl" dir="ltr">${gl}</div>
+          <div class="admin-global-ctx-morph">${morph}</div>
+        </div>`
+      );
+    }
+    if(!parts.length){
+      return '<p class="small opacity-75 mb-0">Sin segmentos visibles.</p>';
+    }
+    return `<div class="admin-global-ctx-strip" dir="rtl">${parts.join('')}</div>`;
+  }
+
+  function renderGlobalWordPicker(verseNum){
+    const wrap = els.globalWordPick;
+    if(!wrap) return;
+    wrap.replaceChildren();
+    editSession.selectedGlobalStrong = '';
+    editSession.globalSearchKind = 'strong';
+    editSession.globalHebrewTarget = '';
+    if(els.globalStrongSelect) els.globalStrongSelect.value = '';
+    const verse = state.chapterDoc?.verses?.[verseNum];
+    const rows = segmentEditRowsForVerse(verse);
+    if(!rows.length){
+      const p = document.createElement('p');
+      p.className = 'small opacity-75 mb-0';
+      p.textContent = 'No hay segmentos en este versículo.';
+      wrap.appendChild(p);
+      return;
+    }
+    for(const { seg } of rows){
+      const he = String(seg.hebrew || '').trim();
+      const st = String(seg.strongs || '').trim();
+      const morph = String(seg.morphology || '').trim();
+      if(!he && !st) continue;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'admin-global-word-chip';
+      const heSp = document.createElement('span');
+      heSp.className = 'admin-global-word-chip-he';
+      heSp.textContent = he || (st ? '·' : '∅');
+      const meta = document.createElement('span');
+      meta.className = 'admin-global-word-chip-meta';
+      if(st){
+        btn.dataset.globalKind = 'strong';
+        btn.dataset.strong = st;
+        meta.textContent = morph ? `${st} · ${morph}` : st;
+      }else{
+        const key = normalizeHebrewSurface(he);
+        if(!key){
+          btn.disabled = true;
+          meta.textContent = 'vacío';
+          btn.title = 'Sin texto hebreo para buscar.';
+        }else{
+          btn.dataset.globalKind = 'hebrew';
+          btn.dataset.hebrewTarget = key;
+          btn.title = 'Busca en todo el snapshot la misma escritura con Strong vacío (puede tardar). Homónimos posibles.';
+          meta.textContent = morph ? `sin Strong · ${morph}` : 'sin Strong · por texto';
+        }
+      }
+      btn.append(heSp, meta);
+      wrap.appendChild(btn);
+    }
+  }
+
+  /**
+   * Segmentos con Strong vacío no están en index.by-strongs; recorremos capítulos del AT.
+   * Iguala superficie hebrea en NFC y exige strongs vacío (articulos, vacíos de datos, etc.).
+   */
+  async function findRefsHebrewEmptyStrong(hebrewTarget){
+    const target = normalizeHebrewSurface(hebrewTarget);
+    if(!target) return [];
+    const refs = [];
+    const slugs = [...new Set(OT_BOOKS.map((row) => row[0]))];
+    let scanned = 0;
+    for(const slug of slugs){
+      const total = await getChapterCount(slug);
+      for(let ch = 1; ch <= total; ch++){
+        scanned += 1;
+        if(scanned % 60 === 0 && els.globalStatus){
+          els.globalStatus.textContent = `Buscando sin Strong… ${scanned} capítulos (${slug} ${ch})`;
+        }
+        if(scanned % 25 === 0){
+          await new Promise((r) => setTimeout(r, 0));
+        }
+        let doc;
+        try{
+          doc = await getChapterDocument(slug, ch);
+        }catch(_e){
+          continue;
+        }
+        const verses = doc?.verses || {};
+        for(const vk of Object.keys(verses)){
+          const segs = verses[vk]?.segments || [];
+          for(let si = 0; si < segs.length; si++){
+            const seg = segs[si];
+            if(!seg || seg.visible_in_admin_ui === false) continue;
+            const he = normalizeHebrewSurface(seg.hebrew);
+            if(he !== target) continue;
+            const st = String(seg.strongs || '').trim();
+            if(st) continue;
+            refs.push(`${slug}/${ch}/${vk}/${si}`);
+          }
+        }
+      }
+    }
+    return refs;
   }
 
   async function loadJson(url){
@@ -720,6 +855,9 @@
     }
     editSession.globalRows = [];
     editSession.globalRefsLoaded = false;
+    editSession.selectedGlobalStrong = '';
+    editSession.globalSearchKind = 'strong';
+    editSession.globalHebrewTarget = '';
     if(els.globalTableWrap) els.globalTableWrap.innerHTML = '';
     if(els.globalStatus) els.globalStatus.textContent = '';
   }
@@ -736,21 +874,36 @@
     if(!rows.length){
       return '<p class="small mb-0 opacity-75">No hay segmentos editables en este versículo.</p>';
     }
-    return rows.map(({ seg, idx }) => {
+    const blocks = rows.map(({ seg, idx }) => {
       const he = escapeHtml(String(seg.hebrew || '').trim());
       const morph = escapeHtml(String(seg.morphology || '').trim());
       const strong = escapeHtml(String(seg.strongs || '').trim());
       const sp = String(seg.spanish || '');
       const gr = String(seg.greek_lxx || '');
+      const metaBits = [
+        strong ? `<code class="admin-unique-strong">${strong}</code>` : '',
+        morph ? `<span class="admin-unique-morph">${morph}</span>` : ''
+      ].filter(Boolean).join(' · ');
       return `
-<details class="admin-seg-row" open>
-  <summary><strong>${he || '(vacío)'}</strong> ${strong ? `<code>${strong}</code>` : ''} · ${morph || '-'}</summary>
-  <div class="d-grid gap-2 mt-2">
-    <label class="admin-field-label">Glosa (español)<input type="text" class="form-control form-control-sm admin-unique-spanish" data-seg-index="${idx}" value="${escapeAttr(sp)}"/></label>
-    <label class="admin-field-label">Griego LXX (opcional)<input type="text" class="form-control form-control-sm admin-unique-greek" data-seg-index="${idx}" value="${escapeAttr(gr)}"/></label>
+<div class="admin-unique-seg">
+  <div class="admin-unique-seg-main">
+    <div class="admin-unique-seg-hewrap">
+      <div class="admin-unique-seg-he" dir="rtl">${he || '·'}</div>
+      ${metaBits ? `<div class="admin-unique-seg-meta" dir="ltr">${metaBits}</div>` : ''}
+    </div>
+    <div class="admin-unique-seg-fields">
+      <label class="admin-unique-field-label">Glosa (español)
+        <input type="text" class="form-control form-control-sm admin-unique-spanish" data-seg-index="${idx}" value="${escapeAttr(sp)}" autocomplete="off"/>
+      </label>
+      <details class="admin-unique-lxx-details">
+        <summary class="admin-unique-lxx-sum">Griego LXX (opcional)</summary>
+        <input type="text" class="form-control form-control-sm admin-unique-greek mt-2" data-seg-index="${idx}" value="${escapeAttr(gr)}" autocomplete="off"/>
+      </details>
+    </div>
   </div>
-</details>`;
-    }).join('');
+</div>`;
+    });
+    return `<div class="admin-unique-list">${blocks.join('')}</div>`;
   }
 
   function populateGlobalStrongSelect(verseNum){
@@ -783,80 +936,106 @@
     syncEditModePanels();
     if(els.editUniquePanel) els.editUniquePanel.innerHTML = renderUniquePanelHtml(editSession.verseNum);
     populateGlobalStrongSelect(editSession.verseNum);
+    renderGlobalWordPicker(editSession.verseNum);
     if(els.globalTableWrap) els.globalTableWrap.innerHTML = '';
     if(els.globalStatus) els.globalStatus.textContent = '';
     openVerseModal();
   }
 
-  async function loadGlobalOccurrencesTable(){
-    const strong = els.globalStrongSelect?.value?.trim();
-    if(!strong){
-      window.alert('Elige un número Strong.');
-      return;
-    }
-    if(els.globalLoadBtn) els.globalLoadBtn.disabled = true;
-    if(els.globalStatus) els.globalStatus.textContent = 'Cargando índice Strong…';
-    try {
-      const index = await getStrongsIndex();
-      const refs = index?.refsByStrongs?.[strong];
-      if(!Array.isArray(refs) || !refs.length){
-        editSession.globalRows = [];
-        if(els.globalTableWrap) els.globalTableWrap.innerHTML = '<p class="small mb-0">No hay referencias para ese Strong en el snapshot.</p>';
-        if(els.globalStatus) els.globalStatus.textContent = '';
-        return;
-      }
-      const parsed = refs.map((r) => ({ raw: r, p: parseSegmentRef(r) })).filter((x) => x.p);
-      parsed.sort((a, b) => {
-        const A = a.p;
-        const B = b.p;
-        if(A.slug !== B.slug) return String(A.slug).localeCompare(B.slug);
-        if(A.chapter !== B.chapter) return A.chapter - B.chapter;
-        if(Number(A.verseKey) !== Number(B.verseKey)) return Number(A.verseKey) - Number(B.verseKey);
-        return A.segmentIndex - B.segmentIndex;
-      });
-      const chapterKeys = [...new Set(parsed.map((x) => chapterCacheKey(x.p.slug, x.p.chapter)))];
-      if(els.globalStatus) els.globalStatus.textContent = `Cargando ${parsed.length} ocurrencias en ${chapterKeys.length} archivos de capítulo…`;
-      await Promise.all(chapterKeys.map((key) => {
-        const [slug, ch] = key.split('/');
-        return getChapterDocument(slug, Number(ch));
-      }));
+  async function hydrateGlobalOccurrencesFromParsed(parsed, statusSuffix){
+    parsed.sort((a, b) => {
+      const A = a.p;
+      const B = b.p;
+      if(A.slug !== B.slug) return String(A.slug).localeCompare(B.slug);
+      if(A.chapter !== B.chapter) return A.chapter - B.chapter;
+      if(Number(A.verseKey) !== Number(B.verseKey)) return Number(A.verseKey) - Number(B.verseKey);
+      return A.segmentIndex - B.segmentIndex;
+    });
+    const chapterKeys = [...new Set(parsed.map((x) => chapterCacheKey(x.p.slug, x.p.chapter)))];
+    if(els.globalStatus) els.globalStatus.textContent = `Cargando ${parsed.length} ocurrencias en ${chapterKeys.length} archivos de capítulo…`;
+    await Promise.all(chapterKeys.map((key) => {
+      const [slug, ch] = key.split('/');
+      return getChapterDocument(slug, Number(ch));
+    }));
 
-      const rows = [];
-      const tableRows = [];
-      for(const { raw, p } of parsed){
-        const doc = chapterCache.get(chapterCacheKey(p.slug, p.chapter));
-        const seg = doc?.verses?.[p.verseKey]?.segments?.[p.segmentIndex];
-        if(!seg){
-          tableRows.push(`<tr><td colspan="4"><span class="text-warning">Falta segmento ${escapeHtml(raw)}</span></td></tr>`);
-          continue;
-        }
-        const book = BOOK_MAP.get(p.slug)?.label || p.slug;
-        const refLabel = `${book} ${p.chapter}:${p.verseKey}`;
-        const he = escapeHtml(String(seg.hebrew || '').trim());
-        const morph = escapeHtml(String(seg.morphology || '').trim());
-        const gloss = String(seg.spanish || '');
-        rows.push({ ref: raw, slug: p.slug, chapter: p.chapter });
-        tableRows.push(`
-<tr>
-  <td><code>${escapeHtml(raw)}</code><div class="small opacity-75">${escapeHtml(refLabel)}</div></td>
-  <td dir="rtl">${he || '—'}</td>
-  <td>${morph || '—'}</td>
-  <td><input type="text" class="admin-global-gloss-input" data-ref="${escapeAttr(raw)}" value="${escapeAttr(gloss)}"/></td>
-</tr>`);
+    const rows = [];
+    const tableRows = [];
+    for(const { raw, p } of parsed){
+      const doc = chapterCache.get(chapterCacheKey(p.slug, p.chapter));
+      const seg = doc?.verses?.[p.verseKey]?.segments?.[p.segmentIndex];
+      if(!seg){
+        tableRows.push(`<tr><td colspan="3"><span class="text-warning">Falta segmento ${escapeHtml(raw)}</span></td></tr>`);
+        continue;
       }
-      editSession.globalRows = rows;
-      editSession.globalRefsLoaded = true;
-      if(els.globalTableWrap){
-        els.globalTableWrap.innerHTML = `
-<table class="admin-global-table">
-<thead><tr><th>Referencia</th><th>Hebreo</th><th>Morfología</th><th>Glosa español</th></tr></thead>
+      const book = BOOK_MAP.get(p.slug)?.label || p.slug;
+      const refLabel = `${book} ${p.chapter}:${p.verseKey}`;
+      const gloss = String(seg.spanish || '');
+      const ctxHtml = renderOccurrenceVerseContextHtml(doc, p.verseKey, p.segmentIndex);
+      rows.push({ ref: raw, slug: p.slug, chapter: p.chapter });
+      tableRows.push(`
+<tr>
+  <td class="admin-global-col-ref"><div class="admin-global-ref-label">${escapeHtml(refLabel)}</div><code class="small opacity-75">${escapeHtml(raw)}</code></td>
+  <td class="admin-global-col-ctx">${ctxHtml}</td>
+  <td class="admin-global-col-gloss"><span class="admin-field-label small d-block mb-1">Glosa en este contexto</span><input type="text" class="admin-global-gloss-input form-control form-control-sm" data-ref="${escapeAttr(raw)}" value="${escapeAttr(gloss)}"/></td>
+</tr>`);
+    }
+    editSession.globalRows = rows;
+    editSession.globalRefsLoaded = true;
+    if(els.globalTableWrap){
+      els.globalTableWrap.innerHTML = `
+<table class="admin-global-table admin-global-table-context">
+<thead><tr><th>Referencia</th><th>Versículo completo (la celda resaltada es la forma que editas)</th><th>Tu glosa</th></tr></thead>
 <tbody>${tableRows.join('')}</tbody>
 </table>`;
+    }
+    if(els.globalStatus) els.globalStatus.textContent = `${parsed.length} pasajes · ${statusSuffix}`;
+  }
+
+  async function loadGlobalOccurrencesTable(){
+    if(els.globalLoadBtn) els.globalLoadBtn.disabled = true;
+    try{
+      let parsed = [];
+      let statusSuffix = '';
+
+      if(editSession.globalSearchKind === 'hebrewEmptyStrong'){
+        const target = normalizeHebrewSurface(editSession.globalHebrewTarget);
+        if(!target){
+          window.alert('Elige un fragmento marcado como «sin Strong · por texto» en las palabras del versículo.');
+          return;
+        }
+        if(els.globalStatus) els.globalStatus.textContent = 'Buscando en todo el snapshot (Strong vacío, misma escritura hebrea). Puede tardar la primera vez…';
+        const refs = await findRefsHebrewEmptyStrong(target);
+        if(!refs.length){
+          editSession.globalRows = [];
+          if(els.globalTableWrap) els.globalTableWrap.innerHTML = '<p class="small mb-0">No hay coincidencias con Strong vacío para ese texto.</p>';
+          if(els.globalStatus) els.globalStatus.textContent = '';
+          return;
+        }
+        parsed = refs.map((r) => ({ raw: r, p: parseSegmentRef(r) })).filter((x) => x.p);
+        statusSuffix = `texto «${target}» (sin Strong)`;
+      }else{
+        const strong = (editSession.selectedGlobalStrong || els.globalStrongSelect?.value || '').trim();
+        if(!strong){
+          window.alert('Toca primero una palabra hebrea en «Palabras de este versículo», o elige un número en «Lista Strong (opcional)».');
+          return;
+        }
+        if(els.globalStatus) els.globalStatus.textContent = 'Cargando índice Strong…';
+        const index = await getStrongsIndex();
+        const refs = index?.refsByStrongs?.[strong];
+        if(!Array.isArray(refs) || !refs.length){
+          editSession.globalRows = [];
+          if(els.globalTableWrap) els.globalTableWrap.innerHTML = '<p class="small mb-0">No hay referencias para esa entrada en el snapshot.</p>';
+          if(els.globalStatus) els.globalStatus.textContent = '';
+          return;
+        }
+        parsed = refs.map((r) => ({ raw: r, p: parseSegmentRef(r) })).filter((x) => x.p);
+        statusSuffix = `Strong ${strong}`;
       }
-      if(els.globalStatus) els.globalStatus.textContent = `${parsed.length} filas · Strong ${strong}`;
+
+      await hydrateGlobalOccurrencesFromParsed(parsed, statusSuffix);
     }catch(e){
       console.error(e);
-      window.alert(`No se pudo cargar el índice global: ${e instanceof Error ? e.message : e}`);
+      window.alert(`No se pudo cargar el listado global: ${e instanceof Error ? e.message : e}`);
       if(els.globalStatus) els.globalStatus.textContent = '';
     }finally{
       if(els.globalLoadBtn) els.globalLoadBtn.disabled = false;
@@ -896,7 +1075,7 @@
   function applyGlobalEditsFromModal(){
     const inputs = els.globalTableWrap?.querySelectorAll('.admin-global-gloss-input[data-ref]');
     if(!inputs || !inputs.length){
-      window.alert('Primero pulsa «Mostrar todas las formas».');
+      window.alert('Primero pulsa «Todas las formas».');
       return false;
     }
     const touchedChapters = new Set();
@@ -1078,6 +1257,43 @@
     els.verseEditCloseBtn?.addEventListener('click', () => closeVerseModal());
     els.verseEditCancelBtn?.addEventListener('click', () => closeVerseModal());
     els.verseEditSaveBtn?.addEventListener('click', () => void saveVerseModalChanges());
+    els.globalStrongSelect?.addEventListener('change', () => {
+      const v = els.globalStrongSelect?.value?.trim() || '';
+      editSession.globalSearchKind = 'strong';
+      editSession.selectedGlobalStrong = v;
+      editSession.globalHebrewTarget = '';
+      editSession.globalRefsLoaded = false;
+      if(els.globalTableWrap) els.globalTableWrap.innerHTML = '';
+      if(els.globalStatus) els.globalStatus.textContent = '';
+      els.globalWordPick?.querySelectorAll('.admin-global-word-chip').forEach((chip) => {
+        if(chip.disabled) return;
+        const on = Boolean(v) && chip.dataset.globalKind === 'strong' && chip.dataset.strong === v;
+        chip.classList.toggle('is-selected', on);
+      });
+    });
+    els.globalWordPick?.addEventListener('click', (event) => {
+      const chip = event.target.closest('.admin-global-word-chip');
+      if(!chip || !els.globalWordPick?.contains(chip) || chip.disabled) return;
+      const kind = chip.dataset.globalKind;
+      editSession.globalRefsLoaded = false;
+      if(els.globalTableWrap) els.globalTableWrap.innerHTML = '';
+      if(els.globalStatus) els.globalStatus.textContent = '';
+      els.globalWordPick.querySelectorAll('.admin-global-word-chip.is-selected').forEach((el) => el.classList.remove('is-selected'));
+      chip.classList.add('is-selected');
+      if(kind === 'strong'){
+        const st = chip.dataset.strong || '';
+        editSession.globalSearchKind = 'strong';
+        editSession.selectedGlobalStrong = st;
+        editSession.globalHebrewTarget = '';
+        if(els.globalStrongSelect) els.globalStrongSelect.value = st;
+      }else if(kind === 'hebrew'){
+        const ht = chip.dataset.hebrewTarget || '';
+        editSession.globalSearchKind = 'hebrewEmptyStrong';
+        editSession.selectedGlobalStrong = '';
+        editSession.globalHebrewTarget = ht;
+        if(els.globalStrongSelect) els.globalStrongSelect.value = '';
+      }
+    });
     els.globalLoadBtn?.addEventListener('click', () => void loadGlobalOccurrencesTable());
     els.verseEditBackdrop?.addEventListener('click', () => closeVerseModal());
     document.addEventListener('keydown', (event) => {
