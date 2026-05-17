@@ -5,3 +5,8 @@ catss-sample/*.par
 catss-par/*.par
 catss-parsed/*.full.json
 catss-parsed/_slice-*.json
+
+# Snapshot interlineal: el JSONL plano supera el limite de 100MB de GitHub.
+# El panel admin estatico solo necesita chapters/**/*.json (regenerar con scripts/export-interlinear-snapshot.js).
+IdiomaORIGEN/interlinear-snapshot/tokens.jsonl
+IdiomaORIGEN/interlinear snapshot/tokens.jsonl
