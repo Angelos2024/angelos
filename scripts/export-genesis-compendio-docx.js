@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Exporta Génesis a DOCX con el interlineal completo tal como en el admin (vista morfología):
- * token/morfema, tipo, hebreo (RTL), morfología + Strong, glosa española, griego LXX y nivel LXX.
+ * Exporta Génesis interlineal (vista morfología admin) en DOCX separados por capítulo.
+ * Mismo contenido que antes en un solo archivo: versículo en negrita, línea LXX, tabla por versículo.
+ * Salida: export/Genesis-interlinear-admin-cap-01.docx … cap-50.docx (sin archivo único ni anexos).
  */
 
 const fs = require("fs/promises");
@@ -27,21 +28,16 @@ const GENESIS_DIR = path.join(
   "chapters",
   "genesis"
 );
-const OUT_FILE = path.join(ROOT, "export", "Genesis-interlineal-admin.docx");
+const EXPORT_DIR = path.join(ROOT, "export");
 
-/** Misma heurística que admin-interlinear-static.js (hasHebrewConsonantSurf). */
 function hasHebrewConsonantSurf(str) {
   return /[\u05D0-\u05EA]/.test(String(str || ""));
 }
 
-/** Segmentos editables en UI (visible_in_admin_ui). */
 function segmentVisibleInAdmin(seg) {
   return seg && seg.visible_in_admin_ui !== false;
 }
 
-/**
- * Misma regla que buildVerseCardFromSnapshot: no dibujar morfema vacío en la tarjeta morfología.
- */
 function passesMorphCard(seg) {
   const hebrewSurface = String(seg.hebrew || "").trim();
   const gloss = String(seg.spanish || "").trim();
@@ -50,7 +46,6 @@ function passesMorphCard(seg) {
   return hasHebrewConsonantSurf(hebrewSurface) || Boolean(gloss) || hasRealGreek;
 }
 
-/** Igual que groupSegmentsForVerse en admin-interlinear-static.js */
 function groupSegmentsForVerse(segments) {
   const visible = (Array.isArray(segments) ? segments : []).filter(segmentVisibleInAdmin);
   const rows = [];
@@ -84,7 +79,6 @@ function formatMorphStrong(seg) {
   return st ? `${st} · ${morph}` : morph;
 }
 
-/** Griego tal como en datos; el nivel LXX se anota como en los tooltips del admin (hint / soft / auto). */
 function formatGreekLxx(seg) {
   const g = String(seg.greek_lxx || "").trim();
   const tier = String(seg.lxx_tier || "").trim();
@@ -212,87 +206,103 @@ function lxxChipParagraph(verse) {
   });
 }
 
+function buildChapterChildren(bookLabel, chapNum, raw) {
+  const children = [];
+
+  children.push(
+    new Paragraph({
+      heading: HeadingLevel.HEADING_1,
+      children: [new TextRun(`${bookLabel} — Capítulo ${chapNum}`)],
+    })
+  );
+
+  const verses = raw.verses || {};
+  const vKeys = Object.keys(verses).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+
+  for (const vk of vKeys) {
+    const v = verses[vk];
+    const vNum = parseInt(vk, 10);
+    const refLine = `${bookLabel} ${chapNum}:${vNum}`;
+
+    children.push(
+      new Paragraph({
+        spacing: { before: 200, after: 120 },
+        children: [new TextRun({ text: refLine, bold: true })],
+      })
+    );
+
+    const lxxPara = lxxChipParagraph(v);
+    if (lxxPara) children.push(lxxPara);
+
+    const morphRows = flattenMorphRows(v.segments);
+    children.push(verseInterlinearTable(morphRows));
+    children.push(new Paragraph({ spacing: { after: 160 }, children: [new TextRun("")] }));
+  }
+
+  return children;
+}
+
+async function purgePreviousGenesisExports() {
+  const candidates = [
+    path.join(EXPORT_DIR, "Genesis-interlinear-admin.docx"),
+    path.join(EXPORT_DIR, "Genesis-interlineal-admin.docx"),
+  ];
+  for (const p of candidates) {
+    try {
+      await fs.unlink(p);
+    } catch (_) {
+      /* */
+    }
+  }
+  try {
+    const names = await fs.readdir(EXPORT_DIR);
+    for (const n of names) {
+      if (/^Genesis-interlinear-admin-cap-\d{2}\.docx$/.test(n)) {
+        await fs.unlink(path.join(EXPORT_DIR, n));
+      }
+    }
+  } catch (_) {
+    /* */
+  }
+}
+
 async function main() {
+  await purgePreviousGenesisExports();
+
   const names = (await fs.readdir(GENESIS_DIR)).filter((f) => /^\d+\.json$/.test(f));
   names.sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
 
-  const children = [];
   let bookLabel = "Génesis";
 
-  children.push(
-    new Paragraph({
-      heading: HeadingLevel.TITLE,
-      children: [new TextRun("Génesis — interlineal (admin)")],
-    })
-  );
-  children.push(
-    new Paragraph({
-      children: [
-        new TextRun(
-          "Exportación del snapshot interlineal con las mismas columnas y reglas de la vista morfología del admin: segmentos con visible_in_admin_ui distinto de false, agrupados por token; se omiten morfemas vacíos como en la tarjeta del versículo (sin consonante hebrea, sin glosa y sin griego real). La columna griego incluye el valor de lxx_tier (hint, soft, auto) cuando existe. Orientación horizontal para tablas anchas."
-        ),
-      ],
-    })
-  );
-  children.push(new Paragraph({ children: [new TextRun("")] }));
+  await fs.mkdir(EXPORT_DIR, { recursive: true });
 
   for (const file of names) {
     const chapNum = parseInt(file.replace(/\.json$/, ""), 10);
     const raw = JSON.parse(await fs.readFile(path.join(GENESIS_DIR, file), "utf8"));
     if (typeof raw.book_label === "string" && raw.book_label) bookLabel = raw.book_label;
 
-    children.push(
-      new Paragraph({
-        heading: HeadingLevel.HEADING_1,
-        children: [new TextRun(`${bookLabel} — Capítulo ${chapNum}`)],
-      })
-    );
-
-    const verses = raw.verses || {};
-    const vKeys = Object.keys(verses).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
-
-    for (const vk of vKeys) {
-      const v = verses[vk];
-      const vNum = parseInt(vk, 10);
-      const refLine = `${bookLabel} ${chapNum}:${vNum}`;
-
-      children.push(
-        new Paragraph({
-          spacing: { before: 200, after: 120 },
-          children: [new TextRun({ text: refLine, bold: true })],
-        })
-      );
-
-      const lxxPara = lxxChipParagraph(v);
-      if (lxxPara) children.push(lxxPara);
-
-      const morphRows = flattenMorphRows(v.segments);
-      children.push(verseInterlinearTable(morphRows));
-      children.push(new Paragraph({ spacing: { after: 160 }, children: [new TextRun("")] }));
-    }
-
-    children.push(new Paragraph({ children: [new TextRun("")] }));
-  }
-
-  const doc = new Document({
-    sections: [
-      {
-        properties: {
-          page: {
-            size: {
-              orientation: PageOrientation.LANDSCAPE,
+    const children = buildChapterChildren(bookLabel, chapNum, raw);
+    const doc = new Document({
+      sections: [
+        {
+          properties: {
+            page: {
+              size: {
+                orientation: PageOrientation.LANDSCAPE,
+              },
             },
           },
+          children,
         },
-        children,
-      },
-    ],
-  });
+      ],
+    });
 
-  await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
-  const buf = await Packer.toBuffer(doc);
-  await fs.writeFile(OUT_FILE, buf);
-  console.log("Wrote", OUT_FILE);
+    const outName = `Genesis-interlinear-admin-cap-${String(chapNum).padStart(2, "0")}.docx`;
+    const outPath = path.join(EXPORT_DIR, outName);
+    const buf = await Packer.toBuffer(doc);
+    await fs.writeFile(outPath, buf);
+    console.log("Wrote", outPath);
+  }
 }
 
 main().catch((e) => {
