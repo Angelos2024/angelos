@@ -1,12 +1,23 @@
 #!/usr/bin/env node
 /**
- * Exporta un DOCX con el texto español concatenado de Génesis desde el snapshot interlineal.
- * Sin datos de código: solo capítulos, referencias y párrafos editables.
+ * Exporta Génesis a DOCX con el interlineal completo tal como en el admin (vista morfología):
+ * token/morfema, tipo, hebreo (RTL), morfología + Strong, glosa española, griego LXX y nivel LXX.
  */
 
 const fs = require("fs/promises");
 const path = require("path");
-const { Document, Packer, Paragraph, TextRun, HeadingLevel } = require("docx");
+const {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  HeadingLevel,
+  Table,
+  TableRow,
+  TableCell,
+  AlignmentType,
+  PageOrientation,
+} = require("docx");
 
 const ROOT = path.join(__dirname, "..");
 const GENESIS_DIR = path.join(
@@ -16,21 +27,189 @@ const GENESIS_DIR = path.join(
   "chapters",
   "genesis"
 );
-const OUT_FILE = path.join(ROOT, "export", "Genesis-compendio-textos.docx");
+const OUT_FILE = path.join(ROOT, "export", "Genesis-interlineal-admin.docx");
 
-function verseSpanish(segments) {
-  if (!Array.isArray(segments)) return "";
-  const sorted = segments.filter((s) => s.visible_in_admin_ui !== false);
-  sorted.sort((a, b) => {
-    const tn = (x) => parseInt(String(x.token_num ?? "0"), 10) || 0;
-    const mi = (x) => Number(x.morpheme_index ?? 0);
-    const c = tn(a) - tn(b);
-    return c !== 0 ? c : mi(a) - mi(b);
+/** Misma heurística que admin-interlinear-static.js (hasHebrewConsonantSurf). */
+function hasHebrewConsonantSurf(str) {
+  return /[\u05D0-\u05EA]/.test(String(str || ""));
+}
+
+/** Segmentos editables en UI (visible_in_admin_ui). */
+function segmentVisibleInAdmin(seg) {
+  return seg && seg.visible_in_admin_ui !== false;
+}
+
+/**
+ * Misma regla que buildVerseCardFromSnapshot: no dibujar morfema vacío en la tarjeta morfología.
+ */
+function passesMorphCard(seg) {
+  const hebrewSurface = String(seg.hebrew || "").trim();
+  const gloss = String(seg.spanish || "").trim();
+  const greekSurf = String(seg.greek_lxx || "").trim();
+  const hasRealGreek = greekSurf && greekSurf !== "—";
+  return hasHebrewConsonantSurf(hebrewSurface) || Boolean(gloss) || hasRealGreek;
+}
+
+/** Igual que groupSegmentsForVerse en admin-interlinear-static.js */
+function groupSegmentsForVerse(segments) {
+  const visible = (Array.isArray(segments) ? segments : []).filter(segmentVisibleInAdmin);
+  const rows = [];
+  let cur = null;
+  for (const seg of visible) {
+    const tk = String(seg.token_num ?? "");
+    if (!cur || cur.token_num !== tk) {
+      cur = { token_num: tk, morphemes: [] };
+      rows.push(cur);
+    }
+    cur.morphemes.push(seg);
+  }
+  return rows;
+}
+
+function flattenMorphRows(segments) {
+  const merged = groupSegmentsForVerse(segments);
+  const out = [];
+  for (const { token_num: tkNum, morphemes } of merged) {
+    for (const morpheme of morphemes) {
+      if (!passesMorphCard(morpheme)) continue;
+      out.push({ token_num: tkNum, seg: morpheme });
+    }
+  }
+  return out;
+}
+
+function formatMorphStrong(seg) {
+  const st = String(seg.strongs || "").trim();
+  const morph = String(seg.morphology || "").trim() || "—";
+  return st ? `${st} · ${morph}` : morph;
+}
+
+/** Griego tal como en datos; el nivel LXX se anota como en los tooltips del admin (hint / soft / auto). */
+function formatGreekLxx(seg) {
+  const g = String(seg.greek_lxx || "").trim();
+  const tier = String(seg.lxx_tier || "").trim();
+  if (g === "—") return tier ? `— (${tier})` : "—";
+  if (!g) return tier ? `(${tier})` : "";
+  return tier ? `${g} (${tier})` : g;
+}
+
+function cellParagraph(text, opts = {}) {
+  const t = text === undefined || text === null ? "" : String(text);
+  return new Paragraph({
+    alignment: opts.alignment,
+    bidirectional: opts.bidirectional,
+    children: [
+      opts.bold ? new TextRun({ text: t || " ", bold: true }) : new TextRun(t || " "),
+    ],
   });
-  const parts = sorted
-    .map((s) => (typeof s.spanish === "string" ? s.spanish.trim() : ""))
-    .filter(Boolean);
-  return parts.join(" ").replace(/\s+/g, " ").trim();
+}
+
+function headerCell(label) {
+  return new TableCell({
+    margins: { top: 80, bottom: 80, left: 80, right: 80 },
+    children: [cellParagraph(label, { bold: true })],
+  });
+}
+
+function verseInterlinearTable(rows) {
+  const headerRow = new TableRow({
+    tableHeader: true,
+    children: [
+      headerCell("Token / índ."),
+      headerCell("Tipo"),
+      headerCell("Hebreo"),
+      headerCell("Morfología · Strong"),
+      headerCell("Español"),
+      headerCell("Griego (LXX)"),
+    ],
+  });
+
+  if (!rows.length) {
+    const emptyRow = new TableRow({
+      children: [
+        new TableCell({
+          columnSpan: 6,
+          margins: { top: 80, bottom: 80, left: 120, right: 120 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun(
+                  "(Sin filas en la vista morfología del admin para este versículo: ningún segmento visible cumple la regla de contenido.)"
+                ),
+              ],
+            }),
+          ],
+        }),
+      ],
+    });
+    return new Table({
+      columnWidths: [900, 720, 2160, 3200, 2600, 3200],
+      rows: [headerRow, emptyRow],
+    });
+  }
+
+  const dataRows = rows.map(({ token_num: tkNum, seg }) => {
+    const idx = seg.morpheme_index ?? 0;
+    const ref = `${tkNum}/${idx}`;
+    const tipo = String(seg.morpheme_type || "base").trim() || "base";
+    const he = String(seg.hebrew || "").trim() || "·";
+
+    return new TableRow({
+      children: [
+        new TableCell({
+          margins: { top: 60, bottom: 60, left: 80, right: 80 },
+          children: [cellParagraph(ref)],
+        }),
+        new TableCell({
+          margins: { top: 60, bottom: 60, left: 80, right: 80 },
+          children: [cellParagraph(tipo)],
+        }),
+        new TableCell({
+          margins: { top: 60, bottom: 60, left: 80, right: 80 },
+          children: [
+            cellParagraph(he, {
+              bidirectional: true,
+              alignment: AlignmentType.RIGHT,
+            }),
+          ],
+        }),
+        new TableCell({
+          margins: { top: 60, bottom: 60, left: 80, right: 80 },
+          children: [cellParagraph(formatMorphStrong(seg))],
+        }),
+        new TableCell({
+          margins: { top: 60, bottom: 60, left: 80, right: 80 },
+          children: [cellParagraph(String(seg.spanish || "").trim())],
+        }),
+        new TableCell({
+          margins: { top: 60, bottom: 60, left: 80, right: 80 },
+          children: [cellParagraph(formatGreekLxx(seg))],
+        }),
+      ],
+    });
+  });
+
+  return new Table({
+    columnWidths: [900, 720, 2160, 3200, 2600, 3200],
+    rows: [headerRow, ...dataRows],
+  });
+}
+
+function lxxChipParagraph(verse) {
+  const edition = String(verse?.lxx_edition || "").trim();
+  const lxxV = verse?.lxx_verse;
+  const mtCh = verse?.mt_chapter;
+  const shifted = Boolean(verse?.mt_lxx_verse_shifted);
+  const mtV = verse?.mt_verse;
+  if (!edition || !Number.isFinite(Number(lxxV))) {
+    return null;
+  }
+  const shiftNote =
+    shifted && Number.isFinite(Number(mtV)) ? ` · Masora v${mtV}→LXX v${lxxV}` : "";
+  const line = `LXX (${edition}) ${mtCh}:${lxxV}${shiftNote}`;
+  return new Paragraph({
+    children: [new TextRun({ text: line, italics: true })],
+  });
 }
 
 async function main() {
@@ -43,14 +222,14 @@ async function main() {
   children.push(
     new Paragraph({
       heading: HeadingLevel.TITLE,
-      children: [new TextRun("Compendio de textos — Génesis")],
+      children: [new TextRun("Génesis — interlineal (admin)")],
     })
   );
   children.push(
     new Paragraph({
       children: [
         new TextRun(
-          "Texto en español reunido a partir de las glosas interlineales del snapshot (solo segmentos visibles en la interfaz de administración). Puedes editar este documento y devolver correcciones para integrarlas en el proyecto."
+          "Exportación del snapshot interlineal con las mismas columnas y reglas de la vista morfología del admin: segmentos con visible_in_admin_ui distinto de false, agrupados por token; se omiten morfemas vacíos como en la tarjeta del versículo (sin consonante hebrea, sin glosa y sin griego real). La columna griego incluye el valor de lxx_tier (hint, soft, auto) cuando existe. Orientación horizontal para tablas anchas."
         ),
       ],
     })
@@ -75,23 +254,39 @@ async function main() {
     for (const vk of vKeys) {
       const v = verses[vk];
       const vNum = parseInt(vk, 10);
-      const text = verseSpanish(v.segments);
-      const ref = `${chapNum}:${vNum}`;
+      const refLine = `${bookLabel} ${chapNum}:${vNum}`;
+
       children.push(
         new Paragraph({
-          children: [
-            new TextRun({ text: `${ref} — `, bold: true }),
-            new TextRun(text || "(sin glosas visibles en UI)"),
-          ],
+          spacing: { before: 200, after: 120 },
+          children: [new TextRun({ text: refLine, bold: true })],
         })
       );
+
+      const lxxPara = lxxChipParagraph(v);
+      if (lxxPara) children.push(lxxPara);
+
+      const morphRows = flattenMorphRows(v.segments);
+      children.push(verseInterlinearTable(morphRows));
+      children.push(new Paragraph({ spacing: { after: 160 }, children: [new TextRun("")] }));
     }
 
     children.push(new Paragraph({ children: [new TextRun("")] }));
   }
 
   const doc = new Document({
-    sections: [{ children }],
+    sections: [
+      {
+        properties: {
+          page: {
+            size: {
+              orientation: PageOrientation.LANDSCAPE,
+            },
+          },
+        },
+        children,
+      },
+    ],
   });
 
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
