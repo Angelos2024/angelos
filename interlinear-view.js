@@ -1609,62 +1609,13 @@
 
   let greekDictionaryPromise = null;
   let hebrewFallbackPromise = null;
-  let manifestPromise = null;
   const hebrewInterlinearBookCache = new Map();
-  const hebrewInterlinearChapterCache = new Map();
   const hebrewInterlinearMapCache = new Map();
-  const MANIFEST_URL = './IdiomaORIGEN/manifest.json';
-  const HEBREW_INTERLINEAL_CHAPTER_BASE = `${HEBREW_INTERLINEAR_BASE}/chapters`;
 
   async function loadJson(path) {
     const response = await fetch(path, { cache: 'force-cache' });
     if (!response.ok) throw new Error(`No se pudo cargar ${path} (HTTP ${response.status})`);
     return response.json();
-  }
-
-  async function getManifest() {
-    if (!manifestPromise) {
-      manifestPromise = loadJson(MANIFEST_URL).catch(() => null);
-    }
-    return manifestPromise;
-  }
-
-  function interlinearChapterUrl(base, chapterNum) {
-    return `${HEBREW_INTERLINEAL_CHAPTER_BASE}/${encodeURIComponent(base)}/${chapterNum}.json`;
-  }
-
-  async function loadHebrewInterlinearChapter(slug, chapterNum) {
-    const slugKey = String(slug || '').trim();
-    const chapter = Number(chapterNum);
-    if (!slugKey || !Number.isInteger(chapter) || chapter < 1) return null;
-
-    const cacheKey = `${slugKey}/${chapter}`;
-    if (hebrewInterlinearChapterCache.has(cacheKey)) {
-      return hebrewInterlinearChapterCache.get(cacheKey);
-    }
-
-    const promise = (async () => {
-      const manifest = await getManifest();
-      const base = manifest?.books?.[slugKey]?.base;
-      if (base) {
-        const chapterDoc = await loadJson(interlinearChapterUrl(base, chapter)).catch(() => null);
-        if (chapterDoc && typeof chapterDoc === 'object') return chapterDoc;
-      }
-
-      const book = await loadHebrewInterlinearBookBySlug(slugKey);
-      const chapterNode = book?.chapters?.[String(chapter)] || null;
-      return chapterNode && typeof chapterNode === 'object' ? chapterNode : null;
-    })();
-
-    hebrewInterlinearChapterCache.set(cacheKey, promise);
-    return promise;
-  }
-
-  function invalidateHebrewChapterCache(slug, chapterNum) {
-    const slugKey = String(slug || '').trim();
-    const chapter = Number(chapterNum);
-    if (!slugKey || !Number.isInteger(chapter) || chapter < 1) return;
-    hebrewInterlinearChapterCache.delete(`${slugKey}/${chapter}`);
   }
 
   async function loadHebrewInterlinearBookBySlug(slug) {
