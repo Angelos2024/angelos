@@ -1459,7 +1459,21 @@ function rebalanceHebrewInterlinearSpanishTokens(spanishTokens, sourceTokenMeta,
     return `<span class="${originalWordClass}">${fmtOrigVerse(fallbackText || '-', isGreek, rows?.context || {})}</span>`;
       }
 
-  const words = tokens.map((token, idx) => {
+  function _isHebrewPrefix(idx) {
+    const meta = sourceTokenMeta[idx];
+    if (!meta) return false;
+    const m = String(meta.morphs || '').trim().toUpperCase();
+    if (/^(CC|CONJ)$/i.test(m)) return true;
+    if (/^(XD|ART|ARTD)$/i.test(m)) return true;
+    if (/^(PB|PL|PM|PK|PREP)$/i.test(m)) return true;
+    if (/^(RD|REL)$/i.test(m)) return true;
+    if (/^(Pi|Pp)$/i.test(m)) return true;
+    const orig = String(meta.orig || '').trim();
+    if (/^[וּוְוַהַבְּלְמִכְּשֶׁ]$/.test(orig)) return true;
+    return false;
+  }
+
+  const wordSpans = tokens.map((token, idx) => {
     const originalWord = esc(token || '-');
     const spanishWord = esc(formatInterlinearSpanishTokenDisplay(spanishTokens[idx] || '-'));
     const analysis = analysisData[idx] || null;
@@ -1468,7 +1482,30 @@ function rebalanceHebrewInterlinearSpanishTokens(spanishTokens, sourceTokenMeta,
     return `<span class="interlinear-word ${directionClass}" data-analysis="${hasAnalysis}"><span class="${originalWordClass}">${originalWord}</span><span class="interlinear-spanish">${spanishWord}</span></span>`;
   });
 
-  return `<span class="interlinear-grid ${directionClass}">${words.join('')}</span>`;
+  if (isGreek) {
+    return `<span class="interlinear-grid ${directionClass}">${wordSpans.join('')}</span>`;
+  }
+
+  const groups = [];
+  let i = 0;
+  while (i < wordSpans.length) {
+    if (_isHebrewPrefix(i) && i + 1 < wordSpans.length) {
+      let group = wordSpans[i];
+      i++;
+      while (i < wordSpans.length && _isHebrewPrefix(i) && i + 1 < wordSpans.length) {
+        group += wordSpans[i];
+        i++;
+      }
+      group += wordSpans[i];
+      i++;
+      groups.push(`<span class="interlinear-word-group">${group}</span>`);
+    } else {
+      groups.push(wordSpans[i]);
+      i++;
+    }
+  }
+
+  return `<span class="interlinear-grid ${directionClass}">${groups.join('')}</span>`;
     }
 function updateViewModeButton(){
   if(!btnViewMode) return;
