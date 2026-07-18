@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>RKANT · Aparato crítico del Nuevo Testamento</title>
+<link rel="stylesheet" href="static/estilo.css"/>
+</head>
+<body class="app-body">
+
+<div class="app">
+
+  <header class="app-topbar">
+    <button id="btn-exit" class="btn-exit" type="button" title="Volver al inicio" hidden>
+      <span aria-hidden="true">←</span>
+      <span class="btn-exit-lbl">Volver al inicio</span>
+    </button>
+    <a class="app-brand" href="#/">
+      <span class="brand-icon">✒︎</span>
+      <div>
+        <div class="brand-name">RKANT</div>
+        <div class="brand-sub">Roans Kritischer Apparat Neuen Testament</div>
+      </div>
+    </a>
+    <div class="app-search">
+      <input id="q" type="search" placeholder="Buscar: Mt 1:1, Gálatas 1 6, apoc 22:21…" autocomplete="off"/>
+      <div id="q-results" class="q-results" role="listbox" hidden></div>
+    </div>
+  </header>
+
+  <nav class="verse-toolbar">
+    <a class="nav-btn nav-prev" id="btn-prev" href="#" title="Versículo anterior (←)">
+      <span class="nav-arrow">←</span>
+      <span class="nav-lbl">Anterior</span>
+    </a>
+
+    <div class="picker">
+      <label class="picker-lbl">Libro</label>
+      <div class="select-wrap">
+        <select id="sel-book" aria-label="Libro"></select>
+      </div>
+    </div>
+
+    <div class="picker">
+      <label class="picker-lbl">Capítulo</label>
+      <div class="select-wrap">
+        <select id="sel-chapter" aria-label="Capítulo"></select>
+      </div>
+    </div>
+
+    <div class="picker">
+      <label class="picker-lbl">Versículo</label>
+      <div class="select-wrap">
+        <select id="sel-verse" aria-label="Versículo"></select>
+      </div>
+    </div>
+
+    <a class="nav-btn nav-next" id="btn-next" href="#" title="Versículo siguiente (→)">
+      <span class="nav-lbl">Siguiente</span>
+      <span class="nav-arrow">→</span>
+    </a>
+  </nav>
+
+  <main class="app-main">
+    <div id="content" class="app-content">
+      <div class="welcome">
+        <h1>RKANT — Aparato crítico del Nuevo Testamento</h1>
+        <p>Elige un libro, capítulo y versículo en la barra superior, o escribe una referencia en el buscador (por ejemplo <kbd>Mt 1:1</kbd>, <kbd>gal 1 6</kbd>, <kbd>apoc 22:21</kbd>).</p>
+        <ul class="hints">
+          <li>Cada versículo se carga con el texto griego, el aparato crítico, la tabla de manuscritos y las referencias cruzadas.</li>
+          <li>Pasa el cursor sobre cada sigla para ver el manuscrito completo.</li>
+          <li>Usa las flechas ← / → o los botones <b>Anterior</b> / <b>Siguiente</b> para leer secuencialmente.</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- tooltip flotante único, compartido por todos los versículos -->
+<div id="ms-tip" class="ms-tip" role="tooltip" aria-hidden="true"></div>
+
+<script>
+(function(){
+  // ---------------- tooltips ---------------------------------------------
+  const tip = document.getElementById('ms-tip');
+  let currentEl = null;
+  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function showTip(el){
+    if (!el || currentEl === el) return;
+    currentEl = el;
+    const title = el.dataset.title || '';
+    const meta  = el.dataset.meta || '';
+    let modsHtml = '';
+    try {
+      const mods = JSON.parse(el.dataset.mods || '[]');
+      if (mods.length){
+        modsHtml = '<div class="mod-list">' + mods.map(m =>
+          '<div class="mod-row"><b>' + esc(m.s) + '</b> — ' + esc(m.d) + '</div>'
+        ).join('') + '</div>';
+      }
+    } catch(e){}
+    tip.innerHTML =
+      '<div class="tip-title">' + esc(title) + '</div>' +
+      '<div class="tip-meta">' + esc(meta) + '</div>' +
+      modsHtml;
+    tip.classList.add('visible');
+    tip.setAttribute('aria-hidden','false');
+    const rect = el.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    const M = 8;
+    let left = rect.left + rect.width/2 - tw/2;
+    let top  = rect.bottom + 6;
+    if (left < M) left = M;
+    if (left + tw > window.innerWidth - M) left = window.innerWidth - tw - M;
+    if (top + th > window.innerHeight - M) { top = rect.top - th - 6; if (top < M) top = M; }
+    tip.style.left = left + 'px';
+    tip.style.top  = top + 'px';
+    el.classList.add('ms-active');
+  }
+  function hideTip(){
+    if (!currentEl) return;
+    tip.classList.remove('visible');
+    tip.setAttribute('aria-hidden','true');
+    currentEl.classList.remove('ms-active');
+    currentEl = null;
+  }
+  document.addEventListener('mouseover', e => {
+    const w = e.target.closest && e.target.closest('.wit');
+    if (w && w.dataset.title !== undefined) showTip(w);
+    else if (currentEl && !e.target.closest('.wit')) hideTip();
+  });
+  document.addEventListener('focusin', e => {
+    const w = e.target.closest && e.target.closest('.wit');
+    if (w && w.dataset.title !== undefined) showTip(w);
+  });
+  document.addEventListener('focusout', () => hideTip());
+  document.addEventListener('scroll', hideTip, true);
+  window.addEventListener('resize', hideTip);
+
+  // ---------------- estado ------------------------------------------------
+  const STATE = { map: null, byBn: {}, byAbrLC: {}, byNameLC: {}, activeBn: null, activeCh: null, activeVs: null };
+  const $ = id => document.getElementById(id);
+  const contentEl = $('content');
+  const btnPrev   = $('btn-prev');
+  const btnNext   = $('btn-next');
+  const qInput    = $('q');
+  const qResults  = $('q-results');
+  const selBook   = $('sel-book');
+  const selCh     = $('sel-chapter');
+  const selVs     = $('sel-verse');
+  const btnExit   = $('btn-exit');
+
+  // ---------------- persistencia local (por dispositivo) -----------------
+  const LS_KEY = 'rkant.newLastHash';
+  function saveHash(h){
+    try { if (h && h !== '#/') localStorage.setItem(LS_KEY, h); } catch(e){}
+  }
+  function loadHash(){
+    try { return localStorage.getItem(LS_KEY) || ''; } catch(e){ return ''; }
+  }
+  window.addEventListener('hashchange', () => saveHash(location.hash));
+
+  // ---------------- integración host (embed / iframe) --------------------
+  const IS_EMBEDDED = (function(){
+    try { return window.self !== window.top; } catch(e){ return true; }
+  })();
+  if (IS_EMBEDDED) {
+    document.body.classList.add('embedded');
+    if (btnExit) {
+      btnExit.hidden = false;
+      btnExit.addEventListener('click', () => {
+        try { window.parent.postMessage({type:'rkant-close', hash: location.hash}, '*'); } catch(e){}
+      });
+    }
+    window.addEventListener('hashchange', () => {
+      try { window.parent.postMessage({type:'rkant-hash', hash: location.hash}, '*'); } catch(e){}
+    });
+    window.addEventListener('message', (ev) => {
+      const d = ev && ev.data;
+      if (!d || typeof d !== 'object') return;
+      if (d.type === 'rkant-go' && typeof d.hash === 'string') {
+        location.hash = d.hash;
+      }
+    });
+  }
+
+  // Si no viene hash explícito, restaurar el último visitado (persistencia
+  // "por dispositivo": funciona tanto en modo standalone como embebido).
+  if (!location.hash || location.hash === '#' || location.hash === '#/') {
+    const last = loadHash();
+    if (last && /^#\/\d+\/\d+\/\d+$/.test(last)) {
+      history.replaceState(null, '', last);
+    }
+  }
+
+  // ---------------- inicial: cargar mapa ----------------------------------
+  fetch('nt-map.json').then(r => r.json()).then(data => {
+    STATE.map = data;
+    (data.libros || []).forEach(L => {
+      STATE.byBn[L.bn] = L;
+      if (L.abr) STATE.byAbrLC[L.abr.toLowerCase().replace(/\s+/g,'')] = L;
+      STATE.byNameLC[L.es.toLowerCase()] = L;
+      STATE.byNameLC[L.es.toLowerCase().replace(/\s+/g,'')] = L;
+    });
+    populateBooks();
+    handleRoute();
+  }).catch(err => {
+    contentEl.innerHTML = '<p class="err">Error cargando nt-map.json: '+ esc(String(err))+ '</p>';
+  });
+
+  // ---------------- pickers (dropdowns) -----------------------------------
+  function populateBooks(){
+    const opts = ['<option value="">— Libro —</option>'].concat(
+      (STATE.map.libros || []).map(L =>
+        '<option value="'+L.bn+'">'+esc((L.abr?L.abr+' · ':'')+L.es)+'</option>'
+      )
+    );
+    selBook.innerHTML = opts.join('');
+    populateChapters(null);
+  }
+
+  function populateChapters(bn){
+    if (!bn){
+      selCh.innerHTML = '<option value="">—</option>';
+      selCh.disabled = true;
+      populateVerses(null, null);
+      return;
+    }
+    const L = STATE.byBn[bn];
+    if (!L) { selCh.innerHTML = ''; selCh.disabled = true; return; }
+    const caps = Object.keys(L.chapters).map(n => parseInt(n)).sort((a,b) => a-b);
+    const opts = ['<option value="">— Cap. —</option>'].concat(
+      caps.map(ch => '<option value="'+ch+'">'+ch+'</option>')
+    );
+    selCh.innerHTML = opts.join('');
+    selCh.disabled = false;
+  }
+
+  function populateVerses(bn, ch){
+    if (!bn || !ch){
+      selVs.innerHTML = '<option value="">—</option>';
+      selVs.disabled = true;
+      return;
+    }
+    const L = STATE.byBn[bn];
+    const versos = (L && L.chapters[ch]) || [];
+    const opts = ['<option value="">— v. —</option>'].concat(
+      versos.map(vs => '<option value="'+vs+'">'+vs+'</option>')
+    );
+    selVs.innerHTML = opts.join('');
+    selVs.disabled = false;
+  }
+
+  function setPickers(bn, ch, vs){
+    if (bn) { selBook.value = String(bn); populateChapters(bn); } else { selBook.value = ''; populateChapters(null); }
+    if (bn && ch) { selCh.value = String(ch); populateVerses(bn, ch); } else if (bn) { selCh.value = ''; }
+    if (bn && ch && vs) { selVs.value = String(vs); } else if (bn && ch) { selVs.value = ''; }
+  }
+
+  selBook.addEventListener('change', () => {
+    const bn = parseInt(selBook.value);
+    if (!bn) { location.hash = '#/'; return; }
+    populateChapters(bn);
+    // navegar al primer capítulo, primer verso disponible
+    const L = STATE.byBn[bn];
+    if (L){
+      const firstCh = parseInt(Object.keys(L.chapters).sort((a,b) => parseInt(a)-parseInt(b))[0]);
+      const firstVs = L.chapters[firstCh][0];
+      location.hash = '#/' + bn + '/' + firstCh + '/' + firstVs;
+    }
+  });
+  selCh.addEventListener('change', () => {
+    const bn = parseInt(selBook.value);
+    const ch = parseInt(selCh.value);
+    if (!bn || !ch) return;
+    const L = STATE.byBn[bn];
+    const firstVs = (L && L.chapters[ch]) ? L.chapters[ch][0] : 1;
+    location.hash = '#/' + bn + '/' + ch + '/' + firstVs;
+  });
+  selVs.addEventListener('change', () => {
+    const bn = parseInt(selBook.value);
+    const ch = parseInt(selCh.value);
+    const vs = parseInt(selVs.value);
+    if (!bn || !ch || !vs) return;
+    location.hash = '#/' + bn + '/' + ch + '/' + vs;
+  });
+
+  // ---------------- carga de contenido -----------------------------------
+  function loadVerse(bn, ch, vs){
+    const url = './' + bn + '/' + ch + '/' + vs + '.html';
+    contentEl.classList.add('loading');
+    fetch(url).then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    }).then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const article = doc.getElementById('verso-content');
+      if (!article) throw new Error('El HTML no contiene <article id="verso-content">');
+      contentEl.innerHTML = '';
+      contentEl.appendChild(article);
+      updateNav(article);
+      contentEl.classList.remove('loading');
+      contentEl.scrollTop = 0;
+      setPickers(bn, ch, vs);
+      STATE.activeBn = bn; STATE.activeCh = ch; STATE.activeVs = vs;
+      document.title = article.dataset.ref + ' — RKANT';
+    }).catch(err => {
+      contentEl.classList.remove('loading');
+      contentEl.innerHTML = '<div class="err">No se pudo cargar el versículo <code>'+esc(url)+'</code>.<br/>' +
+        '<small>'+ esc(String(err)) +'</small></div>';
+    });
+  }
+
+  function updateNav(article){
+    const pbn = article.dataset.prevBn, pch = article.dataset.prevCh, pvs = article.dataset.prevVs;
+    const nbn = article.dataset.nextBn, nch = article.dataset.nextCh, nvs = article.dataset.nextVs;
+    if (pbn && pch && pvs){
+      btnPrev.href = '#/' + pbn + '/' + pch + '/' + pvs;
+      btnPrev.title = 'Anterior: ' + (article.dataset.prevRef || '');
+      btnPrev.classList.remove('disabled');
+    } else {
+      btnPrev.href = '#';
+      btnPrev.title = '';
+      btnPrev.classList.add('disabled');
+    }
+    if (nbn && nch && nvs){
+      btnNext.href = '#/' + nbn + '/' + nch + '/' + nvs;
+      btnNext.title = 'Siguiente: ' + (article.dataset.nextRef || '');
+      btnNext.classList.remove('disabled');
+    } else {
+      btnNext.href = '#';
+      btnNext.title = '';
+      btnNext.classList.add('disabled');
+    }
+  }
+
+  // ---------------- routing por hash --------------------------------------
+  function parseHash(){
+    const h = location.hash.replace(/^#\/?/, '');
+    if (!h) return {};
+    const parts = h.split('/').filter(Boolean).map(x => parseInt(x));
+    if (parts.length === 3) return {bn:parts[0], ch:parts[1], vs:parts[2]};
+    if (parts.length === 2) return {bn:parts[0], ch:parts[1]};
+    if (parts.length === 1) return {bn:parts[0]};
+    return {};
+  }
+
+  function handleRoute(){
+    const r = parseHash();
+    if (r.bn && r.ch && r.vs){
+      loadVerse(r.bn, r.ch, r.vs);
+    } else if (r.bn && r.ch){
+      const L = STATE.byBn[r.bn];
+      const firstVs = (L && L.chapters[r.ch]) ? L.chapters[r.ch][0] : 1;
+      location.hash = '#/' + r.bn + '/' + r.ch + '/' + firstVs;
+    } else if (r.bn){
+      const L = STATE.byBn[r.bn];
+      if (L){
+        const firstCh = parseInt(Object.keys(L.chapters).sort((a,b) => parseInt(a)-parseInt(b))[0]);
+        const firstVs = L.chapters[firstCh][0];
+        location.hash = '#/' + r.bn + '/' + firstCh + '/' + firstVs;
+      }
+    } else {
+      setPickers(null, null, null);
+      contentEl.innerHTML = welcomeHome();
+      btnPrev.classList.add('disabled'); btnPrev.href = '#';
+      btnNext.classList.add('disabled'); btnNext.href = '#';
+    }
+  }
+  window.addEventListener('hashchange', handleRoute);
+
+  function welcomeHome(){
+    const cards = (STATE.map.libros || []).map(L =>
+      `<a class="home-card" href="#/${L.bn}">
+        <div class="hc-abr">${esc(L.abr || '')}</div>
+        <div class="hc-name">${esc(L.es)}</div>
+        <div class="hc-cnt">${L.n_verses} versos</div>
+      </a>`).join('');
+    return `<div class="welcome">
+      <h1>RKANT — Aparato crítico del Nuevo Testamento</h1>
+      <p>Elige un libro, capítulo y versículo arriba, o escribe una referencia en el buscador: <kbd>Mt 1:1</kbd>, <kbd>gal 1 6</kbd>, <kbd>apoc 22:21</kbd>.</p>
+      <div class="home-grid">${cards}</div>
+    </div>`;
+  }
+
+  // ---------------- búsqueda ---------------------------------------------
+  function parseQuery(q){
+    // acepta: "mt 1:1", "mt1:1", "Mt 1 1", "gal 1 6", "1 co 13:4", "apoc 22 21",
+    // "mateo 1:1", "1corintios 13:4", "3 juan 1:1", etc.
+    q = q.trim().toLowerCase();
+    if (!q) return null;
+    // separar la parte del libro y las cifras
+    const m = q.match(/^([a-zñáéíóú0-9 ]+?)\s*(\d+)?\s*[:.\s]?\s*(\d+)?\s*[:.\s]?\s*(\d+)?\s*$/);
+    if (!m) return null;
+    let name = (m[1] || '').trim();
+    const nums = [m[2], m[3], m[4]].filter(Boolean).map(x => parseInt(x));
+    // buscar libro que empiece con el nombre (o coincida abr)
+    name = name.replace(/\s+/g,'');
+    let libro = STATE.byAbrLC[name] || STATE.byNameLC[name];
+    if (!libro){
+      // fuzzy: empieza-con
+      libro = (STATE.map.libros || []).find(L =>
+        (L.es.toLowerCase().replace(/\s+/g,'').startsWith(name)) ||
+        (L.abr && L.abr.toLowerCase().replace(/\s+/g,'').startsWith(name))
+      );
+    }
+    if (!libro) return null;
+    // interpretar cifras según cuántas hay
+    let ch = null, vs = null;
+    if (nums.length >= 2) { ch = nums[0]; vs = nums[1]; }
+    else if (nums.length === 1) { ch = nums[0]; }
+    // validar rangos
+    if (ch != null && !(ch in libro.chapters)) return {libro};
+    if (vs != null && libro.chapters[ch].indexOf(vs) < 0) return {libro, ch};
+    return {libro, ch, vs};
+  }
+
+  qInput.addEventListener('input', () => {
+    const q = qInput.value;
+    if (!q.trim()) { qResults.hidden = true; qResults.innerHTML=''; return; }
+    // sugerencias por libro (prefix match) + interpretación exacta
+    const parsed = parseQuery(q);
+    const parts = [];
+    if (parsed && parsed.libro){
+      const L = parsed.libro;
+      let target = '#/'+L.bn;
+      let lbl = L.es;
+      if (parsed.ch != null) { target += '/'+parsed.ch; lbl += ' '+parsed.ch; }
+      if (parsed.vs != null) { target += '/'+parsed.vs; lbl += ':'+parsed.vs; }
+      parts.push(`<a class="q-hit go" href="${target}"><b>Ir a</b> ${esc(lbl)}</a>`);
+    }
+    const term = q.toLowerCase().replace(/\s+/g,'');
+    const matches = (STATE.map.libros || []).filter(L =>
+      L.es.toLowerCase().replace(/\s+/g,'').includes(term) ||
+      (L.abr && L.abr.toLowerCase().replace(/\s+/g,'').includes(term))
+    ).slice(0, 8);
+    for (const L of matches) {
+      parts.push(`<a class="q-hit" href="#/${L.bn}"><span class="q-abr">${esc(L.abr||'')}</span>${esc(L.es)}<span class="q-cnt">${L.n_verses}</span></a>`);
+    }
+    if (!parts.length){
+      parts.push('<div class="q-empty">sin coincidencias</div>');
+    }
+    qResults.innerHTML = parts.join('');
+    qResults.hidden = false;
+  });
+  qInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter'){
+      const parsed = parseQuery(qInput.value);
+      if (parsed && parsed.libro){
+        let h = '#/'+parsed.libro.bn;
+        if (parsed.ch != null) h += '/'+parsed.ch;
+        if (parsed.vs != null) h += '/'+parsed.vs;
+        location.hash = h;
+        qResults.hidden = true;
+        qInput.blur();
+      }
+    } else if (e.key === 'Escape'){
+      qResults.hidden = true;
+      qInput.blur();
+    }
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.app-search')) qResults.hidden = true;
+  });
+  qResults.addEventListener('click', e => {
+    if (e.target.closest('.q-hit')) {
+      setTimeout(() => { qResults.hidden = true; qInput.value=''; }, 0);
+    }
+  });
+
+  // ---------------- atajos de teclado ------------------------------------
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === '/' || (e.ctrlKey && e.key === 'k')){
+      e.preventDefault(); qInput.focus();
+    } else if (e.key === 'ArrowLeft' && !btnPrev.classList.contains('disabled')){
+      location.hash = btnPrev.getAttribute('href');
+    } else if (e.key === 'ArrowRight' && !btnNext.classList.contains('disabled')){
+      location.hash = btnNext.getAttribute('href');
+    }
+  });
+})();
+</script>
+</body>
+</html>

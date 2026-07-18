@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Hebreos 9:6 — RKANT aparato crítico</title>
+<link rel="stylesheet" href="../../static/estilo.css"/>
+</head>
+<body class="verse-standalone">
+<div class="container">
+
+  <div class="nav">
+    <a href="../../index.html">Libros</a>
+    <span class="sep">›</span>
+    <a href="../../index.html#/650">Hebreos</a>
+    <span class="sep">›</span>
+    <a href="../../index.html#/650/9">Cap. 9</a>
+    <span class="sep">›</span>
+    <span>v. 6</span>
+    <span class="prev-next">
+      <a href="5.html">← Hebreos 9:5</a>
+      <a href="7.html">Hebreos 9:7 →</a>
+    </span>
+  </div>
+
+  <article id="verso-content"
+           data-bn="650" data-ch="9" data-vs="6"
+           data-ref="Hebreos 9:6" data-ref-en="Hebrews 9:6"
+           data-book="Hebreos"
+           data-prev-bn="650" data-prev-ch="9" data-prev-vs="5"
+           data-prev-ref="Hebreos 9:5"
+           data-next-bn="650" data-next-ch="9" data-next-vs="7"
+           data-next-ref="Hebreos 9:7">
+
+  <h1 class="verso-title">Hebreos 9:6</h1>
+  <div class="verso-title-en">Hebrews 9:6</div>
+
+  <div class="section">
+    <h2 class="section-title">Texto Griego</h2>
+    <div class="greek">Τούτων δὲ οὕτως κατεσκευασμένων εἰς μὲν τὴν πρώτην σκηνὴν διὰ παντὸς εἰσίασιν οἱ ἱερεῖς τὰς λατρείας ἐπιτελοῦντες,</div>
+  </div>
+
+  <div class="section apparato">
+    <h2 class="section-title">Aparato Crítico</h2>
+    <p style="color:#999">— Sin variantes textuales registradas —</p>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Variantes significativas de manuscritos</h2>
+    <p style="color:#999">— sin variantes textuales —</p>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Identificación de Manuscritos y Presencia de la Variante</h2>
+    <p style="color:#999">— sin testigos catalogados —</p>
+    
+  </div>
+
+  <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../40/18/3.html">Números 18:3</a></div></div>
+
+  </article>
+
+  <footer>
+    <span class="brand">RKANT</span> — <i>Roans Kritischer Apparat Neuen Testament</i>
+  </footer>
+</div>
+
+<!-- tooltip flotante único, posicionado con JS -->
+<div id="ms-tip" class="ms-tip" role="tooltip" aria-hidden="true"></div>
+<script>
+(function(){
+  const tip = document.getElementById('ms-tip');
+  if (!tip) return;
+  let currentEl = null;
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function show(el){
+    if (!el || currentEl === el) return;
+    currentEl = el;
+    const title = el.dataset.title || '';
+    const meta  = el.dataset.meta || '';
+    let modsHtml = '';
+    try {
+      const mods = JSON.parse(el.dataset.mods || '[]');
+      if (mods.length){
+        modsHtml = '<div class="mod-list">' + mods.map(m =>
+          '<div class="mod-row"><b>' + esc(m.s) + '</b> — ' + esc(m.d) + '</div>'
+        ).join('') + '</div>';
+      }
+    } catch(e){}
+    tip.innerHTML =
+      '<div class="tip-title">' + esc(title) + '</div>' +
+      '<div class="tip-meta">' + esc(meta) + '</div>' +
+      modsHtml;
+    tip.classList.add('visible');
+    tip.setAttribute('aria-hidden','false');
+    const rect = el.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    const M = 8;
+    let left = rect.left + rect.width/2 - tw/2;
+    let top  = rect.bottom + 6;
+    if (left < M) left = M;
+    if (left + tw > window.innerWidth - M) left = window.innerWidth - tw - M;
+    if (top + th > window.innerHeight - M) {
+      // no cabe abajo -> mostrar arriba
+      top = rect.top - th - 6;
+      if (top < M) top = M;
+    }
+    tip.style.left = left + 'px';
+    tip.style.top  = top + 'px';
+    el.classList.add('ms-active');
+  }
+  function hide(){
+    if (!currentEl) return;
+    tip.classList.remove('visible');
+    tip.setAttribute('aria-hidden','true');
+    currentEl.classList.remove('ms-active');
+    currentEl = null;
+  }
+  document.addEventListener('mouseover', e => {
+    const w = e.target.closest && e.target.closest('.wit');
+    if (w && w.dataset.title !== undefined) show(w);
+    else if (currentEl && !e.target.closest('.wit')) hide();
+  });
+  document.addEventListener('mouseleave', () => hide(), true);
+  document.addEventListener('focusin', e => {
+    const w = e.target.closest && e.target.closest('.wit');
+    if (w && w.dataset.title !== undefined) show(w);
+  });
+  document.addEventListener('focusout', () => hide());
+  window.addEventListener('scroll', hide, true);
+  window.addEventListener('resize', hide);
+})();
+</script>
+</body>
+</html>

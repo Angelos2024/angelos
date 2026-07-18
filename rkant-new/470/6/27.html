@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Mateo 6:27 — RKANT aparato crítico</title>
+<link rel="stylesheet" href="../../static/estilo.css"/>
+</head>
+<body class="verse-standalone">
+<div class="container">
+
+  <div class="nav">
+    <a href="../../index.html">Libros</a>
+    <span class="sep">›</span>
+    <a href="../../index.html#/470">Mateo</a>
+    <span class="sep">›</span>
+    <a href="../../index.html#/470/6">Cap. 6</a>
+    <span class="sep">›</span>
+    <span>v. 27</span>
+    <span class="prev-next">
+      <a href="26.html">← Mateo 6:26</a>
+      <a href="28.html">Mateo 6:28 →</a>
+    </span>
+  </div>
+
+  <article id="verso-content"
+           data-bn="470" data-ch="6" data-vs="27"
+           data-ref="Mateo 6:27" data-ref-en="Matthew 6:27"
+           data-book="Mateo"
+           data-prev-bn="470" data-prev-ch="6" data-prev-vs="26"
+           data-prev-ref="Mateo 6:26"
+           data-next-bn="470" data-next-ch="6" data-next-vs="28"
+           data-next-ref="Mateo 6:28">
+
+  <h1 class="verso-title">Mateo 6:27</h1>
+  <div class="verso-title-en">Matthew 6:27</div>
+
+  <div class="section">
+    <h2 class="section-title">Texto Griego</h2>
+    <div class="greek">τίς δὲ ἐξ ὑμῶν μεριμνῶν δύναται προσθεῖναι ἐπὶ τὴν ἡλικίαν αὐτοῦ πῆχυν ἕνα;</div>
+  </div>
+
+  <div class="section apparato">
+    <h2 class="section-title">Aparato Crítico</h2>
+    <p style="color:#999">— Sin variantes textuales registradas —</p>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Variantes significativas de manuscritos</h2>
+    <p style="color:#999">— sin variantes textuales —</p>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Identificación de Manuscritos y Presencia de la Variante</h2>
+    <p style="color:#999">— sin testigos catalogados —</p>
+    
+  </div>
+
+  
+
+  </article>
+
+  <footer>
+    <span class="brand">RKANT</span> — <i>Roans Kritischer Apparat Neuen Testament</i>
+  </footer>
+</div>
+
+<!-- tooltip flotante único, posicionado con JS -->
+<div id="ms-tip" class="ms-tip" role="tooltip" aria-hidden="true"></div>
+<script>
+(function(){
+  const tip = document.getElementById('ms-tip');
+  if (!tip) return;
+  let currentEl = null;
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function show(el){
+    if (!el || currentEl === el) return;
+    currentEl = el;
+    const title = el.dataset.title || '';
+    const meta  = el.dataset.meta || '';
+    let modsHtml = '';
+    try {
+      const mods = JSON.parse(el.dataset.mods || '[]');
+      if (mods.length){
+        modsHtml = '<div class="mod-list">' + mods.map(m =>
+          '<div class="mod-row"><b>' + esc(m.s) + '</b> — ' + esc(m.d) + '</div>'
+        ).join('') + '</div>';
+      }
+    } catch(e){}
+    tip.innerHTML =
+      '<div class="tip-title">' + esc(title) + '</div>' +
+      '<div class="tip-meta">' + esc(meta) + '</div>' +
+      modsHtml;
+    tip.classList.add('visible');
+    tip.setAttribute('aria-hidden','false');
+    const rect = el.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    const M = 8;
+    let left = rect.left + rect.width/2 - tw/2;
+    let top  = rect.bottom + 6;
+    if (left < M) left = M;
+    if (left + tw > window.innerWidth - M) left = window.innerWidth - tw - M;
+    if (top + th > window.innerHeight - M) {
+      // no cabe abajo -> mostrar arriba
+      top = rect.top - th - 6;
+      if (top < M) top = M;
+    }
+    tip.style.left = left + 'px';
+    tip.style.top  = top + 'px';
+    el.classList.add('ms-active');
+  }
+  function hide(){
+    if (!currentEl) return;
+    tip.classList.remove('visible');
+    tip.setAttribute('aria-hidden','true');
+    currentEl.classList.remove('ms-active');
+    currentEl = null;
+  }
+  document.addEventListener('mouseover', e => {
+    const w = e.target.closest && e.target.closest('.wit');
+    if (w && w.dataset.title !== undefined) show(w);
+    else if (currentEl && !e.target.closest('.wit')) hide();
+  });
+  document.addEventListener('mouseleave', () => hide(), true);
+  document.addEventListener('focusin', e => {
+    const w = e.target.closest && e.target.closest('.wit');
+    if (w && w.dataset.title !== undefined) show(w);
+  });
+  document.addEventListener('focusout', () => hide());
+  window.addEventListener('scroll', hide, true);
+  window.addEventListener('resize', hide);
+})();
+</script>
+</body>
+</html>
