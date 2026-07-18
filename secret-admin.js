@@ -1,8 +1,8 @@
 (function(){
-  const ACCESS_KEY = 'angelos.admin.interlinear.access';
+  const ACCESS_KEY = 'angelos.admin.rkant.access';
   const ACCESS_TTL_MS = 8 * 60 * 60 * 1000;
-  const ADMIN_PASSWORD_HASH = '9ece8d19ac8b4bb531ad35e6e6ef440e9e4815868d0f8912585b97f0e6dc2d8c';
-  const CLICK_TARGET = 7;
+  const ADMIN_PASSWORD_HASH = 'a61c11b5647ca4d72e727663243d9812bc38aff9502afcf9c861f835d3720460';
+  const CLICK_TARGET = 4;
   const CLICK_RESET_MS = 2500;
 
   const trigger = document.getElementById('secretAdminTrigger');
@@ -21,9 +21,9 @@
     markup.innerHTML = `
       <div class="secret-admin-card" role="dialog" aria-modal="true" aria-labelledby="secretAdminTitle">
         <div class="secret-admin-head">
-          <div class="secret-admin-kicker">Admin</div>
-          <h2 id="secretAdminTitle" class="secret-admin-title">Acceso editor interlineal</h2>
-          <p class="secret-admin-copy">Ingresa la contraseña del panel privado para abrir el espacio de edición.</p>
+          <div class="secret-admin-kicker">Privado</div>
+          <h2 id="secretAdminTitle" class="secret-admin-title">Acceso aparato crítico</h2>
+          <p class="secret-admin-copy">Ingresa la contraseña del panel privado para abrir el aparato crítico RKANT.</p>
         </div>
         <div class="secret-admin-body">
           <label class="secret-admin-label" for="secretAdminPassword">Contraseña</label>
@@ -70,7 +70,16 @@
 
   function grantAccess(){
     sessionStorage.setItem(ACCESS_KEY, String(Date.now()));
-    window.location.href = './admin-interlinear.html';
+    hideOverlay();
+    // Abrir el aparato crítico RKANT dentro de la misma página (sin navegar).
+    try {
+      if (window.rkantLauncher && typeof window.rkantLauncher.open === 'function') {
+        window.rkantLauncher.open();
+        return;
+      }
+    } catch(e){}
+    // Fallback: si aún no está listo el launcher, se abre en una pestaña nueva.
+    window.open('./rkant/index.html', '_blank', 'noopener');
   }
 
   function setStatus(message, ok){

@@ -1,21 +1,23 @@
 /**
  * rkant-launcher.js
  *
- * Sustituye el panel embebido antiguo de RKANT.
+ * Lanzador del aparato crítico RKANT. Ya no hay botón público: el acceso
+ * viene únicamente por el modo privado (`secret-admin.js`) tras validar
+ * contraseña. Este script expone `window.rkantLauncher.open()` para que
+ * `secret-admin.js` lo llame al conceder acceso.
  *
- * Al hacer click en `#btnRKANTEs` monta un overlay a pantalla completa con un
- * iframe apuntando a `./rkant-new/index.html`. La página principal permanece
- * intacta detrás (misma URL, mismo estado en memoria y en el DOM). El botón
- * "Volver al inicio" dentro del iframe envía un `postMessage` que cierra el
- * overlay y descarta el iframe.
+ * Monta un overlay a pantalla completa con un iframe apuntando a
+ * `./rkant/index.html`. La página principal permanece intacta detrás
+ * (misma URL, mismo estado en memoria y en el DOM). El botón "Volver al
+ * inicio" dentro del iframe envía un `postMessage` que cierra el overlay.
  *
  * También:
- *   - Recuerda el último `#hash` navegado dentro del RKANT (localStorage), de
- *     modo que al reabrirlo vuelva al mismo versículo.
+ *   - Recuerda el último `#hash` navegado dentro del RKANT (localStorage),
+ *     de modo que al reabrirlo vuelva al mismo versículo.
  *   - Soporta cerrar con la tecla ESC como refuerzo.
  */
 (() => {
-  const RKANT_URL   = './rkant-new/index.html';
+  const RKANT_URL   = './rkant/index.html';
   const LS_HASH_KEY = 'rkant.newLastHash';
 
   const state = {
@@ -155,16 +157,10 @@
     }
   });
 
-  // -------- enlazar el botón principal --------------------------------------
+  // -------- enlazar el botón principal (si existe) --------------------------
   function attachButton(){
     const btn = document.getElementById('btnRKANTEs');
-    if (!btn) {
-      // Reintentar cuando el DOM crece; el botón se genera junto al panel
-      // principal, así que ya suele existir en DOMContentLoaded.
-      setTimeout(attachButton, 500);
-      return;
-    }
-    // Evitar dobles bindings si el archivo se carga dos veces
+    if (!btn) return; // el botón puede no existir (RKANT sólo por modo privado)
     if (btn.dataset.rkantBound === '1') return;
     btn.dataset.rkantBound = '1';
     btn.addEventListener('click', (ev) => {
@@ -178,4 +174,10 @@
   } else {
     attachButton();
   }
+
+  // API pública: abrir/cerrar RKANT desde otros scripts (p.ej. secret-admin.js)
+  window.rkantLauncher = {
+    open:  openRKANT,
+    close: closeRKANT,
+  };
 })();

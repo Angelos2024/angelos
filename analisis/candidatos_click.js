@@ -17,9 +17,9 @@
     '/IdiomaORIGEN/frecuencias/min.json'
   ];
   const RKANT_FREQ_MIN_URLS = [
-    '../RKANT/min.json',
-    './RKANT/min.json',
-    '/RKANT/min.json'
+    '../rkant/frecuencias.min.json',
+    './rkant/frecuencias.min.json',
+    '/rkant/frecuencias.min.json'
   ];
 
   const jsonCache = new Map();
