@@ -151,7 +151,7 @@
   const selVs     = $('sel-verse');
   const btnExit   = $('btn-exit');
 
-  // ---------------- persistencia local (por dispositivo) -----------------
+  // ---------------- persistencia local ------------------------------------
   const LS_KEY = 'rkant.newLastHash';
   function saveHash(h){
     try { if (h && h !== '#/') localStorage.setItem(LS_KEY, h); } catch(e){}
@@ -167,15 +167,15 @@
   })();
   if (IS_EMBEDDED) {
     document.body.classList.add('embedded');
-    if (btnExit) {
-      btnExit.hidden = false;
-      btnExit.addEventListener('click', () => {
-        try { window.parent.postMessage({type:'rkant-close', hash: location.hash}, '*'); } catch(e){}
-      });
-    }
+    if (btnExit) btnExit.hidden = false;
+    if (btnExit) btnExit.addEventListener('click', () => {
+      try { window.parent.postMessage({type:'rkant-close', hash: location.hash}, '*'); } catch(e){}
+    });
+    // avisar al host qué versículo se muestra (por si quiere sincronizar)
     window.addEventListener('hashchange', () => {
       try { window.parent.postMessage({type:'rkant-hash', hash: location.hash}, '*'); } catch(e){}
     });
+    // permitir que el host solicite navegar
     window.addEventListener('message', (ev) => {
       const d = ev && ev.data;
       if (!d || typeof d !== 'object') return;
@@ -190,6 +190,7 @@
   if (!location.hash || location.hash === '#' || location.hash === '#/') {
     const last = loadHash();
     if (last && /^#\/\d+\/\d+\/\d+$/.test(last)) {
+      // usar replaceState para no dejar el "home" en el historial
       history.replaceState(null, '', last);
     }
   }
