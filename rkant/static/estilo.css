@@ -816,12 +816,13 @@ body.app-body {
     flex-direction: column;
     background: var(--rk-paper);
     min-height: 0;
+    position: relative;
 }
 .app-content {
     flex: 1;
     overflow-y: auto;
     background: var(--rk-paper);
-    padding: 24px 32px 60px;
+    padding: 24px 32px 60px 162px;   /* carril izq. para el interruptor flotante */
 }
 .app-content.loading { opacity: 0.5; }
 .app-content .err {
@@ -932,9 +933,13 @@ body.verse-standalone .container { max-width: 1080px; }
     .picker { min-width: 90px; }
     .picker select { min-width: 90px; font-size: 13px; }
     #sel-book { min-width: 140px; }
-    .app-content { padding: 12px 12px 40px; }
+    .app-content { padding: 46px 12px 40px; }   /* franja sup. para el interruptor */
     .app-content #verso-content { padding: 16px 18px; }
     .brand-sub { display: none; }
+    /* en móvil el interruptor es una tira horizontal compacta arriba-izq. */
+    .mode-switch{ flex-direction:row; top:8px; left:8px; }
+    .mode-btn{ padding:4px 10px; font-size:11px; }
+    .mode-btn:first-child{ border-bottom:1.5px solid var(--rk-accent); border-right:none; }
 }
 
 /* ==========================================================================
@@ -945,18 +950,20 @@ body.verse-standalone .container { max-width: 1080px; }
     --rk-tan2:#d6c2b2; --rk-ink:#2c1d1f;
 }
 
-/* interruptor de modo (lado izquierdo, sobre el contenido) */
+/* interruptor de modo: control compacto flotante, aislado en la esquina sup. izq.
+   (fuera del flujo: no roba espacio vertical al contenido) */
 .mode-switch{
-    display:flex; gap:0; margin:14px 0 4px; padding:0 4px;
-    justify-content:flex-start;
+    position:absolute; top:10px; left:10px; z-index:6;
+    display:inline-flex; flex-direction:column; gap:0;
+    border-radius:8px; overflow:hidden;
+    box-shadow:0 1px 5px rgba(44,29,31,.18);
 }
 .mode-btn{
-    font:inherit; font-size:13px; font-weight:600; cursor:pointer;
-    padding:8px 16px; border:1.5px solid var(--rk-accent);
-    background:#fff; color:var(--rk-accent);
+    font:inherit; font-size:12px; font-weight:600; cursor:pointer;
+    padding:5px 12px; border:1.5px solid var(--rk-accent);
+    background:#fff; color:var(--rk-accent); text-align:left; white-space:nowrap;
 }
-.mode-btn:first-child{ border-radius:8px 0 0 8px; border-right:none; }
-.mode-btn:last-child{ border-radius:0 8px 8px 0; }
+.mode-btn:first-child{ border-bottom:none; }
 .mode-btn.is-active{ background:var(--rk-accent); color:#fff; }
 .mode-btn:not(.is-active):hover{ background:var(--rk-bg); }
 
@@ -1028,5 +1035,5 @@ body.modo-simple .vista-simple{ display:block; }
 
 @media (max-width: 720px){
     .simple-text{ font-size:18px; } .simple-greek .gk{ font-size:19px; }
-    .mode-btn{ padding:8px 12px; font-size:12px; }
+    .mode-btn{ padding:4px 10px; font-size:11px; }
 }
