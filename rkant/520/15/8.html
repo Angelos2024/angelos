@@ -35,6 +35,7 @@
   <h1 class="verso-title">Romanos 15:8</h1>
   <div class="verso-title-en">Romans 15:8</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">λέγω γὰρ Χριστὸν διάκονον <span class="greek-mark">⸀</span><b class="greek-var">γεγενῆσθαι</b> περιτομῆς ὑπὲρ ἀληθείας θεοῦ, εἰς τὸ βεβαιῶσαι τὰς ἐπαγγελίας τῶν πατέρων,</div>
@@ -64,6 +65,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../470/15/24.html">Mateo 15:24</a>; <a href="../../230/88/3.html">Salmos 88:3</a>; <a href="../../400/7/20.html">Miqueas 7:20</a>; <a href="../../520/11/29.html">Romanos 11:29</a>; <a href="../../510/3/25.html">Hechos 3:25</a>; <a href="../../520/4/16.html">Romanos 4:16</a>; <a href="../../280/36/20.html">Eclesiástico (Sirácida) 36:20</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">λέγω γὰρ Χριστὸν διάκονον <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">γεγενῆσθαι</span> περιτομῆς ὑπὲρ ἀληθείας θεοῦ, εἰς τὸ βεβαιῶσαι τὰς ἐπαγγελίας τῶν πατέρων,</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Pues os digo, que Cristo Jesús vino a <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">ser</span> siervo de la circuncisión para mostrar la verdad de Dios, para confirmar las promesas hechas a los padres,</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«γεγενῆσθαι»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«γεγενῆσθαι»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglos IV al XIII · ≈65% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«γενεσθαι»</span><div class="simple-det">Siglos IV al XIV · ≈35% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -126,13 +149,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

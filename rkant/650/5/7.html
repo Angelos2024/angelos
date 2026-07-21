@@ -35,6 +35,7 @@
   <h1 class="verso-title">Hebreos 5:7</h1>
   <div class="verso-title-en">Hebrews 5:7</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">ὃς ἐν ταῖς ἡμέραις τῆς σαρκὸς αὐτοῦ δεήσεις τε καὶ ἱκετηρίας πρὸς τὸν δυνάμενον σῴζειν αὐτὸν ἐκ θανάτου μετὰ κραυγῆς ἰσχυρᾶς καὶ δακρύων προσενέγκας καὶ εἰσακουσθεὶς ἀπὸ τῆς εὐλαβείας,</div>
@@ -57,6 +58,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../230/22/25.html">Salmos 22:25</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">ὃς ἐν ταῖς ἡμέραις τῆς σαρκὸς αὐτοῦ δεήσεις τε καὶ ἱκετηρίας πρὸς τὸν δυνάμενον σῴζειν αὐτὸν ἐκ θανάτου μετὰ κραυγῆς ἰσχυρᾶς καὶ δακρύων προσενέγκας καὶ εἰσακουσθεὶς ἀπὸ τῆς εὐλαβείας,</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Y Cristo, en los días de su carne, ofreciendo ruegos y súplicas con gran clamor y lágrimas al que le podía librar de la muerte, fue oído a causa de su temor reverente.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <p class="simple-none">— sin variantes textuales en este versículo —</p>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -119,13 +142,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

@@ -35,6 +35,7 @@
   <h1 class="verso-title">Colosenses 4:3</h1>
   <div class="verso-title-en">Colossians 4:3</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">προσευχόμενοι ἅμα καὶ περὶ ἡμῶν, ἵνα ὁ θεὸς ἀνοίξῃ ἡμῖν θύραν τοῦ λόγου <span class="greek-mark">⸆</span> <b class="greek-var">λαλῆσαι</b> τὸ μυστήριον τοῦ <span class="greek-mark">⸀</span><b class="greek-var">Χριστοῦ</b>, δι’ <span class="greek-mark">⸁</span><b class="greek-var">ὃ</b> καὶ δέδεμαι,</div>
@@ -75,6 +76,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../520/15/30.html">Romanos 15:30</a>; <a href="../../560/6/19.html">Efesios 6:19</a>; <a href="../../530/16/9.html">1 Corintios 16:9</a>; <a href="../../550/6/6.html">Gálatas 6:6</a>; <a href="../../580/1/26.html">Colosenses 1:26</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">προσευχόμενοι ἅμα καὶ περὶ ἡμῶν, ἵνα ὁ θεὸς ἀνοίξῃ ἡμῖν θύραν τοῦ λόγου  λαλῆσαι τὸ μυστήριον τοῦ <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">Χριστοῦ,</span> δι’ <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">ὃ</span> καὶ δέδεμαι,</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">orando también al mismo tiempo por nosotros, para que el Señor nos abra puerta para la palabra, a fin de dar a conocer el misterio de <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">Cristo,</span> por <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">el</span> cual también estoy preso,</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«εν παρρησια»</span><div class="simple-det">Siglo V · ≈100% de los testigos citados</div></li></ul></div><div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«Χριστοῦ,»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«θεου»</span><div class="simple-det">Siglos IV al XIII · ≈100% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div><div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«ὃ»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«ον»</span><div class="simple-det">Siglos IV al IX · ≈100% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -137,13 +160,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

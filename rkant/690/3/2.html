@@ -35,6 +35,7 @@
   <h1 class="verso-title">1 Juan 3:2</h1>
   <div class="verso-title-en">I John 3:2</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">ἀγαπητοὶ νῦν τέκνα θεοῦ ἐσμεν, καὶ οὔπω ἐφανερώθη τί ἐσόμεθα. οἴδαμεν <span class="greek-mark">⸆</span> <b class="greek-var">ὅτι</b> ἐὰν φανερωθῇ, ὅμοιοι αὐτῷ ἐσόμεθα, ὅτι ὀψόμεθα αὐτόν, καθώς ἐστιν.</div>
@@ -61,6 +62,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../540/5/7.html">2 Corintios 5:7</a>; <a href="../../690/2/28.html">1 Juan 2:28</a>; <a href="../../580/3/4.html">Colosenses 3:4</a>; <a href="../../570/3/21.html">Filipenses 3:21</a>; <a href="../../20/33/20.html">Éxodo 33:20</a>; <a href="../../230/42/3.html">Salmos 42:3</a>; <a href="../../650/12/14.html">Hebreos 12:14</a>; <a href="../../470/5/8.html">Mateo 5:8</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">ἀγαπητοὶ νῦν τέκνα θεοῦ ἐσμεν, καὶ οὔπω ἐφανερώθη τί ἐσόμεθα. οἴδαμεν  ὅτι ἐὰν φανερωθῇ, ὅμοιοι αὐτῷ ἐσόμεθα, ὅτι ὀψόμεθα αὐτόν, καθώς ἐστιν.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Amados, ahora somos hijos de Dios, y aún no se ha manifestado lo que hemos de ser; pero sabemos que cuando él se manifieste, seremos semejantes a él, porque le veremos tal como él es.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«δε»</span><div class="simple-det">Siglos X al XV · ≈100% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -123,13 +146,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

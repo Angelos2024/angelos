@@ -35,6 +35,7 @@
   <h1 class="verso-title">Mateo 21:12</h1>
   <div class="verso-title-en">Matthew 21:12</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">Καὶ εἰσῆλθεν <span class="greek-mark">⸆</span> <b class="greek-var">Ἰησοῦς</b> εἰς τὸ ἱερὸν <span class="greek-mark">⸇</span> <b class="greek-var">καὶ</b> ἐξέβαλεν πάντας τοὺς πωλοῦντας καὶ ἀγοράζοντας ἐν τῷ ἱερῷ, καὶ τὰς τραπέζας τῶν κολλυβιστῶν κατέστρεψεν καὶ τὰς καθέδρας τῶν πωλούντων τὰς περιστεράς,</div>
@@ -74,6 +75,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../450/14/21.html">Zacarías 14:21</a>; <a href="../../490/2/24.html">Lucas 2:24</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">Καὶ εἰσῆλθεν  Ἰησοῦς εἰς τὸ ἱερὸν  καὶ ἐξέβαλεν πάντας τοὺς πωλοῦντας καὶ ἀγοράζοντας ἐν τῷ ἱερῷ, καὶ τὰς τραπέζας τῶν κολλυβιστῶν κατέστρεψεν καὶ τὰς καθέδρας τῶν πωλούντων τὰς περιστεράς,</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Y entró Jesús en el templo de Dios, y echó fuera a todos los que vendían y compraban en el templo, y volcó las mesas de los cambistas, y las sillas de los que vendían palomas;</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«ο»</span><div class="simple-det">Siglos IV al XIII · ≈64% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«—»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglos I al XV · ≈36% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div><div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«του θεου»</span><div class="simple-det">Siglos IV al XIII · ≈54% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglos I al XV · ≈46% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -136,13 +159,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

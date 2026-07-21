@@ -35,6 +35,7 @@
   <h1 class="verso-title">Lucas 24:9</h1>
   <div class="verso-title-en">Luke 24:9</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">Καὶ ὑποστρέψασαι <span class="greek-mark">⸋</span><b class="greek-var">ἀπὸ τοῦ μνημείου</b><span class="greek-mark">⸌</span> ἀπήγγειλαν <span class="greek-mark">⸉</span><b class="greek-var">ταῦτα</b> πάντα⸊ τοῖς ἕνδεκα καὶ πᾶσιν τοῖς λοιποῖς.</div>
@@ -71,6 +72,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../490/24/22.html">Lucas 24:22</a>; <a href="../../490/24/33.html">Lucas 24:33</a>; <a href="../../470/28/16.html">Mateo 28:16</a>; <a href="../../480/16/14.html">Marcos 16:14</a>; <a href="../../510/1/26.html">Hechos 1:26</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">Καὶ ὑποστρέψασαι <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">ἀπὸ τοῦ μνημείου</span> ἀπήγγειλαν <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">ταῦτα πάντα</span> τοῖς ἕνδεκα καὶ πᾶσιν τοῖς λοιποῖς.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">y volviendo <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">del</span> <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">sepulcro,</span> dieron nuevas de <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">todas</span> estas cosas a los once, y a <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">todos</span> los demás.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-OMITIDO"><div class="svar-head"><span class="svar-tag tag-OMITIDO">Omisión</span><span class="svar-gk gk">«ἀπὸ τοῦ μνημείου»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span><div class="simple-det">Siglo V · ≈100% de los testigos citados</div></li></ul></div><div class="svar svar-OMITIDO"><div class="svar-head"><span class="svar-tag tag-OMITIDO">Omisión</span><span class="svar-gk gk">«ταῦτα πάντα»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«ταῦτα πάντα»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglos I al XV · ≈55% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«—»</span><div class="simple-det">Siglos IV al XII · ≈45% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -133,13 +156,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

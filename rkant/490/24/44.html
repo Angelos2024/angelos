@@ -35,6 +35,7 @@
   <h1 class="verso-title">Lucas 24:44</h1>
   <div class="verso-title-en">Luke 24:44</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">Εἶπεν δὲ πρὸς αὐτούς· οὗτοι οἱ λόγοι μου οὓς ἐλάλησα πρὸς ὑμᾶς <span class="greek-mark">⸂</span><b class="greek-var">ἔτι ὢν</b><span class="greek-mark">⸃</span> σὺν ὑμῖν, ὅτι δεῖ πληρωθῆναι πάντα τὰ γεγραμμένα ἐν τῷ νόμῳ Μωϋσέως καὶ <span class="greek-mark">⸀</span><b class="greek-var">τοῖς</b> προφήταις καὶ ψαλμοῖς περὶ ἐμοῦ.</div>
@@ -74,6 +75,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../490/24/6.html">Lucas 24:6</a>; <a href="../../490/4/21.html">Lucas 4:21</a>; <a href="../../490/18/31.html">Lucas 18:31</a>; <a href="../../490/2/22.html">Lucas 2:22</a>; <a href="../../510/15/5.html">Hechos 15:5</a>; <a href="../../490/20/42.html">Lucas 20:42</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">Εἶπεν δὲ πρὸς αὐτούς· οὗτοι οἱ λόγοι μου οὓς ἐλάλησα πρὸς ὑμᾶς <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">ἔτι ὢν</span> σὺν ὑμῖν, ὅτι δεῖ πληρωθῆναι πάντα τὰ γεγραμμένα ἐν τῷ νόμῳ Μωϋσέως καὶ <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">τοῖς</span> προφήταις καὶ ψαλμοῖς περὶ ἐμοῦ.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Y les dijo: _Estas son las palabras que os hablé, estando <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">aún</span> con vosotros: que era necesario que se cumpliese todo lo que está escrito de mí en la ley de Moisés, en los profetas y en los salmos.__</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«ἔτι ὢν»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«εν ω ημην»</span><div class="simple-det">Siglo V · ≈100% de los testigos citados</div></li></ul></div><div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«τοῖς»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«-»</span><div class="simple-det">Siglos I al XV · ≈80% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«τοῖς»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglos IV al XIII · ≈12% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«εν τοις»</span><div class="simple-det">Siglos IV al VIII · ≈8% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -136,13 +159,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

@@ -35,6 +35,7 @@
   <h1 class="verso-title">Juan 10:35</h1>
   <div class="verso-title-en">John 10:35</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">εἰ ἐκείνους εἶπεν θεοὺς <span class="greek-mark">⸋</span><b class="greek-var">πρὸς οὓς ὁ λόγος <span class="greek-mark">⸉</span><b class="greek-var">τοῦ</b> θεοῦ ἐγένετο⸊</b><span class="greek-mark">⸌</span>, καὶ οὐ δύναται λυθῆναι <span class="greek-mark">⸋</span><b class="greek-var">1ἡ γραφή</b><span class="greek-mark">⸌</span>,</div>
@@ -75,6 +76,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../500/7/23.html">Juan 7:23</a>; <a href="../../470/5/17.html">Mateo 5:17</a>; <a href="../../490/16/17.html">Lucas 16:17</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">εἰ ἐκείνους εἶπεν θεοὺς <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">πρὸς οὓς ὁ λόγος  OMITIDOτοῦ θεοῦ ἐγένετο</span>, καὶ οὐ δύναται λυθῆναι 1<span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">ἡ γραφή</span>,</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">_Si llamó dioses a aquellos <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">a</span> <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">quienes</span> <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">vino</span> la palabra de Dios (y la Escritura no puede ser quebrantada),__</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-OMITIDO"><div class="svar-head"><span class="svar-tag tag-OMITIDO">Omisión</span><span class="svar-gk gk">«πρὸς οὓς ὁ λόγος τοῦ θεοῦ ἐγένετο»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span><div class="simple-det">≈100% de los testigos citados</div></li></ul></div><div class="svar svar-OMITIDO"><div class="svar-head"><span class="svar-tag tag-OMITIDO">Omisión</span><span class="svar-gk gk">«τοῦ θεοῦ ἐγένετο»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span><div class="simple-det">Siglos V al IX · ≈100% de los testigos citados</div></li></ul></div><div class="svar svar-OMITIDO"><div class="svar-head"><span class="svar-tag tag-OMITIDO">Omisión</span><span class="svar-gk gk">«ἡ γραφή»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span><div class="simple-det">≈100% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -137,13 +160,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

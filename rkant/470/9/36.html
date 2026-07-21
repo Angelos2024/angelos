@@ -35,6 +35,7 @@
   <h1 class="verso-title">Mateo 9:36</h1>
   <div class="verso-title-en">Matthew 9:36</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">Ἰδὼν δὲ τοὺς ὄχλους <span class="greek-mark">⸆</span> <b class="greek-var">ἐσπλαγχνίσθη</b> περὶ αὐτῶν, ὅτι ἦσαν <span class="greek-mark">⸀</span><b class="greek-var">ἐσκυλμένοι</b> καὶ ἐρριμμένοι ὡσεὶ πρόβατα μὴ ἔχοντα ποιμένα.</div>
@@ -68,6 +69,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../470/14/14.html">Mateo 14:14</a>; <a href="../../470/15/32.html">Mateo 15:32</a>; <a href="../../470/18/27.html">Mateo 18:27</a>; <a href="../../470/20/34.html">Mateo 20:34</a>; <a href="../../480/1/41.html">Marcos 1:41</a>; <a href="../../490/7/13.html">Lucas 7:13</a>; <a href="../../470/10/6.html">Mateo 10:6</a>; <a href="../../670/2/25.html">1 Pedro 2:25</a>; <a href="../../40/27/17.html">Números 27:17</a>; <a href="../../180/11/19.html">Judit 11:19</a>; <a href="../../140/18/16.html">2 Crónicas 18:16</a>; <a href="../../330/34/5.html">Ezequiel 34:5</a>; <a href="../../450/10/2.html">Zacarías 10:2</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">Ἰδὼν δὲ τοὺς ὄχλους  ἐσπλαγχνίσθη περὶ αὐτῶν, ὅτι ἦσαν <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">ἐσκυλμένοι</span> καὶ ἐρριμμένοι ὡσεὶ πρόβατα μὴ ἔχοντα ποιμένα.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Y al ver las multitudes, tuvo compasión de ellas; porque estaban desamparadas y dispersas como ovejas que no tienen pastor.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«ο Ιησους»</span><div class="simple-det">Siglos V al VI · ≈100% de los testigos citados</div></li></ul></div><div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«ἐσκυλμένοι»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«εκλελυμενοι»</span><div class="simple-det">Siglos VIII al X · ≈100% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -130,13 +153,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

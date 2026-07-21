@@ -35,6 +35,7 @@
   <h1 class="verso-title">Hechos 21:28</h1>
   <div class="verso-title-en">Acts 21:28</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">κράζοντες· ἄνδρες Ἰσραηλῖται, βοηθεῖτε· οὗτός ἐστιν ὁ ἄνθρωπος ὁ κατὰ τοῦ λαοῦ καὶ τοῦ νόμου καὶ τοῦ τόπου τούτου πάντας πανταχῇ διδάσκων, ἔτι τε καὶ Ἕλληνας εἰσήγαγεν εἰς τὸ ἱερὸν καὶ κεκοίνωκεν τὸν ἅγιον τόπον τοῦτον.</div>
@@ -57,6 +58,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../510/6/13.html">Hechos 6:13</a>; <a href="../../510/17/30.html">Hechos 17:30</a>; <a href="../../510/24/3.html">Hechos 24:3</a>; <a href="../../510/24/6.html">Hechos 24:6</a>; <a href="../../330/44/7.html">Ezequiel 44:7</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">κράζοντες· ἄνδρες Ἰσραηλῖται, βοηθεῖτε· οὗτός ἐστιν ὁ ἄνθρωπος ὁ κατὰ τοῦ λαοῦ καὶ τοῦ νόμου καὶ τοῦ τόπου τούτου πάντας πανταχῇ διδάσκων, ἔτι τε καὶ Ἕλληνας εἰσήγαγεν εἰς τὸ ἱερὸν καὶ κεκοίνωκεν τὸν ἅγιον τόπον τοῦτον.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">dando voces: ¡Varones israelitas, ayudad! Este es el hombre que por todas partes enseña a todos contra el pueblo, la ley y este lugar; y además de esto, ha metido a griegos en el templo, y ha profanado este santo lugar.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <p class="simple-none">— sin variantes textuales en este versículo —</p>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -119,13 +142,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

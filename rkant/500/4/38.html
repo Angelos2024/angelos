@@ -35,6 +35,7 @@
   <h1 class="verso-title">Juan 4:38</h1>
   <div class="verso-title-en">John 4:38</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">ἐγὼ <span class="greek-mark">⸀</span><b class="greek-var">ἀπέστειλα</b> ὑμᾶς θερίζειν <span class="greek-mark">°</span><b class="greek-var">ὃ</b> οὐχ ὑμεῖς κεκοπιάκατε· ἄλλοι κεκοπιάκασιν καὶ ὑμεῖς εἰς τὸν κόπον αὐτῶν εἰσεληλύθατε.</div>
@@ -68,6 +69,28 @@
   </div>
 
   
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">ἐγὼ <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">ἀπέστειλα</span> ὑμᾶς θερίζειν <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">ὃ</span> οὐχ ὑμεῖς κεκοπιάκατε· ἄλλοι κεκοπιάκασιν καὶ ὑμεῖς εἰς τὸν κόπον αὐτῶν εἰσεληλύθατε.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">_Yo os he <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">enviado</span> a segar <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">lo</span> que vosotros no labrasteis; otros labraron, y vosotros habéis entrado en sus labores.__</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«ἀπέστειλα»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«απεσταλκα»</span><div class="simple-det">Siglos IV al V · ≈100% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div><div class="svar svar-OMITIDO"><div class="svar-head"><span class="svar-tag tag-OMITIDO">Omisión</span><span class="svar-gk gk">«ὃ»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span><div class="simple-det">Siglos IV al VIII · ≈100% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -130,13 +153,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

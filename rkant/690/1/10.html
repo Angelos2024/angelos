@@ -35,6 +35,7 @@
   <h1 class="verso-title">1 Juan 1:10</h1>
   <div class="verso-title-en">I John 1:10</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">ἐὰν εἴπωμεν ὅτι οὐχ <span class="greek-mark">⸀</span><b class="greek-var">ἡμαρτήκαμεν</b>, ψεύστην ποιοῦμεν αὐτόν, καὶ ὁ λόγος αὐτοῦ <span class="greek-mark">⸉</span><b class="greek-var">οὐκ</b> ἔστιν ἐν ἡμῖν⸊.</div>
@@ -68,6 +69,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../690/1/8.html">1 Juan 1:8</a>; <a href="../../690/5/10.html">1 Juan 5:10</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">ἐὰν εἴπωμεν ὅτι οὐχ <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">ἡμαρτήκαμεν,</span> ψεύστην ποιοῦμεν αὐτόν, καὶ ὁ λόγος αὐτοῦ <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">οὐκ ἔστιν ἐν ἡμῖν</span>.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Si decimos que no hemos <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">pecado,</span> le hacemos a él mentiroso, y su palabra no está <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">en</span> nosotros.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«ἡμαρτήκαμεν,»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«ημαρτομεν»</span><div class="simple-det">Siglos X al XIV · ≈100% de los testigos citados</div></li></ul></div><div class="svar svar-ORDEN"><div class="svar-head"><span class="svar-tag tag-ORDEN">Orden distinto</span><span class="svar-gk gk">«οὐκ ἔστιν ἐν ἡμῖν»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«3 4 1 2»</span><div class="simple-det">Siglos XI al XIII · ≈100% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -130,13 +153,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

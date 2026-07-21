@@ -35,6 +35,7 @@
   <h1 class="verso-title">Lucas 3:8</h1>
   <div class="verso-title-en">Luke 3:8</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">ποιήσατε οὖν <span class="greek-mark">⸂</span><b class="greek-var">καρποὺς ἀξίους</b><span class="greek-mark">⸃</span> τῆς μετανοίας καὶ μὴ ἄρξησθε λέγειν ἐν ἑαυτοῖς· <span class="greek-mark">⸆</span> <b class="greek-var">πατέρα</b> ἔχομεν τὸν Ἀβραάμ. λέγω γὰρ ὑμῖν ὅτι δύναται ὁ θεὸς ἐκ τῶν λίθων τούτων ἐγεῖραι τέκνα τῷ Ἀβραάμ.</div>
@@ -71,6 +72,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../510/26/20.html">Hechos 26:20</a>; <a href="../../490/13/16.html">Lucas 13:16</a>; <a href="../../490/16/24.html">Lucas 16:24</a>; <a href="../../490/19/9.html">Lucas 19:9</a>; <a href="../../500/8/33.html">Juan 8:33</a>; <a href="../../520/4/12.html">Romanos 4:12</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">ποιήσατε οὖν <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">καρποὺς ἀξίους</span> τῆς μετανοίας καὶ μὴ ἄρξησθε λέγειν ἐν ἑαυτοῖς·  πατέρα ἔχομεν τὸν Ἀβραάμ. λέγω γὰρ ὑμῖν ὅτι δύναται ὁ θεὸς ἐκ τῶν λίθων τούτων ἐγεῖραι τέκνα τῷ Ἀβραάμ.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Haced, pues, <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">frutos</span> <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">dignos</span> de arrepentimiento, y no comencéis a decir dentro de vosotros mismos: Tenemos a Abraham por padre; porque os digo que Dios puede levantar hijos a Abraham aun de estas piedras.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-ORDEN"><div class="svar-head"><span class="svar-tag tag-ORDEN">Orden distinto</span><span class="svar-gk gk">«καρποὺς ἀξίους»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span><div class="simple-det">Siglos IV al V · ≈70% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«αξιους καρπους»</span><div class="simple-det">Siglo IV · ≈30% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div><div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«οτι»</span><div class="simple-det">Siglos VIII al XIII · ≈100% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -133,13 +156,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

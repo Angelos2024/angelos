@@ -35,6 +35,7 @@
   <h1 class="verso-title">Lucas 5:35</h1>
   <div class="verso-title-en">Luke 5:35</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">ἐλεύσονται δὲ ἡμέραι, καὶ ὅταν ἀπαρθῇ ἀπ’ αὐτῶν ὁ νυμφίος, τότε νηστεύσουσιν ἐν ἐκείναις ταῖς ἡμέραις.</div>
@@ -57,6 +58,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../490/17/22.html">Lucas 17:22</a>; <a href="../../490/19/43.html">Lucas 19:43</a>; <a href="../../490/21/6.html">Lucas 21:6</a>; <a href="../../490/23/29.html">Lucas 23:29</a>; <a href="../../370/8/11.html">Amós 8:11</a>; <a href="../../370/9/13.html">Amós 9:13</a>; <a href="../../290/53/8.html">Isaías 53:8</a>; <a href="../../510/13/2.html">Hechos 13:2</a>; <a href="../../470/6/16.html">Mateo 6:16</a>; <a href="../../490/2/1.html">Lucas 2:1</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">ἐλεύσονται δὲ ἡμέραι, καὶ ὅταν ἀπαρθῇ ἀπ’ αὐτῶν ὁ νυμφίος, τότε νηστεύσουσιν ἐν ἐκείναις ταῖς ἡμέραις.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">_Mas vendrán días cuando el esposo les será quitado; entonces, en aquellos días ayunarán.__</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <p class="simple-none">— sin variantes textuales en este versículo —</p>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -119,13 +142,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

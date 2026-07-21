@@ -35,6 +35,7 @@
   <h1 class="verso-title">Juan 2:1</h1>
   <div class="verso-title-en">John 2:1</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">Καὶ τῇ <span class="greek-mark">⸂</span><b class="greek-var">ἡμέρᾳ τῇ τρίτῃ</b><span class="greek-mark">⸃</span> γάμος ἐγένετο ἐν <span class="greek-mark">⸆</span> <b class="greek-var">Κανὰ</b> τῆς Γαλιλαίας, καὶ ἦν ἡ μήτηρ τοῦ Ἰησοῦ ἐκεῖ·</div>
@@ -68,6 +69,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../500/1/35.html">Juan 1:35</a>; <a href="../../500/4/46.html">Juan 4:46</a>; <a href="../../500/21/2.html">Juan 21:2</a>; <a href="../../500/4/3.html">Juan 4:3</a>; <a href="../../500/19/25.html">Juan 19:25</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">Καὶ τῇ <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">ἡμέρᾳ τῇ τρίτῃ</span> γάμος ἐγένετο ἐν  Κανὰ τῆς Γαλιλαίας, καὶ ἦν ἡ μήτηρ τοῦ Ἰησοῦ ἐκεῖ·</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Al <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">tercer</span> <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">día</span> se hicieron unas bodas en Caná de Galilea; y estaba allí la madre de Jesús.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-ORDEN"><div class="svar-head"><span class="svar-tag tag-ORDEN">Orden distinto</span><span class="svar-gk gk">«ἡμέρᾳ τῇ τρίτῃ»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«τριτη ημερα»</span><div class="simple-det">Siglos IV al IX · ≈100% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div><div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«τη»</span><div class="simple-det">≈100% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -130,13 +153,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

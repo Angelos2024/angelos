@@ -35,6 +35,7 @@
   <h1 class="verso-title">Apocalipsis 18:23</h1>
   <div class="verso-title-en">Revelation 18:23</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">καὶ φῶς λύχνου οὐ μὴ φάνῃ ἐν σοὶ ἔτι, καὶ φωνὴ νυμφίου καὶ <span class="greek-mark">⸆</span> <b class="greek-var">νύμφης</b> οὐ μὴ ἀκουσθῇ ἐν σοὶ ἔτι· <span class="greek-mark">°</span><b class="greek-var">ὅτι</b> <span class="greek-mark">°</span><b class="greek-var">1οἱ</b> ἔμποροί σου ἦσαν οἱ μεγιστᾶνες τῆς γῆς, ὅτι ἐν τῇ φαρμακείᾳ σου ἐπλανήθησαν πάντα τὰ ἔθνη,</div>
@@ -75,6 +76,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../300/7/34.html">Jeremías 7:34</a>; <a href="../../300/16/9.html">Jeremías 16:9</a>; <a href="../../290/23/8.html">Isaías 23:8</a>; <a href="../../290/34/12.html">Isaías 34:12</a>; <a href="../../480/6/21.html">Marcos 6:21</a>; <a href="../../290/47/9.html">Isaías 47:9</a>; <a href="../../410/3/4.html">Nahúm 3:4</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">καὶ φῶς λύχνου οὐ μὴ φάνῃ ἐν σοὶ ἔτι, καὶ φωνὴ νυμφίου καὶ  νύμφης οὐ μὴ ἀκουσθῇ ἐν σοὶ ἔτι· <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">ὅτι</span> 1<span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">οἱ</span> ἔμποροί σου ἦσαν οἱ μεγιστᾶνες τῆς γῆς, ὅτι ἐν τῇ φαρμακείᾳ σου ἐπλανήθησαν πάντα τὰ ἔθνη,</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Luz de lámpara no alumbrará más en ti, ni voz de esposo y de esposa se oirá más en ti; porque tus mercaderes eran los grandes de la tierra; pues por tus hechicerías fueron engañadas todas las naciones.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«φωνη»</span><div class="simple-det">Siglos V al X · ≈100% de los testigos citados</div></li></ul></div><div class="svar svar-OMITIDO"><div class="svar-head"><span class="svar-tag tag-OMITIDO">Omisión</span><span class="svar-gk gk">«ὅτι»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«—»</span><div class="simple-det">≈100% de los testigos citados</div></li></ul></div><div class="svar svar-OMITIDO"><div class="svar-head"><span class="svar-tag tag-OMITIDO">Omisión</span><span class="svar-gk gk">«οἱ»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span><div class="simple-det">Siglos V al XI · ≈100% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -137,13 +160,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

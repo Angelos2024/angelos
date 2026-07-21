@@ -35,6 +35,7 @@
   <h1 class="verso-title">Hechos 2:24</h1>
   <div class="verso-title-en">Acts 2:24</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">ὃν ὁ θεὸς ἀνέστησεν λύσας <span class="greek-mark">⸆</span> <b class="greek-var">τὰς</b> ὠδῖνας τοῦ <span class="greek-mark">⸀</span><b class="greek-var">θανάτου</b>, καθότι οὐκ ἦν δυνατὸν κρατεῖσθαι αὐτὸν ὑπ’ αὐτοῦ.</div>
@@ -68,6 +69,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../510/2/32.html">Hechos 2:32</a>; <a href="../../510/13/33.html">Hechos 13:33</a>; <a href="../../510/17/31.html">Hechos 17:31</a>; <a href="../../510/3/15.html">Hechos 3:15</a>; <a href="../../230/17/6.html">Salmos 17:6</a>; <a href="../../230/114/3.html">Salmos 114:3</a>; <a href="../../100/22/6.html">2 Samuel 22:6</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">ὃν ὁ θεὸς ἀνέστησεν λύσας  τὰς ὠδῖνας τοῦ <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">θανάτου,</span> καθότι οὐκ ἦν δυνατὸν κρατεῖσθαι αὐτὸν ὑπ’ αὐτοῦ.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">al cual Dios levantó, sueltos los dolores de la muerte, por cuanto era imposible que fuese retenido por ella.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«δι αυτου»</span><div class="simple-det">Siglo VI · ≈100% de los testigos citados</div></li></ul></div><div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«θανάτου,»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«αδου»</span><div class="simple-det">Siglos IV al V · ≈100% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -130,13 +153,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

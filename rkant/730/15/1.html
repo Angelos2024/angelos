@@ -35,6 +35,7 @@
   <h1 class="verso-title">Apocalipsis 15:1</h1>
   <div class="verso-title-en">Revelation 15:1</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">Καὶ εἶδον ἄλλο σημεῖον ἐν τῷ οὐρανῷ μέγα καὶ θαυμαστόν, ἀγγέλους ἑπτὰ ἔχοντας πληγὰς ἑπτὰ τὰς ἐσχάτας, ὅτι <span class="greek-mark">⸂</span><b class="greek-var">ἐν αὐταῖς ἐτελέσθη</b><span class="greek-mark">⸃</span> ὁ θυμὸς τοῦ θεοῦ.</div>
@@ -64,6 +65,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../730/12/3.html">Apocalipsis 12:3</a>; <a href="../../730/16/1.html">Apocalipsis 16:1</a>; <a href="../../730/21/9.html">Apocalipsis 21:9</a>; <a href="../../30/26/21.html">Levítico 26:21</a>; <a href="../../730/10/7.html">Apocalipsis 10:7</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">Καὶ εἶδον ἄλλο σημεῖον ἐν τῷ οὐρανῷ μέγα καὶ θαυμαστόν, ἀγγέλους ἑπτὰ ἔχοντας πληγὰς ἑπτὰ τὰς ἐσχάτας, ὅτι <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">ἐν αὐταῖς ἐτελέσθη</span> ὁ θυμὸς τοῦ θεοῦ.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Vi <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">en</span> el cielo otra señal, grande y admirable: siete ángeles que tenían las siete plagas postreras; porque <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">en</span> <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">ellas</span> se <span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">consumaba</span> la ira de Dios.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-ORDEN"><div class="svar-head"><span class="svar-tag tag-ORDEN">Orden distinto</span><span class="svar-gk gk">«ἐν αὐταῖς ἐτελέσθη»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«εν ταυταις ετελεσθη»</span><div class="simple-det">Siglo X · ≈67% de los testigos citados</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«ετελεσθη εν αυταις»</span><div class="simple-det">≈33% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -126,13 +149,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

@@ -35,6 +35,7 @@
   <h1 class="verso-title">Mateo 10:15</h1>
   <div class="verso-title-en">Matthew 10:15</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">ἀμὴν λέγω ὑμῖν, ἀνεκτότερον ἔσται γῇ Σοδόμων καὶ <span class="greek-mark">⸀</span><b class="greek-var">Γομόρρων</b> ἐν ἡμέρᾳ κρίσεως ἢ τῇ πόλει ἐκείνῃ.</div>
@@ -67,6 +68,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../470/11/22.html">Mateo 11:22</a>; <a href="../../10/19/24.html">Génesis 19:24</a>; <a href="../../520/9/29.html">Romanos 9:29</a>; <a href="../../680/2/6.html">2 Pedro 2:6</a>; <a href="../../720/1/7.html">Judas 1:7</a>; <a href="../../470/11/22.html">Mateo 11:22</a>; <a href="../../470/12/36.html">Mateo 12:36</a>; <a href="../../680/2/9.html">2 Pedro 2:9</a>; <a href="../../690/4/17.html">1 Juan 4:17</a>; <a href="../../290/34/8.html">Isaías 34:8</a>; <a href="../../180/16/17.html">Judit 16:17</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">ἀμὴν λέγω ὑμῖν, ἀνεκτότερον ἔσται γῇ Σοδόμων καὶ <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">Γομόρρων</span> ἐν ἡμέρᾳ κρίσεως ἢ τῇ πόλει ἐκείνῃ.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">_De cierto os digo que en el día del juicio, será más tolerable el castigo para la tierra de Sodoma y de <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">Gomorra,</span> que para aquella ciudad.__</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«Γομόρρων»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«Γομορ(ρ)ας»</span><div class="simple-det">Siglos V al X · ≈82% de los testigos citados</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«γη Γομορρας»</span><div class="simple-det">Siglo V · ≈9% de los testigos citados</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«γη Γομορρων»</span><div class="simple-det">Siglo IV · ≈9% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -129,13 +152,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

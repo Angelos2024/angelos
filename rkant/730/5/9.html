@@ -35,6 +35,7 @@
   <h1 class="verso-title">Apocalipsis 5:9</h1>
   <div class="verso-title-en">Revelation 5:9</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">καὶ ᾄδουσιν ᾠδὴν καινὴν λέγοντες· ἄξιος εἶ λαβεῖν τὸ βιβλίον καὶ ἀνοῖξαι τὰς σφραγῖδας αὐτοῦ, ὅτι ἐσφάγης καὶ ἠγόρασας <span class="greek-mark">⸂</span><b class="greek-var">τῷ θεῷ</b><span class="greek-mark">⸃</span> ἐν τῷ αἵματί σου ἐκ πάσης φυλῆς καὶ γλώσσης καὶ λαοῦ καὶ ἔθνους</div>
@@ -67,6 +68,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../730/14/3.html">Apocalipsis 14:3</a>; <a href="../../230/144/9.html">Salmos 144:9</a>; <a href="../../730/4/11.html">Apocalipsis 4:11</a>; <a href="../../730/5/6.html">Apocalipsis 5:6</a>; <a href="../../730/13/8.html">Apocalipsis 13:8</a>; <a href="../../290/53/7.html">Isaías 53:7</a>; <a href="../../730/14/4.html">Apocalipsis 14:4</a>; <a href="../../730/1/5.html">Apocalipsis 1:5</a>; <a href="../../670/1/19.html">1 Pedro 1:19</a>; <a href="../../730/7/9.html">Apocalipsis 7:9</a>; <a href="../../730/10/11.html">Apocalipsis 10:11</a>; <a href="../../730/11/9.html">Apocalipsis 11:9</a>; <a href="../../730/13/7.html">Apocalipsis 13:7</a>; <a href="../../730/14/6.html">Apocalipsis 14:6</a>; <a href="../../730/17/15.html">Apocalipsis 17:15</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">καὶ ᾄδουσιν ᾠδὴν καινὴν λέγοντες· ἄξιος εἶ λαβεῖν τὸ βιβλίον καὶ ἀνοῖξαι τὰς σφραγῖδας αὐτοῦ, ὅτι ἐσφάγης καὶ ἠγόρασας <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">τῷ θεῷ</span> ἐν τῷ αἵματί σου ἐκ πάσης φυλῆς καὶ γλώσσης καὶ λαοῦ καὶ ἔθνους</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">y cantaban un nuevo cántico, diciendo: Digno eres de tomar el libro y de abrir sus sellos; porque tú fuiste inmolado, y con tu sangre nos has redimido para Dios, de todo linaje y lengua y pueblo y nación;</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«τῷ θεῷ»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«τω θεω ημας»</span><div class="simple-det">Siglos IV al XIII · ≈65% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«ημας τω θεω»</span><div class="simple-det">Siglo XI · ≈29% de los testigos citados</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«τῷ θεῷ»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglo V · ≈6% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -129,13 +152,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

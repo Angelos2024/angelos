@@ -35,6 +35,7 @@
   <h1 class="verso-title">Apocalipsis 12:18</h1>
   <div class="verso-title-en">Revelation 12:18</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">Καὶ <span class="greek-mark">⸀</span><b class="greek-var">ἐστάθη</b> ἐπὶ τὴν ἄμμον τῆς θαλάσσης.</div>
@@ -64,6 +65,11 @@
   </div>
 
   
+  </div>
+
+  <div class="vista vista-simple">
+  <div class="simple-wrap"><p class="simple-none">Este versículo aún no tiene vista simplificada.</p></div>
+  </div>
 
   </article>
 
@@ -126,13 +132,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

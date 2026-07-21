@@ -35,6 +35,7 @@
   <h1 class="verso-title">Mateo 22:44</h1>
   <div class="verso-title-en">Matthew 22:44</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">εἶπεν <span class="greek-mark">⸆</span> <b class="greek-var">κύριος</b> τῷ κυρίῳ μου· κάθου ἐκ δεξιῶν μου, ἕως ἂν θῶ τοὺς ἐχθρούς σου <span class="greek-mark">⸀</span><b class="greek-var">ὑποκάτω</b> τῶν ποδῶν σου˸;</div>
@@ -81,6 +82,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../230/110/1.html">Salmos 110:1</a>; <a href="../../650/1/13.html">Hebreos 1:13</a>; <a href="../../650/10/12.html">Hebreos 10:12</a>; <a href="../../470/26/64.html">Mateo 26:64</a>; <a href="../../560/1/20.html">Efesios 1:20</a>; <a href="../../580/3/1.html">Colosenses 3:1</a>; <a href="../../650/1/3.html">Hebreos 1:3</a>; <a href="../../730/3/21.html">Apocalipsis 3:21</a>; <a href="../../530/15/25.html">1 Corintios 15:25</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">εἶπεν  κύριος τῷ κυρίῳ μου· κάθου ἐκ δεξιῶν μου, ἕως ἂν θῶ τοὺς ἐχθρούς σου <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">ὑποκάτω</span> τῶν ποδῶν σου˸<span class="smark smark-PUNTUACION" tabindex="0" data-title="Puntuación" data-meta="Los manuscritos difieren en la puntuación de este pasaje." title="Puntuación: Los manuscritos difieren en la puntuación de este pasaje.">;</span></span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">_Dijo el Señor a mi Señor: /nSiéntate a mi derecha, /nHasta que ponga a tus enemigos por estrado de tus pies?__</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«ο»</span><div class="simple-det">Siglos I al XV · ≈83% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglos IV al VI · ≈17% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div><div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«ὑποκάτω»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«υποποδιον»</span><div class="simple-det">Siglos I al XV · ≈55% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«ὑποκάτω»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglos IV al XIII · ≈45% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div><div class="svar svar-PUNTUACION"><div class="svar-head"><span class="svar-tag tag-PUNTUACION">Puntuación</span><span class="svar-gk gk">«;»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«[˸ .]»</span><div class="simple-det">≈100% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -143,13 +166,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

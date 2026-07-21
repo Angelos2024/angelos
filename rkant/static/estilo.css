@@ -930,3 +930,96 @@ body.verse-standalone .container { max-width: 1080px; }
     .app-content #verso-content { padding: 16px 18px; }
     .brand-sub { display: none; }
 }
+
+/* ==========================================================================
+   MODO SIMPLIFICADO  ·  paleta del sitio del usuario
+   ========================================================================== */
+:root{
+    --rk-bg:#fdf6f2; --rk-accent:#4b2743; --rk-tan:#e0cdbd;
+    --rk-tan2:#d6c2b2; --rk-ink:#2c1d1f;
+}
+
+/* interruptor de modo (lado izquierdo, sobre el contenido) */
+.mode-switch{
+    display:flex; gap:0; margin:14px 0 4px; padding:0 4px;
+    justify-content:flex-start;
+}
+.mode-btn{
+    font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+    padding:8px 16px; border:1.5px solid var(--rk-accent);
+    background:#fff; color:var(--rk-accent);
+}
+.mode-btn:first-child{ border-radius:8px 0 0 8px; border-right:none; }
+.mode-btn:last-child{ border-radius:0 8px 8px 0; }
+.mode-btn.is-active{ background:var(--rk-accent); color:#fff; }
+.mode-btn:not(.is-active):hover{ background:var(--rk-bg); }
+
+/* alternancia de vistas */
+.vista-simple{ display:none; }
+body.modo-simple .vista-academica{ display:none; }
+body.modo-simple .vista-simple{ display:block; }
+
+/* filas griego / RVR */
+.simple-wrap{ margin-top:6px; }
+.simple-row{
+    background:var(--rk-bg); border:1px solid var(--rk-tan);
+    border-radius:12px; padding:16px 20px; margin:0 0 14px;
+}
+.simple-lang{
+    font-size:12px; font-weight:700; letter-spacing:.04em;
+    text-transform:uppercase; color:var(--rk-accent); margin-bottom:6px;
+}
+.simple-text{ font-size:20px; line-height:1.7; color:var(--rk-ink); }
+.simple-greek .gk{ font-size:22px; }
+
+/* palabras resaltadas (marcas) */
+.smark{
+    cursor:help; font-weight:700; border-radius:3px; padding:0 1px;
+    border-bottom:2.5px solid currentColor;
+}
+.smark:focus{ outline:2px solid var(--rk-accent); outline-offset:1px; }
+.smark-CAMBIO{  color:#7a1f3a; background:rgba(122,31,58,.08); }
+.smark-ORDEN{   color:#1565c0; background:rgba(21,101,192,.08); }
+.smark-AÑADIDO{ color:#2e7d32; background:rgba(46,125,50,.10); }
+.smark-OMITIDO{ color:#8a5a00; background:rgba(138,90,0,.10);
+    text-decoration:line-through; text-decoration-color:rgba(138,90,0,.5); }
+.smark-PUNTUACION{ color:#5a5a5a; background:rgba(90,90,90,.08); }
+
+/* tarjetas de variantes */
+.simple-vars{ margin-top:18px; }
+.simple-vars .section-title{ color:var(--rk-accent); }
+.svar{
+    border:1px solid var(--rk-tan); border-left:5px solid var(--rk-accent);
+    background:#fff; border-radius:10px; padding:12px 16px; margin:0 0 12px;
+}
+.svar-AÑADIDO{ border-left-color:#2e7d32; }
+.svar-OMITIDO{ border-left-color:#8a5a00; }
+.svar-ORDEN{   border-left-color:#1565c0; }
+.svar-CAMBIO{  border-left-color:#7a1f3a; }
+.svar-head{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+.svar-tag{
+    font-size:12px; font-weight:700; color:#fff; padding:3px 10px;
+    border-radius:999px; background:var(--rk-accent);
+}
+.tag-AÑADIDO{ background:#2e7d32; } .tag-OMITIDO{ background:#8a5a00; }
+.tag-ORDEN{ background:#1565c0; } .tag-CAMBIO{ background:#7a1f3a; }
+.tag-PUNTUACION{ background:#5a5a5a; }
+.svar-PUNTUACION{ border-left-color:#5a5a5a; }
+.svar-gk{ font-size:18px; color:var(--rk-ink); }
+.svar-reads{ list-style:none; margin:0; padding:0; }
+.simple-read{ padding:7px 0; border-top:1px dashed var(--rk-tan); }
+.simple-read:first-child{ border-top:none; }
+.simple-quien{ font-weight:700; color:var(--rk-accent); }
+.simple-read.is-min .simple-quien{ color:#6b6b6b; }
+.simple-lect{ font-size:17px; }
+.simple-na{ color:#888; font-size:13px; }
+.simple-det{ font-size:13px; color:#555; margin-top:2px; }
+.simple-antiguo{ font-size:13px; color:#8a5a00; font-weight:600; margin-top:2px; }
+.simple-none{ color:#999; }
+.simple-foot{ font-size:12.5px; color:#777; margin-top:14px;
+    border-top:1px solid var(--rk-tan); padding-top:10px; }
+
+@media (max-width: 720px){
+    .simple-text{ font-size:18px; } .simple-greek .gk{ font-size:19px; }
+    .mode-btn{ padding:8px 12px; font-size:12px; }
+}

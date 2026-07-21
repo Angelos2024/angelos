@@ -35,6 +35,7 @@
   <h1 class="verso-title">2 Corintios 7:15</h1>
   <div class="verso-title-en">II Corinthians 7:15</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">καὶ τὰ σπλάγχνα αὐτοῦ περισσοτέρως εἰς ὑμᾶς ἐστιν ἀναμιμνῃσκομένου τὴν πάντων ὑμῶν ὑπακοήν, ὡς μετὰ φόβου καὶ τρόμου ἐδέξασθε αὐτόν.</div>
@@ -57,6 +58,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../540/2/9.html">2 Corintios 2:9</a>; <a href="../../530/2/3.html">1 Corintios 2:3</a>; <a href="../../570/2/12.html">Filipenses 2:12</a>; <a href="../../560/6/5.html">Efesios 6:5</a>; <a href="../../20/15/16.html">Éxodo 15:16</a>; <a href="../../230/2/11.html">Salmos 2:11</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">καὶ τὰ σπλάγχνα αὐτοῦ περισσοτέρως εἰς ὑμᾶς ἐστιν ἀναμιμνῃσκομένου τὴν πάντων ὑμῶν ὑπακοήν, ὡς μετὰ φόβου καὶ τρόμου ἐδέξασθε αὐτόν.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Y su cariño para con vosotros es aun más abundante, cuando se acuerda de la obediencia de todos vosotros, de cómo lo recibisteis con temor y temblor.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <p class="simple-none">— sin variantes textuales en este versículo —</p>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -119,13 +142,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

@@ -35,6 +35,7 @@
   <h1 class="verso-title">Hechos 18:9</h1>
   <div class="verso-title-en">Acts 18:9</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">Εἶπεν δὲ ὁ κύριος ἐν νυκτὶ δι’ ὁράματος τῷ Παύλῳ· μὴ φοβοῦ, ἀλλὰ λάλει καὶ μὴ σιωπήσῃς,</div>
@@ -57,6 +58,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../510/9/10.html">Hechos 9:10</a>; <a href="../../510/27/24.html">Hechos 27:24</a>; <a href="../../490/1/13.html">Lucas 1:13</a>; <a href="../../60/1/9.html">Josué 1:9</a>; <a href="../../290/41/10.html">Isaías 41:10</a>; <a href="../../290/43/5.html">Isaías 43:5</a>; <a href="../../300/1/8.html">Jeremías 1:8</a>; <a href="../../530/2/3.html">1 Corintios 2:3</a>; <a href="../../470/28/20.html">Mateo 28:20</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">Εἶπεν δὲ ὁ κύριος ἐν νυκτὶ δι’ ὁράματος τῷ Παύλῳ· μὴ φοβοῦ, ἀλλὰ λάλει καὶ μὴ σιωπήσῃς,</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Entonces el Señor dijo a Pablo en visión de noche: _No temas, sino habla, y no calles;__</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <p class="simple-none">— sin variantes textuales en este versículo —</p>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -119,13 +142,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

@@ -35,6 +35,7 @@
   <h1 class="verso-title">Lucas 16:19</h1>
   <div class="verso-title-en">Luke 16:19</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">Πᾶς ὁ ἀπολύων τὴν γυναῖκα αὐτοῦ καὶ γαμῶν ἑτέραν μοιχεύει, καὶ <span class="greek-mark">⸆</span> <span class="greek-mark">°</span><b class="greek-var">ὁ</b> ἀπολελυμένην <span class="greek-mark">⸋</span><b class="greek-var">ἀπὸ ἀνδρὸς</b><span class="greek-mark">⸌</span> γαμῶν μοιχεύει. <span class="greek-mark">⸆</span> <b class="greek-var">Ἄνθρωπος</b> <span class="greek-mark">°</span><b class="greek-var">δέ</b> τις ἦν πλούσιος <span class="greek-mark">⸇</span>, καὶ ἐνεδιδύσκετο πορφύραν καὶ βύσσον εὐφραινόμενος καθ’ ἡμέραν λαμπρῶς.</div>
@@ -78,6 +79,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../490/10/30.html">Lucas 10:30</a>; <a href="../../490/16/1.html">Lucas 16:1</a>; <a href="../../660/5/5.html">Santiago 5:5</a>; <a href="../../490/6/24.html">Lucas 6:24</a>; <a href="../../240/31/22.html">Proverbios 31:22</a>; <a href="../../730/18/12.html">Apocalipsis 18:12</a>; <a href="../../490/12/19.html">Lucas 12:19</a>; <a href="../../490/15/23.html">Lucas 15:23</a>; <a href="../../510/7/41.html">Hechos 7:41</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">Πᾶς ὁ ἀπολύων τὴν γυναῖκα αὐτοῦ καὶ γαμῶν ἑτέραν μοιχεύει, καὶ  ὁ ἀπολελυμένην ἀπὸ ἀνδρὸς γαμῶν μοιχεύει.  Ἄνθρωπος <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">δέ</span> τις ἦν πλούσιος , καὶ ἐνεδιδύσκετο πορφύραν καὶ βύσσον εὐφραινόμενος καθ’ ἡμέραν λαμπρῶς.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">_Había un hombre rico, que se vestía de púrpura y de lino fino, y hacía cada día banquete con esplendidez.__</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«ειπεν δε και ετεραν παραβολην»</span><div class="simple-det">Siglo V · ≈100% de los testigos citados</div></li></ul></div><div class="svar svar-OMITIDO"><div class="svar-head"><span class="svar-tag tag-OMITIDO">Omisión</span><span class="svar-gk gk">«δέ»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span><div class="simple-det">Siglos V al XIII · ≈100% de los testigos citados</div></li></ul></div><div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«ονοματι Νευης»</span><div class="simple-det">≈67% de los testigos citados</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«Finees»</span><div class="simple-det">≈33% de los testigos citados</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -140,13 +163,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

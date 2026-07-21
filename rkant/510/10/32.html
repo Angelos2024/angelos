@@ -35,6 +35,7 @@
   <h1 class="verso-title">Hechos 10:32</h1>
   <div class="verso-title-en">Acts 10:32</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">πέμψον οὖν εἰς Ἰόππην καὶ μετακάλεσαι Σίμωνα ὃς ἐπικαλεῖται Πέτρος, οὗτος ξενίζεται ἐν οἰκίᾳ Σίμωνος βυρσέως παρὰ θάλασσαν <span class="greek-mark">⸆</span>.</div>
@@ -64,6 +65,28 @@
   </div>
 
   
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">πέμψον οὖν εἰς Ἰόππην καὶ μετακάλεσαι Σίμωνα ὃς ἐπικαλεῖται Πέτρος, οὗτος ξενίζεται ἐν οἰκίᾳ Σίμωνος βυρσέως παρὰ θάλασσαν .</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Envía, pues, a Jope, y haz venir a Simón el que tiene por sobrenombre Pedro, el cual mora en casa de Simón, un curtidor, junto al mar; y cuando llegue, él te hablará.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«ος παραγενομενος λαλησει σοι»</span><div class="simple-det">Siglos V al XIII · ≈68% de los testigos citados</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«—»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglos IV al XII · ≈32% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -126,13 +149,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

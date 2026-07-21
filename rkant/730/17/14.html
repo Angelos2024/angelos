@@ -35,6 +35,7 @@
   <h1 class="verso-title">Apocalipsis 17:14</h1>
   <div class="verso-title-en">Revelation 17:14</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">οὗτοι μετὰ τοῦ ἀρνίου πολεμήσουσιν καὶ τὸ ἀρνίον νικήσει αὐτούς, ὅτι κύριος κυρίων ἐστὶν καὶ βασιλεὺς βασιλέων καὶ οἱ μετ’ αὐτοῦ κλητοὶ καὶ ἐκλεκτοὶ καὶ πιστοί.</div>
@@ -57,6 +58,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../730/13/4.html">Apocalipsis 13:4</a>; <a href="../../730/19/16.html">Apocalipsis 19:16</a>; <a href="../../610/6/15.html">1 Timoteo 6:15</a>; <a href="../../50/10/17.html">Deuteronomio 10:17</a>; <a href="../../230/136/3.html">Salmos 136:3</a>; <a href="../../340/2/47.html">Daniel 2:47</a>; <a href="../../464/13/4.html">2 Macabeos 13:4</a>; <a href="../../466/5/35.html">3 Macabeos 5:35</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">οὗτοι μετὰ τοῦ ἀρνίου πολεμήσουσιν καὶ τὸ ἀρνίον νικήσει αὐτούς, ὅτι κύριος κυρίων ἐστὶν καὶ βασιλεὺς βασιλέων καὶ οἱ μετ’ αὐτοῦ κλητοὶ καὶ ἐκλεκτοὶ καὶ πιστοί.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Pelearán contra el Cordero, y el Cordero los vencerá, porque él es Señor de señores y Rey de reyes; y los que están con él son llamados y elegidos y fieles.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <p class="simple-none">— sin variantes textuales en este versículo —</p>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -119,13 +142,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

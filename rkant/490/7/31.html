@@ -35,6 +35,7 @@
   <h1 class="verso-title">Lucas 7:31</h1>
   <div class="verso-title-en">Luke 7:31</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">Τίνι οὖν ὁμοιώσω τοὺς ἀνθρώπους τῆς γενεᾶς ταύτης καὶ τίνι εἰσὶν ὅμοιοι;</div>
@@ -57,6 +58,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../490/13/18.html">Lucas 13:18</a>; <a href="../../490/9/41.html">Lucas 9:41</a>; <a href="../../490/17/25.html">Lucas 17:25</a>; <a href="../../490/21/32.html">Lucas 21:32</a>; <a href="../../510/2/40.html">Hechos 2:40</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">Τίνι οὖν ὁμοιώσω τοὺς ἀνθρώπους τῆς γενεᾶς ταύτης καὶ τίνι εἰσὶν ὅμοιοι;</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Y dijo el Señor: _¿A qué, pues, compararé los hombres de esta generación, y a qué son semejantes?__</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <p class="simple-none">— sin variantes textuales en este versículo —</p>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -119,13 +142,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

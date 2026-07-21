@@ -35,6 +35,7 @@
   <h1 class="verso-title">1 Juan 2:16</h1>
   <div class="verso-title-en">I John 2:16</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">ὅτι πᾶν τὸ ἐν τῷ κόσμῳ, ἡ ἐπιθυμία τῆς σαρκὸς καὶ ἡ ἐπιθυμία τῶν ὀφθαλμῶν καὶ ἡ ἀλαζονεία τοῦ βίου, οὐκ ἔστιν ἐκ τοῦ πατρὸς ἀλλ’ ἐκ τοῦ κόσμου ἐστίν.</div>
@@ -57,6 +58,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../520/8/7.html">Romanos 8:7</a>; <a href="../../550/5/16.html">Gálatas 5:16</a>; <a href="../../630/2/12.html">Tito 2:12</a>; <a href="../../670/4/2.html">1 Pedro 4:2</a>; <a href="../../240/27/20.html">Proverbios 27:20</a>; <a href="../../250/4/8.html">Eclesiastés 4:8</a>; <a href="../../280/14/9.html">Eclesiástico (Sirácida) 14:9</a>; <a href="../../660/4/16.html">Santiago 4:16</a>; <a href="../../690/3/17.html">1 Juan 3:17</a>; <a href="../../690/3/10.html">1 Juan 3:10</a>; <a href="../../690/4/3.html">1 Juan 4:3</a>; <a href="../../690/5/19.html">1 Juan 5:19</a>; <a href="../../500/8/47.html">Juan 8:47</a>; <a href="../../690/4/5.html">1 Juan 4:5</a>; <a href="../../500/15/19.html">Juan 15:19</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">ὅτι πᾶν τὸ ἐν τῷ κόσμῳ, ἡ ἐπιθυμία τῆς σαρκὸς καὶ ἡ ἐπιθυμία τῶν ὀφθαλμῶν καὶ ἡ ἀλαζονεία τοῦ βίου, οὐκ ἔστιν ἐκ τοῦ πατρὸς ἀλλ’ ἐκ τοῦ κόσμου ἐστίν.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">Porque todo lo que hay en el mundo, los deseos de la carne, los deseos de los ojos, y la vanagloria de la vida, no proviene del Padre, sino del mundo.</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <p class="simple-none">— sin variantes textuales en este versículo —</p>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -119,13 +142,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());

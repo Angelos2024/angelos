@@ -35,6 +35,7 @@
   <h1 class="verso-title">Lucas 11:36</h1>
   <div class="verso-title-en">Luke 11:36</div>
 
+  <div class="vista vista-academica">
   <div class="section">
     <h2 class="section-title">Texto Griego</h2>
     <div class="greek">εἰ οὖν τὸ σῶμά σου ὅλον φωτεινόν, μὴ ἔχον <span class="greek-mark">⸄</span><b class="greek-var">μέρος τι</b><span class="greek-mark">⸅</span> σκοτεινόν, ἔσται φωτεινὸν ὅλον ὡς ὅταν ὁ λύχνος <span class="greek-mark">⸆</span> <b class="greek-var">τῇ</b> ἀστραπῇ φωτίζῃ σε.<span class="greek-mark">⸃</span></div>
@@ -57,6 +58,28 @@
   </div>
 
   <div class='section'><h2 class='section-title'>Referencias Cruzadas</h2><div class='xrefs'><a href="../../510/26/18.html">Hechos 26:18</a>; <a href="../../540/3/18.html">2 Corintios 3:18</a>; <a href="../../560/5/8.html">Efesios 5:8</a>; <a href="../../570/2/15.html">Filipenses 2:15</a>; <a href="../../690/2/9.html">1 Juan 2:9</a>; <a href="../../490/24/4.html">Lucas 24:4</a>; <a href="../../470/28/3.html">Mateo 28:3</a></div></div>
+  </div>
+
+  <div class="vista vista-simple">
+  
+  <div class="simple-wrap">
+    <div class="simple-row">
+      <div class="simple-lang">Texto griego (NA28)</div>
+      <div class="simple-text simple-greek"><span class="gk">εἰ οὖν τὸ σῶμά σου ὅλον φωτεινόν, μὴ ἔχον μέρος τι σκοτεινόν, ἔσται φωτεινὸν ὅλον ὡς ὅταν ὁ λύχνος  τῇ ἀστραπῇ φωτίζῃ σε.</span></div>
+    </div>
+    <div class="simple-row">
+      <div class="simple-lang">Reina-Valera 1960</div>
+      <div class="simple-text simple-esp">_Así que, si todo tu cuerpo está lleno de luz, no teniendo parte alguna de tinieblas, será todo luminoso, como cuando una lámpara te alumbra con su resplandor.__</div>
+    </div>
+    <div class="simple-vars">
+      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
+      <p class="simple-none">— sin variantes textuales en este versículo —</p>
+    </div>
+    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
+    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  </div>
+
+  </div>
 
   </article>
 
@@ -119,13 +142,13 @@
     currentEl = null;
   }
   document.addEventListener('mouseover', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
-    else if (currentEl && !e.target.closest('.wit')) hide();
+    else if (currentEl && !e.target.closest('.wit, .smark')) hide();
   });
   document.addEventListener('mouseleave', () => hide(), true);
   document.addEventListener('focusin', e => {
-    const w = e.target.closest && e.target.closest('.wit');
+    const w = e.target.closest && e.target.closest('.wit, .smark');
     if (w && w.dataset.title !== undefined) show(w);
   });
   document.addEventListener('focusout', () => hide());
