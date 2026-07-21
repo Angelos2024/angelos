@@ -64,7 +64,8 @@
   <main class="app-main">
     <div class="mode-switch" role="tablist" aria-label="Modo de visualización">
       <button id="mode-acad" class="mode-btn is-active" type="button" role="tab">Modo académico</button>
-      <button id="mode-simple" class="mode-btn" type="button" role="tab">Modo simplificado</button>
+      <button id="mode-simple" class="mode-btn is-disabled" type="button" role="tab"
+              disabled aria-disabled="true" title="En desarrollo — próximamente">Modo simplificado</button>
     </div>
     <div id="content" class="app-content">
       <div class="welcome">
@@ -165,16 +166,21 @@
     if (modeAcad)   modeAcad.classList.toggle('is-active', !simple);
     if (modeSimple) modeSimple.classList.toggle('is-active', simple);
   }
+  // Modo simplificado deshabilitado temporalmente (en desarrollo): se fuerza académico.
+  const SIMPLE_ENABLED = false;
   let curMode = 'academico';
-  try { curMode = localStorage.getItem(MODE_KEY) || 'academico'; } catch(e){}
+  if (SIMPLE_ENABLED) {
+    try { curMode = localStorage.getItem(MODE_KEY) || 'academico'; } catch(e){}
+  }
   applyMode(curMode);
   function setMode(m){
+    if (!SIMPLE_ENABLED && m === 'simple') return;   // ignorado mientras está en desarrollo
     curMode = m;
     try { localStorage.setItem(MODE_KEY, m); } catch(e){}
     applyMode(m);
   }
   if (modeAcad)   modeAcad.addEventListener('click', () => setMode('academico'));
-  if (modeSimple) modeSimple.addEventListener('click', () => setMode('simple'));
+  if (SIMPLE_ENABLED && modeSimple) modeSimple.addEventListener('click', () => setMode('simple'));
 
   // ---------------- persistencia local ------------------------------------
   const LS_KEY = 'rkant.newLastHash';

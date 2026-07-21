@@ -965,7 +965,11 @@ body.verse-standalone .container { max-width: 1080px; }
 }
 .mode-btn:first-child{ border-bottom:none; }
 .mode-btn.is-active{ background:var(--rk-accent); color:#fff; }
-.mode-btn:not(.is-active):hover{ background:var(--rk-bg); }
+.mode-btn:not(.is-active):not(.is-disabled):hover{ background:var(--rk-bg); }
+.mode-btn.is-disabled{
+    color:#b7a9ae; border-color:#cbbfc4; background:#f4eef0;
+    cursor:not-allowed; opacity:.75;
+}
 
 /* alternancia de vistas */
 .vista-simple{ display:none; }
