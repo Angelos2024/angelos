@@ -1,7 +1,7 @@
 (function(){
   const ACCESS_KEY = 'angelos.admin.rkant.access';
   const ACCESS_TTL_MS = 8 * 60 * 60 * 1000;
-  const ADMIN_PASSWORD_HASH = 'a61c11b5647ca4d72e727663243d9812bc38aff9502afcf9c861f835d3720460';
+  const ADMIN_PASSWORD_HASH = '90dbca35cc682d5b4c2e53bd171e6cfba19168539c6f0799df31613fd5638a0f';
   const CLICK_TARGET = 4;
   const CLICK_RESET_MS = 2500;
 
@@ -27,7 +27,7 @@
         </div>
         <div class="secret-admin-body">
           <label class="secret-admin-label" for="secretAdminPassword">Contraseña</label>
-          <input id="secretAdminPassword" class="secret-admin-input" type="password" autocomplete="current-password"/>
+          <input id="secretAdminPassword" class="secret-admin-input" type="password" inputmode="numeric" autocomplete="current-password"/>
           <div id="secretAdminStatus" class="secret-admin-status" aria-live="polite"></div>
           <div class="secret-admin-actions">
             <button type="button" class="secret-admin-btn secret-admin-btn-secondary" data-secret-admin-close>Cerrar</button>
