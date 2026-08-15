@@ -84,6 +84,25 @@
 <!-- tooltip flotante único, compartido por todos los versículos -->
 <div id="ms-tip" class="ms-tip" role="tooltip" aria-hidden="true"></div>
 
+<!-- aviso emergente del modo simplificado -->
+<div id="simple-note" class="snote-overlay" aria-hidden="true">
+  <div class="snote-box" role="dialog" aria-modal="true" aria-labelledby="snote-title">
+    <button id="snote-close" class="snote-x" type="button" aria-label="Cerrar">&times;</button>
+    <h2 id="snote-title" class="snote-title">Sobre el modo simplificado</h2>
+    <p>Este modo simplificado del español <b>no debe considerarse una traducción fiel</b>.
+    El texto en español es una adaptación —mezcla de versiones— cuyo único fin es dar a
+    entender qué palabras se <b>agregan</b>, se <b>cambian</b> o se <b>omiten</b> conforme
+    al aparato crítico.</p>
+    <p>Debe tomarse como una <b>introducción</b> para aprender a usar el aparato crítico e
+    identificar cambios rápidamente. Aun así, es <b>altamente recomendable usar el modo
+    académico</b>. Cabe añadir que incluso la edición <b>Nestle-Aland 28 (NA28) no es una
+    edición definitiva</b> del Nuevo Testamento.</p>
+    <label class="snote-check">
+      <input type="checkbox" id="snote-hide"> No volver a mostrar
+    </label>
+  </div>
+</div>
+
 <script>
 (function(){
   // ---------------- tooltips ---------------------------------------------
@@ -176,9 +195,33 @@
     curMode = m;
     try { localStorage.setItem(MODE_KEY, m); } catch(e){}
     applyMode(m);
+    if (m === 'simple' && !noteHidden()) openNote();
   }
   if (modeAcad)   modeAcad.addEventListener('click', () => setMode('academico'));
   if (SIMPLE_ENABLED && modeSimple) modeSimple.addEventListener('click', () => setMode('simple'));
+
+  // ---------------- aviso emergente del modo simplificado ----------------
+  const NOTE_KEY  = 'rkant.simpleNoteHidden';
+  const noteEl    = $('simple-note');
+  const noteX     = $('snote-close');
+  const noteChk   = $('snote-hide');
+  function noteHidden(){ try { return localStorage.getItem(NOTE_KEY) === '1'; } catch(e){ return false; } }
+  function openNote(){
+    if (!noteEl) return;
+    noteEl.classList.add('is-open');
+    noteEl.setAttribute('aria-hidden','false');
+  }
+  function closeNote(){
+    if (!noteEl) return;
+    if (noteChk && noteChk.checked){ try { localStorage.setItem(NOTE_KEY,'1'); } catch(e){} }
+    noteEl.classList.remove('is-open');
+    noteEl.setAttribute('aria-hidden','true');
+  }
+  if (noteX)  noteX.addEventListener('click', closeNote);
+  if (noteEl) noteEl.addEventListener('click', ev => { if (ev.target === noteEl) closeNote(); });
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'Escape' && noteEl && noteEl.classList.contains('is-open')) closeNote();
+  });
 
   document.addEventListener('click', ev => {
     const m = ev.target.closest && ev.target.closest('mark.naes');

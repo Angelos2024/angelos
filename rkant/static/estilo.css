@@ -971,6 +971,36 @@ body.verse-standalone .container { max-width: 1080px; }
     cursor:not-allowed; opacity:.75;
 }
 
+/* aviso emergente del modo simplificado */
+.snote-overlay{
+    position:fixed; inset:0; z-index:50; display:none;
+    align-items:center; justify-content:center;
+    background:rgba(28,18,20,.55); padding:18px;
+}
+.snote-overlay.is-open{ display:flex; }
+.snote-box{
+    position:relative; background:#fff; color:var(--rk-ink,#2c1d1f);
+    max-width:520px; width:100%; border-radius:12px; padding:26px 26px 20px;
+    box-shadow:0 12px 40px rgba(28,18,20,.35);
+    border-top:5px solid var(--rk-accent);
+    animation:snotein .16s ease-out;
+}
+@keyframes snotein{ from{ transform:translateY(8px); opacity:0; } to{ transform:none; opacity:1; } }
+.snote-x{
+    position:absolute; top:8px; right:10px; border:none; background:none;
+    font-size:26px; line-height:1; color:#9a8b90; cursor:pointer; padding:2px 6px;
+}
+.snote-x:hover{ color:var(--rk-accent); }
+.snote-title{
+    margin:0 0 12px; font-size:18px; color:var(--rk-accent);
+}
+.snote-box p{ margin:0 0 12px; font-size:14px; line-height:1.55; }
+.snote-check{
+    display:flex; align-items:center; gap:8px; margin-top:6px;
+    font-size:13px; color:#5c4a4f; cursor:pointer; user-select:none;
+}
+.snote-check input{ width:16px; height:16px; cursor:pointer; }
+
 /* alternancia de vistas */
 .vista-simple{ display:none; }
 body.modo-simple .vista-academica{ display:none; }
