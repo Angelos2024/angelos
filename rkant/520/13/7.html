@@ -62,21 +62,10 @@
 
   <div class="vista vista-simple">
   
-  <div class="simple-wrap">
-    <div class="simple-row">
-      <div class="simple-lang">Texto griego (NA28)</div>
-      <div class="simple-text simple-greek"><span class="gk">ἀπόδοτε πᾶσιν τὰς ὀφειλάς, τῷ τὸν φόρον τὸν φόρον, τῷ τὸ τέλος τὸ τέλος, τῷ τὸν φόβον τὸν φόβον, τῷ τὴν τιμὴν τὴν τιμήν.</span></div>
-    </div>
-    <div class="simple-row">
-      <div class="simple-lang">Reina-Valera 1960</div>
-      <div class="simple-text simple-esp">Pagad a todos lo que debéis: al que tributo, tributo; al que impuesto, impuesto; al que respeto, respeto; al que honra, honra.</div>
-    </div>
-    <div class="simple-vars">
-      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
-      <p class="simple-none">— sin variantes textuales en este versículo —</p>
-    </div>
-    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
-    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  <div class="naes-wrap">
+    <p class="naes-verse">Pagad a todos lo que debéis: al que tributo, tributo; al que impuesto, impuesto; al que respeto, respeto; al que honra, honra.</p>
+    
+    <p class="naes-hint">Este versículo no tiene variantes en el aparato de la NA28.</p>
   </div>
 
   </div>
@@ -154,6 +143,15 @@
   document.addEventListener('focusout', () => hide());
   window.addEventListener('scroll', hide, true);
   window.addEventListener('resize', hide);
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
 })();
 </script>
 </body>

@@ -66,21 +66,10 @@
 
   <div class="vista vista-simple">
   
-  <div class="simple-wrap">
-    <div class="simple-row">
-      <div class="simple-lang">Texto griego (NA28)</div>
-      <div class="simple-text simple-greek"><span class="gk">Τὸ λοιπόν, ἀδελφοί, ὅσα ἐστὶν ἀληθῆ, ὅσα σεμνά, ὅσα δίκαια, ὅσα ἁγνά, ὅσα προσφιλῆ, ὅσα εὔφημα, εἴ τις ἀρετὴ καὶ εἴ τις ἔπαινος , ταῦτα λογίζεσθε·</span></div>
-    </div>
-    <div class="simple-row">
-      <div class="simple-lang">Reina-Valera 1960</div>
-      <div class="simple-text simple-esp">Por lo demás, hermanos, todo lo que es verdadero, todo lo honesto, todo lo justo, todo lo puro, todo lo amable, todo lo que es de buen nombre; si hay virtud alguna, si algo digno de alabanza, en esto pensad.</div>
-    </div>
-    <div class="simple-vars">
-      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
-      <div class="svar svar-AÑADIDO"><div class="svar-head"><span class="svar-tag tag-AÑADIDO">Adición</span><span class="svar-gk gk">«επιστημης»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría añade:</span> <span class="simple-lect gk">«επιστημης»</span><div class="simple-det">Siglos VI al IX · ≈100% de los testigos citados</div></li></ul></div>
-    </div>
-    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
-    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  <div class="naes-wrap">
+    <p class="naes-verse">Por lo demás, hermanos, todo lo que es verdadero, todo lo honesto, todo lo justo, todo lo puro, todo lo amable, todo lo que es de buen nombre; si hay virtud alguna, si algo digno de alabanza, en esto pensad. <mark class="naes c-anade" tabindex="0" data-k="a">¶</mark></p>
+    <div class="naes-panel is-on" data-k="a"><h2 class="naes-h">Aquí añadieron</h2><div class="naes-reads cols-2"><article class="naes-read"><div class="naes-badge">Otra lectura</div><p class="naes-que">«entendido»</p><p class="naes-grp"><span class="naes-fam naes-fam-byz">Bizantino</span> Copias bizantinos (siglo IX) añaden «entendido».</p><p class="naes-grp"><span class="naes-fam naes-fam-west">Occidental</span> El Bezae y el latín, occidental (siglo VI) añaden «entendido».</p><p class="naes-grp"><span class="naes-fam naes-fam-otro">Otras copias</span> El latín y Ambrosiaster (siglo IV) añaden «entendido».</p></article></div></div>
+    <p class="naes-hint">Toca una palabra pintada para comparar las copias por tradición y siglos.</p><div class="naes-legend"><span class="c-cambio">otra palabra</span><span class="c-omite">aquí no está</span><span class="c-anade">aquí añadieron</span><span class="c-orden">otro orden</span><span class="c-duda">verso dudoso</span></div>
   </div>
 
   </div>
@@ -158,6 +147,15 @@
   document.addEventListener('focusout', () => hide());
   window.addEventListener('scroll', hide, true);
   window.addEventListener('resize', hide);
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
 })();
 </script>
 </body>

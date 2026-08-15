@@ -18,7 +18,7 @@
     <span class="sep">›</span>
     <span>v. 5</span>
     <span class="prev-next">
-      <a href="2.html">← Gálatas 3:2</a>
+      <a href="4.html">← Gálatas 3:4</a>
       <a href="6.html">Gálatas 3:6 →</a>
     </span>
   </div>
@@ -27,8 +27,8 @@
            data-bn="550" data-ch="3" data-vs="5"
            data-ref="Gálatas 3:5" data-ref-en="Galatians 3:5"
            data-book="Gálatas"
-           data-prev-bn="550" data-prev-ch="3" data-prev-vs="2"
-           data-prev-ref="Gálatas 3:2"
+           data-prev-bn="550" data-prev-ch="3" data-prev-vs="4"
+           data-prev-ref="Gálatas 3:4"
            data-next-bn="550" data-next-ch="3" data-next-vs="6"
            data-next-ref="Gálatas 3:6">
 
@@ -62,21 +62,10 @@
 
   <div class="vista vista-simple">
   
-  <div class="simple-wrap">
-    <div class="simple-row">
-      <div class="simple-lang">Texto griego (NA28)</div>
-      <div class="simple-text simple-greek"><span class="gk">ὁ οὖν ἐπιχορηγῶν ὑμῖν τὸ πνεῦμα καὶ ἐνεργῶν δυνάμεις ἐν ὑμῖν, ἐξ ἔργων νόμου ἢ ἐξ ἀκοῆς πίστεως;</span></div>
-    </div>
-    <div class="simple-row">
-      <div class="simple-lang">Reina-Valera 1960</div>
-      <div class="simple-text simple-esp">Aquel, pues, que os suministra el Espíritu, y hace maravillas entre vosotros, ¿lo hace por las obras de la ley, o por el oír con fe?</div>
-    </div>
-    <div class="simple-vars">
-      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
-      <p class="simple-none">— sin variantes textuales en este versículo —</p>
-    </div>
-    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
-    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  <div class="naes-wrap">
+    <p class="naes-verse">Aquel, pues, que os suministra el Espíritu, y hace maravillas entre vosotros, ¿lo hace por las obras de la ley, o por el oír con fe?</p>
+    
+    <p class="naes-hint">Este versículo no tiene variantes en el aparato de la NA28.</p>
   </div>
 
   </div>
@@ -154,6 +143,15 @@
   document.addEventListener('focusout', () => hide());
   window.addEventListener('scroll', hide, true);
   window.addEventListener('resize', hide);
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
 })();
 </script>
 </body>

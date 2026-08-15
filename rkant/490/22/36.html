@@ -72,21 +72,10 @@
 
   <div class="vista vista-simple">
   
-  <div class="simple-wrap">
-    <div class="simple-row">
-      <div class="simple-lang">Texto griego (NA28)</div>
-      <div class="simple-text simple-greek"><span class="gk"><span class="smark smark-ORDEN" tabindex="0" data-title="Orden distinto" data-meta="Algunos manuscritos presentan estas palabras en otro orden." title="Orden distinto: Algunos manuscritos presentan estas palabras en otro orden.">εἶπεν δὲ</span> αὐτοῖς· ἀλλὰ νῦν ὁ ἔχων βαλλάντιον ἀράτω, ὁμοίως καὶ πήραν, καὶ ὁ μὴ ἔχων πωλησάτω τὸ ἱμάτιον αὐτοῦ καὶ ἀγορασάτω μάχαιραν.</span></div>
-    </div>
-    <div class="simple-row">
-      <div class="simple-lang">Reina-Valera 1960</div>
-      <div class="simple-text simple-esp">Y les dijo: _Pues ahora, el que tiene bolsa, tómela, y también la alforja; y el que no tiene espada, venda su capa y compre una.__</div>
-    </div>
-    <div class="simple-vars">
-      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
-      <div class="svar svar-ORDEN"><div class="svar-head"><span class="svar-tag tag-ORDEN">Orden distinto</span><span class="svar-gk gk">«εἶπεν δὲ»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«ειπεν ουν»</span><div class="simple-det">Siglos IV al XIII · ≈56% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«εἶπεν δὲ»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglos IV al XIII · ≈28% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«ο δε ειπεν»</span><div class="simple-det">Siglos IV al IX · ≈16% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
-    </div>
-    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
-    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  <div class="naes-wrap">
+    <p class="naes-verse">Y les dijo: Pues ahora, el que tiene bolsa, tómela, y también la alforja; y el que <mark class="naes c-cambio" tabindex="0" data-k="a">dijo y</mark> tiene espada, venda su capa y compre una.</p>
+    <div class="naes-panel is-on" data-k="a"><h2 class="naes-h">Otra palabra</h2><div class="naes-reads cols-3"><article class="naes-read is-na"><div class="naes-badge">Texto de la NA28</div><p class="naes-que">«dijo y»</p><p class="naes-grp"><span class="naes-fam naes-fam-alex">Alejandrino</span> Manuscritos alejandrinos (siglos IV–XIII) —un papiro, el Sinaítico y el Vaticano— dicen «dijo y».</p><p class="naes-grp"><span class="naes-fam naes-fam-otro">Otras copias</span> Una familia de manuscritos y el copto (siglo XII) dicen «dijo y».</p></article><article class="naes-read"><div class="naes-badge">Otra lectura</div><p class="naes-que">«el y dijo»</p><p class="naes-grp"><span class="naes-fam naes-fam-alex">Alejandrino</span> El Sinaítico y el Coridethi, alejandrino (siglos IV–IX) dicen «el y dijo».</p><p class="naes-grp"><span class="naes-fam naes-fam-west">Occidental</span> El Bezae y el latín, occidental (siglo V) dicen «el y dijo».</p><p class="naes-grp"><span class="naes-fam naes-fam-otro">Otras copias</span> El siriaco dice «el y dijo».</p></article><article class="naes-read"><div class="naes-badge">Otra lectura</div><p class="naes-que">«dijo pues»</p><p class="naes-grp"><span class="naes-fam naes-fam-alex">Alejandrino</span> Copias alejandrinos (siglo IX) dicen «dijo pues».</p><p class="naes-grp"><span class="naes-fam naes-fam-byz">Bizantino</span> La mayoría de los manuscritos bizantinos (siglos V–X) dicen «dijo pues».</p><p class="naes-grp"><span class="naes-fam naes-fam-otro">Otras copias</span> El Guelferbytano B, el Washington, el Sangallense y el Laura (siglos IV–XIII) dicen «dijo pues».</p></article></div></div>
+    <p class="naes-hint">Toca una palabra pintada para comparar las copias por tradición y siglos.</p><div class="naes-legend"><span class="c-cambio">otra palabra</span><span class="c-omite">aquí no está</span><span class="c-anade">aquí añadieron</span><span class="c-orden">otro orden</span><span class="c-duda">verso dudoso</span></div>
   </div>
 
   </div>
@@ -164,6 +153,15 @@
   document.addEventListener('focusout', () => hide());
   window.addEventListener('scroll', hide, true);
   window.addEventListener('resize', hide);
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
 })();
 </script>
 </body>

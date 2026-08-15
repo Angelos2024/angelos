@@ -92,7 +92,13 @@
   </div>
 
   <div class="vista vista-simple">
-  <div class="simple-wrap"><p class="simple-none">Este versículo aún no tiene vista simplificada.</p></div>
+  
+  <div class="naes-wrap">
+    <p class="naes-verse">La paz sea contigo. Los <mark class="naes c-cambio" tabindex="0" data-k="c">amigos</mark> te saludan. Saluda tú a los amigos, a cada uno en particular. <mark class="naes c-anade" tabindex="0" data-k="d">¶</mark></p>
+    <div class="naes-panel is-on" data-k="c"><h2 class="naes-h">Otra palabra</h2><div class="naes-reads cols-3"><article class="naes-read is-na"><div class="naes-badge">Texto de la NA28</div><p class="naes-que">«amigos»</p><p class="naes-grp"><span class="naes-fam naes-fam-otro">Otras copias</span> Así lo imprime la NA28: «amigos».</p></article><article class="naes-read"><div class="naes-badge">Otra lectura</div><p class="naes-que">«amigos tuyo»</p><p class="naes-grp"><span class="naes-fam naes-fam-otro">Otras copias</span> El Laura (siglos VIII–IX) dice «amigos tuyo».</p></article><article class="naes-read"><div class="naes-badge">Otra lectura</div><p class="naes-que">«hermanos»</p><p class="naes-grp"><span class="naes-fam naes-fam-byz">Bizantino</span> Copias bizantinos (siglo XI) dicen «hermanos».</p><p class="naes-grp"><span class="naes-fam naes-fam-otro">Otras copias</span> El siriaco y el copto (siglos XI–XII) dicen «hermanos».</p></article></div></div><div class="naes-panel" data-k="d"><h2 class="naes-h">Aquí añadieron</h2><div class="naes-reads cols-2"><article class="naes-read"><div class="naes-badge">Otra lectura</div><p class="naes-que">«amén»</p><p class="naes-grp"><span class="naes-fam naes-fam-otro">Otras copias</span> Copias (siglos X–XIII) añaden «amén».</p></article></div></div>
+    <p class="naes-hint">Toca una palabra pintada para comparar las copias por tradición y siglos.</p><div class="naes-legend"><span class="c-cambio">otra palabra</span><span class="c-omite">aquí no está</span><span class="c-anade">aquí añadieron</span><span class="c-orden">otro orden</span><span class="c-duda">verso dudoso</span></div>
+  </div>
+
   </div>
 
   </article>
@@ -168,6 +174,15 @@
   document.addEventListener('focusout', () => hide());
   window.addEventListener('scroll', hide, true);
   window.addEventListener('resize', hide);
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
 })();
 </script>
 </body>

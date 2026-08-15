@@ -19,7 +19,7 @@
     <span>v. 11</span>
     <span class="prev-next">
       <a href="10.html">← 1 Timoteo 5:10</a>
-      <a href="13.html">1 Timoteo 5:13 →</a>
+      <a href="12.html">1 Timoteo 5:12 →</a>
     </span>
   </div>
 
@@ -29,8 +29,8 @@
            data-book="1 Timoteo"
            data-prev-bn="610" data-prev-ch="5" data-prev-vs="10"
            data-prev-ref="1 Timoteo 5:10"
-           data-next-bn="610" data-next-ch="5" data-next-vs="13"
-           data-next-ref="1 Timoteo 5:13">
+           data-next-bn="610" data-next-ch="5" data-next-vs="12"
+           data-next-ref="1 Timoteo 5:12">
 
   <h1 class="verso-title">1 Timoteo 5:11</h1>
   <div class="verso-title-en">I Timothy 5:11</div>
@@ -62,21 +62,10 @@
 
   <div class="vista vista-simple">
   
-  <div class="simple-wrap">
-    <div class="simple-row">
-      <div class="simple-lang">Texto griego (NA28)</div>
-      <div class="simple-text simple-greek"><span class="gk">νεωτέρας δὲ χήρας παραιτοῦ· ὅταν γὰρ καταστρηνιάσωσιν τοῦ Χριστοῦ, γαμεῖν θέλουσιν</span></div>
-    </div>
-    <div class="simple-row">
-      <div class="simple-lang">Reina-Valera 1960</div>
-      <div class="simple-text simple-esp">Pero viudas más jóvenes no admitas; porque cuando, impulsadas por sus deseos, se rebelan contra Cristo, quieren casarse,</div>
-    </div>
-    <div class="simple-vars">
-      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
-      <p class="simple-none">— sin variantes textuales en este versículo —</p>
-    </div>
-    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
-    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  <div class="naes-wrap">
+    <p class="naes-verse">Pero viudas más jóvenes no admitas; porque cuando, impulsadas por sus deseos, se rebelan contra Cristo, quieren casarse.</p>
+    
+    <p class="naes-hint">Este versículo no tiene variantes en el aparato de la NA28.</p>
   </div>
 
   </div>
@@ -154,6 +143,15 @@
   document.addEventListener('focusout', () => hide());
   window.addEventListener('scroll', hide, true);
   window.addEventListener('resize', hide);
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
 })();
 </script>
 </body>

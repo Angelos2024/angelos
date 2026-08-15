@@ -18,7 +18,7 @@
     <span class="sep">›</span>
     <span>v. 17</span>
     <span class="prev-next">
-      <a href="15.html">← Hebreos 9:15</a>
+      <a href="16.html">← Hebreos 9:16</a>
       <a href="18.html">Hebreos 9:18 →</a>
     </span>
   </div>
@@ -27,8 +27,8 @@
            data-bn="650" data-ch="9" data-vs="17"
            data-ref="Hebreos 9:17" data-ref-en="Hebrews 9:17"
            data-book="Hebreos"
-           data-prev-bn="650" data-prev-ch="9" data-prev-vs="15"
-           data-prev-ref="Hebreos 9:15"
+           data-prev-bn="650" data-prev-ch="9" data-prev-vs="16"
+           data-prev-ref="Hebreos 9:16"
            data-next-bn="650" data-next-ch="9" data-next-vs="18"
            data-next-ref="Hebreos 9:18">
 
@@ -66,21 +66,10 @@
 
   <div class="vista vista-simple">
   
-  <div class="simple-wrap">
-    <div class="simple-row">
-      <div class="simple-lang">Texto griego (NA28)</div>
-      <div class="simple-text simple-greek"><span class="gk">διαθήκη γὰρ ἐπὶ νεκροῖς βεβαία, ἐπεὶ <span class="smark smark-CAMBIO" tabindex="0" data-title="Cambio de palabra" data-meta="Algunos manuscritos usan una palabra distinta en este punto." title="Cambio de palabra: Algunos manuscritos usan una palabra distinta en este punto.">μήποτε</span> ἰσχύει ὅτε ζῇ ὁ διαθέμενος.</span></div>
-    </div>
-    <div class="simple-row">
-      <div class="simple-lang">Reina-Valera 1960</div>
-      <div class="simple-text simple-esp">Porque el testamento con la muerte se confirma; pues no es válido entre tanto que el testador vive.</div>
-    </div>
-    <div class="simple-vars">
-      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
-      <div class="svar svar-CAMBIO"><div class="svar-head"><span class="svar-tag tag-CAMBIO">Cambio de palabra</span><span class="svar-gk gk">«μήποτε»</span></div><ul class="svar-reads"><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«μη τοτε»</span><div class="simple-det">Siglos IV al VI · ≈100% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li></ul></div>
-    </div>
-    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
-    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  <div class="naes-wrap">
+    <p class="naes-verse">Porque el testamento con la muerte se confirma; pues no es válido entre tanto que el testador vive.</p>
+    
+    <p class="naes-hint">Este versículo no tiene variantes en el aparato de la NA28.</p>
   </div>
 
   </div>
@@ -158,6 +147,15 @@
   document.addEventListener('focusout', () => hide());
   window.addEventListener('scroll', hide, true);
   window.addEventListener('resize', hide);
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
 })();
 </script>
 </body>

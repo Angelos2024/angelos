@@ -68,7 +68,13 @@
   </div>
 
   <div class="vista vista-simple">
-  <div class="simple-wrap"><p class="simple-none">Este versículo aún no tiene vista simplificada.</p></div>
+  
+  <div class="naes-wrap">
+    <p class="naes-verse">y fue puesto de pie sobre la arena de la mar.</p>
+    
+    <p class="naes-hint">Este versículo no tiene variantes en el aparato de la NA28.</p>
+  </div>
+
   </div>
 
   </article>
@@ -144,6 +150,15 @@
   document.addEventListener('focusout', () => hide());
   window.addEventListener('scroll', hide, true);
   window.addEventListener('resize', hide);
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
 })();
 </script>
 </body>

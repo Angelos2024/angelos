@@ -78,21 +78,10 @@
 
   <div class="vista vista-simple">
   
-  <div class="simple-wrap">
-    <div class="simple-row">
-      <div class="simple-lang">Texto griego (NA28)</div>
-      <div class="simple-text simple-greek"><span class="gk">εἰ δὲ μή γε, ἔτι αὐτοῦ πόρρω ὄντος πρεσβείαν ἀποστείλας ἐρωτᾷ <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">τὰ πρὸς</span> εἰρήνην.</span></div>
-    </div>
-    <div class="simple-row">
-      <div class="simple-lang">Reina-Valera 1960</div>
-      <div class="simple-text simple-esp">_Y si no puede, cuando el otro está todavía lejos, le envía una embajada y le pide condiciones <span class="smark smark-OMITIDO" tabindex="0" data-title="Omisión" data-meta="Algunos manuscritos no incluyen esta(s) palabra(s)." title="Omisión: Algunos manuscritos no incluyen esta(s) palabra(s).">de</span> paz.__</div>
-    </div>
-    <div class="simple-vars">
-      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
-      <div class="svar svar-OMITIDO"><div class="svar-head"><span class="svar-tag tag-OMITIDO">Omisión</span><span class="svar-gk gk">«τὰ πρὸς»</span></div><ul class="svar-reads"><li class="simple-read is-may"><span class="simple-quien">La mayoría de los manuscritos lee:</span> <span class="simple-lect gk">«τὰ πρὸς»</span> <i class="simple-na">(texto adoptado por la NA28)</i><div class="simple-det">Siglos IV al XIII · ≈78% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«προς»</span><div class="simple-det">Siglos IV al XII · ≈11% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«εις»</span><div class="simple-det">Siglo IV · ≈4% de los testigos citados</div><div class="simple-antiguo">Incluye los manuscritos más antiguos (siglo IV o anteriores)</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría lee:</span> <span class="simple-lect gk">«τα εις»</span><div class="simple-det">Siglo IX · ≈4% de los testigos citados</div></li><li class="simple-read is-min"><span class="simple-quien">Una minoría omite:</span> <span class="simple-lect simple-omite">estas palabras (no las incluyen)</span><div class="simple-det">≈4% de los testigos citados</div></li></ul></div>
-    </div>
-    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
-    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  <div class="naes-wrap">
+    <p class="naes-verse">Y si no puede, cuando el otro está todavía lejos, le envía una embajada y le pide condiciones <mark class="naes c-omite" tabindex="0" data-k="a">de</mark> paz.</p>
+    <div class="naes-panel is-on" data-k="a"><h2 class="naes-h">Aquí no está</h2><div class="naes-reads cols-3"><article class="naes-read is-na"><div class="naes-badge">Texto de la NA28</div><p class="naes-que">«de»</p><p class="naes-grp"><span class="naes-fam naes-fam-otro">Otras copias</span> Así lo imprime la NA28: «de».</p></article><article class="naes-read"><div class="naes-badge">Otra lectura</div><p class="naes-que">«hacia»</p><p class="naes-grp"><span class="naes-fam naes-fam-alex">Alejandrino</span> El Sinaítico, alejandrino (siglo IV) dice «hacia».</p><p class="naes-grp"><span class="naes-fam naes-fam-byz">Bizantino</span> El Tischendorf, bizantino (siglo X) dice «hacia».</p><p class="naes-grp"><span class="naes-fam naes-fam-otro">Otras copias</span> Copias (siglo XII) dicen «hacia».</p></article><article class="naes-read"><div class="naes-badge">Otra lectura</div><p class="naes-que">«a»</p><p class="naes-grp"><span class="naes-fam naes-fam-alex">Alejandrino</span> El Vaticano, alejandrino (siglo IV) dice «a».</p></article><article class="naes-read"><div class="naes-badge">Otra lectura</div><p class="naes-que">«las a»</p><p class="naes-grp"><span class="naes-fam naes-fam-byz">Bizantino</span> El Ciprio, bizantino (siglo IX) dice «las a».</p></article><article class="naes-read"><div class="naes-badge">Otra lectura</div><p class="naes-que">«no lo traen»</p><p class="naes-grp"><span class="naes-fam naes-fam-alex">Alejandrino</span> Un papiro, alejandrino no trae estas palabras.</p></article></div></div>
+    <p class="naes-hint">Toca una palabra pintada para comparar las copias por tradición y siglos.</p><div class="naes-legend"><span class="c-cambio">otra palabra</span><span class="c-omite">aquí no está</span><span class="c-anade">aquí añadieron</span><span class="c-orden">otro orden</span><span class="c-duda">verso dudoso</span></div>
   </div>
 
   </div>
@@ -170,6 +159,15 @@
   document.addEventListener('focusout', () => hide());
   window.addEventListener('scroll', hide, true);
   window.addEventListener('resize', hide);
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
 })();
 </script>
 </body>

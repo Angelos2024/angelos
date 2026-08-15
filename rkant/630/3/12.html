@@ -18,7 +18,7 @@
     <span class="sep">›</span>
     <span>v. 12</span>
     <span class="prev-next">
-      <a href="10.html">← Tito 3:10</a>
+      <a href="11.html">← Tito 3:11</a>
       <a href="13.html">Tito 3:13 →</a>
     </span>
   </div>
@@ -27,8 +27,8 @@
            data-bn="630" data-ch="3" data-vs="12"
            data-ref="Tito 3:12" data-ref-en="Titus 3:12"
            data-book="Tito"
-           data-prev-bn="630" data-prev-ch="3" data-prev-vs="10"
-           data-prev-ref="Tito 3:10"
+           data-prev-bn="630" data-prev-ch="3" data-prev-vs="11"
+           data-prev-ref="Tito 3:11"
            data-next-bn="630" data-next-ch="3" data-next-vs="13"
            data-next-ref="Tito 3:13">
 
@@ -62,21 +62,10 @@
 
   <div class="vista vista-simple">
   
-  <div class="simple-wrap">
-    <div class="simple-row">
-      <div class="simple-lang">Texto griego (NA28)</div>
-      <div class="simple-text simple-greek"><span class="gk">Ὅταν πέμψω Ἀρτεμᾶν πρὸς σὲ ἢ Τύχικον, σπούδασον ἐλθεῖν πρός με εἰς Νικόπολιν, ἐκεῖ γὰρ κέκρικα παραχειμάσαι.</span></div>
-    </div>
-    <div class="simple-row">
-      <div class="simple-lang">Reina-Valera 1960</div>
-      <div class="simple-text simple-esp">Cuando envíe a ti a Artemas o a Tíquico, apresúrate a venir a mí en Nicópolis, porque allí he determinado pasar el invierno.</div>
-    </div>
-    <div class="simple-vars">
-      <h2 class="section-title">¿Qué dicen los manuscritos?</h2>
-      <p class="simple-none">— sin variantes textuales en este versículo —</p>
-    </div>
-    <p class="simple-foot">Las palabras <b>resaltadas</b> señalan diferencias entre
-    manuscritos. Pasa el cursor (o toca) para ver de qué tipo es cada una.</p>
+  <div class="naes-wrap">
+    <p class="naes-verse">Cuando envíe a ti a Artemas o a Tíquico, apresúrate a venir a mí en Nicópolis, porque allí he determinado pasar el invierno.</p>
+    
+    <p class="naes-hint">Este versículo no tiene variantes en el aparato de la NA28.</p>
   </div>
 
   </div>
@@ -154,6 +143,15 @@
   document.addEventListener('focusout', () => hide());
   window.addEventListener('scroll', hide, true);
   window.addEventListener('resize', hide);
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
 })();
 </script>
 </body>
