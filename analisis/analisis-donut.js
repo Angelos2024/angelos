@@ -192,7 +192,7 @@
           <div class="btn-group btn-group-sm" role="group" aria-label="Idioma">
             <button type="button" class="btn btn-soft active" data-language="es">Español</button>
             <button type="button" class="btn btn-soft" data-language="he">Hebreo</button>
-<button type="button" class="btn btn-soft" data-language="gr_rkant">Griego RKANT</button>
+<button type="button" class="btn btn-soft" data-language="gr_rkant">Griego NA28</button>
             <button type="button" class="btn btn-soft" data-language="gr_lxx">Griego LXX</button>
                       </div>
         </div>

@@ -23,7 +23,7 @@
         <div class="secret-admin-head">
           <div class="secret-admin-kicker">Privado</div>
           <h2 id="secretAdminTitle" class="secret-admin-title">Acceso aparato crítico</h2>
-          <p class="secret-admin-copy">Ingresa la contraseña del panel privado para abrir el aparato crítico RKANT.</p>
+          <p class="secret-admin-copy">Ingresa la contraseña del panel privado para abrir el aparato crítico NA28 (Edición especial en español).</p>
         </div>
         <div class="secret-admin-body">
           <label class="secret-admin-label" for="secretAdminPassword">Contraseña</label>

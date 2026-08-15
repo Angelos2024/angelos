@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>RKANT · Aparato crítico del Nuevo Testamento</title>
+<title>NA28 · Edición especial en español</title>
 <link rel="stylesheet" href="static/estilo.css"/>
 </head>
 <body class="app-body">
@@ -16,10 +16,10 @@
       <span class="btn-exit-lbl">Volver al inicio</span>
     </button>
     <a class="app-brand" href="#/">
-      <span class="brand-icon">✒︎</span>
+      <span class="brand-icon">☧</span>
       <div>
-        <div class="brand-name">RKANT</div>
-        <div class="brand-sub">Roans Kritischer Apparat Neuen Testament</div>
+        <div class="brand-name">NA28</div>
+        <div class="brand-sub">Edición especial en español</div>
       </div>
     </a>
     <div class="app-search">
@@ -68,7 +68,7 @@
     </div>
     <div id="content" class="app-content">
       <div class="welcome">
-        <h1>RKANT — Aparato crítico del Nuevo Testamento</h1>
+        <h1>NA28 — Aparato crítico del Nuevo Testamento (Edición especial en español)</h1>
         <p>Elige un libro, capítulo y versículo en la barra superior, o escribe una referencia en el buscador (por ejemplo <kbd>Mt 1:1</kbd>, <kbd>gal 1 6</kbd>, <kbd>apoc 22:21</kbd>).</p>
         <ul class="hints">
           <li>Cada versículo se carga con el texto griego, el aparato crítico, la tabla de manuscritos y las referencias cruzadas.</li>
@@ -394,7 +394,7 @@
       contentEl.scrollTop = 0;
       setPickers(bn, ch, vs);
       STATE.activeBn = bn; STATE.activeCh = ch; STATE.activeVs = vs;
-      document.title = article.dataset.ref + ' — RKANT';
+      document.title = article.dataset.ref + ' — NA28 · Edición especial en español';
     }).catch(err => {
       contentEl.classList.remove('loading');
       contentEl.innerHTML = '<div class="err">No se pudo cargar el versículo <code>'+esc(url)+'</code>.<br/>' +
@@ -468,7 +468,7 @@
         <div class="hc-cnt">${L.n_verses} versos</div>
       </a>`).join('');
     return `<div class="welcome">
-      <h1>RKANT — Aparato crítico del Nuevo Testamento</h1>
+      <h1>NA28 — Aparato crítico del Nuevo Testamento (Edición especial en español)</h1>
       <p>Elige un libro, capítulo y versículo arriba, o escribe una referencia en el buscador: <kbd>Mt 1:1</kbd>, <kbd>gal 1 6</kbd>, <kbd>apoc 22:21</kbd>.</p>
       <div class="home-grid">${cards}</div>
     </div>`;

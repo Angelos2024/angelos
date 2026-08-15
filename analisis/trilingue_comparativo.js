@@ -1949,7 +1949,7 @@ if (diagEl) diagEl.textContent = 'Por favor, cargue los archivos JSON de los lib
                 res = {
                     ...res,
                     ok: true,
-                    tier: `${res.tier} + RKANT`,
+                    tier: `${res.tier} + NA28`,
                     matches: ntMatches.map(item => ({
                         he: item.he,
                         gr: '',
@@ -1958,7 +1958,7 @@ if (diagEl) diagEl.textContent = 'Por favor, cargue los archivos JSON de los lib
                         candidatos: item.candidatos,
                         _rkntOnly: true
                     })),
-                    diag: 'Sin coincidencias en LXX; se muestran coincidencias desde RKANT (NT).'
+                    diag: 'Sin coincidencias en LXX; se muestran coincidencias desde NA28 (NT).'
                 };
             }
         }

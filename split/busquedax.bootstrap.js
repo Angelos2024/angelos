@@ -66,7 +66,7 @@ const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
  
    const langLabels = {
      es: 'RVR1960',
-     gr: 'RKANT',
+     gr: 'NA28',
     he: 'Hebreo'
    };
  const SEARCH_EQUIVALENCE_GROUPS = [

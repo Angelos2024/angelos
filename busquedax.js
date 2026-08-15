@@ -198,7 +198,7 @@ const NT_SET = new Set([...GOSPELS, ...ACTS, ...LETTERS, ...APOCALYPSE]);
  
    const langLabels = {
      es: 'RVR1960',
-     gr: 'RKANT',
+     gr: 'NA28',
     he: 'Hebreo',
     lxx: 'LXX'
    };
@@ -2932,7 +2932,7 @@ if (enforceSpanishReferenceCorrespondence && enabledCorpora.has('he')) {
         `Lema: <span class="fw-semibold">${lemmaLabel}</span>`,
         `TransliteraciÃ³n: ${translitLabel}`,
         `POS: ${posTag}`,
-        `RKANT: ${enabledCorpora.has('gr') ? grRefs.length : 'â€”'}`,
+        `NA28: ${enabledCorpora.has('gr') ? grRefs.length : 'â€”'}`,
         `LXX: ${enabledCorpora.has('lxx') ? lxxMatches.refs.length : 'â€”'}`,
         `Hebreo: ${enabledCorpora.has('he') ? heRefs.length : 'â€”'}`,
         `RVR1960: ${enabledCorpora.has('es') ? esRefs.length : 'â€”'}`
@@ -2961,7 +2961,7 @@ if (enforceSpanishReferenceCorrespondence && enabledCorpora.has('he')) {
         samplesTasks.push(
           buildSamplesForRefs(grRefs, 'gr', 3, null, options).then((grSamples) => {
             cards.push(buildCorrespondenceCard({
-              title: 'RKANT (NT)',
+              title: 'NA28 (NT)',
               word: greekLemma,
               transliteration: greekTranslit,
               samples: grSamples,

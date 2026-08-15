@@ -70,15 +70,15 @@
     const overlay = document.createElement('div');
     overlay.id = 'rkantOverlay';
     overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-label', 'RKANT — Aparato crítico');
+    overlay.setAttribute('aria-label', 'NA28 — Aparato crítico');
 
     const loading = document.createElement('div');
     loading.className = 'rk-load';
-    loading.textContent = 'Cargando RKANT…';
+    loading.textContent = 'Cargando NA28…';
     overlay.appendChild(loading);
 
     const iframe = document.createElement('iframe');
-    iframe.title = 'RKANT — Aparato crítico del Nuevo Testamento';
+    iframe.title = 'NA28 — Aparato crítico del Nuevo Testamento (Edición especial en español)';
     iframe.setAttribute('allow', 'clipboard-write');
     // Restaurar el último versículo visitado si existe
     iframe.src = RKANT_URL + (state.lastHash ? state.lastHash : '');

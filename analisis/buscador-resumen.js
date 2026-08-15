@@ -919,7 +919,7 @@ function getRvrCardTitle() {
             (async () => {
         const refs = await searchRefsInTextIndex('gr', greekLookup, 3);
                 const samples = await buildSamplesForRefs(refs, 'gr', 3);
-        return buildSamplesCard('RKANT (NT)', 'gr', greekLookup, samples, greekHighlight);
+        return buildSamplesCard('NA28 (NT)', 'gr', greekLookup, samples, greekHighlight);
                       })(),
       (async () => {
         const refs = await searchRefsInTextIndex('he', heWord, 3);
@@ -932,7 +932,7 @@ const samples = await buildLxxMatches(normalizeGreek(greekLookup), 3);
     const settled = await Promise.allSettled(tasks);
     return settled.map((item, idx) => {
       if (item.status === 'fulfilled') return item.value;
-      return buildSamplesCard(['RVR1960 (AT/NT)', 'RKANT (NT)', 'Hebreo (AT)', 'LXX (AT)'][idx], ['es', 'gr', 'he', 'lxx'][idx], '', []);
+      return buildSamplesCard(['RVR1960 (AT/NT)', 'NA28 (NT)', 'Hebreo (AT)', 'LXX (AT)'][idx], ['es', 'gr', 'he', 'lxx'][idx], '', []);
           });
   }
 
@@ -967,7 +967,7 @@ const samples = await buildLxxMatches(normalizeGreek(greekLookup), 3);
     renderSummary(`Palabra buscada: <span class="fw-semibold">${palabrasBuscadas}</span>`);
 
     renderExamples([
-      '<div class="small muted">Cargando muestras de LXX, texto hebreo, RVR1960 y RKANT…</div>'
+      '<div class="small muted">Cargando muestras de LXX, texto hebreo, RVR1960 y NA28…</div>'
     ]);
 
   const sourceCards = await buildSourceCards({
@@ -1021,7 +1021,7 @@ heWord: heb || (lang === 'he' ? rawQuery : ''),
                 candidatos: item.candidatos,
                 _rkntOnly: true
               })),
-              diag: 'Sin coincidencias en LXX; se usa RKANT como base para el resumen del lema.'
+              diag: 'Sin coincidencias en LXX; se usa NA28 como base para el resumen del lema.'
             };
           }
         }

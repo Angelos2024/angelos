@@ -1055,7 +1055,7 @@ function isLikelyVerbEntry(entry) {
       '<div class="t2 row" id="he-lex-root-definition-row" style="display:none"><span class="lab" id="he-lex-root-definition-label">Definición de Raíz:</span><div id="he-lex-root-definition" class="def"></div></div>' +
             '<div class="t2 row"><span class="lab">LXX:</span><div id="he-lex-lxx" class="def"></div></div>' +
       '<hr class="sep" />' +
-      '<div class="t2"><span class="lab">Correspondencia RKANT:</span></div>' +
+      '<div class="t2"><span class="lab">Correspondencia NA28:</span></div>' +
 '<div id="he-lex-rkant" class="rkant"></div>' +
       '</div>' +
       '</div>';
@@ -1331,7 +1331,7 @@ function setPopupExpanded(expanded) {
     if (rootDefinitionEl) rootDefinitionEl.textContent = '—';
     if (rootDefinitionRowEl) rootDefinitionRowEl.style.display = 'none';
     if (rootDefinitionLabelEl) rootDefinitionLabelEl.textContent = 'Definición de Raíz:';
-    if (rkantEl) rkantEl.innerHTML = '<div class="rkant-row muted">Buscando correspondencias RKANT…</div>';
+    if (rkantEl) rkantEl.innerHTML = '<div class="rkant-row muted">Buscando correspondencias NA28…</div>';
     showPopupNear(marker || ev.target);
         setPopupExpanded(false);
 
@@ -1423,7 +1423,7 @@ const refCandidates = uniqueList([lookupWord, normalized, ...compoundTokens]);
       const rkantSamples = await buildNa28Samples(greekCandidate.normalized, 4);
           if (requestId !== state.popupRequestId) return;
       if (!rkantSamples.length) {
-        if (rkantEl) rkantEl.innerHTML = `<div class="rkant-row muted">Lema griego: ${escapeHtml(greekCandidate.lemma)} · Sin ocurrencias en RKANT.</div>`;
+        if (rkantEl) rkantEl.innerHTML = `<div class="rkant-row muted">Lema griego: ${escapeHtml(greekCandidate.lemma)} · Sin ocurrencias en NA28.</div>`;
         return;
       }
       const items = rkantSamples.map((sample) => (
@@ -1448,7 +1448,7 @@ const refCandidates = uniqueList([lookupWord, normalized, ...compoundTokens]);
       if (rootDefinitionEl) rootDefinitionEl.textContent = '—';
       if (rootDefinitionRowEl) rootDefinitionRowEl.style.display = 'none';
       if (lxxEl) lxxEl.textContent = '—';
-      if (rkantEl) rkantEl.innerHTML = '<div class="rkant-row muted">No se pudo cargar la correspondencia RKANT.</div>';
+      if (rkantEl) rkantEl.innerHTML = '<div class="rkant-row muted">No se pudo cargar la correspondencia NA28.</div>';
     }
   }, false);
 })();
