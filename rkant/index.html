@@ -64,8 +64,7 @@
   <main class="app-main">
     <div class="mode-switch" role="tablist" aria-label="Modo de visualización">
       <button id="mode-acad" class="mode-btn is-active" type="button" role="tab">Modo académico</button>
-      <button id="mode-simple" class="mode-btn is-disabled" type="button" role="tab"
-              disabled aria-disabled="true" title="En desarrollo — próximamente">Modo simplificado</button>
+      <button id="mode-simple" class="mode-btn" type="button" role="tab">Modo simplificado</button>
     </div>
     <div id="content" class="app-content">
       <div class="welcome">
@@ -166,21 +165,37 @@
     if (modeAcad)   modeAcad.classList.toggle('is-active', !simple);
     if (modeSimple) modeSimple.classList.toggle('is-active', simple);
   }
-  // Modo simplificado deshabilitado temporalmente (en desarrollo): se fuerza académico.
-  const SIMPLE_ENABLED = false;
+  const SIMPLE_ENABLED = true;
   let curMode = 'academico';
   if (SIMPLE_ENABLED) {
     try { curMode = localStorage.getItem(MODE_KEY) || 'academico'; } catch(e){}
   }
   applyMode(curMode);
   function setMode(m){
-    if (!SIMPLE_ENABLED && m === 'simple') return;   // ignorado mientras está en desarrollo
+    if (!SIMPLE_ENABLED && m === 'simple') return;
     curMode = m;
     try { localStorage.setItem(MODE_KEY, m); } catch(e){}
     applyMode(m);
   }
   if (modeAcad)   modeAcad.addEventListener('click', () => setMode('academico'));
   if (SIMPLE_ENABLED && modeSimple) modeSimple.addEventListener('click', () => setMode('simple'));
+
+  document.addEventListener('click', ev => {
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    const wrap = m.closest('.naes-wrap');
+    if (!wrap) return;
+    const k = m.dataset.k;
+    wrap.querySelectorAll('mark.naes').forEach(x => x.classList.toggle('is-on', x === m));
+    wrap.querySelectorAll('.naes-panel').forEach(p => p.classList.toggle('is-on', p.dataset.k === k));
+  });
+  document.addEventListener('keydown', ev => {
+    if (ev.key !== 'Enter' && ev.key !== ' ') return;
+    const m = ev.target.closest && ev.target.closest('mark.naes');
+    if (!m) return;
+    ev.preventDefault();
+    m.click();
+  });
 
   // ---------------- persistencia local ------------------------------------
   const LS_KEY = 'rkant.newLastHash';

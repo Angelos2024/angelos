@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Modo simple — comparar variantes</title>
+<style>
+  :root{
+    --bg:#fdf6f2; --ink:#2c1d1f; --accent:#4b2743;
+    --tan:#e0cdbd; --paper:#fff;
+    --cambio:#2e7d32; --omite:#6a1b9a; --anade:#c62828; --orden:#1565c0; --duda:#b8860b;
+    --alex:#1e4d7b; --byz:#8a3d12; --west:#5a3d7a; --otro:#3d5a45;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; font-family:"Segoe UI", system-ui, sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.55;
+  }
+  .wrap{ max-width:820px; margin:0 auto; padding:28px 20px 80px; }
+  .tabs{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+  .tab{
+    border:1.5px solid var(--accent); background:#fff; color:var(--accent);
+    font:inherit; font-size:13px; font-weight:600; padding:6px 12px;
+    border-radius:999px; cursor:pointer;
+  }
+  .tab.is-on{ background:var(--accent); color:#fff; }
+  .card{
+    background:var(--paper); border:1px solid var(--tan);
+    border-radius:14px; padding:22px 22px 18px;
+  }
+  .ref{ font-size:13px; font-weight:700; letter-spacing:.04em;
+        text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+  .verse{ font-size:21px; line-height:1.7; margin:0 0 8px; }
+  mark{
+    font-style:normal; font-weight:700; border-radius:4px;
+    padding:0 3px 1px; cursor:pointer; border-bottom:2.5px solid currentColor;
+  }
+  mark:focus{ outline:2px solid var(--accent); outline-offset:2px; }
+  mark.is-on{ box-shadow:0 0 0 3px rgba(75,39,67,.18); }
+  .c-cambio{ color:#fff; background:#2e7d32; border-bottom-color:#1b5e20; }
+  .c-omite{  color:#fff; background:#6a1b9a; border-bottom-color:#4a148c; }
+  .c-anade{  color:#fff; background:#c62828; border-bottom-color:#8e0000; }
+  .c-orden{  color:#fff; background:#1565c0; border-bottom-color:#0d47a1; }
+  .c-duda{   color:#3d3200; background:#ffe566; border-bottom-color:#e6c200; }
+  .panel{ display:none; margin-top:16px; }
+  .panel.is-on{ display:block; }
+  .panel h2{
+    font-size:12px; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 10px;
+  }
+  .reads{
+    display:grid; gap:10px;
+    grid-template-columns:1fr;
+  }
+  @media (min-width:640px){
+    .reads.cols-2{ grid-template-columns:1fr 1fr; }
+    .reads.cols-3{ grid-template-columns:1fr 1fr 1fr; }
+  }
+  .read{
+    border:1px solid var(--tan); border-radius:12px; padding:12px 14px;
+    background:#faf6f3; min-width:0;
+  }
+  .read.is-na{ background:#fff; border-color:var(--accent); }
+  .read .que{
+    font-size:18px; font-weight:700; margin:0 0 4px; line-height:1.35;
+  }
+  .read .que em{ font-style:normal; color:var(--accent); }
+  .read .badge{
+    display:inline-block; font-size:11px; font-weight:700;
+    letter-spacing:.03em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:8px;
+  }
+  .grp{ margin:0 0 8px; font-size:14.5px; }
+  .grp:last-child{ margin-bottom:0; }
+  .fam{
+    display:inline-block; font-size:11px; font-weight:700;
+    letter-spacing:.03em; text-transform:uppercase;
+    padding:1px 6px; border-radius:999px; margin-right:4px; color:#fff;
+  }
+  .fam-alex{ background:var(--alex); }
+  .fam-byz{  background:var(--byz); }
+  .fam-west{ background:var(--west); }
+  .fam-otro{ background:var(--otro); }
+  .hint{ font-size:13px; color:#7a686b; margin:16px 0 0; }
+  .legend{ display:flex; flex-wrap:wrap; gap:10px 16px; margin-top:14px; font-size:12px; }
+  .legend span{ font-weight:700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tabs" id="tabs"></div>
+  <div class="card" id="card"></div>
+</div>
+
+<script>
+const EJEMPLOS = [
+  {
+    ref: "Mateo 1:18",
+    html: `El <mark class="c-cambio" data-k="a">origen</mark> de <mark class="c-orden" data-k="b">Jesucristo</mark> fue así: estando desposada María su madre con José, antes que se juntasen, se halló que había concebido del Espíritu Santo.`,
+    notas: {
+      a: {
+        titulo: "Otra palabra",
+        cols: 2,
+        lecturas: [
+          {
+            na: true,
+            que: "«origen»",
+            grupos: [
+              ["alex", "Alejandrino", "Un papiro antiguo, el Sinaítico y el Vaticano (siglo IV) y el Efrén (siglo V) dicen «origen»."],
+              ["otro", "Otras copias", "También el Washington (siglos IV–V) y las versiones siriacas."]
+            ]
+          },
+          {
+            que: "«nacimiento»",
+            grupos: [
+              ["byz", "Bizantino", "La mayoría de los manuscritos bizantinos —el Ciprio (siglo IX) y muchos minúsculos de los siglos IX al XIII— dicen «nacimiento»."],
+              ["alex", "Alejandrino tardío", "El Regio (siglo VIII) y el minúsculo 33 (siglo IX) también van con «nacimiento»."]
+            ]
+          }
+        ]
+      },
+      b: {
+        titulo: "Otro orden",
+        cols: 3,
+        lecturas: [
+          {
+            na: true,
+            que: "«Jesucristo»",
+            grupos: [
+              ["otro", "Texto impreso", "Así lo imprimen casi todas las copias. Es el orden habitual."]
+            ]
+          },
+          {
+            que: "«Cristo Jesús»",
+            grupos: [
+              ["alex", "Alejandrino", "El Vaticano, un manuscrito alejandrino del siglo IV, pone las palabras al revés: «Cristo Jesús»."]
+            ]
+          },
+          {
+            que: "solo «Jesús»",
+            grupos: [
+              ["otro", "Una copia", "El Washington (siglos IV–V) omite «Cristo» y deja solo «Jesús»."]
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    ref: "Mateo 6:13",
+    html: `Y no nos metas en tentación, mas líbranos del mal.<mark class="c-anade" data-k="a"> ¶</mark>`,
+    notas: {
+      a: {
+        titulo: "Aquí añadieron",
+        cols: 2,
+        lecturas: [
+          {
+            na: true,
+            que: "termina aquí",
+            grupos: [
+              ["alex", "Alejandrino", "El Sinaítico y el Vaticano (siglo IV) terminan el Padrenuestro en «líbranos del mal»."],
+              ["west", "Occidental", "El Bezae (siglo V) también termina aquí, igual que Orígenes."]
+            ]
+          },
+          {
+            que: "«porque tuyo es el reino, y el poder, y la gloria…»",
+            grupos: [
+              ["byz", "Bizantino", "La mayoría de los manuscritos bizantinos, del siglo V al XIII, añaden esa doxología. Ya aparece en el Washington (siglos IV–V)."],
+              ["otro", "Versiones", "También la traen el siriaco y el bohaírico."],
+              ["otro", "Más antigua", "La Didaché (hacia el año 100) tiene una forma más corta: «tuyo es el poder y la gloria por los siglos»."]
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    ref: "Marcos 1:1",
+    html: `Principio del evangelio de Jesucristo, <mark class="c-omite" data-k="a">Hijo de Dios</mark>.`,
+    notas: {
+      a: {
+        titulo: "¿Está o no está?",
+        cols: 3,
+        lecturas: [
+          {
+            na: true,
+            que: "«Hijo de Dios»",
+            grupos: [
+              ["alex", "Alejandrino", "El Vaticano (siglo IV) y el Regio (siglo VIII) sí lo traen. La NA28 lo imprime entre corchetes porque no es del todo seguro."],
+              ["west", "Occidental", "El Bezae (siglo V) y toda la tradición latina también lo traen."],
+              ["otro", "Versiones", "Lo tienen el siriaco y el copto."]
+            ]
+          },
+          {
+            que: "«el Hijo de Dios»",
+            grupos: [
+              ["byz", "Bizantino", "El Alejandrino (siglo V) y la mayoría de los manuscritos bizantinos, siglos V al XIII, añaden el artículo: «el Hijo de Dios»."]
+            ]
+          },
+          {
+            que: "no lo traen",
+            grupos: [
+              ["alex", "Alejandrino", "El Sinaítico (siglo IV) y el sahídico no ponen «Hijo de Dios»."],
+              ["otro", "Padres", "Orígenes (siglo III) cita el verso sin esas palabras."]
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    ref: "Lucas 22:43",
+    html: `<mark class="c-duda" data-k="a">Y se le apareció un ángel del cielo para fortalecerle.</mark>`,
+    notas: {
+      a: {
+        titulo: "Este versículo",
+        cols: 2,
+        lecturas: [
+          {
+            na: true,
+            que: "sí lo imprimen (dudoso)",
+            grupos: [
+              ["west", "Occidental", "El Bezae (siglo V) trae el versículo del ángel."],
+              ["byz", "Bizantino", "La mayoría de los manuscritos bizantinos, siglos VIII al XIII, también lo traen."],
+              ["otro", "Muy antiguos", "Ya lo conocían Justino (siglo II), Hipólito (siglo III) e Ireneo. Por eso la NA28 lo imprime, pero marcado como dudoso."]
+            ]
+          },
+          {
+            que: "no está el versículo",
+            grupos: [
+              ["alex", "Alejandrino", "Un papiro, el Sinaítico y el Vaticano (siglo IV) y el Alejandrino (siglo V) no traen este versículo."],
+              ["otro", "Versiones", "Tampoco está en el sahídico ni en el bohaírico."]
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    ref: "Juan 1:18",
+    html: `A Dios nadie le vio jamás; el <mark class="c-cambio" data-k="a">unigénito Dios</mark>, que está en el seno del Padre, él le ha dado a conocer.`,
+    notas: {
+      a: {
+        titulo: "Otra palabra",
+        cols: 2,
+        lecturas: [
+          {
+            na: true,
+            que: "«el unigénito Dios»",
+            grupos: [
+              ["alex", "Alejandrino", "Papiros de los siglos II–III, el Sinaítico y el Vaticano (siglo IV), el Efrén (siglo V) y el Regio (siglo VIII) dicen «unigénito Dios»."],
+              ["otro", "Padres", "Orígenes y Dídimo de Alejandría (siglo IV) leen igual."]
+            ]
+          },
+          {
+            que: "«el unigénito Hijo»",
+            grupos: [
+              ["byz", "Bizantino", "El Alejandrino (siglo V) y la mayoría de los manuscritos bizantinos, siglos V al XIII, dicen «el unigénito Hijo»."],
+              ["otro", "Versiones", "Así también el latín y el siriaco."],
+              ["west", "Otra forma", "El Washington (siglos IV–V), el latín antiguo e Ireneo (siglo II) dicen «si no el unigénito Hijo»."]
+            ]
+          }
+        ]
+      }
+    }
+  }
+];
+
+const FAM = { alex: "Alejandrino", byz: "Bizantino", west: "Occidental", otro: "Otras copias" };
+
+const tabs = document.getElementById("tabs");
+const card = document.getElementById("card");
+let cur = 0;
+let openK = "a";
+
+EJEMPLOS.forEach((e, i) => {
+  const b = document.createElement("button");
+  b.className = "tab" + (i === 0 ? " is-on" : "");
+  b.type = "button";
+  b.textContent = e.ref;
+  b.onclick = () => { cur = i; openK = "a"; pint(); };
+  tabs.appendChild(b);
+});
+
+function famTag(k){
+  return `<span class="fam fam-${k}">${FAM[k] || k}</span>`;
+}
+
+function pint(){
+  [...tabs.children].forEach((b, i) => b.classList.toggle("is-on", i === cur));
+  const e = EJEMPLOS[cur];
+  const paneles = Object.entries(e.notas).map(([k, n]) => {
+    const cols = n.cols >= 3 ? "cols-3" : "cols-2";
+    const lects = n.lecturas.map(L => `
+      <article class="read${L.na ? " is-na" : ""}">
+        ${L.na ? `<div class="badge">Texto de la NA28</div>` : `<div class="badge">Otra lectura</div>`}
+        <p class="que">${L.que}</p>
+        ${L.grupos.map(([fam, _tit, txt]) =>
+          `<p class="grp">${famTag(fam)} ${txt}</p>`
+        ).join("")}
+      </article>`).join("");
+    return `<div class="panel${openK === k ? " is-on" : ""}" id="n-${k}">
+      <h2>${n.titulo}</h2>
+      <div class="reads ${cols}">${lects}</div>
+    </div>`;
+  }).join("");
+
+  card.innerHTML = `
+    <div class="ref">${e.ref} · NA28</div>
+    <p class="verse">${e.html}</p>
+    ${paneles}
+    <p class="hint">Toca otra palabra pintada para cambiar la comparación. Las copias que dicen lo mismo se juntan: no hace falta nombrarlas una por una.</p>
+    <div class="legend">
+      <span class="c-cambio">otra palabra</span>
+      <span class="c-omite">aquí no está</span>
+      <span class="c-anade">aquí añadieron</span>
+      <span class="c-orden">otro orden</span>
+      <span class="c-duda">verso dudoso</span>
+    </div>`;
+  card.querySelectorAll("mark").forEach(m => {
+    m.tabIndex = 0;
+    m.classList.toggle("is-on", m.dataset.k === openK);
+    const go = () => { openK = m.dataset.k; pint(); };
+    m.onclick = go;
+    m.onkeydown = ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); go(); } };
+  });
+}
+pint();
+</script>
+</body>
+</html>
